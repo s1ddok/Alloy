@@ -35,9 +35,18 @@ public final class ComputeCommand {
     
     public init(library: MTLLibrary,
                 name: String,
-                constantValues: MTLFunctionConstantValues) throws {
-        let function = try library.makeFunction(name: name,
-                                                constantValues: constantValues)
+                constantValues: MTLFunctionConstantValues? = nil) throws {
+        let function: MTLFunction
+        if let consts = constantValues {
+            function = try library.makeFunction(name: name,
+                                                constantValues: consts)
+        } else {
+            guard let f = library.makeFunction(name: name) else {
+                fatalError("Couldn't find function with name: \(name)")
+            }
+            
+            function = f 
+        }
         
         var reflection: MTLAutoreleasedComputePipelineReflection? = nil
         self.pipelineState = try library.device.makeComputePipelineState(function: function,
@@ -140,7 +149,7 @@ public final class ComputeCommand {
         
         for (name, argument) in bufferArguments {
             guard let buffer = self.bufferValues[name] else {
-                fatalError("\(#function): Missing buffer value for \(name) argument")
+                fatalError("\(#function): Missing buffer value for \(name) =argument")
             }
             
             let offset = self.bufferOffsetValues[name] ?? 0
