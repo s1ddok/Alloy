@@ -26,4 +26,17 @@ public extension CVPixelBuffer {
     }
 }
 
+public extension MetalContext {
+    public func makeTextureCache() -> CVMetalTextureCache? {
+        var videoTextureCache: CVMetalTextureCache? = nil
+        let textureCacheError = CVMetalTextureCacheCreate(kCFAllocatorDefault, nil, device, nil, &videoTextureCache);
+        if textureCacheError != kCVReturnSuccess {
+            print("ERROR: Wasn't able to create CVMetalTextureCache")
+            return nil
+        }
+        
+        return videoTextureCache
+    }
+}
+
 
