@@ -123,4 +123,16 @@ public final class MetalContext {
         let texture = device.makeTexture(descriptor: textureDescriptor)
         return texture
     }
+    
+    public func heap(size: Int,
+                     storageMode: MTLStorageMode,
+                     cpuCacheMode: MTLCPUCacheMode = .defaultCache) -> MTLHeap! {
+        let descriptor = MTLHeapDescriptor()
+        descriptor.size = size
+        descriptor.storageMode = storageMode
+        descriptor.cpuCacheMode = cpuCacheMode
+        
+        let heap = device.makeHeap(descriptor: descriptor)
+        return heap
+    }
 }
