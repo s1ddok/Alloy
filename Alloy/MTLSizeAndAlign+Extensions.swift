@@ -27,3 +27,11 @@ public extension MTLSizeAndAlign {
         return MTLSizeAndAlign(size: selfAligned + otherAligned, align: requiredAlignment)
     }
 }
+
+public extension Sequence where Element == MTLTextureDescriptor {
+    public func heapSizeAndAlignCombined(on device: MTLDevice) -> MTLSizeAndAlign {
+        return self.reduce(MTLSizeAndAlign(size: 0, align: 0)) {
+            $0.combined(with: device.heapTextureSizeAndAlign(descriptor: $1))
+        }
+    }
+}
