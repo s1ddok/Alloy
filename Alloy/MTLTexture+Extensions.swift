@@ -59,6 +59,12 @@ public extension MTLTexture {
 }
 
 public extension MTLTexture {
+    public var size: MTLSize {
+        return MTLSize(width: self.width,
+                       height: self.height,
+                       depth: self.depth)
+    }
+    
     public var descriptor: MTLTextureDescriptor {
         let retVal = MTLTextureDescriptor()
         

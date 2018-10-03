@@ -35,3 +35,11 @@ public extension Sequence where Element == MTLTextureDescriptor {
         }
     }
 }
+
+public extension MTLSize {
+    public func clamped(to size: MTLSize) -> MTLSize {
+        return MTLSize(width:  min(max(self.width, 0), size.width),
+                       height: min(max(self.height, 0), size.height),
+                       depth:  min(max(self.depth, 0), size.depth))
+    }
+}
