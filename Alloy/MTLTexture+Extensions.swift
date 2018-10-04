@@ -59,6 +59,11 @@ public extension MTLTexture {
 }
 
 public extension MTLTexture {
+    public var region: MTLRegion {
+        return MTLRegion(origin: .zero,
+                         size: self.size)
+    }
+    
     public var size: MTLSize {
         return MTLSize(width: self.width,
                        height: self.height,
@@ -78,7 +83,15 @@ public extension MTLTexture {
         retVal.textureType = textureType
         retVal.sampleCount = sampleCount
         retVal.mipmapLevelCount = mipmapLevelCount
+        retVal.pixelFormat = pixelFormat
+        if #available(iOS 12, *) {
+            retVal.allowGPUOptimizedContents = allowGPUOptimizedContents
+        }
         
         return retVal
+    }
+    
+    public func matchingTexture() -> MTLTexture? {
+        return self.device.makeTexture(descriptor: self.descriptor)
     }
 }
