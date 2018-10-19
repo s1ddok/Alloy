@@ -113,11 +113,20 @@ public final class MetalContext {
         return texture
     }
     
+    public func depthState(depthCompareFunction: MTLCompareFunction,
+                           isDepthWriteEnabled: Bool = true) -> MTLDepthStencilState! {
+        let descriptor = MTLDepthStencilDescriptor()
+        descriptor.depthCompareFunction = depthCompareFunction
+        descriptor.isDepthWriteEnabled = isDepthWriteEnabled
+        
+        return self.device.makeDepthStencilState(descriptor: descriptor)
+    }
+    
     public func depthBuffer(width: Int, height: Int) -> MTLTexture! {
         let textureDescriptor = MTLTextureDescriptor()
         textureDescriptor.width = width
         textureDescriptor.height = height
-        textureDescriptor.pixelFormat = .depth32Float_stencil8
+        textureDescriptor.pixelFormat = .depth32Float
         textureDescriptor.usage = [.renderTarget]
         
         let texture = device.makeTexture(descriptor: textureDescriptor)
