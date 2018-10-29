@@ -91,7 +91,17 @@ public extension MTLTexture {
         return retVal
     }
     
-    public func matchingTexture() -> MTLTexture? {
-        return self.device.makeTexture(descriptor: self.descriptor)
+    public func matchingTexture(usage: MTLTextureUsage? = nil,
+                                storage: MTLStorageMode? = nil) -> MTLTexture? {
+        let matchingDescriptor = self.descriptor
+        
+        if let u = usage {
+            matchingDescriptor.usage = u
+        }
+        if let s = storage {
+            matchingDescriptor.storageMode = s
+        }
+        
+        return self.device.makeTexture(descriptor: matchingDescriptor)
     }
 }
