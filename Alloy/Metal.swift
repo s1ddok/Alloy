@@ -59,21 +59,28 @@ public final class MTLContext {
     }
     
     public func createMultisampleRenderTargetPair(width: Int, height: Int,
-                                                  sampleCount: Int = 4) -> (main: MTLTexture, resolve: MTLTexture) {
-        let outTexture = self.createRenderTargetTexture(width: width, height: height, pixelFormat: .rgba8Unorm)
+                                                  pixelFormat: MTLPixelFormat,
+                                                  sampleCount: Int = 4) -> (main: MTLTexture, resolve: MTLTexture)? {
+        let mainDesc = MTLTextureDescriptor()
+        mainDesc.width = width
+        mainDesc.height = height
+        mainDesc.pixelFormat = pixelFormat
+        mainDesc.usage = [.renderTarget, .shaderRead]
         
         let sampleDesc = MTLTextureDescriptor()
         sampleDesc.textureType = MTLTextureType.type2DMultisample
         sampleDesc.width  = width
         sampleDesc.height = height
         sampleDesc.sampleCount = sampleCount
-        sampleDesc.pixelFormat = .rgba8Unorm
-        sampleDesc.storageMode = .private
+        sampleDesc.pixelFormat = pixelFormat
+        sampleDesc.storageMode = .memoryless
         sampleDesc.usage = .renderTarget
         
-        let sampleTex = device.makeTexture(descriptor: sampleDesc)!
+        guard let mainTex = device.makeTexture(descriptor: mainDesc),
+              let sampleTex = device.makeTexture(descriptor: sampleDesc)
+        else { return nil}
         
-        return (main: sampleTex, resolve: outTexture)
+        return (main: sampleTex, resolve: mainTex)
     }
     
     public func createRenderTargetTexture(width: Int, height: Int, pixelFormat: MTLPixelFormat, writable: Bool = false) -> MTLTexture {
