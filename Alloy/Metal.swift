@@ -19,7 +19,7 @@ public final class Metal {
     
 }
 
-public final class MetalContext {
+public final class MTLContext {
     public let device: MTLDevice
     public let commandQueue: MTLCommandQueue
     public let standardLibrary: MTLLibrary
