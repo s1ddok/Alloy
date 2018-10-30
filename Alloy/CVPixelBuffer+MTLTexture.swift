@@ -26,7 +26,7 @@ public extension CVPixelBuffer {
     }
 }
 
-public extension MetalContext {
+public extension MTLContext {
     public func makeTextureCache(textureAge: Float = 1.0) -> CVMetalTextureCache? {
         let options = [kCVMetalTextureCacheMaximumTextureAgeKey as NSString: NSNumber(value: textureAge)] as NSDictionary
         
