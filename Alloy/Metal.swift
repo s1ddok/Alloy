@@ -122,12 +122,15 @@ public final class MTLContext {
         return self.device.makeDepthStencilState(descriptor: descriptor)
     }
     
-    public func depthBuffer(width: Int, height: Int) -> MTLTexture! {
+    public func depthBuffer(width: Int, height: Int,
+                            usage: MTLTextureUsage = [],
+                            storageMode: MTLStorageMode = .memoryless) -> MTLTexture! {
         let textureDescriptor = MTLTextureDescriptor()
         textureDescriptor.width = width
         textureDescriptor.height = height
         textureDescriptor.pixelFormat = .depth32Float
-        textureDescriptor.usage = [.renderTarget]
+        textureDescriptor.usage = usage.union([.renderTarget])
+        textureDescriptor.storageMode = storageMode
         
         let texture = device.makeTexture(descriptor: textureDescriptor)
         return texture
