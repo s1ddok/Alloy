@@ -133,6 +133,12 @@ public final class MetalContext {
         return texture
     }
     
+    public func buffer<T>(for type: T.Type,
+                          options: MTLResourceOptions) -> MTLBuffer! {
+        return self.device.makeBuffer(length: MemoryLayout<T>.stride,
+                                      options: options)
+    }
+    
     public func heap(size: Int,
                      storageMode: MTLStorageMode,
                      cpuCacheMode: MTLCPUCacheMode = .defaultCache) -> MTLHeap! {
