@@ -24,6 +24,8 @@ public final class MTLContext {
     public let commandQueue: MTLCommandQueue
     public let standardLibrary: MTLLibrary
     
+    private var libraryCache: [Bundle: MTLLibrary] = [:]
+    
     public init(device: MTLDevice, commandQueue: MTLCommandQueue, library: MTLLibrary) {
         self.device = device
         self.commandQueue = commandQueue
@@ -50,6 +52,22 @@ public final class MTLContext {
         }
 
         self.init(device: device, commandQueue: commandQueue, library: library)
+    }
+    
+    public func shaderLibrary(for bundle: Bundle) -> MTLLibrary? {
+        if let cachedLibrary = self.libraryCache[bundle] {
+            return cachedLibrary
+        }
+        
+        guard let library = try? self.device.makeDefaultLibrary(bundle: bundle)
+        else { return nil }
+        
+        self.libraryCache[bundle] = library
+        return library
+    }
+    
+    public func purgeLibraryCache() {
+        self.libraryCache = [:]
     }
     
     public func compileShaderLibrary(from file: URL) throws -> MTLLibrary {
