@@ -8,6 +8,21 @@
 import Metal
 
 public extension MTLComputeCommandEncoder {
+    
+    public func dispatch1d(state: MTLComputePipelineState,
+                           covering size: Int,
+                           threadgroupWidth: Int? = nil) {
+        let tgWidth = threadgroupWidth ?? state.threadExecutionWidth
+        let tgSize = MTLSize(width: tgWidth, height: 1, depth: 1)
+        
+        let count = MTLSize(width: (size + tgWidth - 1) / tgWidth,
+                            height: 1,
+                            depth: 1)
+        
+        self.setComputePipelineState(state)
+        self.dispatchThreadgroups(count, threadsPerThreadgroup: tgSize)
+    }
+    
     public func dispatch2d(state: MTLComputePipelineState,
                            covering size: MTLSize,
                            threadgroupSize: MTLSize? = nil) {
