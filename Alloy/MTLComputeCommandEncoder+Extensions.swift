@@ -9,6 +9,16 @@ import Metal
 
 public extension MTLComputeCommandEncoder {
     
+    public func set<T>(_ value: T, at index: Int) {
+        var t = value
+        self.setBytes(&t, length: MemoryLayout<T>.stride, index: index)
+    }
+    
+    public func set<T>(_ value: T, at index: Int) where T: Collection {
+        var t = value
+        self.setBytes(&t, length: MemoryLayout<T>.stride * value.count, index: index)
+    }
+    
     public func dispatch1d(state: MTLComputePipelineState,
                            covering size: Int,
                            threadgroupWidth: Int? = nil) {
