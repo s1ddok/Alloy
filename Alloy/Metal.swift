@@ -118,12 +118,12 @@ public final class MTLContext {
         return outTexture
     }
     
-    public func texture(from image: UIImage) -> MTLTexture {
+    public func texture(from image: CGImage) -> MTLTexture? {
         let textureLoader = MTKTextureLoader(device: device)
         // Note: the SRGB option should be set to false, otherwise the image
         // appears way too dark, since it wasn't actually saved as SRGB.
         
-        return try! textureLoader.newTexture(cgImage: image.cgImage!,
+        return try? textureLoader.newTexture(cgImage: image,
                                              options: [ .SRGB : false ])
                                                 //image.cgImage!.colorSpace!.name == CGColorSpace.sRGB ])
     }
