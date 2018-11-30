@@ -22,11 +22,11 @@ public final class Metal {
 public final class MTLContext {
     public let device: MTLDevice
     public let commandQueue: MTLCommandQueue
-    public let standardLibrary: MTLLibrary
+    public let standardLibrary: MTLLibrary?
     
     private var libraryCache: [Bundle: MTLLibrary] = [:]
     
-    public init(device: MTLDevice, commandQueue: MTLCommandQueue, library: MTLLibrary) {
+    public init(device: MTLDevice, commandQueue: MTLCommandQueue, library: MTLLibrary? = nil) {
         self.device = device
         self.commandQueue = commandQueue
         self.standardLibrary = library
@@ -37,18 +37,12 @@ public final class MTLContext {
             fatalError("Could not create a command queue to form a Metal context")
         }
         
-        let library: MTLLibrary
+        let library: MTLLibrary?
         
         if name == nil {
-            guard let lib = try? device.makeDefaultLibrary(bundle: bundle) else {
-                fatalError("Could not load library to form a Metal context")
-            }
-            library = lib
+            library = try? device.makeDefaultLibrary(bundle: bundle)
         } else {
-            guard let lib = try? device.makeLibrary(filepath: bundle.path(forResource: name!, ofType: "metallib")!) else {
-                fatalError("Could not load library to form a Metal context")
-            }
-            library = lib
+            library = try? device.makeLibrary(filepath: bundle.path(forResource: name!, ofType: "metallib")!)
         }
 
         self.init(device: device, commandQueue: commandQueue, library: library)
