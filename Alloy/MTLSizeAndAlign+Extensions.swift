@@ -42,4 +42,6 @@ public extension MTLSize {
                        height: min(max(self.height, 0), size.height),
                        depth:  min(max(self.depth, 0), size.depth))
     }
+    
+    public static let zero = MTLSize(width: 0, height: 0, depth: 0)
 }
