@@ -8,6 +8,7 @@
 
 import Metal
 
+@available(OSX 10.13, *)
 @dynamicMemberLookup
 public final class ComputeCommand {
     public typealias ThreadsInfo = (groupSize: MTLSize, groupCount: MTLSize)
