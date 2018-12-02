@@ -45,7 +45,11 @@ public final class MTLContext {
         let library: MTLLibrary?
         
         if name == nil {
-            library = try? device.makeDefaultLibrary(bundle: bundle)
+            if #available(OSX 10.12, *) {
+                library = try? device.makeDefaultLibrary(bundle: bundle)
+            } else {
+                library = device.makeDefaultLibrary()
+            }
         } else {
             library = try? device.makeLibrary(filepath: bundle.path(forResource: name!, ofType: "metallib")!)
         }
@@ -174,7 +178,7 @@ public final class MTLContext {
     
     public func depthBuffer(width: Int, height: Int,
                             usage: MTLTextureUsage = [],
-                            storageMode: MTLStorageMode = .memoryless) -> MTLTexture! {
+                            storageMode: MTLStorageMode? = nil) -> MTLTexture! {
         let textureDescriptor = MTLTextureDescriptor()
         textureDescriptor.width = width
         textureDescriptor.height = height
