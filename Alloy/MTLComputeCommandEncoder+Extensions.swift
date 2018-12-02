@@ -19,6 +19,16 @@ public extension MTLComputeCommandEncoder {
         self.setBytes(&t, length: MemoryLayout<T>.stride * value.count, index: index)
     }
     
+    public func set(textures: [MTLTexture?], startingAt startIndex: Int = 0) {
+        self.setTextures(textures, range: startIndex..<(startIndex + textures.count))
+    }
+    
+    public func set(buffers: [MTLBuffer?], offsets: [Int]? = nil, startingAt startIndex: Int = 0) {
+        self.setBuffers(buffers,
+                        offsets: offsets ?? buffers.map { _ in 0 },
+                        range: startIndex..<(startIndex + buffers.count))
+    }
+    
     public func dispatch1d(state: MTLComputePipelineState,
                            covering size: Int,
                            threadgroupWidth: Int? = nil) {
