@@ -25,6 +25,11 @@ public final class MTLContext {
     public let standardLibrary: MTLLibrary?
     
     private var libraryCache: [Bundle: MTLLibrary] = [:]
+    private lazy var textureLoader = MTKTextureLoader(device: self.device)
+    
+    public convenience init() {
+        self.init(device: Metal.device)
+    }
     
     public init(device: MTLDevice, commandQueue: MTLCommandQueue, library: MTLLibrary? = nil) {
         self.device = device
@@ -113,13 +118,12 @@ public final class MTLContext {
     }
     
     public func texture(from image: CGImage) -> MTLTexture? {
-        let textureLoader = MTKTextureLoader(device: device)
         // Note: the SRGB option should be set to false, otherwise the image
         // appears way too dark, since it wasn't actually saved as SRGB.
-        
-        return try? textureLoader.newTexture(cgImage: image,
-                                             options: [ .SRGB : false ])
-                                                //image.cgImage!.colorSpace!.name == CGColorSpace.sRGB ])
+        return try? self.textureLoader
+                        .newTexture(cgImage: image,
+                                    options: [ .SRGB : false ])
+                                    // image.colorSpace == CGColorSpace(name: CGColorSpace.sRGB)
     }
     
     public func texture(width: Int, height: Int, pixelFormat: MTLPixelFormat, writable: Bool = false) -> MTLTexture! {
