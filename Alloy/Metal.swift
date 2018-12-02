@@ -73,6 +73,25 @@ public final class MTLContext {
         self.libraryCache = [:]
     }
     
+    public func schedule(_ bufferEncodings: (MTLCommandBuffer) -> Void) {
+        guard let commandBuffer = self.commandQueue.makeCommandBuffer()
+        else { return }
+        
+        bufferEncodings(commandBuffer)
+        
+        commandBuffer.commit()
+        commandBuffer.waitUntilCompleted()
+    }
+    
+    public func scheduleAsync(_ bufferEncodings: (MTLCommandBuffer) -> Void) {
+        guard let commandBuffer = self.commandQueue.makeCommandBuffer()
+        else { return }
+        
+        bufferEncodings(commandBuffer)
+        
+        commandBuffer.commit()
+    }
+    
     public func compileShaderLibrary(from file: URL) throws -> MTLLibrary {
         let shaderSource = try String(contentsOf: file)
         
