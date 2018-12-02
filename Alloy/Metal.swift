@@ -53,10 +53,12 @@ public final class MTLContext {
         self.init(device: device, commandQueue: commandQueue, library: library)
     }
     
+    @available(iOS 10.0, macOS 10.12, *)
     public func shaderLibrary(for anyclass: AnyClass) -> MTLLibrary? {
         return self.shaderLibrary(for: Bundle(for: anyclass))
     }
     
+    @available(iOS 10.0, macOS 10.12, *)
     public func shaderLibrary(for bundle: Bundle) -> MTLLibrary? {
         if let cachedLibrary = self.libraryCache[bundle] {
             return cachedLibrary
@@ -113,7 +115,9 @@ public final class MTLContext {
         sampleDesc.height = height
         sampleDesc.sampleCount = sampleCount
         sampleDesc.pixelFormat = pixelFormat
+        #if !os(macOS)
         sampleDesc.storageMode = .memoryless
+        #endif
         sampleDesc.usage = .renderTarget
         
         guard let mainTex = device.makeTexture(descriptor: mainDesc),
@@ -176,7 +180,12 @@ public final class MTLContext {
         textureDescriptor.height = height
         textureDescriptor.pixelFormat = .depth32Float
         textureDescriptor.usage = usage.union([.renderTarget])
-        textureDescriptor.storageMode = storageMode
+        #if !os(macOS)
+        textureDescriptor.storageMode = storageMode ?? .memoryless
+        #else
+        textureDescriptor.storageMode = storageMode ?? .private
+        #endif
+        
         
         let texture = device.makeTexture(descriptor: textureDescriptor)
         return texture
@@ -188,6 +197,7 @@ public final class MTLContext {
                                       options: options)
     }
     
+    @available(iOS 10.0, macOS 10.13, *)
     public func heap(size: Int,
                      storageMode: MTLStorageMode,
                      cpuCacheMode: MTLCPUCacheMode = .defaultCache) -> MTLHeap! {
