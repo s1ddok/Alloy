@@ -8,7 +8,7 @@
 import Metal
 
 public extension MTLCommandBuffer {
-    @available(iOS 12.0, *)
+    @available(OSX 10.14, iOS 12.0, *)
     public func compute(dispatch: MTLDispatchType,
                         _ commands: (MTLComputeCommandEncoder) -> Void) {
         guard let encoder = self.makeComputeCommandEncoder(dispatchType: dispatch)
