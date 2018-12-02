@@ -20,6 +20,7 @@ public extension MTLLibrary {
         return try self.device.makeComputePipelineState(function: function)
     }
     
+    @available(OSX 10.12, *)
     public func computePipelineState(function: String,
                                      constants: MTLFunctionConstantValues) throws -> MTLComputePipelineState {
         let function = try self.makeFunction(name: function,
