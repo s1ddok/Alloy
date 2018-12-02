@@ -102,7 +102,7 @@ public extension MTLTexture {
         retVal.sampleCount = sampleCount
         retVal.mipmapLevelCount = mipmapLevelCount
         retVal.pixelFormat = pixelFormat
-        if #available(iOS 12, *) {
+        if #available(iOS 12, macOS 10.14, *) {
             retVal.allowGPUOptimizedContents = allowGPUOptimizedContents
         }
         
