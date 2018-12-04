@@ -79,21 +79,21 @@ public final class MTLContext {
         self.libraryCache = [:]
     }
     
-    public func schedule(_ bufferEncodings: (MTLCommandBuffer) -> Void) {
+    public func scheduleAndWait(_ bufferEncodings: (MTLCommandBuffer) throws -> Void) rethrows {
         guard let commandBuffer = self.commandQueue.makeCommandBuffer()
         else { return }
         
-        bufferEncodings(commandBuffer)
+        try bufferEncodings(commandBuffer)
         
         commandBuffer.commit()
         commandBuffer.waitUntilCompleted()
     }
     
-    public func scheduleAsync(_ bufferEncodings: (MTLCommandBuffer) -> Void) {
+    public func schedule(_ bufferEncodings: (MTLCommandBuffer) throws -> Void) rethrows {
         guard let commandBuffer = self.commandQueue.makeCommandBuffer()
         else { return }
         
-        bufferEncodings(commandBuffer)
+        try bufferEncodings(commandBuffer)
         
         commandBuffer.commit()
     }
