@@ -162,15 +162,15 @@ public final class MTLContext {
                                     options: options)
     }
     
-    public func texture(width: Int, height: Int, pixelFormat: MTLPixelFormat, writable: Bool = false) -> MTLTexture! {
+    public func texture(width: Int,
+                        height: Int,
+                        pixelFormat: MTLPixelFormat,
+                        usage: MTLTextureUsage = [.shaderRead]) -> MTLTexture! {
         let textureDescriptor = MTLTextureDescriptor()
         textureDescriptor.width = width
         textureDescriptor.height = height
         textureDescriptor.pixelFormat = pixelFormat
-        textureDescriptor.usage = [.shaderRead]
-        if writable {
-            textureDescriptor.usage.formUnion(.shaderWrite)
-        }
+        textureDescriptor.usage = usage
         
         let texture = device.makeTexture(descriptor: textureDescriptor)
         return texture
