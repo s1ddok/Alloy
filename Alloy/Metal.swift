@@ -196,8 +196,9 @@ public final class MTLContext {
     }
     
     public func buffer<T>(for type: T.Type,
+                          count: Int = 1,
                           options: MTLResourceOptions) -> MTLBuffer! {
-        return self.device.makeBuffer(length: MemoryLayout<T>.stride,
+        return self.device.makeBuffer(length: MemoryLayout<T>.stride * count,
                                       options: options)
     }
     
