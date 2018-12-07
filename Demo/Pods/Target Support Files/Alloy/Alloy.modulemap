@@ -1,0 +1,6 @@
+framework module Alloy {
+  umbrella header "Alloy-umbrella.h"
+
+  export *
+  module * { export * }
+}

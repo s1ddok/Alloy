@@ -1,0 +1,16 @@
+PODS:
+  - Alloy (0.1.0)
+
+DEPENDENCIES:
+  - Alloy (from `../`)
+
+EXTERNAL SOURCES:
+  Alloy:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  Alloy: 24dc88af832012a345bb435c798e7b2967aeab14
+
+PODFILE CHECKSUM: 9384768113abbc785c5311ccef61cdf6ac8b73de
+
+COCOAPODS: 1.6.0.beta.2
