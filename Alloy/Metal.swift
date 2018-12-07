@@ -149,13 +149,17 @@ public final class MTLContext {
         return outTexture
     }
     
-    public func texture(from image: CGImage) -> MTLTexture? {
-        // Note: the SRGB option should be set to false, otherwise the image
-        // appears way too dark, since it wasn't actually saved as SRGB.
+    public func texture(from image: CGImage, usage: MTLTextureUsage = [.shaderRead]) -> MTLTexture? {
+        let options: [MTKTextureLoader.Option: Any] = [
+            // Note: the SRGB option should be set to false, otherwise the image
+            // appears way too dark, since it wasn't actually saved as SRGB.
+            .SRGB : false, // image.colorSpace == CGColorSpace(name: CGColorSpace.sRGB)
+            .textureUsage: NSNumber(value: usage.rawValue)
+        ]
+        
         return try? self.textureLoader
                         .newTexture(cgImage: image,
-                                    options: [ .SRGB : false ])
-                                    // image.colorSpace == CGColorSpace(name: CGColorSpace.sRGB)
+                                    options: options)
     }
     
     public func texture(width: Int, height: Int, pixelFormat: MTLPixelFormat, writable: Bool = false) -> MTLTexture! {
