@@ -17,7 +17,7 @@ kernel void brightness(texture2d<half, access::read_write> input [[ texture(0) ]
     }
     
     half4 originalValue = input.read(position);
-    originalValue *= coeff;
+    originalValue.rgb *= coeff;
     
     input.write(originalValue, position);
 }
