@@ -39,8 +39,8 @@ class ViewController: NSViewController {
         var rect = NSRect(origin: .zero, size: self.image.size)
         guard
             let cgImage = self.image.cgImage(forProposedRect: &rect,
-                                               context: nil,
-                                               hints: nil),
+                                             context: nil,
+                                             hints: nil),
             let texture = context.texture(from: cgImage,
                                           usage: [.shaderRead, .shaderWrite])
         else { return }
