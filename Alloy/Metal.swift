@@ -13,6 +13,11 @@ public final class Metal {
     
     public static let device: MTLDevice! = MTLCreateSystemDefaultDevice()
     
+    @available(OSX 10.11, *)
+    public static let lowPowerDevice: MTLDevice? = {
+        return MTLCopyAllDevices().first { $0.isLowPower }
+    }()
+    
     public static var isAvailable: Bool {
         return Metal.device != nil
     }
