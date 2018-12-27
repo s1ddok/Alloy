@@ -16,8 +16,7 @@ class ViewController: NSViewController {
     @IBOutlet weak var slider: NSSlider!
     
     let context = MTLContext(device: Metal.lowPowerDevice!)
-
-    var computePipelineState: MTLComputePipelineState! = nil
+    var brightnessEncoder: BrightnessEncoder!
 
     let image = NSImage(named: "flower")!
     
@@ -26,17 +25,12 @@ class ViewController: NSViewController {
         
         self.imageView.image = self.image
         
-        guard let lib = context.standardLibrary,
-              let computePipelineState = try? lib.computePipelineState(function: "brightness")
-        else {
-            fatalError("Metal initialization step failed")
-        }
-        
-        self.computePipelineState = computePipelineState
+        self.brightnessEncoder = BrightnessEncoder(context: self.context)
     }
     
     @IBAction func sliderDragged(_ sender: NSSlider) {
         var rect = NSRect(origin: .zero, size: self.image.size)
+        // Very very bad and slow, just for demo purposes
         guard
             let cgImage = self.image.cgImage(forProposedRect: &rect,
                                              context: nil,
@@ -45,17 +39,17 @@ class ViewController: NSViewController {
                                           usage: [.shaderRead, .shaderWrite])
         else { return }
         
+
         self.context.scheduleAndWait { buffer in
-            buffer.compute { encoder in
-                encoder.set(textures: [texture])
-                encoder.set(sender.floatValue, at: 0)
-                
-                encoder.dispatch2d(state: self.computePipelineState,
-                                   covering: texture.size)
-            }
+            self.brightnessEncoder.intensity = sender.floatValue
+            self.brightnessEncoder.encode(input: texture,
+                                          in: buffer)
             
-            buffer.blit { encoder in
-                encoder.synchronize(resource: texture)
+            // For Mac applications (doesn't actually do anything, serves as an example)
+            if case .managed = texture.storageMode {
+                buffer.blit { encoder in
+                    encoder.synchronize(resource: texture)
+                }
             }
         }
         
