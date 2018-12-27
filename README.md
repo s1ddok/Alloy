@@ -5,15 +5,15 @@ Alloy is a tiny set of utils and extensions over Apple's Metal framework dedicat
 While this library doesn't introduce any new paradigms or concepts that significantly change the way you approach your Metal implementations, it has some optional-to-use things that you can incorporate in your apps if you find them as useful as library author did :)
 
 - Nano-tiny layer over vanilla Metal API
-- No external dependencies 
+- No external dependencies
 - Cross-platform support
 - Very Swifty
 
 # Warning
 
-This library happens to be under eventual active development as I use it in my real-world projects, so its' API is subject to random changes. 
+This library happens to be under eventual active development as I use it in my real-world projects, so its' API is subject to random changes.
 
-# Okay, let me see what's up 
+# Okay, let me see what's up
 
 First of all, this framework provides a set of utils, that hides the majority of redudant explicity in your Metal code, while not limiting a flexibility a bit. You can easily mix Alloy and vanilla Metal code.
 
@@ -26,14 +26,14 @@ In particular, this is:
 
 Internally, it also manages a `MTKTextureLoader` and a cache of `MTLLibraries`, but this logic should be considered private. As of now, `MTLContext` **is not threadsafe**.
 
-`MTLContext` usually being injected as a dependency to any object that interacts with Metal devices. 
+`MTLContext` usually being injected as a dependency to any object that interacts with Metal devices.
 
 It can do a bunch of things for you, few examples:
 
 ### Easily create textures from CGImage
 ```swift
 let texture = context.texture(from: cgImage,
-usage: [.shaderRead, .shaderWrite])
+                              usage: [.shaderRead, .shaderWrite])
 ```
 
 ### Dispatch command buffers in both sync/async manner
@@ -42,13 +42,13 @@ See how you can group encodings with Swift closures.
 
 ```swift
 self.context.scheduleAndWait { buffer in
-buffer.compute { encoder in
-// compute command encoding logic
-}
+    buffer.compute { encoder in
+      // compute command encoding logic
+    }
 
-buffer.blit { encoder in
-// blit command encoding logic
-}
+    buffer.blit { encoder in
+      // blit command encoding logic
+    }
 }
 ```
 
@@ -62,8 +62,8 @@ let computePipelineState = try? lib.computePipelineState(function: "brightness")
 
 ```swift
 let buffer = context.buffer(for: InstanceUniforms.self,
-count: 99,
-options: .storageModeShared)
+                            count: 99,
+                            options: .storageModeShared)
 ```
 
 ### Other things
@@ -75,7 +75,7 @@ options: .storageModeShared)
 
 ## Other Alloy-specific types
 
-Other objects that are introduces my Alloy are 
+Other objects that are introduces my Alloy are
 
 - `MTLOffscreenRenderer`: this is a class that lets you create simple off-screen renderers to draw something into arbitary `MTLTextures`
 - `ComputeCommand`: this is an *experimental class* that does a reflection over Metal kernels and lets you assign arguments by name instead of index. This is a subject for improvements.
@@ -88,60 +88,60 @@ Other objects that are introduces my Alloy are
 import Alloy
 
 public class BrightnessEncoder {
-public let context: MTLContext
-fileprivate let pipelineState: MTLComputePipelineState
+    public let context: MTLContext
+    fileprivate let pipelineState: MTLComputePipelineState
 
-/**
-* This variable controls the brightness factor. Should be in range of -1.0...1.0
-*/
-public var intensity: Float = 1.0
+    /**
+     * This variable controls the brightness factor. Should be in range of -1.0...1.0
+     */
+    public var intensity: Float = 1.0
 
-public init(context: MTLContext) {
-self.context = context
+    public init(context: MTLContext) {
+        self.context = context
 
-guard let lib = context.shaderLibrary(for: BrightnessEncoder.self),
-let state = try? lib.computePipelineState(function: "brightness")
-else { fatalError("Error during shader loading") }
+        guard let lib = context.shaderLibrary(for: BrightnessEncoder.self),
+              let state = try? lib.computePipelineState(function: "brightness")
+        else { fatalError("Error during shader loading") }
 
-self.pipelineState = state
-}
+        self.pipelineState = state
+    }
 
-public func encode(input: MTLTexture,
-in commandBuffer: MTLCommandBuffer) {
-commandBuffer.compute { encoder in
-encoder.set(textures: [input])
-encoder.set(self.intensity, at: 0)
+    public func encode(input: MTLTexture,
+                       in commandBuffer: MTLCommandBuffer) {
+        commandBuffer.compute { encoder in
+            encoder.set(textures: [input])
+            encoder.set(self.intensity, at: 0)
 
-encoder.dispatch2d(state: self.pipelineState,
-covering: input.size)
-}
+            encoder.dispatch2d(state: self.pipelineState,
+                               covering: input.size)
+        }
 
-// For Mac applications
-if case .managed = input.storageMode {
-commandBuffer.blit { encoder in
-encoder.synchronize(resource: input)
-}
-}
-}
+        // For Mac applications
+        if case .managed = input.storageMode {
+            commandBuffer.blit { encoder in
+                encoder.synchronize(resource: input)
+            }
+        }
+    }
 
 }
 ```
 
 Note how simple it is to kick off a kernel with Alloy, no more tedious thredgroup size calculations, multiple encoder initialization with balancing `.endEncoding()` calls.
 
-Then somewhere else you just do 
+Then somewhere else you just do
 
 ```swift
 context.scheduleAndWait { buffer in
-self.brightnessEncoder.intensity = sender.floatValue
-self.brightnessEncoder.encode(input: texture,
-in: buffer)
+    self.brightnessEncoder.intensity = sender.floatValue
+    self.brightnessEncoder.encode(input: texture,
+                                  in: buffer)
 
-if case .managed = texture.storageMode {
-buffer.blit { encoder in
-encoder.synchronize(resource: texture)
-}
-}
+    if case .managed = texture.storageMode {
+        buffer.blit { encoder in
+            encoder.synchronize(resource: texture)
+        }
+    }
 }
 ```
 
