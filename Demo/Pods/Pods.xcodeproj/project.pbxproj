@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -19,13 +19,13 @@
 		58E807BC75375BEA3AB4AB17458EF770 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD4E35E8614F0A0E8E92DCE399AB86E2 /* Cocoa.framework */; };
 		6C47C5DC70C647CC9D6DD429C44276DB /* MTLBlitCommandEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40147855E27F24D9651853FC29C0A421 /* MTLBlitCommandEncoder+Extensions.swift */; };
 		6DCE21E9480024A832B4178CB97B3AF3 /* Sequence+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC484FA4B41AFE3B403E6E2734C84DD1 /* Sequence+Utils.swift */; };
+		930654CF21D54AD900ACD3D7 /* MTLRenderCommandEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930654CE21D54AD900ACD3D7 /* MTLRenderCommandEncoder+Extensions.swift */; };
 		A5F15888F29CD0AB280EAD1FE3D02BC2 /* MTLOrigin+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9B6FD7C566794E35D6D673D1481D038 /* MTLOrigin+Extensions.swift */; };
 		B272B099532E5D2C17632DBA022DDD94 /* MTLClearColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99867EDFDFB3018263403E2A09EBAE43 /* MTLClearColor+Extensions.swift */; };
 		B7087D22B453861FA96FBA7983A278BC /* MTLTexture+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1626A96F43DCB24603102863DD548C27 /* MTLTexture+Extensions.swift */; };
 		B9A48648C4F10CDEA731A9912E7B1D2A /* MTLComputeCommandEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D8E3BAA095C2A606A25A0710DB0B9B1 /* MTLComputeCommandEncoder+Extensions.swift */; };
 		BE09876FCEC6CB40E16302333B8B9EDF /* MTLCommandBuffer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCCC7329D0C5951090BBBC6579C4F1EE /* MTLCommandBuffer+Extensions.swift */; };
 		C2D496A1E11F80C4EC3D9C2BE8BBA3B2 /* Pods-Demo-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = B8C3B3DF3DE3CD7E534945E2D7AB7227 /* Pods-Demo-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C3996BF43829B9EEA9B16F2A7B35D523 /* MTLDevice+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19CEB91735247D5601EE6B6D5D1F4F14 /* MTLDevice+Extensions.swift */; };
 		CE8EC710E9410CE5901B463896EE9133 /* MTLOffscreenRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2CA35C8C0EEF1F0AD94130AE6F3997 /* MTLOffscreenRenderer.swift */; };
 		DF7E1241A85F5C632B04646F9AE8D8AF /* MTLSizeAndAlign+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6209473404E5C22760B2E5D8E4E26C8D /* MTLSizeAndAlign+Extensions.swift */; };
 		E04B73C75CD0B3F6195CEA6B265298A2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD4E35E8614F0A0E8E92DCE399AB86E2 /* Cocoa.framework */; };
@@ -43,10 +43,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0F09E0FD23D1E16F54A8D67E8BD08AF3 /* Pods_Demo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_Demo.framework; path = "Pods-Demo.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0F09E0FD23D1E16F54A8D67E8BD08AF3 /* Pods_Demo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Demo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1626A96F43DCB24603102863DD548C27 /* MTLTexture+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLTexture+Extensions.swift"; path = "Alloy/MTLTexture+Extensions.swift"; sourceTree = "<group>"; };
 		1855D129A333314339C56264397CB491 /* Alloy-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Alloy-dummy.m"; sourceTree = "<group>"; };
-		19CEB91735247D5601EE6B6D5D1F4F14 /* MTLDevice+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLDevice+Extensions.swift"; path = "Alloy/MTLDevice+Extensions.swift"; sourceTree = "<group>"; };
 		2567332B657C5CB67A4723AD53AF4857 /* Alloy.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Alloy.xcconfig; sourceTree = "<group>"; };
 		27157BCB11DD7AA9AC9D97FC957BF943 /* MTLComputePipelineState+Threads.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLComputePipelineState+Threads.swift"; path = "Alloy/MTLComputePipelineState+Threads.swift"; sourceTree = "<group>"; };
 		294AB7D2E4BFD1E500ED27BC7E716E3A /* Pods-Demo.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-Demo.modulemap"; sourceTree = "<group>"; };
@@ -54,7 +53,7 @@
 		34674FDBF5A48654BA05CDC1DD4E7E54 /* Pods-Demo-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Demo-Info.plist"; sourceTree = "<group>"; };
 		40147855E27F24D9651853FC29C0A421 /* MTLBlitCommandEncoder+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLBlitCommandEncoder+Extensions.swift"; path = "Alloy/MTLBlitCommandEncoder+Extensions.swift"; sourceTree = "<group>"; };
 		52C73E501C40F56DDCB1395380E403F7 /* MTLLibrary+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLLibrary+Extensions.swift"; path = "Alloy/MTLLibrary+Extensions.swift"; sourceTree = "<group>"; };
-		541959CF024702F7F9165122C568A817 /* Alloy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Alloy.framework; path = Alloy.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		541959CF024702F7F9165122C568A817 /* Alloy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Alloy.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6209473404E5C22760B2E5D8E4E26C8D /* MTLSizeAndAlign+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLSizeAndAlign+Extensions.swift"; path = "Alloy/MTLSizeAndAlign+Extensions.swift"; sourceTree = "<group>"; };
 		6C77103193050CFB67E2834F2BC12C79 /* Pods-Demo-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Demo-acknowledgements.markdown"; sourceTree = "<group>"; };
 		6D8E3BAA095C2A606A25A0710DB0B9B1 /* MTLComputeCommandEncoder+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLComputeCommandEncoder+Extensions.swift"; path = "Alloy/MTLComputeCommandEncoder+Extensions.swift"; sourceTree = "<group>"; };
@@ -62,11 +61,12 @@
 		7B289544340575E7077715161BF266A4 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Metal.framework; sourceTree = DEVELOPER_DIR; };
 		7C007BF1255C4723F0F15FEB3CA4C0A2 /* Metal.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Metal.swift; path = Alloy/Metal.swift; sourceTree = "<group>"; };
 		876F7380C723D3E455AE81BD70DE45CD /* Alloy.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = Alloy.modulemap; sourceTree = "<group>"; };
+		930654CE21D54AD900ACD3D7 /* MTLRenderCommandEncoder+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "MTLRenderCommandEncoder+Extensions.swift"; path = "Alloy/MTLRenderCommandEncoder+Extensions.swift"; sourceTree = "<group>"; };
 		962F4F162E25ADA766EE2552D595FCB4 /* Pods-Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Demo.release.xcconfig"; sourceTree = "<group>"; };
 		99867EDFDFB3018263403E2A09EBAE43 /* MTLClearColor+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLClearColor+Extensions.swift"; path = "Alloy/MTLClearColor+Extensions.swift"; sourceTree = "<group>"; };
 		AC484FA4B41AFE3B403E6E2734C84DD1 /* Sequence+Utils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Sequence+Utils.swift"; path = "Alloy/Sequence+Utils.swift"; sourceTree = "<group>"; };
 		B1E0173D4081FD8A49D3C3C9609D6E70 /* CVPixelBuffer+MTLTexture.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "CVPixelBuffer+MTLTexture.swift"; path = "Alloy/CVPixelBuffer+MTLTexture.swift"; sourceTree = "<group>"; };
-		B36AB396275697EEE1A5B13BA8A38FE3 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		B36AB396275697EEE1A5B13BA8A38FE3 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		B8C3B3DF3DE3CD7E534945E2D7AB7227 /* Pods-Demo-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Demo-umbrella.h"; sourceTree = "<group>"; };
 		B9B6FD7C566794E35D6D673D1481D038 /* MTLOrigin+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLOrigin+Extensions.swift"; path = "Alloy/MTLOrigin+Extensions.swift"; sourceTree = "<group>"; };
 		BABC62476FCEE1DEF16D9B19FEC2DDB4 /* Alloy-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Alloy-umbrella.h"; sourceTree = "<group>"; };
@@ -76,7 +76,7 @@
 		CFA073D542BE76A9C30C7A0F54FD341D /* Pods-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Demo.debug.xcconfig"; sourceTree = "<group>"; };
 		DB2CA35C8C0EEF1F0AD94130AE6F3997 /* MTLOffscreenRenderer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MTLOffscreenRenderer.swift; path = Alloy/MTLOffscreenRenderer.swift; sourceTree = "<group>"; };
 		DE92159CD40B3610500CCBE37407F7A8 /* Pods-Demo-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Demo-frameworks.sh"; sourceTree = "<group>"; };
-		E98BCA0138B061FE5DD6A0F76CE9B979 /* Alloy.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = Alloy.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		E98BCA0138B061FE5DD6A0F76CE9B979 /* Alloy.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = Alloy.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		EDAAA568CE85F47C2C6DB02F6601B602 /* Pods-Demo-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Demo-acknowledgements.plist"; sourceTree = "<group>"; };
 		FD4E35E8614F0A0E8E92DCE399AB86E2 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		FD7B17019BB82151C9BBB5BA4EAEA9AB /* Alloy-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Alloy-prefix.pch"; sourceTree = "<group>"; };
@@ -145,13 +145,13 @@
 				BCCC7329D0C5951090BBBC6579C4F1EE /* MTLCommandBuffer+Extensions.swift */,
 				6D8E3BAA095C2A606A25A0710DB0B9B1 /* MTLComputeCommandEncoder+Extensions.swift */,
 				27157BCB11DD7AA9AC9D97FC957BF943 /* MTLComputePipelineState+Threads.swift */,
-				19CEB91735247D5601EE6B6D5D1F4F14 /* MTLDevice+Extensions.swift */,
 				52C73E501C40F56DDCB1395380E403F7 /* MTLLibrary+Extensions.swift */,
 				DB2CA35C8C0EEF1F0AD94130AE6F3997 /* MTLOffscreenRenderer.swift */,
 				B9B6FD7C566794E35D6D673D1481D038 /* MTLOrigin+Extensions.swift */,
 				C759694172EECEB6D35F754F2F7C046A /* MTLRegion+Extensions.swift */,
 				6209473404E5C22760B2E5D8E4E26C8D /* MTLSizeAndAlign+Extensions.swift */,
 				1626A96F43DCB24603102863DD548C27 /* MTLTexture+Extensions.swift */,
+				930654CE21D54AD900ACD3D7 /* MTLRenderCommandEncoder+Extensions.swift */,
 				AC484FA4B41AFE3B403E6E2734C84DD1 /* Sequence+Utils.swift */,
 				AB3152BBFA5EC9B1B0E79EAC2324DC6D /* Pod */,
 				6146C471472743A6174B2AEDC4B85617 /* Support Files */,
@@ -343,10 +343,10 @@
 				34ADFAAB0CB6F14EB372C78E84D2433B /* Metal.swift in Sources */,
 				6C47C5DC70C647CC9D6DD429C44276DB /* MTLBlitCommandEncoder+Extensions.swift in Sources */,
 				B272B099532E5D2C17632DBA022DDD94 /* MTLClearColor+Extensions.swift in Sources */,
+				930654CF21D54AD900ACD3D7 /* MTLRenderCommandEncoder+Extensions.swift in Sources */,
 				BE09876FCEC6CB40E16302333B8B9EDF /* MTLCommandBuffer+Extensions.swift in Sources */,
 				B9A48648C4F10CDEA731A9912E7B1D2A /* MTLComputeCommandEncoder+Extensions.swift in Sources */,
 				1F32AF30494BC9F0FC6709B085E1B49F /* MTLComputePipelineState+Threads.swift in Sources */,
-				C3996BF43829B9EEA9B16F2A7B35D523 /* MTLDevice+Extensions.swift in Sources */,
 				0D0B2EEC2BE93663C074B10EBD099085 /* MTLLibrary+Extensions.swift in Sources */,
 				CE8EC710E9410CE5901B463896EE9133 /* MTLOffscreenRenderer.swift in Sources */,
 				A5F15888F29CD0AB280EAD1FE3D02BC2 /* MTLOrigin+Extensions.swift in Sources */,
@@ -453,11 +453,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/Alloy/Alloy-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/Alloy/Alloy-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MODULEMAP_FILE = "Target Support Files/Alloy/Alloy.modulemap";
 				PRODUCT_MODULE_NAME = Alloy;
@@ -491,11 +487,7 @@
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = "Target Support Files/Pods-Demo/Pods-Demo-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MODULEMAP_FILE = "Target Support Files/Pods-Demo/Pods-Demo.modulemap";
@@ -531,11 +523,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/Alloy/Alloy-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/Alloy/Alloy-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MODULEMAP_FILE = "Target Support Files/Alloy/Alloy.modulemap";
 				PRODUCT_MODULE_NAME = Alloy;
@@ -602,8 +590,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = NO;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 4.2;
 				SYMROOT = "${SRCROOT}/../build";
 			};
@@ -629,11 +616,7 @@
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = "Target Support Files/Pods-Demo/Pods-Demo-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MODULEMAP_FILE = "Target Support Files/Pods-Demo/Pods-Demo.modulemap";
