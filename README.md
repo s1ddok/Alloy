@@ -115,13 +115,6 @@ public class BrightnessEncoder {
             encoder.dispatch2d(state: self.pipelineState,
                                covering: input.size)
         }
-
-        // For Mac applications
-        if case .managed = input.storageMode {
-            commandBuffer.blit { encoder in
-                encoder.synchronize(resource: input)
-            }
-        }
     }
 
 }
@@ -137,6 +130,7 @@ context.scheduleAndWait { buffer in
     self.brightnessEncoder.encode(input: texture,
                                   in: buffer)
 
+    // For Mac applications
     if case .managed = texture.storageMode {
         buffer.blit { encoder in
             encoder.synchronize(resource: texture)
