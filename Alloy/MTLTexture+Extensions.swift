@@ -131,11 +131,11 @@ public extension MTLTexture {
         case .type2DArray: sliceType = .type2D
         case .typeCubeArray: sliceType = .typeCube
         default:
-            if slice == 0 {
-                return self
-            } else {
+            guard slice == 0 else {
                 return nil
             }
+            
+            sliceType = self.textureType
         }
         
         return self.makeTextureView(pixelFormat: self.pixelFormat,
