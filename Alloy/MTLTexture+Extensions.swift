@@ -122,4 +122,25 @@ public extension MTLTexture {
         
         return self.device.makeTexture(descriptor: matchingDescriptor)
     }
+    
+    public func view(slice: Int, levels: Range<Int>? = nil) -> MTLTexture? {
+        let sliceType: MTLTextureType
+        
+        switch self.textureType {
+        case .type1DArray: sliceType = .type1D
+        case .type2DArray: sliceType = .type2D
+        case .typeCubeArray: sliceType = .typeCube
+        default:
+            if slice == 0 {
+                return self
+            } else {
+                return nil
+            }
+        }
+        
+        return self.makeTextureView(pixelFormat: self.pixelFormat,
+                                    textureType: sliceType,
+                                    levels: levels ?? 0..<1,
+                                    slices: slice..<(slice + 1))
+    }
 }
