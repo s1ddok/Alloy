@@ -1,6 +1,6 @@
 //
 //  MTLBuffer+Extensions.swift
-//  Adjuster
+//  Alloy
 //
 //  Created by Andrey Volodin on 18/01/2019.
 //
