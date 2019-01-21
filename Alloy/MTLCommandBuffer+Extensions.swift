@@ -8,6 +8,19 @@
 import Metal
 
 public extension MTLCommandBuffer {
+
+    @available(iOS 10.3, tvOS 10.3, *)
+    @available(macOS, unavailable)
+    public var gpuExecutionTime: CFTimeInterval {
+        return self.gpuEndTime - self.gpuStartTime
+    }
+
+    @available(iOS 10.3, tvOS 10.3, *)
+    @available(macOS, unavailable)
+    public var kernelExecutionTime: CFTimeInterval {
+        return self.kernelEndTime - self.kernelStartTime
+    }
+
     @available(OSX 10.14, iOS 12.0, *)
     public func compute(dispatch: MTLDispatchType,
                         _ commands: (MTLComputeCommandEncoder) -> Void) {
