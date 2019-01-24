@@ -55,4 +55,27 @@ public extension MTLComputeCommandEncoder {
         self.setComputePipelineState(state)
         self.dispatchThreadgroups(count, threadsPerThreadgroup: tgSize)
     }
+
+    @available(iOS 11, tvOS 11, OSX 10.13, *)
+    public func dispatch1d(state: MTLComputePipelineState,
+                           exactly size: Int,
+                           threadgroupWidth: Int? = nil) {
+        let tgSize = MTLSize(width: threadgroupWidth ?? state.threadExecutionWidth,
+                             height: 1,
+                             depth: 1)
+
+        self.setComputePipelineState(state)
+        self.dispatchThreads(MTLSize(width: size, height: 1, depth: 1),
+                             threadsPerThreadgroup: tgSize)
+    }
+    
+    @available(iOS 11, tvOS 11, OSX 10.13, *)
+    public func dispatch2d(state: MTLComputePipelineState,
+                           exactly size: MTLSize,
+                           threadgroupSize: MTLSize? = nil) {
+        let tgSize = threadgroupSize ?? state.max2dThreadgroupSize
+        
+        self.setComputePipelineState(state)
+        self.dispatchThreads(size, threadsPerThreadgroup: tgSize)
+    }
 }
