@@ -8,7 +8,7 @@
 import Metal
 
 public extension MTLBuffer {
-    public func copy(to other: MTLBuffer, offset: Int = 0) {
+    func copy(to other: MTLBuffer, offset: Int = 0) {
         memcpy(other.contents() + offset, self.contents(), self.length)
     }
 }

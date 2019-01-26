@@ -13,12 +13,12 @@ import Accelerate
 
 public extension MTLTexture {
     #if os(iOS)
-    public typealias XImage = UIImage
+    typealias XImage = UIImage
     #elseif os(macOS)
-    public typealias XImage = NSImage
+    typealias XImage = NSImage
     #endif
     
-    public var cgImage: CGImage? {
+    var cgImage: CGImage? {
         if self.pixelFormat == .bgra8Unorm {
             // read texture as byte array
             let rowBytes = self.width * 4
@@ -66,7 +66,7 @@ public extension MTLTexture {
         }
     }
     
-    public var image: XImage? {
+    var image: XImage? {
         guard let cgImage = self.cgImage else { return nil }
         #if os(iOS)
         return UIImage(cgImage: cgImage)
@@ -77,18 +77,18 @@ public extension MTLTexture {
 }
 
 public extension MTLTexture {
-    public var region: MTLRegion {
+    var region: MTLRegion {
         return MTLRegion(origin: .zero,
                          size: self.size)
     }
     
-    public var size: MTLSize {
+    var size: MTLSize {
         return MTLSize(width: self.width,
                        height: self.height,
                        depth: self.depth)
     }
     
-    public var descriptor: MTLTextureDescriptor {
+    var descriptor: MTLTextureDescriptor {
         let retVal = MTLTextureDescriptor()
         
         retVal.width = width
@@ -109,8 +109,8 @@ public extension MTLTexture {
         return retVal
     }
     
-    public func matchingTexture(usage: MTLTextureUsage? = nil,
-                                storage: MTLStorageMode? = nil) -> MTLTexture? {
+    func matchingTexture(usage: MTLTextureUsage? = nil,
+                         storage: MTLStorageMode? = nil) -> MTLTexture? {
         let matchingDescriptor = self.descriptor
         
         if let u = usage {
@@ -123,7 +123,7 @@ public extension MTLTexture {
         return self.device.makeTexture(descriptor: matchingDescriptor)
     }
     
-    public func view(slice: Int, levels: Range<Int>? = nil) -> MTLTexture? {
+    func view(slice: Int, levels: Range<Int>? = nil) -> MTLTexture? {
         let sliceType: MTLTextureType
         
         switch self.textureType {

@@ -12,7 +12,7 @@ public enum MTLLibraryErrors: Error {
 }
 
 public extension MTLLibrary {
-    public func computePipelineState(function: String) throws -> MTLComputePipelineState {
+    func computePipelineState(function: String) throws -> MTLComputePipelineState {
         guard let function = self.makeFunction(name: function) else {
             throw MTLLibraryErrors.missingFunction
         }
@@ -21,8 +21,8 @@ public extension MTLLibrary {
     }
     
     @available(OSX 10.12, *)
-    public func computePipelineState(function: String,
-                                     constants: MTLFunctionConstantValues) throws -> MTLComputePipelineState {
+    func computePipelineState(function: String,
+                              constants: MTLFunctionConstantValues) throws -> MTLComputePipelineState {
         let function = try self.makeFunction(name: function,
                                              constantValues: constants)
         

@@ -8,31 +8,31 @@
 import Metal
 
 public extension MTLRegion {
-    public var minX: Int {
+    var minX: Int {
         return self.origin.x
     }
     
-    public var minY: Int {
+    var minY: Int {
         return self.origin.y
     }
     
-    public var minZ: Int {
+    var minZ: Int {
         return self.origin.z
     }
     
-    public var maxX: Int {
+    var maxX: Int {
         return self.origin.x + self.size.width
     }
     
-    public var maxY: Int {
+    var maxY: Int {
         return self.origin.y + self.size.height
     }
     
-    public var maxZ: Int {
+    var maxZ: Int {
         return self.origin.z + self.size.depth
     }
     
-    public func clamped(to region: MTLRegion) -> MTLRegion? {
+    func clamped(to region: MTLRegion) -> MTLRegion? {
         let ox = max(self.origin.x, region.origin.x)
         let oy = max(self.origin.y, region.origin.y)
         let oz = max(self.origin.z, region.origin.z)

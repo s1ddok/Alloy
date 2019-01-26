@@ -8,5 +8,5 @@
 import Metal
 
 public extension MTLClearColor {
-    public static let clear = MTLClearColor(red: 0, green: 0, blue: 0, alpha: 0)
+    static let clear = MTLClearColor(red: 0, green: 0, blue: 0, alpha: 0)
 }

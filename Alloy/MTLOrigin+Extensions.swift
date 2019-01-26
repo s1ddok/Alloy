@@ -8,9 +8,9 @@
 import Metal
 
 public extension MTLOrigin {
-    public static let zero = MTLOrigin(x: 0, y: 0, z: 0)
+    static let zero = MTLOrigin(x: 0, y: 0, z: 0)
     
-    public func clamped(to size: MTLSize) -> MTLOrigin {
+    func clamped(to size: MTLSize) -> MTLOrigin {
         return MTLOrigin(x: min(max(self.x, 0), size.width),
                          y: min(max(self.y, 0), size.height),
                          z: min(max(self.z, 0), size.depth))

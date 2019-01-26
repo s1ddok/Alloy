@@ -9,29 +9,29 @@ import Metal
 
 public extension MTLComputeCommandEncoder {
     
-    public func set<T>(_ value: T, at index: Int) {
+    func set<T>(_ value: T, at index: Int) {
         var t = value
         self.setBytes(&t, length: MemoryLayout<T>.stride, index: index)
     }
     
-    public func set<T>(_ value: T, at index: Int) where T: Collection {
+    func set<T>(_ value: T, at index: Int) where T: Collection {
         var t = value
         self.setBytes(&t, length: MemoryLayout<T>.stride * value.count, index: index)
     }
     
-    public func set(textures: [MTLTexture?], startingAt startIndex: Int = 0) {
+    func set(textures: [MTLTexture?], startingAt startIndex: Int = 0) {
         self.setTextures(textures, range: startIndex..<(startIndex + textures.count))
     }
     
-    public func set(buffers: [MTLBuffer?], offsets: [Int]? = nil, startingAt startIndex: Int = 0) {
+    func set(buffers: [MTLBuffer?], offsets: [Int]? = nil, startingAt startIndex: Int = 0) {
         self.setBuffers(buffers,
                         offsets: offsets ?? buffers.map { _ in 0 },
                         range: startIndex..<(startIndex + buffers.count))
     }
     
-    public func dispatch1d(state: MTLComputePipelineState,
-                           covering size: Int,
-                           threadgroupWidth: Int? = nil) {
+    func dispatch1d(state: MTLComputePipelineState,
+                    covering size: Int,
+                    threadgroupWidth: Int? = nil) {
         let tgWidth = threadgroupWidth ?? state.threadExecutionWidth
         let tgSize = MTLSize(width: tgWidth, height: 1, depth: 1)
         
@@ -43,9 +43,9 @@ public extension MTLComputeCommandEncoder {
         self.dispatchThreadgroups(count, threadsPerThreadgroup: tgSize)
     }
     
-    public func dispatch2d(state: MTLComputePipelineState,
-                           covering size: MTLSize,
-                           threadgroupSize: MTLSize? = nil) {
+    func dispatch2d(state: MTLComputePipelineState,
+                    covering size: MTLSize,
+                    threadgroupSize: MTLSize? = nil) {
         let tgSize = threadgroupSize ?? state.max2dThreadgroupSize
         
         let count = MTLSize(width: (size.width + tgSize.width - 1) / tgSize.width,
@@ -57,9 +57,9 @@ public extension MTLComputeCommandEncoder {
     }
 
     @available(iOS 11, tvOS 11, OSX 10.13, *)
-    public func dispatch1d(state: MTLComputePipelineState,
-                           exactly size: Int,
-                           threadgroupWidth: Int? = nil) {
+    func dispatch1d(state: MTLComputePipelineState,
+                    exactly size: Int,
+                    threadgroupWidth: Int? = nil) {
         let tgSize = MTLSize(width: threadgroupWidth ?? state.threadExecutionWidth,
                              height: 1,
                              depth: 1)
@@ -70,9 +70,9 @@ public extension MTLComputeCommandEncoder {
     }
     
     @available(iOS 11, tvOS 11, OSX 10.13, *)
-    public func dispatch2d(state: MTLComputePipelineState,
-                           exactly size: MTLSize,
-                           threadgroupSize: MTLSize? = nil) {
+    func dispatch2d(state: MTLComputePipelineState,
+                    exactly size: MTLSize,
+                    threadgroupSize: MTLSize? = nil) {
         let tgSize = threadgroupSize ?? state.max2dThreadgroupSize
         
         self.setComputePipelineState(state)

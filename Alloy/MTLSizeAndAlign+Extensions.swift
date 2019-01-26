@@ -19,7 +19,7 @@ func alignUp(size: Int, align: Int) -> Int {
 }
 
 public extension MTLSizeAndAlign {
-    public func combined(with sizeAndAlign: MTLSizeAndAlign) -> MTLSizeAndAlign {
+    func combined(with sizeAndAlign: MTLSizeAndAlign) -> MTLSizeAndAlign {
         let requiredAlignment = max(self.align, sizeAndAlign.align)
         let selfAligned = alignUp(size: self.size, align: requiredAlignment)
         let otherAligned = alignUp(size: sizeAndAlign.size, align: requiredAlignment)
@@ -30,7 +30,7 @@ public extension MTLSizeAndAlign {
 
 public extension Sequence where Element == MTLTextureDescriptor {
     @available(OSX 10.13, *)
-    public func heapSizeAndAlignCombined(on device: MTLDevice) -> MTLSizeAndAlign {
+    func heapSizeAndAlignCombined(on device: MTLDevice) -> MTLSizeAndAlign {
         return self.reduce(MTLSizeAndAlign(size: 0, align: 0)) {
             $0.combined(with: device.heapTextureSizeAndAlign(descriptor: $1))
         }
@@ -38,11 +38,11 @@ public extension Sequence where Element == MTLTextureDescriptor {
 }
 
 public extension MTLSize {
-    public func clamped(to size: MTLSize) -> MTLSize {
+    func clamped(to size: MTLSize) -> MTLSize {
         return MTLSize(width:  min(max(self.width, 0), size.width),
                        height: min(max(self.height, 0), size.height),
                        depth:  min(max(self.depth, 0), size.depth))
     }
     
-    public static let zero = MTLSize(width: 0, height: 0, depth: 0)
+    static let zero = MTLSize(width: 0, height: 0, depth: 0)
 }
