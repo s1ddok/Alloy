@@ -1,5 +1,5 @@
 framework module Alloy {
-  umbrella header "Alloy-umbrella.h"
+  umbrella header "Alloy-macOS-umbrella.h"
 
   export *
   module * { export * }
