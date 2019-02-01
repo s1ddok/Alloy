@@ -27,6 +27,10 @@ public final class Metal {
 }
 
 public final class MTLContext {
+    public enum Errors: Error {
+        case commandBufferCreationFailed
+    }
+
     public let device: MTLDevice
     public let commandQueue: MTLCommandQueue
     public let standardLibrary: MTLLibrary?
@@ -86,19 +90,21 @@ public final class MTLContext {
         self.libraryCache = [:]
     }
     
-    public func scheduleAndWait(_ bufferEncodings: (MTLCommandBuffer) throws -> Void) rethrows {
+    public func scheduleAndWait<T>(_ bufferEncodings: (MTLCommandBuffer) throws -> T) throws -> T {
         guard let commandBuffer = self.commandQueue.makeCommandBuffer()
-        else { return }
+        else { throw Errors.commandBufferCreationFailed }
         
-        try bufferEncodings(commandBuffer)
+        let retVal = try bufferEncodings(commandBuffer)
         
         commandBuffer.commit()
         commandBuffer.waitUntilCompleted()
+
+        return retVal
     }
     
-    public func schedule(_ bufferEncodings: (MTLCommandBuffer) throws -> Void) rethrows {
+    public func schedule(_ bufferEncodings: (MTLCommandBuffer) throws -> Void) throws {
         guard let commandBuffer = self.commandQueue.makeCommandBuffer()
-        else { return }
+        else { throw Errors.commandBufferCreationFailed }
         
         try bufferEncodings(commandBuffer)
         
