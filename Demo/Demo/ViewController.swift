@@ -38,7 +38,6 @@ class ViewController: NSViewController {
             let texture = context.texture(from: cgImage,
                                           usage: [.shaderRead, .shaderWrite])
         else { return }
-        
 
         self.context.scheduleAndWait { buffer in
             self.brightnessEncoder.intensity = sender.floatValue

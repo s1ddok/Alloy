@@ -21,8 +21,8 @@ class AlloyTests: XCTestCase {
     var evenOptimizedProcessState: MTLComputePipelineState! = nil
     var exactProcessState: MTLComputePipelineState! = nil
 
-    var textureBaseWidth = 1024
-    var textureBaseHeight = 1024
+    var textureBaseWidth = 1_024
+    var textureBaseHeight = 1_024
     var gpuIterations = 4
 
     override func setUp() {
@@ -109,11 +109,11 @@ class AlloyTests: XCTestCase {
 
         for wd in 0..<maximumThreadgroupSize.width {
             for ht in 0..<maximumThreadgroupSize.height {
-                var texture = self.context.texture(width:  self.textureBaseWidth + wd,
+                var texture = self.context.texture(width: self.textureBaseWidth + wd,
                                                    height: self.textureBaseHeight + ht,
                                                    pixelFormat: .rgba8Unorm)!
 
-                var outputTexture = self.context.texture(width:  self.textureBaseWidth + wd,
+                var outputTexture = self.context.texture(width: self.textureBaseWidth + wd,
                                                          height: self.textureBaseHeight + ht,
                                                          pixelFormat: .rgba8Unorm)!
 

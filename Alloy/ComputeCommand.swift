@@ -86,7 +86,7 @@ public final class ComputeCommand {
             && input.count > ComputeCommand.bufferOffsetPostFix.count {
                 let bufferName = String(input.dropLast(ComputeCommand.bufferOffsetPostFix.count))
                 // if there are not such buffer, user tries to assign something else
-                if let _ = self.bufferArguments[bufferName] {
+                if self.bufferArguments[bufferName] != nil {
                     self.bufferOffsetValues[bufferName] = newValue
                     return
                 }
@@ -99,7 +99,7 @@ public final class ComputeCommand {
                 
                 let threadgroupArgumentName = String(input.dropLast(ComputeCommand.threadgroupMemoryOffsetPostFix.count))
                 // if there are not such threadgroup memory, user tries to assign something else
-                if let _ = self.threadgroupMemoryArguments[threadgroupArgumentName] {
+                if self.threadgroupMemoryArguments[threadgroupArgumentName] != nil {
                     self.threadgroupMemoryLengths[threadgroupArgumentName] = newValue
                     return
                 }

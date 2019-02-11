@@ -47,9 +47,9 @@ public extension MTLRegion {
         return MTLRegion(origin: MTLOrigin(x: ox,
                                            y: oy,
                                            z: oz),
-                         size: MTLSize(width:  maxX - ox,
+                         size: MTLSize(width: maxX - ox,
                                        height: maxY - oy,
-                                       depth:  maxZ - oz))
+                                       depth: maxZ - oz))
         
     }
 }
