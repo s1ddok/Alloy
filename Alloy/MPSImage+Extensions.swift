@@ -10,29 +10,37 @@ import MetalPerformanceShaders
 
 /* Utility functions for converting of MPSImages to floating point arrays. */
 
-extension MPSImage {
+public extension MPSImage {
 
     /// Utility function for converting of MPSImages to floating point arrays.
     ///
     /// - Returns: Array of floats containing each pixel of MPSImage's texture.
-    public func toFloatArray() -> [Float] {
+    func toFloatArray() -> [Float]? {
         switch pixelFormat {
         case .r16Float, .rg16Float, .rgba16Float: return fromFloat16()
         case .r32Float, .rg32Float, .rgba32Float: return fromFloat32()
-        default: fatalError("Pixel format \(pixelFormat) not supported")
+        default: return nil
         }
     }
 
-    private func fromFloat16() -> [Float] {
-        var outputFloat16 = convert(initial: Float16(0))
+    private func fromFloat16() -> [Float]? {
+        guard
+            var outputFloat16 = convert(initial: Float16(0))
+        else { return nil }
         return float16to32(&outputFloat16, count: outputFloat16.count)
     }
 
-    private func fromFloat32() -> [Float] {
+    private func fromFloat32() -> [Float]? {
         return convert(initial: Float(0))
     }
 
-    private func convert<T>(initial: T) -> [T] {
+    private func convert<T>(initial: T) -> [T]? {
+        #if os(iOS) || os(tvOS)
+        guard self.texture.storageMode == .shared else { return nil }
+        #elseif os(macOS)
+        guard self.texture.storageMode == .shared || self.texture.storageMode == .managed else { return nil }
+        #endif
+
         let numSlices = (featureChannels + 3) / 4
 
         /// If the number of channels is not a multiple of 4, we may need to add
@@ -52,7 +60,7 @@ extension MPSImage {
         let region = MTLRegion(origin: MTLOrigin(x: 0, y: 0, z: 0),
                                size: MTLSize(width: width, height: height, depth: 1))
 
-        for i in 0 ..< numSlices*numberOfImages {
+        for i in 0 ..< numSlices * numberOfImages {
             texture.getBytes(&(output[width * height * numComponents * i]),
                              bytesPerRow: width * numComponents * MemoryLayout<T>.size,
                              bytesPerImage: 0,

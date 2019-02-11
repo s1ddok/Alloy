@@ -147,7 +147,7 @@ public extension MTLTexture {
 
 /* Utility functions for converting of MTLTextures to floating point arrays. */
 
-extension MTLTexture {
+public extension MTLTexture {
 
     /// Creates a new array of `Float`s and copies the texture's pixels into it.
     ///
@@ -156,7 +156,7 @@ extension MTLTexture {
     ///   - height: Height of the texture.
     ///   - featureChannels: The number of color components per pixel: must be 1, 2, or 4.
     /// - Returns: Array of floats containing each pixel of the texture.
-    public func toFloatArray(width: Int, height: Int, featureChannels: Int) -> [Float] {
+    func toFloatArray(width: Int, height: Int, featureChannels: Int) throws -> [Float]? {
         return toArray(width: width, height: height,
                        featureChannels: featureChannels, initial: Float(0))
     }
@@ -168,7 +168,7 @@ extension MTLTexture {
     ///   - height: Height of the texture.
     ///   - featureChannels: The number of color components per pixel: must be 1, 2, or 4.
     /// - Returns: Array of floats containing each pixel of the texture.
-    public func toFloat16Array(width: Int, height: Int, featureChannels: Int) -> [Float16] {
+    func toFloat16Array(width: Int, height: Int, featureChannels: Int) throws -> [Float16]? {
         return toArray(width: width, height: height,
                        featureChannels: featureChannels, initial: Float16(0))
     }
@@ -180,7 +180,7 @@ extension MTLTexture {
     ///   - height: Height of the texture.
     ///   - featureChannels: The number of color components per pixel: must be 1, 2, or 4.
     /// - Returns: Array of floats containing each pixel of the texture.
-    public func toUInt8Array(width: Int, height: Int, featureChannels: Int) -> [UInt8] {
+    func toUInt8Array(width: Int, height: Int, featureChannels: Int) -> [UInt8]? {
         return toArray(width: width, height: height,
                        featureChannels: featureChannels, initial: UInt8(0))
     }
@@ -196,8 +196,14 @@ extension MTLTexture {
     ///     since `T` could be anything and may not have an init that takes a literal
     ///     value.
     /// - Returns: Swift array containing texture's pixel data.
-    func toArray<T>(width: Int, height: Int, featureChannels: Int, initial: T) -> [T] {
-        assert(featureChannels != 3 && featureChannels <= 4, "channels must be 1, 2, or 4")
+
+    private func toArray<T>(width: Int, height: Int, featureChannels: Int, initial: T) -> [T]? {
+        #if os(iOS) || os(tvOS)
+        guard self.storageMode == .shared else { return nil }
+        #elseif os(macOS)
+        guard self.storageMode == .shared || self.storageMode == .managed else { return nil }
+        #endif
+        guard featureChannels != 3 && featureChannels <= 4 else { return nil }
 
         var bytes = [T](repeating: initial, count: width * height * featureChannels)
         let region = MTLRegionMake2D(0, 0, width, height)
