@@ -42,5 +42,5 @@ final public class TextureCopy {
         }
     }
 
-    public static let functionName = "textureCopy"
+    private static let functionName = "textureCopy"
 }
