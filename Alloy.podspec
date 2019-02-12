@@ -9,7 +9,17 @@ Pod::Spec.new do |s|
   s.source                = { :git => 'https://github.com/s1ddok/Alloy.git', :tag => s.version.to_s }
   s.ios.deployment_target = '11.0'
   s.osx.deployment_target = '10.11'
-  s.source_files          = 'Alloy/**/*.{swift}'
-  s.frameworks            = 'Metal', 'CoreVideo'
   s.swift_version         = '4.2'
+  s.default_subspec       = 'Core'
+
+  s.subspec 'Core' do |core|
+    core.source_files       = 'Alloy/*.{swift}'
+    core.frameworks         = 'Metal', 'CoreVideo'
+  end
+
+  s.subspec 'Shaders' do |shaders|
+    shaders.source_files       = 'Alloy/Shaders/*.{metal}', 'Alloy/Encoders/*.{swift}'
+    shaders.frameworks         = 'Metal', 'CoreVideo'
+    shaders.dependency 'Alloy/Core'
+  end
 end
