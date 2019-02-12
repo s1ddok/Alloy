@@ -17,15 +17,10 @@ public extension MPSImage {
     /// - Returns: Array of floats containing each pixel of MPSImage's texture.
     func toFloatArray() -> [Float]? {
         switch pixelFormat {
-        case .r16Unorm, .r16Snorm, .r16Uint, .r16Sint, .r16Float,
-             .rg16Unorm, .rg16Snorm, .rg16Float,
-             .rgba16Unorm, .rgba16Snorm, .rgba16Uint, .rgba16Sint, .rgba16Float:
+        case .r16Float, .rg16Float, .rgba16Float:
             guard var outputFloat16 = convert(initial: Float16(0)) else { return nil }
             return float16to32(&outputFloat16, count: outputFloat16.count)
-        case .r32Uint, .r32Sint, .r32Float,
-             .rg32Uint, .rg32Sint, .rg32Float,
-             .rgba32Uint, .rgba32Sint, .rgba32Float,
-             .depth32Float:
+        case .r32Float, .rg32Float, .rgba32Float, .depth32Float:
             return convert(initial: Float(0))
         case .invalid: return nil
         default: return nil
