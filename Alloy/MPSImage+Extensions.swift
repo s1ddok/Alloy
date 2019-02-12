@@ -21,7 +21,7 @@ public extension MPSImage {
             guard var outputFloat16 = convert(initial: Float16(0)) else { return nil }
             return float16to32(&outputFloat16, count: outputFloat16.count)
         case .r32Float, .rg32Float, .rgba32Float, .depth32Float:
-            return convert(initial: Float(0))
+            return self.convert(initial: Float(0))
         case .invalid: return nil
         default: return nil
         }
@@ -55,11 +55,11 @@ public extension MPSImage {
 
         for i in 0 ..< numSlices * self.numberOfImages {
             self.texture.getBytes(&(output[self.width * self.height * numComponents * i]),
-                             bytesPerRow: self.width * numComponents * MemoryLayout<T>.self.size,
-                             bytesPerImage: 0,
-                             from: region,
-                             mipmapLevel: 0,
-                             slice: i)
+                                  bytesPerRow: self.width * numComponents * MemoryLayout<T>.self.size,
+                                  bytesPerImage: 0,
+                                  from: region,
+                                  mipmapLevel: 0,
+                                  slice: i)
         }
         return output
     }
