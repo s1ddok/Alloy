@@ -157,7 +157,7 @@ public extension MTLTexture {
     ///   - featureChannels: The number of color components per pixel: must be 1, 2, or 4.
     /// - Returns: Array of floats containing each pixel of the texture.
     func toFloatArray(width: Int, height: Int, featureChannels: Int) -> [Float]? {
-        return toArray(width: width, height: height,
+        return self.toArray(width: width, height: height,
                        featureChannels: featureChannels, initial: Float(0))
     }
 
@@ -169,7 +169,7 @@ public extension MTLTexture {
     ///   - featureChannels: The number of color components per pixel: must be 1, 2, or 4.
     /// - Returns: Array of floats containing each pixel of the texture.
     func toFloat16Array(width: Int, height: Int, featureChannels: Int) -> [Float16]? {
-        return toArray(width: width, height: height,
+        return self.toArray(width: width, height: height,
                        featureChannels: featureChannels, initial: Float16(0))
     }
 
@@ -181,7 +181,7 @@ public extension MTLTexture {
     ///   - featureChannels: The number of color components per pixel: must be 1, 2, or 4.
     /// - Returns: Array of floats containing each pixel of the texture.
     func toUInt8Array(width: Int, height: Int, featureChannels: Int) -> [UInt8]? {
-        return toArray(width: width, height: height,
+        return self.toArray(width: width, height: height,
                        featureChannels: featureChannels, initial: UInt8(0))
     }
 
@@ -207,7 +207,7 @@ public extension MTLTexture {
 
         var bytes = [T](repeating: initial, count: width * height * featureChannels)
         let region = MTLRegionMake2D(0, 0, width, height)
-        getBytes(&bytes, bytesPerRow: width * featureChannels * MemoryLayout<T>.stride,
+        self.getBytes(&bytes, bytesPerRow: width * featureChannels * MemoryLayout<T>.stride,
                  from: region, mipmapLevel: 0)
         return bytes
     }
