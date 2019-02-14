@@ -175,7 +175,3 @@ kernel void mean(texture2d<half, access::sample> input_texture [[ texture(0) ]],
     }
 
 }
-
-
-
-kernel void dummy() {}
