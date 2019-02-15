@@ -11,7 +11,7 @@ import Alloy
 public class BrightnessEncoder {
     public let context: MTLContext
     fileprivate let pipelineState: MTLComputePipelineState
-    
+
     /**
      * This variable controls the brightness factor. Should be in range of -1.0...1.0
      */
