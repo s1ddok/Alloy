@@ -40,7 +40,7 @@ class ViewController: NSViewController {
         else { return }
         
 
-        self.context.scheduleAndWait { buffer in
+        try? self.context.scheduleAndWait { buffer in
             self.brightnessEncoder.intensity = sender.floatValue
             self.brightnessEncoder.encode(input: texture,
                                           in: buffer)
