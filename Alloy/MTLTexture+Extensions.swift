@@ -12,57 +12,101 @@ import GLKit
 import Accelerate
 
 public extension MTLTexture {
-    #if os(iOS)
+    #if os(iOS) || os(tvOS)
     typealias XImage = UIImage
     #elseif os(macOS)
     typealias XImage = NSImage
     #endif
     
     var cgImage: CGImage? {
-        if self.pixelFormat == .bgra8Unorm {
+        #if os(macOS)
+        guard self.storageMode == .managed || self.storageMode == .shared else {
+            return nil
+        }
+        #endif
+
+        #if os(iOS) || os(tvOS)
+        guard self.storageMode == .shared else {
+            return nil
+        }
+        #endif
+
+        switch self.pixelFormat {
+        case .a8Unorm, .r8Unorm, .r8Uint:
+            let rowBytes = self.width
+            let length = rowBytes * self.height
+
+            let rgbaBytes = [UInt8](repeating: 0, count: length)
+            self.getBytes(UnsafeMutableRawPointer(mutating: rgbaBytes),
+                                                  bytesPerRow: rowBytes,
+                                                  from: self.region,
+                                                  mipmapLevel: 0)
+
+            let colorScape = CGColorSpaceCreateDeviceGray()
+            let bitmapInfo = CGBitmapInfo(rawValue: self.pixelFormat == .a8Unorm
+                                                    ? CGImageAlphaInfo.alphaOnly.rawValue
+                                                    : CGImageAlphaInfo.none.rawValue)
+            guard let data = CFDataCreate(nil, rgbaBytes, length),
+                  let dataProvider = CGDataProvider(data: data)
+            else { return nil }
+            let cgImage = CGImage(width: self.width, height: self.height, bitsPerComponent: 8, bitsPerPixel: 8, bytesPerRow: rowBytes,
+                                  space: colorScape, bitmapInfo: bitmapInfo, provider: dataProvider,
+                                  decode: nil, shouldInterpolate: true, intent: .defaultIntent)
+            return cgImage
+        case .bgra8Unorm:
             // read texture as byte array
             let rowBytes = self.width * 4
             let length = rowBytes * self.height
             let bgraBytes = [UInt8](repeating: 0, count: length)
-            let region = MTLRegionMake2D(0, 0, self.width, self.height)
-            self.getBytes(UnsafeMutableRawPointer(mutating: bgraBytes), bytesPerRow: rowBytes, from: region, mipmapLevel: 0)
-            
+            self.getBytes(UnsafeMutableRawPointer(mutating: bgraBytes),
+                                                  bytesPerRow: rowBytes,
+                                                  from: self.region,
+                                                  mipmapLevel: 0)
+
             // use Accelerate framework to convert from BGRA to RGBA
             var bgraBuffer = vImage_Buffer(data: UnsafeMutableRawPointer(mutating: bgraBytes),
-                                           height: vImagePixelCount(self.height), width: vImagePixelCount(self.width), rowBytes: rowBytes)
+                                           height: vImagePixelCount(self.height),
+                                           width: vImagePixelCount(self.width),
+                                           rowBytes: rowBytes)
             let rgbaBytes = [UInt8](repeating: 0, count: length)
             var rgbaBuffer = vImage_Buffer(data: UnsafeMutableRawPointer(mutating: rgbaBytes),
-                                           height: vImagePixelCount(self.height), width: vImagePixelCount(self.width), rowBytes: rowBytes)
+                                           height: vImagePixelCount(self.height),
+                                           width: vImagePixelCount(self.width),
+                                           rowBytes: rowBytes)
             let map: [UInt8] = [2, 1, 0, 3]
             vImagePermuteChannels_ARGB8888(&bgraBuffer, &rgbaBuffer, map, 0)
-            
+
             // create CGImage with RGBA Flipped Bytes
             let colorScape = CGColorSpaceCreateDeviceRGB()
             let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
-            guard let data = CFDataCreate(nil, rgbaBytes, length) else { return nil }
-            guard let dataProvider = CGDataProvider(data: data) else { return nil }
+            guard let data = CFDataCreate(nil, rgbaBytes, length),
+                  let dataProvider = CGDataProvider(data: data)
+            else { return nil }
             let cgImage = CGImage(width: self.width, height: self.height, bitsPerComponent: 8, bitsPerPixel: 32, bytesPerRow: rowBytes,
                                   space: colorScape, bitmapInfo: bitmapInfo, provider: dataProvider,
                                   decode: nil, shouldInterpolate: true, intent: .defaultIntent)
+
             return cgImage
-            
-        } else if self.pixelFormat == .rgba8Unorm {
+        case .rgba8Unorm:
             let rowBytes = self.width * 4
             let length = rowBytes * self.height
-            
+
             let rgbaBytes = [UInt8](repeating: 0, count: length)
-            self.getBytes(UnsafeMutableRawPointer(mutating: rgbaBytes), bytesPerRow: rowBytes, from: region, mipmapLevel: 0)
-            // create CGImage with RGBA Flipped Bytes
+            self.getBytes(UnsafeMutableRawPointer(mutating: rgbaBytes),
+                          bytesPerRow: rowBytes,
+                          from: self.region,
+                          mipmapLevel: 0)
+
             let colorScape = CGColorSpaceCreateDeviceRGB()
             let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
-            guard let data = CFDataCreate(nil, rgbaBytes, length) else { return nil }
-            guard let dataProvider = CGDataProvider(data: data) else { return nil }
+            guard let data = CFDataCreate(nil, rgbaBytes, length),
+                  let dataProvider = CGDataProvider(data: data)
+            else { return nil }
             let cgImage = CGImage(width: self.width, height: self.height, bitsPerComponent: 8, bitsPerPixel: 32, bytesPerRow: rowBytes,
                                   space: colorScape, bitmapInfo: bitmapInfo, provider: dataProvider,
                                   decode: nil, shouldInterpolate: true, intent: .defaultIntent)
             return cgImage
-        } else {
-            return nil
+        default: return nil
         }
     }
     
