@@ -8,7 +8,7 @@
 import Metal
 import simd
 
-final public class MaxEncoder {
+public class MaxEncoder {
 
     enum Errors: Error {
         case functionCreationFailed

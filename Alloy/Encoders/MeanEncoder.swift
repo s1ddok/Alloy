@@ -8,7 +8,7 @@
 import Metal
 import simd
 
-final public class MeanEncoder {
+public class MeanEncoder {
 
     enum Errors: Error {
         case functionCreationFailed

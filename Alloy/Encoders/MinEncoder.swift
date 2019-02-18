@@ -8,7 +8,7 @@
 import Metal
 import simd
 
-final public class MinEncoder {
+public class MinEncoder {
 
     enum Errors: Error {
         case functionCreationFailed
