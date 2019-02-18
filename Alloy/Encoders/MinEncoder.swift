@@ -43,9 +43,7 @@ public class MinEncoder {
                           offset: 0,
                           index: 1)
 
-        let threadgroupWidth = self.pipelineState.threadExecutionWidth
-        let threadgroupHeight = self.pipelineState.maxTotalThreadsPerThreadgroup / threadgroupWidth
-        let threadsPerThreadgroup = MTLSizeMake(threadgroupWidth, threadgroupHeight, 1)
+        let threadsPerThreadgroup = self.pipelineState.max2dThreadgroupSize
 
         // We have to dispatch only one threadgroup so all threads can share a memory
         let threadgroupsPerGrid = MTLSize(width: 1, height: 1, depth: 1)
