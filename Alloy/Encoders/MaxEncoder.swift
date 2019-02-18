@@ -16,18 +16,13 @@ public class MaxEncoder {
         case invalidBufferStorageMode
     }
 
-    let device: MTLDevice
-    let library: MTLLibrary
     let pipelineState: MTLComputePipelineState
 
     public init(library: MTLLibrary) throws {
-        self.device = library.device
-        self.library = library
-
         guard
             let function = library.makeFunction(name: MaxEncoder.functionName)
         else { throw Errors.functionCreationFailed }
-        let pipelineState = try device.makeComputePipelineState(function: function)
+        let pipelineState = try library.device.makeComputePipelineState(function: function)
         self.pipelineState = pipelineState
     }
 
