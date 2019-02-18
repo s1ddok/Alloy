@@ -30,32 +30,28 @@ public class MaxEncoder {
                        blockSize: BlockSize,
                        resultBuffer: MTLBuffer,
                        in commandBuffer: MTLCommandBuffer) throws {
-        guard
-            let encoder = commandBuffer.makeComputeCommandEncoder()
-        else { throw Errors.encoderCreationFailed }
-
         guard resultBuffer.storageMode == .shared
         else { throw Errors.invalidBufferStorageMode }
 
-        encoder.setTexture(inputTexture, index: 0)
-        encoder.set(blockSize, at: 0)
-        encoder.setBuffer(resultBuffer,
-                          offset: 0,
-                          index: 1)
+        commandBuffer.compute { (encoder) in
+            encoder.setTexture(inputTexture, index: 0)
+            encoder.set(blockSize, at: 0)
+            encoder.setBuffer(resultBuffer,
+                              offset: 0,
+                              index: 1)
 
-        let threadsPerThreadgroup = self.pipelineState.max2dThreadgroupSize
+            let threadsPerThreadgroup = self.pipelineState.max2dThreadgroupSize
 
-        // We have to dispatch only one threadgroup so all threads can share a memory
-        let threadgroupsPerGrid = MTLSize(width: 1, height: 1, depth: 1)
+            // We have to dispatch only one threadgroup so all threads can share a memory
+            let threadgroupsPerGrid = MTLSize(width: 1, height: 1, depth: 1)
 
-        encoder.setThreadgroupMemoryLength(threadsPerThreadgroup.width * threadsPerThreadgroup.height * 4 * MemoryLayout<Float16>.stride,
-                                           index: 0)
+            encoder.setThreadgroupMemoryLength(threadsPerThreadgroup.width * threadsPerThreadgroup.height * 4 * MemoryLayout<Float16>.stride,
+                                               index: 0)
 
-        encoder.setComputePipelineState(self.pipelineState)
-        encoder.dispatchThreadgroups(threadgroupsPerGrid,
-                                     threadsPerThreadgroup: threadsPerThreadgroup)
-
-        encoder.endEncoding()
+            encoder.setComputePipelineState(self.pipelineState)
+            encoder.dispatchThreadgroups(threadgroupsPerGrid,
+                                         threadsPerThreadgroup: threadsPerThreadgroup)
+        }
     }
 
     public static let functionName = "max"
