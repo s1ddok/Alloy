@@ -44,28 +44,25 @@ kernel void max(texture2d<half, access::sample> input_texture [[ texture(0) ]],
                 const ushort2 thread_position_in_grid [[ thread_position_in_grid ]],
                 const ushort2 threads_per_threadgroup [[ threads_per_threadgroup ]]) {
 
-    const half input_texture_width = input_texture.get_width();
-    const half input_texture_height = input_texture.get_height();
+    const ushort input_texture_width = input_texture.get_width();
+    const ushort input_texture_height = input_texture.get_height();
 
     const ushort2 block_size_coef = ushort2(block_size.width, block_size.height);
-    float2 read_position = float2(thread_position_in_grid * block_size_coef);
+    const ushort2 block_start = thread_position_in_grid * block_size_coef;
 
-    constexpr sampler s(coord::pixel,
-                        address::clamp_to_zero,
-                        filter::nearest);
-
-    half4 max_value_in_block = input_texture.sample(s, read_position);
+    half4 max_value_in_block = input_texture.read(block_start);
 
     for (ushort x = 0; x < block_size.width; x++) {
         for (ushort y = 1; y < block_size.height; y++) {
+
+            const ushort2 read_position = block_start + ushort2(x, y);
 
             // Prevent going out of texture.
             if (read_position.x >= input_texture_width || read_position.y >= input_texture_height) {
                 break;
             }
 
-            read_position = float2(thread_position_in_grid * block_size_coef + ushort2(x, y));
-            const half4 current_value = input_texture.sample(s, read_position);
+            const half4 current_value = input_texture.read(read_position);
             max_value_in_block = max(max_value_in_block, current_value);
         }
     }
@@ -96,28 +93,25 @@ kernel void min(texture2d<half, access::sample> input_texture [[ texture(0) ]],
                 const ushort2 thread_position_in_grid [[ thread_position_in_grid ]],
                 const ushort2 threads_per_threadgroup [[ threads_per_threadgroup ]]) {
 
-    const half input_texture_width = input_texture.get_width();
-    const half input_texture_height = input_texture.get_height();
+    const ushort input_texture_width = input_texture.get_width();
+    const ushort input_texture_height = input_texture.get_height();
 
     const ushort2 block_size_coef = ushort2(block_size.width, block_size.height);
-    float2 read_position = float2(thread_position_in_grid * block_size_coef);
+    const ushort2 block_start = thread_position_in_grid * block_size_coef;
 
-    constexpr sampler s(coord::pixel,
-                        address::clamp_to_zero,
-                        filter::nearest);
-
-    half4 min_value_in_block = input_texture.sample(s, read_position);
+    half4 min_value_in_block = input_texture.read(block_start);
 
     for (ushort x = 0; x < block_size.width; x++) {
         for (ushort y = 1; y < block_size.height; y++) {
+
+            const ushort2 read_position = block_start + ushort2(x, y);
 
             // Prevent going out of texture.
             if (read_position.x >= input_texture_width || read_position.y >= input_texture_height) {
                 break;
             }
 
-            read_position = float2(thread_position_in_grid * block_size_coef + ushort2(x, y));
-            const half4 current_value = input_texture.sample(s, read_position);
+            const half4 current_value = input_texture.read(read_position);
             min_value_in_block = min(min_value_in_block, current_value);
         }
     }
@@ -148,28 +142,25 @@ kernel void mean(texture2d<half, access::sample> input_texture [[ texture(0) ]],
                  const ushort2 thread_position_in_grid [[ thread_position_in_grid ]],
                  const ushort2 threads_per_threadgroup [[ threads_per_threadgroup ]]) {
 
-    const half input_texture_width = input_texture.get_width();
-    const half input_texture_height = input_texture.get_height();
+    const ushort input_texture_width = input_texture.get_width();
+    const ushort input_texture_height = input_texture.get_height();
 
     const ushort2 block_size_coef = ushort2(block_size.width, block_size.height);
-    float2 read_position = float2(thread_position_in_grid * block_size_coef);
+    const ushort2 block_start = thread_position_in_grid * block_size_coef;
 
-    constexpr sampler s(coord::pixel,
-                        address::clamp_to_zero,
-                        filter::nearest);
-
-    half4 total_sum_in_block = input_texture.sample(s, read_position);
+    half4 total_sum_in_block = input_texture.read(block_start);
 
     for (ushort x = 0; x < block_size.width; x++) {
         for (ushort y = 1; y < block_size.height; y++) {
+
+            const ushort2 read_position = block_start + ushort2(x, y);
 
             // Prevent going out of texture.
             if (read_position.x >= input_texture_width || read_position.y >= input_texture_height) {
                 break;
             }
 
-            read_position = float2(thread_position_in_grid * block_size_coef + ushort2(x, y));
-            const half4 current_value = input_texture.sample(s, read_position);
+            const half4 current_value = input_texture.read(read_position);
             total_sum_in_block += current_value;
         }
     }
