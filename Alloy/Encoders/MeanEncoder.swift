@@ -23,16 +23,20 @@ public class MeanEncoder {
     }
 
     public func encode(inputTexture: MTLTexture,
-                       blockSize: BlockSize,
                        resultBuffer: MTLBuffer,
                        in commandBuffer: MTLCommandBuffer) throws {
+        let threadgroupSize = MTLSize(width: 8, height: 8, depth: 1).clamped(to: inputTexture.size)
+        let blockSize = MTLSize(width: (inputTexture.width + threadgroupSize.width - 1) / threadgroupSize.width,
+                                height: (inputTexture.height + threadgroupSize.height - 1) / threadgroupSize.height,
+                                depth: 1)
+
         commandBuffer.compute { (encoder) in
             encoder.setTexture(inputTexture, index: 0)
             encoder.set(blockSize, at: 0)
             encoder.setBuffer(resultBuffer,
                               offset: 0,
                               index: 1)
-            let threadgroupSize = self.pipelineState.max2dThreadgroupSize
+
             encoder.setThreadgroupMemoryLength(threadgroupSize.width * threadgroupSize.height * 4 * MemoryLayout<Float16>.stride,
                                                index: 0)
             encoder.dispatch2d(state: self.pipelineState,
