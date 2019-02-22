@@ -26,9 +26,8 @@ public class MeanEncoder {
                        resultBuffer: MTLBuffer,
                        in commandBuffer: MTLCommandBuffer) throws {
         let threadgroupSize = MTLSize(width: 8, height: 8, depth: 1).clamped(to: inputTexture.size)
-        let blockSize = MTLSize(width: (inputTexture.width + threadgroupSize.width - 1) / threadgroupSize.width,
-                                height: (inputTexture.height + threadgroupSize.height - 1) / threadgroupSize.height,
-                                depth: 1)
+        let blockSize = BlockSize(width: UInt16((inputTexture.width + threadgroupSize.width - 1) / threadgroupSize.width),
+                                  height: UInt16((inputTexture.height + threadgroupSize.height - 1) / threadgroupSize.height))
 
         commandBuffer.compute { (encoder) in
             encoder.setTexture(inputTexture, index: 0)
