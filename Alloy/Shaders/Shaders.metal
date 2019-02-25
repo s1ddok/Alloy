@@ -22,8 +22,8 @@ kernel void textureCopy(texture2d<half, access::read> texture_1 [[ texture(0) ]]
                         texture2d<half, access::write> texture_2 [[ texture(1) ]],
                         const ushort2 thread_position_in_grid [[thread_position_in_grid]]) {
 
-    const half input_texture_width = texture_1.get_width();
-    const half input_texture_height = texture_1.get_height();
+    const ushort input_texture_width = texture_1.get_width();
+    const ushort input_texture_height = texture_1.get_height();
 
     if (!device_supports_features_of_gpu_family4_v1) {
         if (thread_position_in_grid.x >= input_texture_width || thread_position_in_grid.y >= input_texture_height) {
