@@ -12,7 +12,7 @@ public extension MTLResource {
     var isAccessibleOnCPU: Bool {
         #if os(iOS) || os(tvOS)
         return self.storageMode == .shared
-        #elseif os(OSX)
+        #elseif os(macOS)
         return self.storageMode == .managed
         #endif
     }
