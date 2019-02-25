@@ -37,6 +37,7 @@ public final class MTLContext {
     
     private var libraryCache: [Bundle: MTLLibrary] = [:]
     private lazy var textureLoader = MTKTextureLoader(device: self.device)
+    private let textureDescriptor = MTLTextureDescriptor()
     
     public convenience init() {
         self.init(device: Metal.device)
@@ -144,20 +145,7 @@ public final class MTLContext {
         return (main: sampleTex, resolve: mainTex)
     }
     
-    public func createRenderTargetTexture(width: Int, height: Int, pixelFormat: MTLPixelFormat, writable: Bool = false) -> MTLTexture {
-        let textureDescriptor = MTLTextureDescriptor()
-        textureDescriptor.pixelFormat = pixelFormat
-        textureDescriptor.width  = width
-        textureDescriptor.height = height
-        textureDescriptor.usage = [.renderTarget, .shaderRead]
-        if writable {
-            textureDescriptor.usage.formUnion(.shaderWrite)
-        }
-        let outTexture = device.makeTexture(descriptor: textureDescriptor)!
-        return outTexture
-    }
-    
-    public func texture(from image: CGImage, usage: MTLTextureUsage = [.shaderRead]) -> MTLTexture? {
+    public func texture(from image: CGImage, usage: MTLTextureUsage = [.shaderRead]) throws -> MTLTexture {
         let options: [MTKTextureLoader.Option: Any] = [
             // Note: the SRGB option should be set to false, otherwise the image
             // appears way too dark, since it wasn't actually saved as SRGB.
@@ -165,23 +153,21 @@ public final class MTLContext {
             .textureUsage: NSNumber(value: usage.rawValue)
         ]
         
-        return try? self.textureLoader
-                        .newTexture(cgImage: image,
-                                    options: options)
+        return try self.textureLoader
+                       .newTexture(cgImage: image,
+                                   options: options)
     }
     
     public func texture(width: Int,
                         height: Int,
                         pixelFormat: MTLPixelFormat,
-                        usage: MTLTextureUsage = [.shaderRead]) -> MTLTexture! {
-        let textureDescriptor = MTLTextureDescriptor()
-        textureDescriptor.width = width
-        textureDescriptor.height = height
-        textureDescriptor.pixelFormat = pixelFormat
-        textureDescriptor.usage = usage
+                        usage: MTLTextureUsage = [.shaderRead]) -> MTLTexture? {
+        self.textureDescriptor.width = width
+        self.textureDescriptor.height = height
+        self.textureDescriptor.pixelFormat = pixelFormat
+        self.textureDescriptor.usage = usage
         
-        let texture = device.makeTexture(descriptor: textureDescriptor)
-        return texture
+        return device.makeTexture(descriptor: textureDescriptor)
     }
     
     public func depthState(depthCompareFunction: MTLCompareFunction,
