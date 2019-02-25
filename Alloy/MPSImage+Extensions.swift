@@ -9,7 +9,7 @@
 import MetalPerformanceShaders
 
 /* Utility functions for converting of MPSImages to floating point arrays. */
-
+@available(iOS 10.0, tvOS 10.0, macOS 10.13, *)
 public extension MPSImage {
 
     /// Utility function for converting of MPSImages to floating point arrays.
@@ -28,11 +28,7 @@ public extension MPSImage {
     }
 
     private func convert<T>(initial: T) -> [T]? {
-        #if os(iOS) || os(tvOS)
-        guard self.texture.storageMode == .shared else { return nil }
-        #elseif os(macOS)
-        guard self.texture.storageMode == .shared || self.texture.storageMode == .managed else { return nil }
-        #endif
+        guard self.texture.isAccessibleOnCPU else { return nil }
 
         let numSlices = (self.featureChannels + 3) / 4
 
