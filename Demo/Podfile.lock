@@ -1,18 +1,21 @@
 PODS:
-  - Alloy (0.9.4):
-    - Alloy/Core (= 0.9.4)
-  - Alloy/Core (0.9.4)
+  - Alloy (0.10.0):
+    - Alloy/Core (= 0.10.0)
+  - Alloy/Core (0.10.0)
+  - Alloy/Shaders (0.10.0):
+    - Alloy/Core
 
 DEPENDENCIES:
   - Alloy (from `../`)
+  - Alloy/Shaders (from `../`)
 
 EXTERNAL SOURCES:
   Alloy:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Alloy: cd6a59ba0d32c6eb2ae681e371e8e765a64c7bf7
+  Alloy: e10f7986f368ef362e4d86e03bb88cbf2513663c
 
-PODFILE CHECKSUM: a142b258686d7b69e9a920e4c37e00a8b87ea600
+PODFILE CHECKSUM: 4705d26d1f70590bbf791c9e43509db5a79e6f6e
 
 COCOAPODS: 1.6.1

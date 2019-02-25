@@ -1,8 +1,8 @@
 ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES
 CODE_SIGN_IDENTITY =
-FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/Alloy-macOS"
+FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/Alloy.default-Shaders"
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-HEADER_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/Alloy-macOS/Alloy.framework/Headers"
+HEADER_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/Alloy.default-Shaders/Alloy.framework/Headers"
 LD_RUNPATH_SEARCH_PATHS = $(inherited) '@executable_path/../Frameworks' '@loader_path/Frameworks'
 OTHER_LDFLAGS = $(inherited) -framework "Alloy" -framework "CoreVideo" -framework "Metal"
 OTHER_SWIFT_FLAGS = $(inherited) -D COCOAPODS

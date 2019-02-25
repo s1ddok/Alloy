@@ -14,6 +14,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Alloy.default-Shaders.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-AlloyTests.xcscheme</key>
 		<dict>
 			<key>isShown</key>

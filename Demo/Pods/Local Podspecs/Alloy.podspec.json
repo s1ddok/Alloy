@@ -1,6 +1,6 @@
 {
   "name": "Alloy",
-  "version": "0.9.4",
+  "version": "0.10.0",
   "license": {
     "type": "MIT",
     "file": "LICENSE"
@@ -13,11 +13,11 @@
   "social_media_url": "http://twitter.com/s1ddok",
   "source": {
     "git": "https://github.com/s1ddok/Alloy.git",
-    "tag": "0.9.4"
+    "tag": "0.10.0"
   },
   "platforms": {
     "ios": "11.0",
-    "osx": "10.11"
+    "osx": "10.12"
   },
   "swift_version": "4.2",
   "default_subspecs": "Core",
@@ -33,7 +33,7 @@
     {
       "name": "Shaders",
       "source_files": [
-        "Alloy/Shaders/*.{metal}",
+        "Alloy/Shaders/*.{metal,h}",
         "Alloy/Encoders/*.{swift}"
       ],
       "frameworks": [
