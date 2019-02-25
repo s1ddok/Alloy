@@ -10,7 +10,7 @@ import simd
 
 public class MaxEncoder {
 
-    enum Errors: Error {
+    public enum Errors: Error {
         case functionCreationFailed
         case encoderCreationFailed
         case invalidBufferStorageMode
