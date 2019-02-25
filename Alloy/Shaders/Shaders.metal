@@ -148,7 +148,7 @@ kernel void mean(texture2d<half, access::sample> input_texture [[ texture(0) ]],
     const ushort2 block_size_coef = ushort2(block_size.width, block_size.height);
     const ushort2 block_start = thread_position_in_grid * block_size_coef;
 
-    half4 total_sum_in_block = half4(0, 0, 0, 0);
+    half4 total_sum_in_block = half4(0);
 
     for (ushort x = 0; x < block_size.width; x++) {
         for (ushort y = 0; y < block_size.height; y++) {
