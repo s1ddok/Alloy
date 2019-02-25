@@ -40,7 +40,9 @@ public class MTLOffscreenRenderer {
         renderPassDescriptor.colorAttachments[0].clearColor = clearColor
         
         if sampleCount == 1 {
-            let targetTexture = context.createRenderTargetTexture(width: width, height: height, pixelFormat: pixelFormat)
+            let targetTexture = context.texture(width: width, height: height,
+                                                pixelFormat: pixelFormat,
+                                                usage: [.shaderRead, .shaderWrite, .renderTarget])
             renderPassDescriptor.colorAttachments[0].texture = targetTexture
             renderPassDescriptor.colorAttachments[0].storeAction = .store
         } else {
