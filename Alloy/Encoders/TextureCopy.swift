@@ -7,6 +7,7 @@
 
 import Metal
 
+@available(iOS 11.3, tvOS 11.3, macOS 10.13, *)
 final public class TextureCopy {
     public let library: MTLLibrary
 
@@ -14,14 +15,17 @@ final public class TextureCopy {
     public var outputTexture: MTLTexture!
 
     private let pipelineState: MTLComputePipelineState
-    private let deviceSupportsFeaturesOfGPUFamily4_v1: Bool
+    private let deviceSupportsNonuniformThreadgroups: Bool
 
     public init(library: MTLLibrary) throws {
         self.library = library
-        self.deviceSupportsFeaturesOfGPUFamily4_v1 = library.device.supportsFeatureSet(.iOS_GPUFamily4_v1)
-
+        #if os(iOS) || os(tvOS)
+        self.deviceSupportsNonuniformThreadgroups = library.device.supportsFeatureSet(.iOS_GPUFamily4_v1)
+        #elseif os(macOS)
+        self.deviceSupportsNonuniformThreadgroups = library.device.supportsFeatureSet(.macOS_GPUFamily1_v3)
+        #endif
         let constantValues = MTLFunctionConstantValues()
-        var dispatchFlag = self.deviceSupportsFeaturesOfGPUFamily4_v1
+        var dispatchFlag = self.deviceSupportsNonuniformThreadgroups
         constantValues.setConstantValue(&dispatchFlag,
                                         type: .bool,
                                         index: 0)
@@ -33,7 +37,7 @@ final public class TextureCopy {
     public func encode(using encoder: MTLComputeCommandEncoder) {
         encoder.set(textures: [self.inputTexture, self.outputTexture])
 
-        if self.pipelineState.device.supportsFeatureSet(.iOS_GPUFamily4_v1) {
+        if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: self.pipelineState,
                                exactly: self.inputTexture!.size)
         } else {
