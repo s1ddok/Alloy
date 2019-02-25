@@ -37,31 +37,29 @@ kernel void textureCopy(texture2d<half, access::read> texture_1 [[ texture(0) ]]
 }
 
 kernel void max(texture2d<half, access::sample> input_texture [[ texture(0) ]],
-                constant BlockSize& block_size [[ buffer(0) ]],
+                constant BlockSize& input_block_size [[ buffer(0) ]],
                 device float4& result [[ buffer(1) ]],
                 threadgroup half4* shared_memory [[ threadgroup(0) ]],
                 const ushort thread_index_in_threadgroup [[ thread_index_in_threadgroup ]],
                 const ushort2 thread_position_in_grid [[ thread_position_in_grid ]],
                 const ushort2 threads_per_threadgroup [[ threads_per_threadgroup ]]) {
 
-    const ushort input_texture_width = input_texture.get_width();
-    const ushort input_texture_height = input_texture.get_height();
+    const ushort2 input_texture_size = ushort2(input_texture.get_width(), input_texture.get_height());
 
-    const ushort2 block_size_coef = ushort2(block_size.width, block_size.height);
-    const ushort2 block_start = thread_position_in_grid * block_size_coef;
+    ushort2 original_block_size = ushort2(input_block_size.width, input_block_size.height);
+    const ushort2 block_start_position = thread_position_in_grid * original_block_size;
 
-    half4 max_value_in_block = input_texture.read(block_start);
+    ushort2 block_size = original_block_size;
+    if (thread_position_in_grid.x == threads_per_threadgroup.x || thread_position_in_grid.y == threads_per_threadgroup.y) {
+        const ushort2 read_territory = block_start_position + original_block_size;
+        block_size = original_block_size - (read_territory - input_texture_size);
+    }
 
-    for (ushort x = 0; x < block_size.width; x++) {
-        for (ushort y = 0; y < block_size.height; y++) {
+    half4 max_value_in_block = input_texture.read(block_start_position);
 
-            const ushort2 read_position = block_start + ushort2(x, y);
-
-            // Prevent going out of texture.
-            if (read_position.x >= input_texture_width || read_position.y >= input_texture_height) {
-                break;
-            }
-
+    for (ushort x = 0; x < block_size.x; x++) {
+        for (ushort y = 0; y < block_size.y; y++) {
+            const ushort2 read_position = block_start_position + ushort2(x, y);
             const half4 current_value = input_texture.read(read_position);
             max_value_in_block = max(max_value_in_block, current_value);
         }
@@ -86,31 +84,29 @@ kernel void max(texture2d<half, access::sample> input_texture [[ texture(0) ]],
 }
 
 kernel void min(texture2d<half, access::sample> input_texture [[ texture(0) ]],
-                constant BlockSize& block_size [[ buffer(0) ]],
+                constant BlockSize& input_block_size [[ buffer(0) ]],
                 device float4& result [[ buffer(1) ]],
                 threadgroup half4* shared_memory [[ threadgroup(0) ]],
                 const ushort thread_index_in_threadgroup [[ thread_index_in_threadgroup ]],
                 const ushort2 thread_position_in_grid [[ thread_position_in_grid ]],
                 const ushort2 threads_per_threadgroup [[ threads_per_threadgroup ]]) {
 
-    const ushort input_texture_width = input_texture.get_width();
-    const ushort input_texture_height = input_texture.get_height();
+    const ushort2 input_texture_size = ushort2(input_texture.get_width(), input_texture.get_height());
 
-    const ushort2 block_size_coef = ushort2(block_size.width, block_size.height);
-    const ushort2 block_start = thread_position_in_grid * block_size_coef;
+    ushort2 original_block_size = ushort2(input_block_size.width, input_block_size.height);
+    const ushort2 block_start_position = thread_position_in_grid * original_block_size;
 
-    half4 min_value_in_block = input_texture.read(block_start);
+    ushort2 block_size = original_block_size;
+    if (thread_position_in_grid.x == threads_per_threadgroup.x || thread_position_in_grid.y == threads_per_threadgroup.y) {
+        const ushort2 read_territory = block_start_position + original_block_size;
+        block_size = original_block_size - (read_territory - input_texture_size);
+    }
 
-    for (ushort x = 0; x < block_size.width; x++) {
-        for (ushort y = 0; y < block_size.height; y++) {
+    half4 min_value_in_block = input_texture.read(block_start_position);
 
-            const ushort2 read_position = block_start + ushort2(x, y);
-
-            // Prevent going out of texture.
-            if (read_position.x >= input_texture_width || read_position.y >= input_texture_height) {
-                break;
-            }
-
+    for (ushort x = 0; x < block_size.x; x++) {
+        for (ushort y = 0; y < block_size.y; y++) {
+            const ushort2 read_position = block_start_position + ushort2(x, y);
             const half4 current_value = input_texture.read(read_position);
             min_value_in_block = min(min_value_in_block, current_value);
         }
@@ -135,31 +131,29 @@ kernel void min(texture2d<half, access::sample> input_texture [[ texture(0) ]],
 }
 
 kernel void mean(texture2d<half, access::sample> input_texture [[ texture(0) ]],
-                 constant BlockSize& block_size [[ buffer(0) ]],
+                 constant BlockSize& input_block_size [[ buffer(0) ]],
                  device float4& result [[ buffer(1) ]],
                  threadgroup half4* shared_memory [[ threadgroup(0) ]],
                  const ushort thread_index_in_threadgroup [[ thread_index_in_threadgroup ]],
                  const ushort2 thread_position_in_grid [[ thread_position_in_grid ]],
                  const ushort2 threads_per_threadgroup [[ threads_per_threadgroup ]]) {
 
-    const ushort input_texture_width = input_texture.get_width();
-    const ushort input_texture_height = input_texture.get_height();
+    const ushort2 input_texture_size = ushort2(input_texture.get_width(), input_texture.get_height());
 
-    const ushort2 block_size_coef = ushort2(block_size.width, block_size.height);
-    const ushort2 block_start = thread_position_in_grid * block_size_coef;
+    ushort2 original_block_size = ushort2(input_block_size.width, input_block_size.height);
+    const ushort2 block_start_position = thread_position_in_grid * original_block_size;
 
-    half4 total_sum_in_block = half4(0);
+    ushort2 block_size = original_block_size;
+    if (thread_position_in_grid.x == threads_per_threadgroup.x || thread_position_in_grid.y == threads_per_threadgroup.y) {
+        const ushort2 read_territory = block_start_position + original_block_size;
+        block_size = original_block_size - (read_territory - input_texture_size);
+    }
 
-    for (ushort x = 0; x < block_size.width; x++) {
-        for (ushort y = 0; y < block_size.height; y++) {
+    half4 total_sum_in_block = half4(0, 0, 0, 0);
 
-            const ushort2 read_position = block_start + ushort2(x, y);
-
-            // Prevent going out of texture.
-            if (read_position.x >= input_texture_width || read_position.y >= input_texture_height) {
-                break;
-            }
-
+    for (ushort x = 0; x < block_size.x; x++) {
+        for (ushort y = 0; y < block_size.y; y++) {
+            const ushort2 read_position = block_start_position + ushort2(x, y);
             const half4 current_value = input_texture.read(read_position);
             total_sum_in_block += current_value;
         }
