@@ -19,16 +19,16 @@ public extension MTLBuffer {
         return bindedPointer
     }
 
-    func bufferPointer<T>(of type: T.Type, capacity: Int) -> UnsafeBufferPointer<T>? {
+    func bufferPointer<T>(of type: T.Type, count: Int) -> UnsafeBufferPointer<T>? {
         guard let startPointer = self.pointer(of: type)
         else { return nil }
         let bufferPointer = UnsafeBufferPointer(start: startPointer,
-                                                count: capacity)
+                                                count: count)
         return bufferPointer
     }
 
     func array<T>(of type: T.Type, count: Int) -> [T]? {
-        guard let bufferPointer = self.bufferPointer(of: type, capacity: count)
+        guard let bufferPointer = self.bufferPointer(of: type, count: count)
         else { return nil }
         let valueArray = Array(bufferPointer)
         return valueArray
