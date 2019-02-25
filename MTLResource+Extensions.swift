@@ -13,7 +13,7 @@ public extension MTLResource {
         #if os(iOS) || os(tvOS)
         return self.storageMode == .shared
         #elseif os(macOS)
-        return self.storageMode == .managed
+        return self.storageMode == .managed || self.storageMode == .shared
         #endif
     }
 
