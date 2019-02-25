@@ -35,8 +35,8 @@ class ViewController: NSViewController {
             let cgImage = self.image.cgImage(forProposedRect: &rect,
                                              context: nil,
                                              hints: nil),
-            let texture = context.texture(from: cgImage,
-                                          usage: [.shaderRead, .shaderWrite])
+            let texture = try? context.texture(from: cgImage,
+                                               usage: [.shaderRead, .shaderWrite])
         else { return }
         
 
