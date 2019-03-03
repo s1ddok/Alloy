@@ -6,15 +6,8 @@
 //
 
 import Metal
-import simd
 
 public class MeanEncoder {
-
-    public enum Errors: Error {
-        case functionCreationFailed
-        case encoderCreationFailed
-        case invalidBufferStorageMode
-    }
 
     let pipelineState: MTLComputePipelineState
 
@@ -40,7 +33,6 @@ public class MeanEncoder {
                                                index: 0)
             encoder.dispatch2d(state: self.pipelineState,
                                covering: MTLSize(width: 1, height: 1, depth: 1))
-
         }
     }
 

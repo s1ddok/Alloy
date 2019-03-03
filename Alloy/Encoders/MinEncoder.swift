@@ -6,15 +6,8 @@
 //
 
 import Metal
-import simd
 
 public class MinEncoder {
-
-    public enum Errors: Error {
-        case functionCreationFailed
-        case encoderCreationFailed
-        case invalidBufferStorageMode
-    }
 
     let pipelineState: MTLComputePipelineState
 
