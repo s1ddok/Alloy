@@ -9,6 +9,10 @@ While this library doesn't introduce any new paradigms or concepts that signific
 - Cross-platform support
 - Very Swifty
 
+# Usage examples:
+
+[Combine the power of CoreGraphics and Metal by sharing resource memory](https://medium.com/@s1ddok/combine-the-power-of-coregraphics-and-metal-by-sharing-resource-memory-eabb4c1be615)
+
 # Warning
 
 This library happens to be under eventual active development as I use it in my real-world projects, so its' API is subject to random changes.
