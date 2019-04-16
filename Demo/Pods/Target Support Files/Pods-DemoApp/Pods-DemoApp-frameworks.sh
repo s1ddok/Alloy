@@ -153,10 +153,10 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_framework "${BUILT_PRODUCTS_DIR}/Alloy-iOS/Alloy.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/Alloy.default-ML-Shaders-iOS/Alloy.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_framework "${BUILT_PRODUCTS_DIR}/Alloy-iOS/Alloy.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/Alloy.default-ML-Shaders-iOS/Alloy.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then
   wait

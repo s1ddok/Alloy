@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "4B3A57C1151A1B0568F9FA53BF19BCDB"
-               BuildableName = "Pods_Demo.framework"
-               BlueprintName = "Pods-Demo"
+               BlueprintIdentifier = "71F61A3165EDA1E769B475591888D227"
+               BuildableName = "Alloy.framework"
+               BlueprintName = "Alloy.default-ML-Shaders-macOS"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,9 +45,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4B3A57C1151A1B0568F9FA53BF19BCDB"
-            BuildableName = "Pods_Demo.framework"
-            BlueprintName = "Pods-Demo"
+            BlueprintIdentifier = "71F61A3165EDA1E769B475591888D227"
+            BuildableName = "Alloy.framework"
+            BlueprintName = "Alloy.default-ML-Shaders-macOS"
             ReferencedContainer = "container:Pods.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

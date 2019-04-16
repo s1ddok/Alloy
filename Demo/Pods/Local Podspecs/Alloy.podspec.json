@@ -45,6 +45,19 @@
 
         ]
       }
+    },
+    {
+      "name": "ML",
+      "source_files": "Alloy/ML/*.{swift}",
+      "frameworks": [
+        "Metal",
+        "MetalPerformanceShaders"
+      ],
+      "dependencies": {
+        "Alloy/Core": [
+
+        ]
+      }
     }
   ]
 }

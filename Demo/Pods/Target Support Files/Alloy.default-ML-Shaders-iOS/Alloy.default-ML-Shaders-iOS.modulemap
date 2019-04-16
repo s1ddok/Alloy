@@ -1,0 +1,6 @@
+framework module Alloy {
+  umbrella header "Alloy.default-ML-Shaders-iOS-umbrella.h"
+
+  export *
+  module * { export * }
+}

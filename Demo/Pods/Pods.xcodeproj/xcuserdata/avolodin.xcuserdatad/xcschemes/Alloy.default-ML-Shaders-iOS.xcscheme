@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "37E6D81D91AFC85575A29ED317FCC3FF"
+               BlueprintIdentifier = "6FBB367C526D3A44C924CD512B590730"
                BuildableName = "Alloy.framework"
-               BlueprintName = "Alloy.default-Shaders"
+               BlueprintName = "Alloy.default-ML-Shaders-iOS"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,9 +45,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "37E6D81D91AFC85575A29ED317FCC3FF"
+            BlueprintIdentifier = "6FBB367C526D3A44C924CD512B590730"
             BuildableName = "Alloy.framework"
-            BlueprintName = "Alloy.default-Shaders"
+            BlueprintName = "Alloy.default-ML-Shaders-iOS"
             ReferencedContainer = "container:Pods.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

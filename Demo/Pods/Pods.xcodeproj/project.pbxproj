@@ -7,109 +7,152 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		040CE7C9BC68521CCBD636C784B7FED9 /* CVPixelBuffer+MTLTexture.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE81536851FF0DB2ED59DCDD944C6AD /* CVPixelBuffer+MTLTexture.swift */; };
-		0A5BC73583BDAAEBC68AC07BE82EE706 /* MTLBuffer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F07F57D769F441469C12DA15B9C8EFE3 /* MTLBuffer+Extensions.swift */; };
-		0B9CC1060D2ACEA5FF07A9FDDFD9D826 /* MTLClearColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B17DE1C19A24160105BAE4933EB5CAC /* MTLClearColor+Extensions.swift */; };
-		0E68DD21705630E07C91946A469D271A /* MTLSizeAndAlign+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2A0EB29033367831049560B6CBCB90 /* MTLSizeAndAlign+Extensions.swift */; };
-		119E243B51FE0FC61FE5EE504F361AD2 /* MTLComputePipelineState+Threads.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A3D01DEEDE7EBCE9D73887ACB6A5354 /* MTLComputePipelineState+Threads.swift */; };
-		1338E0C397A98D125A5EB72840BEBD6D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04A1746FB1770F38F5204CB17956F900 /* Cocoa.framework */; };
-		136D0F82834F0A7C86D2F3AF1BC3DA02 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 97A9660576A6ECA5AA495E8BC80DCE62 /* Metal.framework */; };
-		13D7CDA221E8B9A567AEFD03C3879918 /* MTLTexture+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72C3DECEE93B77FECEC2BE9F1B09420B /* MTLTexture+Extensions.swift */; };
-		145E99D8ED231283497675A3595FE593 /* ComputeCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2EFF6FDBCDAC2C4A4A99C125EC86FC /* ComputeCommand.swift */; };
-		149C94BD997311739B61AF61C9D522F1 /* MTLBuffer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F07F57D769F441469C12DA15B9C8EFE3 /* MTLBuffer+Extensions.swift */; };
-		172F7D24274DB76E0ACB4B1D3D32C76B /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04A1746FB1770F38F5204CB17956F900 /* Cocoa.framework */; };
-		1A855E64DDA4094D1E609DD7F3C77614 /* Float16.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EEA59BE30E4E87E58D555A318D1EF8F /* Float16.swift */; };
-		232DACF634A9A06B799DCA4AE74D895F /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 2B404447650344F553CA1E734B1E2B8F /* Shaders.metal */; };
-		26954461EBB2BB08113645CF39238244 /* MTLComputeCommandEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 285FD63111B2E28565B7A99142DE0737 /* MTLComputeCommandEncoder+Extensions.swift */; };
-		289F0EF1E3BDC100310BDB44E938F989 /* MTLRenderCommandEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72594B329664FE921DD09AB57EAB01DE /* MTLRenderCommandEncoder+Extensions.swift */; };
-		2A41D17939C86BC15581939BF6D5C73B /* Pods-DemoApp-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 4700109B67C3DE021989FD0DCC852C45 /* Pods-DemoApp-dummy.m */; };
-		2F6B37AEF1EC9FCB6CEE656FEB0641B4 /* Alloy-macOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 5572313322E1CC3E634DE4D906315D1B /* Alloy-macOS-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		31F5061466F54FC6B6E4C535C5FC8F60 /* MTLBuffer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F07F57D769F441469C12DA15B9C8EFE3 /* MTLBuffer+Extensions.swift */; };
-		3585110430DFDBCEA6CAFAC20FCC551F /* Sequence+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091B8D4F994D3153017576131952CFD2 /* Sequence+Utils.swift */; };
-		3FED9FBD8EB90AD3266A8916B72E9B92 /* MTLTexture+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72C3DECEE93B77FECEC2BE9F1B09420B /* MTLTexture+Extensions.swift */; };
-		415DA20FE7663C44C9AF186D2DD06811 /* MTLResource+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 756C13986A2038510BE79FD0B791E44C /* MTLResource+Extensions.swift */; };
-		423A203867420439BF701D6012C137A4 /* MTLOrigin+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF635C85B52FD473442B91551C4499D /* MTLOrigin+Extensions.swift */; };
-		47ECCC40117DB8DA5559FB0AA79DDE19 /* Metal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 803469064342242C0EAEAE8F52B07B64 /* Metal.swift */; };
-		49C80385DCB335DEBD38AF08FA91834A /* MTLClearColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B17DE1C19A24160105BAE4933EB5CAC /* MTLClearColor+Extensions.swift */; };
-		4B646083B2E550344D7FB47F6CA4A12B /* MTLComputeCommandEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 285FD63111B2E28565B7A99142DE0737 /* MTLComputeCommandEncoder+Extensions.swift */; };
-		4B8D8973367E00E1763965EBDC2042A0 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 800DDAE67C5BBE4077CCD8DBAAF1474E /* CoreVideo.framework */; };
-		4BADC656506B480B30F451688A01C245 /* MeanEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0D21CAE83DAAE9FA609F8F1C2FD6DB /* MeanEncoder.swift */; };
-		4CC234F38AD480ED87C21B3672776724 /* MTLBlitCommandEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65003111F656ED6A4863CA1EA3708E76 /* MTLBlitCommandEncoder+Extensions.swift */; };
-		4DE781B32F798A3FDA356262BFB5CC5A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59B8B26D2906DD2B431E74EE74F2CA65 /* Foundation.framework */; };
-		4E8B27F0F761C8841E50E63725F792BB /* Metal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 803469064342242C0EAEAE8F52B07B64 /* Metal.swift */; };
-		503973FF6078FB275B5D0A996F79EEDE /* Alloy.default-Shaders-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 985E23D522324A8DA84D7DC5CA82EC9B /* Alloy.default-Shaders-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		516DB960661E7D982B871210A4F1E70D /* MTLRenderCommandEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72594B329664FE921DD09AB57EAB01DE /* MTLRenderCommandEncoder+Extensions.swift */; };
-		519A2DBB8F6F436BDD27479DDF08D242 /* MTLComputePipelineState+Threads.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A3D01DEEDE7EBCE9D73887ACB6A5354 /* MTLComputePipelineState+Threads.swift */; };
-		561F9EAAE7D3F62AEEAB21E8F7184C82 /* MinEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E6B6F559689F167563D0D53A43C622 /* MinEncoder.swift */; };
-		56963C0B13DD2B9E3997FE5376A70011 /* MTLRegion+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F933F66CD79C49C2AEC5A23AEB97776 /* MTLRegion+Extensions.swift */; };
-		5869AF25A68272B0F03F0EF59CEE76E9 /* MTLCommandBuffer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD3F4DC2DD5CC5042C758C5D649503A /* MTLCommandBuffer+Extensions.swift */; };
-		5C30DD3FB9BBC77AE45A4FB0A58CD7C1 /* MPSImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCD1EF453F5D5185FCE9988011CE78D /* MPSImage+Extensions.swift */; };
-		6304F742404F5F6BB420D6FCA60CCF7A /* MTLComputePipelineState+Threads.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A3D01DEEDE7EBCE9D73887ACB6A5354 /* MTLComputePipelineState+Threads.swift */; };
-		64AD2E3A5BD062F7C1767970EA1A6351 /* MTLOrigin+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF635C85B52FD473442B91551C4499D /* MTLOrigin+Extensions.swift */; };
-		65A3B48E7EABDBC74114331E157B5DE9 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAEB352F042A11405A8CA1454C4D9D8E /* CoreVideo.framework */; };
-		6DA76E055FB7D58112ED9BA1A863BA60 /* MTLOffscreenRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425F6805ECDE4A2BB4D4B558D76ECD46 /* MTLOffscreenRenderer.swift */; };
-		704ACFCF9842CCE5C7EED6786CFE7DF8 /* Pods-Demo-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = F6F9F5009737064935B5C76D54AAAAC0 /* Pods-Demo-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		71223ADE3A90B3B136BAF787A3DE4B68 /* ComputeCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2EFF6FDBCDAC2C4A4A99C125EC86FC /* ComputeCommand.swift */; };
-		713C6EED793C25BE998484AD29C9C35A /* Float16.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EEA59BE30E4E87E58D555A318D1EF8F /* Float16.swift */; };
+		0108390A77203DE54AD4EEEEA2263716 /* ColorConversion.h in Headers */ = {isa = PBXBuildFile; fileRef = 810DC1D6CF00BD9DBB94DA8ADE3AC2AB /* ColorConversion.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		040CE7C9BC68521CCBD636C784B7FED9 /* CVPixelBuffer+MTLTexture.swift in Sources */ = {isa = PBXBuildFile; fileRef = D443A0A6A2D8754BC92398D99C59F5F7 /* CVPixelBuffer+MTLTexture.swift */; };
+		04E5447598888F1356D4D5C0F0AE0008 /* MTLRenderCommandEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 957AD94F0098CF636747D844A82834EE /* MTLRenderCommandEncoder+Extensions.swift */; };
+		0619539F71388130EEC7EBF06F19ABFD /* ColorConversion.h in Headers */ = {isa = PBXBuildFile; fileRef = 810DC1D6CF00BD9DBB94DA8ADE3AC2AB /* ColorConversion.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0A5BC73583BDAAEBC68AC07BE82EE706 /* MTLBuffer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C9FF7390A5AD7EF22EFEE49397D601 /* MTLBuffer+Extensions.swift */; };
+		0B13AC28AC216E34BE128D1CE025902D /* MTLRenderCommandEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 957AD94F0098CF636747D844A82834EE /* MTLRenderCommandEncoder+Extensions.swift */; };
+		11DD657C3BA34997CCD2A1B397BF5316 /* MTLOrigin+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A83D1D6AA8CD28869AE2D5322C045DA /* MTLOrigin+Extensions.swift */; };
+		1338E0C397A98D125A5EB72840BEBD6D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 365213F6A21BA8B6F59EB8C339D0F8CC /* Cocoa.framework */; };
+		136D0F82834F0A7C86D2F3AF1BC3DA02 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0668811627B7D2F8BCBAE2B55FC16B1 /* Metal.framework */; };
+		1388884C9D35581DB35C6ECE79EB60BD /* MTLOffscreenRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92AC8512979FC9766A48FB524D62596B /* MTLOffscreenRenderer.swift */; };
+		13D7CDA221E8B9A567AEFD03C3879918 /* MTLTexture+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FFCE2DA4F5EA452F4D5E03C8EB085EF /* MTLTexture+Extensions.swift */; };
+		145E99D8ED231283497675A3595FE593 /* ComputeCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E854CDB9105F08B6F0DF8ECAA47AD00 /* ComputeCommand.swift */; };
+		1695E810B7E865BA291CA38966E24FB7 /* ComputeCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E854CDB9105F08B6F0DF8ECAA47AD00 /* ComputeCommand.swift */; };
+		184BEE90C0EADCC3F7431A9C5C47867B /* MTLOrigin+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A83D1D6AA8CD28869AE2D5322C045DA /* MTLOrigin+Extensions.swift */; };
+		197C9690E04F9C42DE14AA82464FF5B2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DD78C34C7380FE69F7B5A612CCAFCB /* Foundation.framework */; };
+		1A855E64DDA4094D1E609DD7F3C77614 /* Float16.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB946C03D980E48320464F847BCDA99 /* Float16.swift */; };
+		1B0EF9B20E5303A92C46FDE06B175CA0 /* MTLRegion+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 698EA8F3B498386F78991A00BCE68ABB /* MTLRegion+Extensions.swift */; };
+		1C84742ACE8C458808F19B6D9EAA8C19 /* MTLLibrary+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7020A804BC0AA6F9E86B63644B8B92F4 /* MTLLibrary+Extensions.swift */; };
+		21F9788EF92AB10C13AD93754B89FB1A /* MeanEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D57AA399924219D2EBA90702977A4FD1 /* MeanEncoder.swift */; };
+		26954461EBB2BB08113645CF39238244 /* MTLComputeCommandEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C701BC0F9B2395D23700B4DBE2A17828 /* MTLComputeCommandEncoder+Extensions.swift */; };
+		2922335AAB4E55D5286AB0830DAD1FCF /* MTLLibrary+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7020A804BC0AA6F9E86B63644B8B92F4 /* MTLLibrary+Extensions.swift */; };
+		2BE1C84D120E77B42AF833E4188E25A9 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 365213F6A21BA8B6F59EB8C339D0F8CC /* Cocoa.framework */; };
+		2F25590A4B889C18C91595DC931DB54E /* MTLResource+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE4E5FF5F19B24C2D25F4A25AF805F3E /* MTLResource+Extensions.swift */; };
+		2F6B37AEF1EC9FCB6CEE656FEB0641B4 /* Alloy-macOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BE51200B3F7F211858B91D8DF42FF17 /* Alloy-macOS-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2FD1561FBEA04B47B0477736AC7AE858 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 26EE22F96D5B90E3642C4E2AAA882331 /* Shaders.metal */; };
+		30FFDAA84003C3CA1E73EF7640399A7D /* Metal.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90975CEBC0F7398B87A82BA7F802502 /* Metal.swift */; };
+		31D7B5CE08177351A5B5AF45F14E31E1 /* PoolPadding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7210F8B910B20BD3C063BCE74666481E /* PoolPadding.swift */; };
+		31F5061466F54FC6B6E4C535C5FC8F60 /* MTLBuffer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C9FF7390A5AD7EF22EFEE49397D601 /* MTLBuffer+Extensions.swift */; };
+		32A70B9FBDABFC9782AA1E974AE65DA9 /* MTLClearColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7802111478CE8733AFF9C169EDC85D1A /* MTLClearColor+Extensions.swift */; };
+		330D263166E6FF1BB878422A1DB7AA9E /* MinEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A36C58EC119B5C5D2D1EAA1A7E8CCE2 /* MinEncoder.swift */; };
+		33193D617BCCF85BCCA1F4C8E6E0FEF9 /* PoolPadding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7210F8B910B20BD3C063BCE74666481E /* PoolPadding.swift */; };
+		349EEB72BE22129C1CF538829C61E180 /* MTLSizeAndAlign+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD3C5EB2D1D2F506E0663A1CDCADF6BD /* MTLSizeAndAlign+Extensions.swift */; };
+		38ECFC0A4948B0D8BB4F48D5F29A7A4C /* MetalPerformanceShaders.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 064BC6460C1F8F0F90E458B6A2B854B6 /* MetalPerformanceShaders.framework */; };
+		40FD052B6E35C18CE578F1888714A4AA /* Alloy.default-ML-Shaders-iOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = B57BCAFA0288680F313CF492CC8FCF20 /* Alloy.default-ML-Shaders-iOS-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		415DA20FE7663C44C9AF186D2DD06811 /* MTLResource+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE4E5FF5F19B24C2D25F4A25AF805F3E /* MTLResource+Extensions.swift */; };
+		423A203867420439BF701D6012C137A4 /* MTLOrigin+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A83D1D6AA8CD28869AE2D5322C045DA /* MTLOrigin+Extensions.swift */; };
+		47ECCC40117DB8DA5559FB0AA79DDE19 /* Metal.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90975CEBC0F7398B87A82BA7F802502 /* Metal.swift */; };
+		4924CEFAD0161EEF1C863CAE35AA04F1 /* CVPixelBuffer+MTLTexture.swift in Sources */ = {isa = PBXBuildFile; fileRef = D443A0A6A2D8754BC92398D99C59F5F7 /* CVPixelBuffer+MTLTexture.swift */; };
+		49C80385DCB335DEBD38AF08FA91834A /* MTLClearColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7802111478CE8733AFF9C169EDC85D1A /* MTLClearColor+Extensions.swift */; };
+		4AE55E782F62B25447126F0DA22E71E0 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 26EE22F96D5B90E3642C4E2AAA882331 /* Shaders.metal */; };
+		4B8D8973367E00E1763965EBDC2042A0 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75D2F1C1FDF07242A74EDA63DA412A1D /* CoreVideo.framework */; };
+		4CC234F38AD480ED87C21B3672776724 /* MTLBlitCommandEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D5F53CFCFD1C3DFE27AC222D6401AB /* MTLBlitCommandEncoder+Extensions.swift */; };
+		4E8B27F0F761C8841E50E63725F792BB /* Metal.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90975CEBC0F7398B87A82BA7F802502 /* Metal.swift */; };
+		516DB960661E7D982B871210A4F1E70D /* MTLRenderCommandEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 957AD94F0098CF636747D844A82834EE /* MTLRenderCommandEncoder+Extensions.swift */; };
+		519A2DBB8F6F436BDD27479DDF08D242 /* MTLComputePipelineState+Threads.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAE22FB7223AB2541C768488F65FCB06 /* MTLComputePipelineState+Threads.swift */; };
+		56963C0B13DD2B9E3997FE5376A70011 /* MTLRegion+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 698EA8F3B498386F78991A00BCE68ABB /* MTLRegion+Extensions.swift */; };
+		56E2B3B6B2FEAC568871AF96FE82943F /* Metal.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90975CEBC0F7398B87A82BA7F802502 /* Metal.swift */; };
+		570E34DA1D546F0B97421E60C7C72667 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 365213F6A21BA8B6F59EB8C339D0F8CC /* Cocoa.framework */; };
+		5869AF25A68272B0F03F0EF59CEE76E9 /* MTLCommandBuffer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 142FC906813F8D0C02E33C585A0A87B3 /* MTLCommandBuffer+Extensions.swift */; };
+		5A6125CCFEFC3F9F39C0D1F8E42CDFD3 /* MPSImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FD866FE77435605593B2B4AC25EE5E0 /* MPSImage+Extensions.swift */; };
+		5B35C8BFD7D3EA5173487DC854120A66 /* MTLRegion+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 698EA8F3B498386F78991A00BCE68ABB /* MTLRegion+Extensions.swift */; };
+		5C30DD3FB9BBC77AE45A4FB0A58CD7C1 /* MPSImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FD866FE77435605593B2B4AC25EE5E0 /* MPSImage+Extensions.swift */; };
+		601791AD3B7FDEEA750B2516FE4115EC /* Sequence+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAABA99AF0A6B1F4BF74E3ADC4E56C9 /* Sequence+Utils.swift */; };
+		609395A6EF7FD8CFED7F25C552AE9476 /* BlockSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC91570CA390C50052713C19D726FB9 /* BlockSize.swift */; };
+		617BD1A069891C7B5FC8CA001BFB39EF /* MTLComputeCommandEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C701BC0F9B2395D23700B4DBE2A17828 /* MTLComputeCommandEncoder+Extensions.swift */; };
+		6304F742404F5F6BB420D6FCA60CCF7A /* MTLComputePipelineState+Threads.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAE22FB7223AB2541C768488F65FCB06 /* MTLComputePipelineState+Threads.swift */; };
+		64065216AA231C45DD4D3901D0F0AED0 /* Alloy.default-ML-Shaders-macOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = F88792ED50AFB9172B295C1A62DD0363 /* Alloy.default-ML-Shaders-macOS-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6458A0E474CB47B2B75B60E7EE00858C /* Sequence+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAABA99AF0A6B1F4BF74E3ADC4E56C9 /* Sequence+Utils.swift */; };
+		6759F9B0749E3C3ACF80D4BBA506C515 /* MTLSizeAndAlign+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD3C5EB2D1D2F506E0663A1CDCADF6BD /* MTLSizeAndAlign+Extensions.swift */; };
+		6B4D5AC92BDD6A4418E98A805AE6C1F9 /* MTLCommandBuffer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 142FC906813F8D0C02E33C585A0A87B3 /* MTLCommandBuffer+Extensions.swift */; };
+		6DA76E055FB7D58112ED9BA1A863BA60 /* MTLOffscreenRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92AC8512979FC9766A48FB524D62596B /* MTLOffscreenRenderer.swift */; };
+		71223ADE3A90B3B136BAF787A3DE4B68 /* ComputeCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E854CDB9105F08B6F0DF8ECAA47AD00 /* ComputeCommand.swift */; };
+		713C6EED793C25BE998484AD29C9C35A /* Float16.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB946C03D980E48320464F847BCDA99 /* Float16.swift */; };
 		71B3E095F5E9F551B1654BE7104C44AB /* Pods-AlloyTests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = E64119D8E58BDBD6A4931329904B8CA7 /* Pods-AlloyTests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		75570AEDCAF21A3CD37A5EC3D9710E52 /* Alloy.default-Shaders-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 0591B44B9497DEAFE986600B520D95A3 /* Alloy.default-Shaders-dummy.m */; };
-		766B36B10DDD55E83C7C562458BBF1C0 /* CVPixelBuffer+MTLTexture.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE81536851FF0DB2ED59DCDD944C6AD /* CVPixelBuffer+MTLTexture.swift */; };
-		7FAB426925E3928EBA9F1430D6FB7F74 /* ColorConversion.h in Headers */ = {isa = PBXBuildFile; fileRef = 0DB852B9B9BD6F8A09E14BBA2794DC70 /* ColorConversion.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		896654052501FBB20184EC5C913AFDB7 /* MTLRegion+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F933F66CD79C49C2AEC5A23AEB97776 /* MTLRegion+Extensions.swift */; };
-		8A117564CE10780891F17AAA530678A1 /* MTLLibrary+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D6E9C25218A173F7F3906774A71607 /* MTLLibrary+Extensions.swift */; };
-		8CDC83A7224F24B48D24CE7C39FC5523 /* Alloy-iOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 423F7FBD7B54702A65BA6836C17468C5 /* Alloy-iOS-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8F11EED33BB60882C434893124BC8E03 /* MTLLibrary+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D6E9C25218A173F7F3906774A71607 /* MTLLibrary+Extensions.swift */; };
-		90FAFA5E7BE8BA32AAF6EE697C0062B3 /* MTLResource+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 756C13986A2038510BE79FD0B791E44C /* MTLResource+Extensions.swift */; };
-		9164040DB2FA68EFD06AFDB0BFA501DD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59B8B26D2906DD2B431E74EE74F2CA65 /* Foundation.framework */; };
-		924803F2691751C0981AC0AE865D6F81 /* TextureCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 026D5B7C794FBB0EB89B8D73BFA3A13C /* TextureCopy.swift */; };
-		97D1F47751F61119C0E75B4922AD09D8 /* MTLBlitCommandEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65003111F656ED6A4863CA1EA3708E76 /* MTLBlitCommandEncoder+Extensions.swift */; };
-		9A8DD17004A0D8AEC76AE8AAA52AF26D /* MaxEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D76AA3916659B77ED602025DD938C2 /* MaxEncoder.swift */; };
-		A129DE5A0F0170EAE20DBEC14B622E8E /* MTLRenderCommandEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72594B329664FE921DD09AB57EAB01DE /* MTLRenderCommandEncoder+Extensions.swift */; };
-		A195DF93CC433857E69B80969D6E29DB /* Metal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 803469064342242C0EAEAE8F52B07B64 /* Metal.swift */; };
-		A2616D39771350981ED7431969A721A6 /* MTLCommandBuffer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD3F4DC2DD5CC5042C758C5D649503A /* MTLCommandBuffer+Extensions.swift */; };
-		A58D27BC0F4DAF5005AD8E3463D25FED /* BlockSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F9CEE4C8810072253855510E63A94F /* BlockSize.swift */; };
-		A69DE6F0EB0FEEBB2014E2CF4F7CDFCF /* MTLSizeAndAlign+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2A0EB29033367831049560B6CBCB90 /* MTLSizeAndAlign+Extensions.swift */; };
-		A6C3754B87BB4E3A7EE7E01D0796C307 /* MTLClearColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B17DE1C19A24160105BAE4933EB5CAC /* MTLClearColor+Extensions.swift */; };
-		A7F10B094D24FBC061616D2B22AF66D4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04A1746FB1770F38F5204CB17956F900 /* Cocoa.framework */; };
-		ACAE0BAABDBDBD104D8BF38745A5EF04 /* MPSImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCD1EF453F5D5185FCE9988011CE78D /* MPSImage+Extensions.swift */; };
+		728582D61EA3E5277B5470CDACD31E4A /* Pods-DemoApp-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = A6A1A3F1DEBA0091FC07D5D5D9C7C0CA /* Pods-DemoApp-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		791AF0D2C83D59B4EACC7631B4ADBC8A /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F31CFA08590EA10C805BD2F49FE531C /* CoreVideo.framework */; };
+		802B29FDF8A4B64A439305FA8671D3EC /* Alloy.default-ML-Shaders-iOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F75986CFEED1A5F8CB141608CCCE6A /* Alloy.default-ML-Shaders-iOS-dummy.m */; };
+		8809E0DECAFBF9E0EB0C1FDF178786F4 /* MTLBuffer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C9FF7390A5AD7EF22EFEE49397D601 /* MTLBuffer+Extensions.swift */; };
+		88B8F7778DF87ABCD30C3B9D04002854 /* MTLTexture+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FFCE2DA4F5EA452F4D5E03C8EB085EF /* MTLTexture+Extensions.swift */; };
+		896654052501FBB20184EC5C913AFDB7 /* MTLRegion+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 698EA8F3B498386F78991A00BCE68ABB /* MTLRegion+Extensions.swift */; };
+		899892CF709ECC38C2E5780486648693 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B70D6A55430B8280DFD490BAEE346ADA /* Metal.framework */; };
+		8A117564CE10780891F17AAA530678A1 /* MTLLibrary+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7020A804BC0AA6F9E86B63644B8B92F4 /* MTLLibrary+Extensions.swift */; };
+		8AE7AA5AA3086C37886E64AA6755FF0F /* Pods-Demo-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = A1805D8D33E39387F9B55772C6040460 /* Pods-Demo-dummy.m */; };
+		8CDC83A7224F24B48D24CE7C39FC5523 /* Alloy-iOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 25CC4A7BB40ECF258F9BDE01CB728895 /* Alloy-iOS-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8E0DBB5822E3874A73107ED97BA6D914 /* BlockSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC91570CA390C50052713C19D726FB9 /* BlockSize.swift */; };
+		8F11EED33BB60882C434893124BC8E03 /* MTLLibrary+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7020A804BC0AA6F9E86B63644B8B92F4 /* MTLLibrary+Extensions.swift */; };
+		90FAFA5E7BE8BA32AAF6EE697C0062B3 /* MTLResource+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE4E5FF5F19B24C2D25F4A25AF805F3E /* MTLResource+Extensions.swift */; };
+		9164040DB2FA68EFD06AFDB0BFA501DD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DD78C34C7380FE69F7B5A612CCAFCB /* Foundation.framework */; };
+		94358231D66F58B13FC0152EA220345B /* ComputeCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E854CDB9105F08B6F0DF8ECAA47AD00 /* ComputeCommand.swift */; };
+		97D1F47751F61119C0E75B4922AD09D8 /* MTLBlitCommandEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D5F53CFCFD1C3DFE27AC222D6401AB /* MTLBlitCommandEncoder+Extensions.swift */; };
+		99317D3D5CEE542416C63D90FAC1B7B9 /* MTLComputePipelineState+Threads.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAE22FB7223AB2541C768488F65FCB06 /* MTLComputePipelineState+Threads.swift */; };
+		9A34ADBA43D9141353833DD150A45272 /* MTLClearColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7802111478CE8733AFF9C169EDC85D1A /* MTLClearColor+Extensions.swift */; };
+		9DA046589F65F00BB0CCF21F3FD61F82 /* MTLBlitCommandEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D5F53CFCFD1C3DFE27AC222D6401AB /* MTLBlitCommandEncoder+Extensions.swift */; };
+		A05BADDA8A054981AA063CE06A666E3E /* MeanEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D57AA399924219D2EBA90702977A4FD1 /* MeanEncoder.swift */; };
+		A129DE5A0F0170EAE20DBEC14B622E8E /* MTLRenderCommandEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 957AD94F0098CF636747D844A82834EE /* MTLRenderCommandEncoder+Extensions.swift */; };
+		A2616D39771350981ED7431969A721A6 /* MTLCommandBuffer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 142FC906813F8D0C02E33C585A0A87B3 /* MTLCommandBuffer+Extensions.swift */; };
+		A6747CA9C0A7091F93F5360FF76B3A6C /* MetalPerformanceShaders.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 385CC06582E1C6EF9837E53C1894DC9E /* MetalPerformanceShaders.framework */; };
+		A69DE6F0EB0FEEBB2014E2CF4F7CDFCF /* MTLSizeAndAlign+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD3C5EB2D1D2F506E0663A1CDCADF6BD /* MTLSizeAndAlign+Extensions.swift */; };
+		A6C3754B87BB4E3A7EE7E01D0796C307 /* MTLClearColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7802111478CE8733AFF9C169EDC85D1A /* MTLClearColor+Extensions.swift */; };
+		A6DE926505051420F003B966775EBB7C /* TextureCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13C0C3127F830C9A5569AE3655991657 /* TextureCopy.swift */; };
+		A837790B9CA7633B5C622D93C4BD532B /* Pods-DemoApp-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 4700109B67C3DE021989FD0DCC852C45 /* Pods-DemoApp-dummy.m */; };
+		A9CCFB9477B0F3C55D03F6FB194DE6DB /* Pods-Demo-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = F6F9F5009737064935B5C76D54AAAAC0 /* Pods-Demo-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AA966F03BB938DCD1900547B3422A903 /* Alloy.default-ML-Shaders-macOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 330B297A35EF4EDD6E04DF6CB51ADBF4 /* Alloy.default-ML-Shaders-macOS-dummy.m */; };
 		AE6D4FD8802AED7763D78AC3811D09D4 /* Pods-AlloyTests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 79CB235E5DC6C9FB696B6F5F88180B82 /* Pods-AlloyTests-dummy.m */; };
-		B30066FD35B36DED6C4AC1F55CF54523 /* MTLCommandBuffer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DD3F4DC2DD5CC5042C758C5D649503A /* MTLCommandBuffer+Extensions.swift */; };
-		B4C4AA95B16A7C45073CB6D430AD4508 /* Sequence+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091B8D4F994D3153017576131952CFD2 /* Sequence+Utils.swift */; };
-		B61ACA20B272FAB19325F5D3F39C806C /* MTLBlitCommandEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65003111F656ED6A4863CA1EA3708E76 /* MTLBlitCommandEncoder+Extensions.swift */; };
-		B79A487B72D1996416295DDF58FCBFFA /* CVPixelBuffer+MTLTexture.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE81536851FF0DB2ED59DCDD944C6AD /* CVPixelBuffer+MTLTexture.swift */; };
-		BE7519864AC5828454B54A042491AFB8 /* MTLTexture+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72C3DECEE93B77FECEC2BE9F1B09420B /* MTLTexture+Extensions.swift */; };
-		BEB0C730F4840BA6832F7D2C1C9EC38B /* Sequence+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091B8D4F994D3153017576131952CFD2 /* Sequence+Utils.swift */; };
-		BF2420A33FC91342FEAA78DEB354F3A6 /* Alloy-macOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C869034B5CA6C7500BD283F0B620A5C /* Alloy-macOS-dummy.m */; };
-		C42EEA97C62A4966F7E154E2316C6B0A /* MTLOrigin+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF635C85B52FD473442B91551C4499D /* MTLOrigin+Extensions.swift */; };
-		C4F3298CC41731F4C3DBB3DF4AB30154 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86AD85CECA3A39F9E5BBB58E6717CE02 /* Metal.framework */; };
-		C711B473CFB3CB1A71C02D470680EBAF /* ComputeCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2EFF6FDBCDAC2C4A4A99C125EC86FC /* ComputeCommand.swift */; };
-		C7A80781ECEDBD355F3B80F7E5AA75B7 /* MTLOffscreenRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425F6805ECDE4A2BB4D4B558D76ECD46 /* MTLOffscreenRenderer.swift */; };
-		CA5F4EEA4BCCE56E548F067B044B2BD4 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAEB352F042A11405A8CA1454C4D9D8E /* CoreVideo.framework */; };
-		CE0A6D2343E6C41F5352A9561CB27861 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59B8B26D2906DD2B431E74EE74F2CA65 /* Foundation.framework */; };
+		AEED26AF8149768EFFE1AA87F76DD447 /* MPSImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FD866FE77435605593B2B4AC25EE5E0 /* MPSImage+Extensions.swift */; };
+		B0CCE57748B596FF83CD57A1586DF244 /* TextureCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13C0C3127F830C9A5569AE3655991657 /* TextureCopy.swift */; };
+		B4C4AA95B16A7C45073CB6D430AD4508 /* Sequence+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAABA99AF0A6B1F4BF74E3ADC4E56C9 /* Sequence+Utils.swift */; };
+		B79A487B72D1996416295DDF58FCBFFA /* CVPixelBuffer+MTLTexture.swift in Sources */ = {isa = PBXBuildFile; fileRef = D443A0A6A2D8754BC92398D99C59F5F7 /* CVPixelBuffer+MTLTexture.swift */; };
+		BBD6B4827AA30C4D6D7C2CE5A63FD6F8 /* Float16.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB946C03D980E48320464F847BCDA99 /* Float16.swift */; };
+		BE7519864AC5828454B54A042491AFB8 /* MTLTexture+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FFCE2DA4F5EA452F4D5E03C8EB085EF /* MTLTexture+Extensions.swift */; };
+		BEB0C730F4840BA6832F7D2C1C9EC38B /* Sequence+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAABA99AF0A6B1F4BF74E3ADC4E56C9 /* Sequence+Utils.swift */; };
+		BF2420A33FC91342FEAA78DEB354F3A6 /* Alloy-macOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 6836416741DB76724CAB778CC4444F94 /* Alloy-macOS-dummy.m */; };
+		C253F5FD57E5A47708D1B8981A7150B2 /* MTLResource+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE4E5FF5F19B24C2D25F4A25AF805F3E /* MTLResource+Extensions.swift */; };
+		C42EEA97C62A4966F7E154E2316C6B0A /* MTLOrigin+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A83D1D6AA8CD28869AE2D5322C045DA /* MTLOrigin+Extensions.swift */; };
+		C9AB72A932BF2EF58DE1B2A9D47272B2 /* MinEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A36C58EC119B5C5D2D1EAA1A7E8CCE2 /* MinEncoder.swift */; };
+		CA5F4EEA4BCCE56E548F067B044B2BD4 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F31CFA08590EA10C805BD2F49FE531C /* CoreVideo.framework */; };
+		CE0A6D2343E6C41F5352A9561CB27861 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DD78C34C7380FE69F7B5A612CCAFCB /* Foundation.framework */; };
 		D24646777533141B73333DD693A64149 /* Pods-DemoAppTests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 18FB0D7FDA921AFE292DBEF86F9169A2 /* Pods-DemoAppTests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D381AB78895E3E1E37683090DBB1034A /* MPSImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCD1EF453F5D5185FCE9988011CE78D /* MPSImage+Extensions.swift */; };
-		D3BEFB2FE57F4079D77C317B577EF207 /* MTLOffscreenRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425F6805ECDE4A2BB4D4B558D76ECD46 /* MTLOffscreenRenderer.swift */; };
-		DDA1355982349AD6DE97276FDF8EF28B /* MTLResource+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 756C13986A2038510BE79FD0B791E44C /* MTLResource+Extensions.swift */; };
-		E21EC53454EBCDD76E5BBBED8F6A3664 /* Pods-DemoApp-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = A6A1A3F1DEBA0091FC07D5D5D9C7C0CA /* Pods-DemoApp-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E3CBB5ED1EDA3C38F1280B0584A795FF /* MTLSizeAndAlign+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2A0EB29033367831049560B6CBCB90 /* MTLSizeAndAlign+Extensions.swift */; };
-		EA12FA761F51C5712DB1D2DB09E83440 /* Float16.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EEA59BE30E4E87E58D555A318D1EF8F /* Float16.swift */; };
-		F1401726EFF0A959C02A2A45180AB568 /* Pods-Demo-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = A1805D8D33E39387F9B55772C6040460 /* Pods-Demo-dummy.m */; };
-		F1D7818007FBEFB1B8C0530E8AEFD5EB /* MTLComputeCommandEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 285FD63111B2E28565B7A99142DE0737 /* MTLComputeCommandEncoder+Extensions.swift */; };
+		D381AB78895E3E1E37683090DBB1034A /* MPSImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FD866FE77435605593B2B4AC25EE5E0 /* MPSImage+Extensions.swift */; };
+		D3BEFB2FE57F4079D77C317B577EF207 /* MTLOffscreenRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92AC8512979FC9766A48FB524D62596B /* MTLOffscreenRenderer.swift */; };
+		D4A00098B0111D6C329D882DA6DFEC5D /* MTLComputePipelineState+Threads.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAE22FB7223AB2541C768488F65FCB06 /* MTLComputePipelineState+Threads.swift */; };
+		DDAF792A2C656154EACA42655A07EE99 /* MTLBlitCommandEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D5F53CFCFD1C3DFE27AC222D6401AB /* MTLBlitCommandEncoder+Extensions.swift */; };
+		DFDC84DB47464A000615A4C7E26462AD /* MTLCommandBuffer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 142FC906813F8D0C02E33C585A0A87B3 /* MTLCommandBuffer+Extensions.swift */; };
+		E2C286E7A8493CC9654C9779005DB602 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0668811627B7D2F8BCBAE2B55FC16B1 /* Metal.framework */; };
+		E3CBB5ED1EDA3C38F1280B0584A795FF /* MTLSizeAndAlign+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD3C5EB2D1D2F506E0663A1CDCADF6BD /* MTLSizeAndAlign+Extensions.swift */; };
+		EA34B3F88083F04434E9F48FC51981DB /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75D2F1C1FDF07242A74EDA63DA412A1D /* CoreVideo.framework */; };
+		EF04E4111D037DE962770B4DB433956F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DD78C34C7380FE69F7B5A612CCAFCB /* Foundation.framework */; };
+		F1D7818007FBEFB1B8C0530E8AEFD5EB /* MTLComputeCommandEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C701BC0F9B2395D23700B4DBE2A17828 /* MTLComputeCommandEncoder+Extensions.swift */; };
+		F20E585A48CC3CA69FC20B0F03A25863 /* MTLTexture+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FFCE2DA4F5EA452F4D5E03C8EB085EF /* MTLTexture+Extensions.swift */; };
+		F29713FCBB4532DD83176B21E0773759 /* MaxEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9AE9210273D9F36C8134D56956FA99E /* MaxEncoder.swift */; };
+		F674054F324607023EDD0ED122BEBC6F /* MTLOffscreenRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92AC8512979FC9766A48FB524D62596B /* MTLOffscreenRenderer.swift */; };
 		F6FA0AE68E94FEDAAC52732744862571 /* Pods-DemoAppTests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = DE3DF5A550FAFCE1F901662517395571 /* Pods-DemoAppTests-dummy.m */; };
-		FAB2C6C90B98448D924C821E9B1E040C /* Alloy-iOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAEC0B5E17DFF9441D097500192D3C2 /* Alloy-iOS-dummy.m */; };
-		FC5019AD6ABDB8AFCA7B827D4C3751E2 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86AD85CECA3A39F9E5BBB58E6717CE02 /* Metal.framework */; };
-		FC53CFE9E82FBCD544B338DC8FE3810C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04A1746FB1770F38F5204CB17956F900 /* Cocoa.framework */; };
-		FCC26CA98C719EA7A834112EEE8F2FA9 /* MTLRegion+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F933F66CD79C49C2AEC5A23AEB97776 /* MTLRegion+Extensions.swift */; };
-		FE232D40ADAC7C557DEC93A300A21895 /* MTLLibrary+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D6E9C25218A173F7F3906774A71607 /* MTLLibrary+Extensions.swift */; };
+		FA6A6F22D38B85D03DCFFEED1C923E7E /* MTLComputeCommandEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C701BC0F9B2395D23700B4DBE2A17828 /* MTLComputeCommandEncoder+Extensions.swift */; };
+		FAB2C6C90B98448D924C821E9B1E040C /* Alloy-iOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = E984DEDE41BC3B447C5171C18B045A0F /* Alloy-iOS-dummy.m */; };
+		FC5019AD6ABDB8AFCA7B827D4C3751E2 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B70D6A55430B8280DFD490BAEE346ADA /* Metal.framework */; };
+		FC53CFE9E82FBCD544B338DC8FE3810C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 365213F6A21BA8B6F59EB8C339D0F8CC /* Cocoa.framework */; };
+		FC97A7494E2E8696ECB2653B0DAE64DB /* MaxEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9AE9210273D9F36C8134D56956FA99E /* MaxEncoder.swift */; };
+		FCE6AE743D0B002BC3AEF1ED4AF1B501 /* MTLBuffer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C9FF7390A5AD7EF22EFEE49397D601 /* MTLBuffer+Extensions.swift */; };
+		FD4CEFFE358F9DB37F0E1B97A3433EC2 /* CVPixelBuffer+MTLTexture.swift in Sources */ = {isa = PBXBuildFile; fileRef = D443A0A6A2D8754BC92398D99C59F5F7 /* CVPixelBuffer+MTLTexture.swift */; };
+		FFDD4B452BFB6C30E518B304FCF5A8EA /* Float16.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB946C03D980E48320464F847BCDA99 /* Float16.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		2318737C006EDB9C21266D6922BDEDD8 /* PBXContainerItemProxy */ = {
+		3A103A4A2CD3186355C37AD6C83F7550 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 994EF47A3561B985CDDF080702BF5D58;
-			remoteInfo = "Alloy-iOS";
+			remoteGlobalIDString = 71F61A3165EDA1E769B475591888D227;
+			remoteInfo = "Alloy.default-ML-Shaders-macOS";
+		};
+		6BEF895651AE96071C9B24CCE29D74F9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6FBB367C526D3A44C924CD512B590730;
+			remoteInfo = "Alloy.default-ML-Shaders-iOS";
 		};
 		789314B9337D640DC58CC46C7BCBB5D6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -125,122 +168,128 @@
 			remoteGlobalIDString = DE08C48F313B36DA073AF474D8EC3E14;
 			remoteInfo = "Alloy-macOS";
 		};
-		C25B58B346E32AFE4EF200FDD061051B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 37E6D81D91AFC85575A29ED317FCC3FF;
-			remoteInfo = "Alloy.default-Shaders";
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		0119A0B511155EAE6347812B02E27C2C /* Pods-Demo-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Demo-acknowledgements.markdown"; sourceTree = "<group>"; };
-		026D5B7C794FBB0EB89B8D73BFA3A13C /* TextureCopy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TextureCopy.swift; sourceTree = "<group>"; };
+		011F8EFD8AD4E11009AF7BB5B9A98841 /* Alloy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Alloy.framework; path = "Alloy.default-ML-Shaders-macOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		02579C2EDDF7672D5CF28BF794310846 /* Alloy-macOS.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; name = "Alloy-macOS.modulemap"; path = "../Alloy-macOS/Alloy-macOS.modulemap"; sourceTree = "<group>"; };
 		029C2322FD23C3FCFFB7F69B22CD228C /* Pods-Demo.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-Demo.modulemap"; sourceTree = "<group>"; };
-		04A1746FB1770F38F5204CB17956F900 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
-		0591B44B9497DEAFE986600B520D95A3 /* Alloy.default-Shaders-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "Alloy.default-Shaders-dummy.m"; path = "../Alloy.default-Shaders/Alloy.default-Shaders-dummy.m"; sourceTree = "<group>"; };
-		091B8D4F994D3153017576131952CFD2 /* Sequence+Utils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Sequence+Utils.swift"; path = "Alloy/Sequence+Utils.swift"; sourceTree = "<group>"; };
-		0DB852B9B9BD6F8A09E14BBA2794DC70 /* ColorConversion.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = ColorConversion.h; sourceTree = "<group>"; };
-		0DD3F4DC2DD5CC5042C758C5D649503A /* MTLCommandBuffer+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLCommandBuffer+Extensions.swift"; path = "Alloy/MTLCommandBuffer+Extensions.swift"; sourceTree = "<group>"; };
-		162DD501C7776EDD80DC57CCEBDE4DE8 /* Pods_DemoApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_DemoApp.framework; path = "Pods-DemoApp.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0616BD77231FAD00C4CD494AF4FBC1D0 /* Alloy.default-ML-Shaders-iOS.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Alloy.default-ML-Shaders-iOS.xcconfig"; path = "../Alloy.default-ML-Shaders-iOS/Alloy.default-ML-Shaders-iOS.xcconfig"; sourceTree = "<group>"; };
+		064BC6460C1F8F0F90E458B6A2B854B6 /* MetalPerformanceShaders.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalPerformanceShaders.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/MetalPerformanceShaders.framework; sourceTree = DEVELOPER_DIR; };
+		0FD866FE77435605593B2B4AC25EE5E0 /* MPSImage+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MPSImage+Extensions.swift"; path = "Alloy/MPSImage+Extensions.swift"; sourceTree = "<group>"; };
+		10F3BF1A3B8943B9CB49AECA22A0182E /* Alloy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Alloy.framework; path = "Alloy-macOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		13C0C3127F830C9A5569AE3655991657 /* TextureCopy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TextureCopy.swift; sourceTree = "<group>"; };
+		142FC906813F8D0C02E33C585A0A87B3 /* MTLCommandBuffer+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLCommandBuffer+Extensions.swift"; path = "Alloy/MTLCommandBuffer+Extensions.swift"; sourceTree = "<group>"; };
 		173651145F3971C4C53E4BB70B998B3F /* Pods-AlloyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-AlloyTests.release.xcconfig"; sourceTree = "<group>"; };
 		18FB0D7FDA921AFE292DBEF86F9169A2 /* Pods-DemoAppTests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-DemoAppTests-umbrella.h"; sourceTree = "<group>"; };
-		1A2EFF6FDBCDAC2C4A4A99C125EC86FC /* ComputeCommand.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ComputeCommand.swift; path = Alloy/ComputeCommand.swift; sourceTree = "<group>"; };
+		19A05AF8F84FF1D5FE67722716CDD57F /* Alloy-macOS-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "Alloy-macOS-prefix.pch"; path = "../Alloy-macOS/Alloy-macOS-prefix.pch"; sourceTree = "<group>"; };
+		1AAABA99AF0A6B1F4BF74E3ADC4E56C9 /* Sequence+Utils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Sequence+Utils.swift"; path = "Alloy/Sequence+Utils.swift"; sourceTree = "<group>"; };
+		1C1BF1345467CE04EBA8491995554B08 /* Alloy.default-ML-Shaders-macOS.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; name = "Alloy.default-ML-Shaders-macOS.modulemap"; path = "../Alloy.default-ML-Shaders-macOS/Alloy.default-ML-Shaders-macOS.modulemap"; sourceTree = "<group>"; };
 		1FA161729A8DEA4378ED1E1A588D07BF /* Pods-DemoAppTests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-DemoAppTests-acknowledgements.markdown"; sourceTree = "<group>"; };
-		20EFFBB4B38CA6E9D40AA6ADCAE56E32 /* Alloy-macOS-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "Alloy-macOS-prefix.pch"; path = "../Alloy-macOS/Alloy-macOS-prefix.pch"; sourceTree = "<group>"; };
-		2103F0BFCF7035947680106DDA8BA08D /* Alloy-macOS.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; name = "Alloy-macOS.modulemap"; path = "../Alloy-macOS/Alloy-macOS.modulemap"; sourceTree = "<group>"; };
-		27DA9D46DF926855DDB26012208008D5 /* Alloy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Alloy.framework; path = "Alloy-iOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
-		285FD63111B2E28565B7A99142DE0737 /* MTLComputeCommandEncoder+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLComputeCommandEncoder+Extensions.swift"; path = "Alloy/MTLComputeCommandEncoder+Extensions.swift"; sourceTree = "<group>"; };
-		2B404447650344F553CA1E734B1E2B8F /* Shaders.metal */ = {isa = PBXFileReference; includeInIndex = 1; path = Shaders.metal; sourceTree = "<group>"; };
-		306AA28B04D834BC12901D8224FEEDC3 /* Pods_DemoAppTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_DemoAppTests.framework; path = "Pods-DemoAppTests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		21060D210B1A445BC98E4EE47BAE4005 /* Pods_Demo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_Demo.framework; path = "Pods-Demo.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		25CC4A7BB40ECF258F9BDE01CB728895 /* Alloy-iOS-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Alloy-iOS-umbrella.h"; sourceTree = "<group>"; };
+		26EE22F96D5B90E3642C4E2AAA882331 /* Shaders.metal */ = {isa = PBXFileReference; includeInIndex = 1; path = Shaders.metal; sourceTree = "<group>"; };
+		2904654A1CAC9FE241CB502461254F57 /* Alloy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Alloy.framework; path = "Alloy-iOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2A36C58EC119B5C5D2D1EAA1A7E8CCE2 /* MinEncoder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MinEncoder.swift; sourceTree = "<group>"; };
+		2E854CDB9105F08B6F0DF8ECAA47AD00 /* ComputeCommand.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ComputeCommand.swift; path = Alloy/ComputeCommand.swift; sourceTree = "<group>"; };
+		2EB290E7B750979A82C576B3DC9D10D5 /* Alloy.default-ML-Shaders-macOS-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = "Alloy.default-ML-Shaders-macOS-Info.plist"; path = "../Alloy.default-ML-Shaders-macOS/Alloy.default-ML-Shaders-macOS-Info.plist"; sourceTree = "<group>"; };
 		30C38FE74E4FBE528C0E4AF443FE7D78 /* Pods-AlloyTests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-AlloyTests-frameworks.sh"; sourceTree = "<group>"; };
-		36AFEE195735E84545609B8BCF59974F /* Alloy-iOS-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Alloy-iOS-prefix.pch"; sourceTree = "<group>"; };
+		32A6EFCDE8F8EFF16CF143C972F0C8AB /* Pods_DemoApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_DemoApp.framework; path = "Pods-DemoApp.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		330B297A35EF4EDD6E04DF6CB51ADBF4 /* Alloy.default-ML-Shaders-macOS-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "Alloy.default-ML-Shaders-macOS-dummy.m"; path = "../Alloy.default-ML-Shaders-macOS/Alloy.default-ML-Shaders-macOS-dummy.m"; sourceTree = "<group>"; };
+		365213F6A21BA8B6F59EB8C339D0F8CC /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		385CC06582E1C6EF9837E53C1894DC9E /* MetalPerformanceShaders.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalPerformanceShaders.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.0.sdk/System/Library/Frameworks/MetalPerformanceShaders.framework; sourceTree = DEVELOPER_DIR; };
 		3FFEC2DDD29F7A23FEB88591D19EEBE9 /* Pods-AlloyTests-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-AlloyTests-Info.plist"; sourceTree = "<group>"; };
-		423F7FBD7B54702A65BA6836C17468C5 /* Alloy-iOS-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Alloy-iOS-umbrella.h"; sourceTree = "<group>"; };
-		425F6805ECDE4A2BB4D4B558D76ECD46 /* MTLOffscreenRenderer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MTLOffscreenRenderer.swift; path = Alloy/MTLOffscreenRenderer.swift; sourceTree = "<group>"; };
+		463B1A167EA120DD300EE43E5CE733B1 /* Alloy-iOS.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Alloy-iOS.modulemap"; sourceTree = "<group>"; };
 		4700109B67C3DE021989FD0DCC852C45 /* Pods-DemoApp-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-DemoApp-dummy.m"; sourceTree = "<group>"; };
+		470E65CF445AAD40A1132A9A599530B3 /* Alloy.default-ML-Shaders-iOS-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "Alloy.default-ML-Shaders-iOS-prefix.pch"; path = "../Alloy.default-ML-Shaders-iOS/Alloy.default-ML-Shaders-iOS-prefix.pch"; sourceTree = "<group>"; };
+		47D5F53CFCFD1C3DFE27AC222D6401AB /* MTLBlitCommandEncoder+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLBlitCommandEncoder+Extensions.swift"; path = "Alloy/MTLBlitCommandEncoder+Extensions.swift"; sourceTree = "<group>"; };
 		4AD1B50B3FB191C0003C65F6E9F5AAB8 /* Pods-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Demo.debug.xcconfig"; sourceTree = "<group>"; };
 		4C9CA0B1ECAF531E22D2B2A330096A5C /* Pods-Demo-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Demo-frameworks.sh"; sourceTree = "<group>"; };
-		514C51CEFF3C2C5098FBCB0DF0D13BED /* Alloy.default-Shaders-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = "Alloy.default-Shaders-Info.plist"; path = "../Alloy.default-Shaders/Alloy.default-Shaders-Info.plist"; sourceTree = "<group>"; };
+		4FC91570CA390C50052713C19D726FB9 /* BlockSize.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BlockSize.swift; sourceTree = "<group>"; };
+		53DD78C34C7380FE69F7B5A612CCAFCB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		54F75986CFEED1A5F8CB141608CCCE6A /* Alloy.default-ML-Shaders-iOS-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "Alloy.default-ML-Shaders-iOS-dummy.m"; path = "../Alloy.default-ML-Shaders-iOS/Alloy.default-ML-Shaders-iOS-dummy.m"; sourceTree = "<group>"; };
 		5521A4F7F9808D7AE83137222F134C50 /* Pods-DemoAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-DemoAppTests.release.xcconfig"; sourceTree = "<group>"; };
-		5572313322E1CC3E634DE4D906315D1B /* Alloy-macOS-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "Alloy-macOS-umbrella.h"; path = "../Alloy-macOS/Alloy-macOS-umbrella.h"; sourceTree = "<group>"; };
-		56F9CEE4C8810072253855510E63A94F /* BlockSize.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BlockSize.swift; sourceTree = "<group>"; };
 		57106BDA7D53203D8FEB1109B422F4E2 /* Pods-DemoAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-DemoAppTests.debug.xcconfig"; sourceTree = "<group>"; };
-		59B8B26D2906DD2B431E74EE74F2CA65 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		5B0D21CAE83DAAE9FA609F8F1C2FD6DB /* MeanEncoder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MeanEncoder.swift; sourceTree = "<group>"; };
-		5C869034B5CA6C7500BD283F0B620A5C /* Alloy-macOS-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "Alloy-macOS-dummy.m"; path = "../Alloy-macOS/Alloy-macOS-dummy.m"; sourceTree = "<group>"; };
-		5EEA59BE30E4E87E58D555A318D1EF8F /* Float16.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Float16.swift; path = Alloy/Float16.swift; sourceTree = "<group>"; };
-		5F648296AD90DAABA9F78C898B532C4A /* Alloy-macOS-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = "Alloy-macOS-Info.plist"; path = "../Alloy-macOS/Alloy-macOS-Info.plist"; sourceTree = "<group>"; };
+		5D3D4AF16C8E54C34CE428A8F397FB85 /* Alloy-iOS.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Alloy-iOS.xcconfig"; sourceTree = "<group>"; };
+		5F31CFA08590EA10C805BD2F49FE531C /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreVideo.framework; sourceTree = DEVELOPER_DIR; };
 		5FFFC6092BB1C1EF9A6FC21E14DB5DA6 /* Pods-DemoApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-DemoApp.release.xcconfig"; sourceTree = "<group>"; };
-		611E79E37BAB82D760F981CA7C546150 /* Alloy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Alloy.framework; path = "Alloy-macOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
-		61EF09505F9B8C802DC93E446F13F611 /* Alloy-iOS-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Alloy-iOS-Info.plist"; sourceTree = "<group>"; };
-		65003111F656ED6A4863CA1EA3708E76 /* MTLBlitCommandEncoder+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLBlitCommandEncoder+Extensions.swift"; path = "Alloy/MTLBlitCommandEncoder+Extensions.swift"; sourceTree = "<group>"; };
-		66E6B6F559689F167563D0D53A43C622 /* MinEncoder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MinEncoder.swift; sourceTree = "<group>"; };
+		6836416741DB76724CAB778CC4444F94 /* Alloy-macOS-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "Alloy-macOS-dummy.m"; path = "../Alloy-macOS/Alloy-macOS-dummy.m"; sourceTree = "<group>"; };
+		698EA8F3B498386F78991A00BCE68ABB /* MTLRegion+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLRegion+Extensions.swift"; path = "Alloy/MTLRegion+Extensions.swift"; sourceTree = "<group>"; };
 		69B88AE178F2FB72FE62B7577A299A46 /* Pods-DemoApp-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-DemoApp-frameworks.sh"; sourceTree = "<group>"; };
+		6A43301A72299AC6D57E5776BB728425 /* Alloy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Alloy.framework; path = "Alloy.default-ML-Shaders-iOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C24AE0DF1160EB0045CFEC5E3A87AD9 /* Pods-Demo-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Demo-acknowledgements.plist"; sourceTree = "<group>"; };
+		6CB049DE5C3BCCAD84E6C33FEBEBF39E /* Alloy.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = Alloy.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		6F03B76E59DEEE0DB5C984A15BAE7B97 /* Pods-DemoApp-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-DemoApp-acknowledgements.markdown"; sourceTree = "<group>"; };
-		72594B329664FE921DD09AB57EAB01DE /* MTLRenderCommandEncoder+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLRenderCommandEncoder+Extensions.swift"; path = "Alloy/MTLRenderCommandEncoder+Extensions.swift"; sourceTree = "<group>"; };
-		72C3DECEE93B77FECEC2BE9F1B09420B /* MTLTexture+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLTexture+Extensions.swift"; path = "Alloy/MTLTexture+Extensions.swift"; sourceTree = "<group>"; };
-		7484CD888D2A4446976563418086EE41 /* Pods_Demo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_Demo.framework; path = "Pods-Demo.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
-		756C13986A2038510BE79FD0B791E44C /* MTLResource+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLResource+Extensions.swift"; path = "Alloy/MTLResource+Extensions.swift"; sourceTree = "<group>"; };
+		7020A804BC0AA6F9E86B63644B8B92F4 /* MTLLibrary+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLLibrary+Extensions.swift"; path = "Alloy/MTLLibrary+Extensions.swift"; sourceTree = "<group>"; };
+		7210F8B910B20BD3C063BCE74666481E /* PoolPadding.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PoolPadding.swift; path = Alloy/ML/PoolPadding.swift; sourceTree = "<group>"; };
+		75D2F1C1FDF07242A74EDA63DA412A1D /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.0.sdk/System/Library/Frameworks/CoreVideo.framework; sourceTree = DEVELOPER_DIR; };
 		7746AC19632F9C267288FE830A5F76E3 /* Pods-AlloyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-AlloyTests.debug.xcconfig"; sourceTree = "<group>"; };
+		7802111478CE8733AFF9C169EDC85D1A /* MTLClearColor+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLClearColor+Extensions.swift"; path = "Alloy/MTLClearColor+Extensions.swift"; sourceTree = "<group>"; };
 		79CB235E5DC6C9FB696B6F5F88180B82 /* Pods-AlloyTests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-AlloyTests-dummy.m"; sourceTree = "<group>"; };
-		7A3D01DEEDE7EBCE9D73887ACB6A5354 /* MTLComputePipelineState+Threads.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLComputePipelineState+Threads.swift"; path = "Alloy/MTLComputePipelineState+Threads.swift"; sourceTree = "<group>"; };
-		7B17DE1C19A24160105BAE4933EB5CAC /* MTLClearColor+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLClearColor+Extensions.swift"; path = "Alloy/MTLClearColor+Extensions.swift"; sourceTree = "<group>"; };
-		7D3C991571997F9BE7825884DE98426A /* Alloy-macOS.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Alloy-macOS.xcconfig"; path = "../Alloy-macOS/Alloy-macOS.xcconfig"; sourceTree = "<group>"; };
-		7FF359AF32FCF8DA3DB3C4128AB2EBBC /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
-		800DDAE67C5BBE4077CCD8DBAAF1474E /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.0.sdk/System/Library/Frameworks/CoreVideo.framework; sourceTree = DEVELOPER_DIR; };
-		803469064342242C0EAEAE8F52B07B64 /* Metal.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Metal.swift; path = Alloy/Metal.swift; sourceTree = "<group>"; };
-		8672E4D441EE53E6094EA00BB0C72BD8 /* Alloy.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = Alloy.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		86AD85CECA3A39F9E5BBB58E6717CE02 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Metal.framework; sourceTree = DEVELOPER_DIR; };
-		8786F99181836A7D28613C7F310B1456 /* Alloy.default-Shaders.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Alloy.default-Shaders.xcconfig"; path = "../Alloy.default-Shaders/Alloy.default-Shaders.xcconfig"; sourceTree = "<group>"; };
-		8D85A3CC1C2C5C810F42D34A7FB4316C /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
-		8F2A0EB29033367831049560B6CBCB90 /* MTLSizeAndAlign+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLSizeAndAlign+Extensions.swift"; path = "Alloy/MTLSizeAndAlign+Extensions.swift"; sourceTree = "<group>"; };
-		97A9660576A6ECA5AA495E8BC80DCE62 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.0.sdk/System/Library/Frameworks/Metal.framework; sourceTree = DEVELOPER_DIR; };
-		985E23D522324A8DA84D7DC5CA82EC9B /* Alloy.default-Shaders-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "Alloy.default-Shaders-umbrella.h"; path = "../Alloy.default-Shaders/Alloy.default-Shaders-umbrella.h"; sourceTree = "<group>"; };
+		7BE51200B3F7F211858B91D8DF42FF17 /* Alloy-macOS-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "Alloy-macOS-umbrella.h"; path = "../Alloy-macOS/Alloy-macOS-umbrella.h"; sourceTree = "<group>"; };
+		7FFCE2DA4F5EA452F4D5E03C8EB085EF /* MTLTexture+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLTexture+Extensions.swift"; path = "Alloy/MTLTexture+Extensions.swift"; sourceTree = "<group>"; };
+		810DC1D6CF00BD9DBB94DA8ADE3AC2AB /* ColorConversion.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = ColorConversion.h; sourceTree = "<group>"; };
+		8A83D1D6AA8CD28869AE2D5322C045DA /* MTLOrigin+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLOrigin+Extensions.swift"; path = "Alloy/MTLOrigin+Extensions.swift"; sourceTree = "<group>"; };
+		8AE3A9CB0B18F89DFE0E4A15196C0AA4 /* Alloy.default-ML-Shaders-iOS-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = "Alloy.default-ML-Shaders-iOS-Info.plist"; path = "../Alloy.default-ML-Shaders-iOS/Alloy.default-ML-Shaders-iOS-Info.plist"; sourceTree = "<group>"; };
+		8FADE390253D610F1980DE6F89327385 /* Alloy.default-ML-Shaders-macOS-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "Alloy.default-ML-Shaders-macOS-prefix.pch"; path = "../Alloy.default-ML-Shaders-macOS/Alloy.default-ML-Shaders-macOS-prefix.pch"; sourceTree = "<group>"; };
+		8FB946C03D980E48320464F847BCDA99 /* Float16.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Float16.swift; path = Alloy/Float16.swift; sourceTree = "<group>"; };
+		92AC8512979FC9766A48FB524D62596B /* MTLOffscreenRenderer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MTLOffscreenRenderer.swift; path = Alloy/MTLOffscreenRenderer.swift; sourceTree = "<group>"; };
+		957AD94F0098CF636747D844A82834EE /* MTLRenderCommandEncoder+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLRenderCommandEncoder+Extensions.swift"; path = "Alloy/MTLRenderCommandEncoder+Extensions.swift"; sourceTree = "<group>"; };
 		9A93FE17E9A06F499DDD03B8AA290691 /* Pods-DemoAppTests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-DemoAppTests-frameworks.sh"; sourceTree = "<group>"; };
 		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		9F417FD6C03BC490FC6AA9FD7875A65E /* Alloy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Alloy.framework; path = "Alloy.default-Shaders.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
-		9F933F66CD79C49C2AEC5A23AEB97776 /* MTLRegion+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLRegion+Extensions.swift"; path = "Alloy/MTLRegion+Extensions.swift"; sourceTree = "<group>"; };
 		A1805D8D33E39387F9B55772C6040460 /* Pods-Demo-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Demo-dummy.m"; sourceTree = "<group>"; };
-		A3604E331827DA6226E272ED4BD16D9D /* Alloy.default-Shaders.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; name = "Alloy.default-Shaders.modulemap"; path = "../Alloy.default-Shaders/Alloy.default-Shaders.modulemap"; sourceTree = "<group>"; };
+		A350AE95C607D4D53D989FAFF34B8705 /* Alloy-iOS-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Alloy-iOS-Info.plist"; sourceTree = "<group>"; };
 		A6A1A3F1DEBA0091FC07D5D5D9C7C0CA /* Pods-DemoApp-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-DemoApp-umbrella.h"; sourceTree = "<group>"; };
 		A725AB1CBF203DD56BCDB9A5160C6A3A /* Pods-DemoApp-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-DemoApp-Info.plist"; sourceTree = "<group>"; };
-		B5A76FC1B06F7F3F5EE0FAC4CF7BD442 /* Alloy-iOS.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Alloy-iOS.modulemap"; sourceTree = "<group>"; };
+		AAE22FB7223AB2541C768488F65FCB06 /* MTLComputePipelineState+Threads.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLComputePipelineState+Threads.swift"; path = "Alloy/MTLComputePipelineState+Threads.swift"; sourceTree = "<group>"; };
+		B57BCAFA0288680F313CF492CC8FCF20 /* Alloy.default-ML-Shaders-iOS-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "Alloy.default-ML-Shaders-iOS-umbrella.h"; path = "../Alloy.default-ML-Shaders-iOS/Alloy.default-ML-Shaders-iOS-umbrella.h"; sourceTree = "<group>"; };
+		B6394EB77034E56ABF9F74F8CFA9C74E /* Pods_AlloyTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_AlloyTests.framework; path = "Pods-AlloyTests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B70D6A55430B8280DFD490BAEE346ADA /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Metal.framework; sourceTree = DEVELOPER_DIR; };
 		B7D4E919EB45FA3654ED802BCFCB6419 /* Pods-DemoApp.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-DemoApp.modulemap"; sourceTree = "<group>"; };
-		BFCD1EF453F5D5185FCE9988011CE78D /* MPSImage+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MPSImage+Extensions.swift"; path = "Alloy/MPSImage+Extensions.swift"; sourceTree = "<group>"; };
+		BD3C5EB2D1D2F506E0663A1CDCADF6BD /* MTLSizeAndAlign+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLSizeAndAlign+Extensions.swift"; path = "Alloy/MTLSizeAndAlign+Extensions.swift"; sourceTree = "<group>"; };
+		C0668811627B7D2F8BCBAE2B55FC16B1 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.0.sdk/System/Library/Frameworks/Metal.framework; sourceTree = DEVELOPER_DIR; };
 		C0F2920D007653B2E397A2CBA05894F2 /* Pods-DemoApp-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-DemoApp-acknowledgements.plist"; sourceTree = "<group>"; };
+		C1160E7ADEE028C9213A0DFFABC32E95 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
+		C701BC0F9B2395D23700B4DBE2A17828 /* MTLComputeCommandEncoder+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLComputeCommandEncoder+Extensions.swift"; path = "Alloy/MTLComputeCommandEncoder+Extensions.swift"; sourceTree = "<group>"; };
 		C7110A0237F6C45E62F610B8381B0F6D /* Pods-DemoAppTests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-DemoAppTests-acknowledgements.plist"; sourceTree = "<group>"; };
 		C8B683276963D080CC66BC351E3EC7D4 /* Pods-Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Demo.release.xcconfig"; sourceTree = "<group>"; };
+		C90975CEBC0F7398B87A82BA7F802502 /* Metal.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Metal.swift; path = Alloy/Metal.swift; sourceTree = "<group>"; };
+		C9EBEFDF0D2F337C4D875413B1EA0A88 /* Alloy-iOS-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Alloy-iOS-prefix.pch"; sourceTree = "<group>"; };
 		CDEE2E9C8332AEFA0CECA42F24797FEF /* Pods-DemoApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-DemoApp.debug.xcconfig"; sourceTree = "<group>"; };
 		CEE4A10332ABC68E8DE2AE9CD8F8CB6B /* Pods-DemoAppTests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-DemoAppTests.modulemap"; sourceTree = "<group>"; };
-		CFE81536851FF0DB2ED59DCDD944C6AD /* CVPixelBuffer+MTLTexture.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "CVPixelBuffer+MTLTexture.swift"; path = "Alloy/CVPixelBuffer+MTLTexture.swift"; sourceTree = "<group>"; };
 		D0B7D804FC526FB130EB4E0EEB3BCD73 /* Pods-Demo-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Demo-Info.plist"; sourceTree = "<group>"; };
-		D4D76AA3916659B77ED602025DD938C2 /* MaxEncoder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MaxEncoder.swift; sourceTree = "<group>"; };
+		D443A0A6A2D8754BC92398D99C59F5F7 /* CVPixelBuffer+MTLTexture.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "CVPixelBuffer+MTLTexture.swift"; path = "Alloy/CVPixelBuffer+MTLTexture.swift"; sourceTree = "<group>"; };
+		D57AA399924219D2EBA90702977A4FD1 /* MeanEncoder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MeanEncoder.swift; sourceTree = "<group>"; };
 		D63671ABB4ECC58A1929F3A92CEFBE87 /* Pods-DemoAppTests-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-DemoAppTests-Info.plist"; sourceTree = "<group>"; };
-		D855A2917A5AE88E87BE2651E713B4A3 /* Alloy-iOS.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Alloy-iOS.xcconfig"; sourceTree = "<group>"; };
 		DAE9FD64B7DEF7D3EDA70FAF8495CFA7 /* Pods-AlloyTests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-AlloyTests.modulemap"; sourceTree = "<group>"; };
-		DD7A7EAF94C3169C2A867498DDF147C5 /* Alloy.default-Shaders-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "Alloy.default-Shaders-prefix.pch"; path = "../Alloy.default-Shaders/Alloy.default-Shaders-prefix.pch"; sourceTree = "<group>"; };
+		DC0EC370473C023243A3676ADE8B3E42 /* Alloy.default-ML-Shaders-iOS.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; name = "Alloy.default-ML-Shaders-iOS.modulemap"; path = "../Alloy.default-ML-Shaders-iOS/Alloy.default-ML-Shaders-iOS.modulemap"; sourceTree = "<group>"; };
 		DE3DF5A550FAFCE1F901662517395571 /* Pods-DemoAppTests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-DemoAppTests-dummy.m"; sourceTree = "<group>"; };
-		DE9C5461C3D912251B45B557C0102579 /* Pods_AlloyTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_AlloyTests.framework; path = "Pods-AlloyTests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DEC8DB4B48F899B05BF597DD99E02289 /* Pods-AlloyTests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-AlloyTests-acknowledgements.plist"; sourceTree = "<group>"; };
+		E0203D075C390C7A23FD20C8A2B74AF6 /* Pods_DemoAppTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_DemoAppTests.framework; path = "Pods-DemoAppTests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E569DAD08534E9171A089DF1C6226178 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
+		E5BE9B8DF176A7B4DDD1806B0A012901 /* Alloy-macOS.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Alloy-macOS.xcconfig"; path = "../Alloy-macOS/Alloy-macOS.xcconfig"; sourceTree = "<group>"; };
 		E64119D8E58BDBD6A4931329904B8CA7 /* Pods-AlloyTests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-AlloyTests-umbrella.h"; sourceTree = "<group>"; };
-		EBAEC0B5E17DFF9441D097500192D3C2 /* Alloy-iOS-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Alloy-iOS-dummy.m"; sourceTree = "<group>"; };
-		EEF635C85B52FD473442B91551C4499D /* MTLOrigin+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLOrigin+Extensions.swift"; path = "Alloy/MTLOrigin+Extensions.swift"; sourceTree = "<group>"; };
-		F07F57D769F441469C12DA15B9C8EFE3 /* MTLBuffer+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLBuffer+Extensions.swift"; path = "Alloy/MTLBuffer+Extensions.swift"; sourceTree = "<group>"; };
-		F6D6E9C25218A173F7F3906774A71607 /* MTLLibrary+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLLibrary+Extensions.swift"; path = "Alloy/MTLLibrary+Extensions.swift"; sourceTree = "<group>"; };
+		E8124AE95ECBC21A76BA7BB7945CE296 /* Alloy-macOS-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = "Alloy-macOS-Info.plist"; path = "../Alloy-macOS/Alloy-macOS-Info.plist"; sourceTree = "<group>"; };
+		E984DEDE41BC3B447C5171C18B045A0F /* Alloy-iOS-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Alloy-iOS-dummy.m"; sourceTree = "<group>"; };
+		E9AE9210273D9F36C8134D56956FA99E /* MaxEncoder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MaxEncoder.swift; sourceTree = "<group>"; };
+		EE4E5FF5F19B24C2D25F4A25AF805F3E /* MTLResource+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLResource+Extensions.swift"; path = "Alloy/MTLResource+Extensions.swift"; sourceTree = "<group>"; };
 		F6F9F5009737064935B5C76D54AAAAC0 /* Pods-Demo-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Demo-umbrella.h"; sourceTree = "<group>"; };
-		FAEB352F042A11405A8CA1454C4D9D8E /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/CoreVideo.framework; sourceTree = DEVELOPER_DIR; };
+		F7C9FF7390A5AD7EF22EFEE49397D601 /* MTLBuffer+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "MTLBuffer+Extensions.swift"; path = "Alloy/MTLBuffer+Extensions.swift"; sourceTree = "<group>"; };
+		F88792ED50AFB9172B295C1A62DD0363 /* Alloy.default-ML-Shaders-macOS-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "Alloy.default-ML-Shaders-macOS-umbrella.h"; path = "../Alloy.default-ML-Shaders-macOS/Alloy.default-ML-Shaders-macOS-umbrella.h"; sourceTree = "<group>"; };
+		F9C2C80FB56D8703A299942E4A192C27 /* Alloy.default-ML-Shaders-macOS.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Alloy.default-ML-Shaders-macOS.xcconfig"; path = "../Alloy.default-ML-Shaders-macOS/Alloy.default-ML-Shaders-macOS.xcconfig"; sourceTree = "<group>"; };
 		FDD692B4AC4B395FFD1E96C84F48CF1D /* Pods-AlloyTests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-AlloyTests-acknowledgements.markdown"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		37E9620824D4F730A72642F04B298423 /* Frameworks */ = {
+		1F5850496C770D18645349353AED06C4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				172F7D24274DB76E0ACB4B1D3D32C76B /* Cocoa.framework in Frameworks */,
+				2BE1C84D120E77B42AF833E4188E25A9 /* Cocoa.framework in Frameworks */,
+				791AF0D2C83D59B4EACC7631B4ADBC8A /* CoreVideo.framework in Frameworks */,
+				899892CF709ECC38C2E5780486648693 /* Metal.framework in Frameworks */,
+				38ECFC0A4948B0D8BB4F48D5F29A7A4C /* MetalPerformanceShaders.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,11 +311,30 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		6AAA99F8BD802A18189BFD6E1130F965 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EA34B3F88083F04434E9F48FC51981DB /* CoreVideo.framework in Frameworks */,
+				EF04E4111D037DE962770B4DB433956F /* Foundation.framework in Frameworks */,
+				E2C286E7A8493CC9654C9779005DB602 /* Metal.framework in Frameworks */,
+				A6747CA9C0A7091F93F5360FF76B3A6C /* MetalPerformanceShaders.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		870CBC17FEE47F85B263D2C77744F1D6 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				FC53CFE9E82FBCD544B338DC8FE3810C /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9304D802BA4B2438D8D90B94058EDB3F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				197C9690E04F9C42DE14AA82464FF5B2 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -280,27 +348,38 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C5F2FDDE9A96E50661AC0FD82F68FABD /* Frameworks */ = {
+		B095B62E88071FE16D5D5A1BD5EE2910 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4DE781B32F798A3FDA356262BFB5CC5A /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E420DCA85A6DBF9059CCB29F269FF65A /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				A7F10B094D24FBC061616D2B22AF66D4 /* Cocoa.framework in Frameworks */,
-				65A3B48E7EABDBC74114331E157B5DE9 /* CoreVideo.framework in Frameworks */,
-				C4F3298CC41731F4C3DBB3DF4AB30154 /* Metal.framework in Frameworks */,
+				570E34DA1D546F0B97421E60C7C72667 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		028D695323DAA36764DC1C22AD236FFD /* Shaders */ = {
+			isa = PBXGroup;
+			children = (
+				810DC1D6CF00BD9DBB94DA8ADE3AC2AB /* ColorConversion.h */,
+				26EE22F96D5B90E3642C4E2AAA882331 /* Shaders.metal */,
+			);
+			name = Shaders;
+			path = Alloy/Shaders;
+			sourceTree = "<group>";
+		};
+		0D0F4669ADE68FFD1697B8B544D64189 /* OS X */ = {
+			isa = PBXGroup;
+			children = (
+				365213F6A21BA8B6F59EB8C339D0F8CC /* Cocoa.framework */,
+				5F31CFA08590EA10C805BD2F49FE531C /* CoreVideo.framework */,
+				B70D6A55430B8280DFD490BAEE346ADA /* Metal.framework */,
+				064BC6460C1F8F0F90E458B6A2B854B6 /* MetalPerformanceShaders.framework */,
+			);
+			name = "OS X";
+			sourceTree = "<group>";
+		};
 		1FF199F95FAD21D1519E5AD87E01406F /* Targets Support Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -329,23 +408,63 @@
 			path = "Target Support Files/Pods-DemoApp";
 			sourceTree = "<group>";
 		};
-		2CE28A515BBD9EDD1D4EE7D6751010A4 /* OS X */ = {
+		29A3EDFA43EFE32707B093DD9DBC8F00 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				04A1746FB1770F38F5204CB17956F900 /* Cocoa.framework */,
-				FAEB352F042A11405A8CA1454C4D9D8E /* CoreVideo.framework */,
-				86AD85CECA3A39F9E5BBB58E6717CE02 /* Metal.framework */,
+				2E854CDB9105F08B6F0DF8ECAA47AD00 /* ComputeCommand.swift */,
+				D443A0A6A2D8754BC92398D99C59F5F7 /* CVPixelBuffer+MTLTexture.swift */,
+				8FB946C03D980E48320464F847BCDA99 /* Float16.swift */,
+				C90975CEBC0F7398B87A82BA7F802502 /* Metal.swift */,
+				0FD866FE77435605593B2B4AC25EE5E0 /* MPSImage+Extensions.swift */,
+				47D5F53CFCFD1C3DFE27AC222D6401AB /* MTLBlitCommandEncoder+Extensions.swift */,
+				F7C9FF7390A5AD7EF22EFEE49397D601 /* MTLBuffer+Extensions.swift */,
+				7802111478CE8733AFF9C169EDC85D1A /* MTLClearColor+Extensions.swift */,
+				142FC906813F8D0C02E33C585A0A87B3 /* MTLCommandBuffer+Extensions.swift */,
+				C701BC0F9B2395D23700B4DBE2A17828 /* MTLComputeCommandEncoder+Extensions.swift */,
+				AAE22FB7223AB2541C768488F65FCB06 /* MTLComputePipelineState+Threads.swift */,
+				7020A804BC0AA6F9E86B63644B8B92F4 /* MTLLibrary+Extensions.swift */,
+				92AC8512979FC9766A48FB524D62596B /* MTLOffscreenRenderer.swift */,
+				8A83D1D6AA8CD28869AE2D5322C045DA /* MTLOrigin+Extensions.swift */,
+				698EA8F3B498386F78991A00BCE68ABB /* MTLRegion+Extensions.swift */,
+				957AD94F0098CF636747D844A82834EE /* MTLRenderCommandEncoder+Extensions.swift */,
+				EE4E5FF5F19B24C2D25F4A25AF805F3E /* MTLResource+Extensions.swift */,
+				BD3C5EB2D1D2F506E0663A1CDCADF6BD /* MTLSizeAndAlign+Extensions.swift */,
+				7FFCE2DA4F5EA452F4D5E03C8EB085EF /* MTLTexture+Extensions.swift */,
+				1AAABA99AF0A6B1F4BF74E3ADC4E56C9 /* Sequence+Utils.swift */,
 			);
-			name = "OS X";
+			name = Core;
 			sourceTree = "<group>";
 		};
-		312B48D08B6C882DD9406CF191DCA5CC /* Frameworks */ = {
+		3707D9CF8069DC7B3D31DDFCAD26BF19 /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				A55BF8155D63099B594C1ABE03A9CB0E /* iOS */,
-				2CE28A515BBD9EDD1D4EE7D6751010A4 /* OS X */,
+				463B1A167EA120DD300EE43E5CE733B1 /* Alloy-iOS.modulemap */,
+				5D3D4AF16C8E54C34CE428A8F397FB85 /* Alloy-iOS.xcconfig */,
+				E984DEDE41BC3B447C5171C18B045A0F /* Alloy-iOS-dummy.m */,
+				A350AE95C607D4D53D989FAFF34B8705 /* Alloy-iOS-Info.plist */,
+				C9EBEFDF0D2F337C4D875413B1EA0A88 /* Alloy-iOS-prefix.pch */,
+				25CC4A7BB40ECF258F9BDE01CB728895 /* Alloy-iOS-umbrella.h */,
+				02579C2EDDF7672D5CF28BF794310846 /* Alloy-macOS.modulemap */,
+				E5BE9B8DF176A7B4DDD1806B0A012901 /* Alloy-macOS.xcconfig */,
+				6836416741DB76724CAB778CC4444F94 /* Alloy-macOS-dummy.m */,
+				E8124AE95ECBC21A76BA7BB7945CE296 /* Alloy-macOS-Info.plist */,
+				19A05AF8F84FF1D5FE67722716CDD57F /* Alloy-macOS-prefix.pch */,
+				7BE51200B3F7F211858B91D8DF42FF17 /* Alloy-macOS-umbrella.h */,
+				DC0EC370473C023243A3676ADE8B3E42 /* Alloy.default-ML-Shaders-iOS.modulemap */,
+				0616BD77231FAD00C4CD494AF4FBC1D0 /* Alloy.default-ML-Shaders-iOS.xcconfig */,
+				54F75986CFEED1A5F8CB141608CCCE6A /* Alloy.default-ML-Shaders-iOS-dummy.m */,
+				8AE3A9CB0B18F89DFE0E4A15196C0AA4 /* Alloy.default-ML-Shaders-iOS-Info.plist */,
+				470E65CF445AAD40A1132A9A599530B3 /* Alloy.default-ML-Shaders-iOS-prefix.pch */,
+				B57BCAFA0288680F313CF492CC8FCF20 /* Alloy.default-ML-Shaders-iOS-umbrella.h */,
+				1C1BF1345467CE04EBA8491995554B08 /* Alloy.default-ML-Shaders-macOS.modulemap */,
+				F9C2C80FB56D8703A299942E4A192C27 /* Alloy.default-ML-Shaders-macOS.xcconfig */,
+				330B297A35EF4EDD6E04DF6CB51ADBF4 /* Alloy.default-ML-Shaders-macOS-dummy.m */,
+				2EB290E7B750979A82C576B3DC9D10D5 /* Alloy.default-ML-Shaders-macOS-Info.plist */,
+				8FADE390253D610F1980DE6F89327385 /* Alloy.default-ML-Shaders-macOS-prefix.pch */,
+				F88792ED50AFB9172B295C1A62DD0363 /* Alloy.default-ML-Shaders-macOS-umbrella.h */,
 			);
-			name = Frameworks;
+			name = "Support Files";
+			path = "Demo/Pods/Target Support Files/Alloy-iOS";
 			sourceTree = "<group>";
 		};
 		3AB0FCC6326ABF33FFBC32A39B664606 /* Pods-Demo */ = {
@@ -365,80 +484,100 @@
 			path = "Target Support Files/Pods-Demo";
 			sourceTree = "<group>";
 		};
-		400E4166ED506F9F30F45F43B26ACA54 /* Support Files */ = {
+		5527E058B07AC138422C4EE7E90C3B53 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				B5A76FC1B06F7F3F5EE0FAC4CF7BD442 /* Alloy-iOS.modulemap */,
-				D855A2917A5AE88E87BE2651E713B4A3 /* Alloy-iOS.xcconfig */,
-				EBAEC0B5E17DFF9441D097500192D3C2 /* Alloy-iOS-dummy.m */,
-				61EF09505F9B8C802DC93E446F13F611 /* Alloy-iOS-Info.plist */,
-				36AFEE195735E84545609B8BCF59974F /* Alloy-iOS-prefix.pch */,
-				423F7FBD7B54702A65BA6836C17468C5 /* Alloy-iOS-umbrella.h */,
-				2103F0BFCF7035947680106DDA8BA08D /* Alloy-macOS.modulemap */,
-				7D3C991571997F9BE7825884DE98426A /* Alloy-macOS.xcconfig */,
-				5C869034B5CA6C7500BD283F0B620A5C /* Alloy-macOS-dummy.m */,
-				5F648296AD90DAABA9F78C898B532C4A /* Alloy-macOS-Info.plist */,
-				20EFFBB4B38CA6E9D40AA6ADCAE56E32 /* Alloy-macOS-prefix.pch */,
-				5572313322E1CC3E634DE4D906315D1B /* Alloy-macOS-umbrella.h */,
-				A3604E331827DA6226E272ED4BD16D9D /* Alloy.default-Shaders.modulemap */,
-				8786F99181836A7D28613C7F310B1456 /* Alloy.default-Shaders.xcconfig */,
-				0591B44B9497DEAFE986600B520D95A3 /* Alloy.default-Shaders-dummy.m */,
-				514C51CEFF3C2C5098FBCB0DF0D13BED /* Alloy.default-Shaders-Info.plist */,
-				DD7A7EAF94C3169C2A867498DDF147C5 /* Alloy.default-Shaders-prefix.pch */,
-				985E23D522324A8DA84D7DC5CA82EC9B /* Alloy.default-Shaders-umbrella.h */,
+				8BFEA349E79F6B277509D46E1DD1FF17 /* iOS */,
+				0D0F4669ADE68FFD1697B8B544D64189 /* OS X */,
 			);
-			name = "Support Files";
-			path = "Demo/Pods/Target Support Files/Alloy-iOS";
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		53A73220BE023C7D7038D3E2CF561D36 /* Development Pods */ = {
+		68D22A77510B9B18AD46F2D5329F160D /* Development Pods */ = {
 			isa = PBXGroup;
 			children = (
-				D6E54830762F58928BD6BAEAB9504A2B /* Alloy */,
+				A59A41CFD2C7827CDA5CBEBF423715DF /* Alloy */,
 			);
 			name = "Development Pods";
 			sourceTree = "<group>";
 		};
-		6138409D6D0B65E14BA8BA8375B3ED07 /* Encoders */ = {
+		6DFD0F748E4D66E33CDA9189ECE13312 /* Pod */ = {
 			isa = PBXGroup;
 			children = (
-				56F9CEE4C8810072253855510E63A94F /* BlockSize.swift */,
-				D4D76AA3916659B77ED602025DD938C2 /* MaxEncoder.swift */,
-				5B0D21CAE83DAAE9FA609F8F1C2FD6DB /* MeanEncoder.swift */,
-				66E6B6F559689F167563D0D53A43C622 /* MinEncoder.swift */,
-				026D5B7C794FBB0EB89B8D73BFA3A13C /* TextureCopy.swift */,
+				6CB049DE5C3BCCAD84E6C33FEBEBF39E /* Alloy.podspec */,
+				C1160E7ADEE028C9213A0DFFABC32E95 /* LICENSE */,
+				E569DAD08534E9171A089DF1C6226178 /* README.md */,
+			);
+			name = Pod;
+			sourceTree = "<group>";
+		};
+		79E11AB84D6388CA305A099ECF21D3A2 /* ML */ = {
+			isa = PBXGroup;
+			children = (
+				7210F8B910B20BD3C063BCE74666481E /* PoolPadding.swift */,
+			);
+			name = ML;
+			sourceTree = "<group>";
+		};
+		836F72A2631371C514500FD662137BBF /* Shaders */ = {
+			isa = PBXGroup;
+			children = (
+				9D3261CE6AEE22112D2B7CB6454D13FF /* Encoders */,
+				028D695323DAA36764DC1C22AD236FFD /* Shaders */,
+			);
+			name = Shaders;
+			sourceTree = "<group>";
+		};
+		8BFEA349E79F6B277509D46E1DD1FF17 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				75D2F1C1FDF07242A74EDA63DA412A1D /* CoreVideo.framework */,
+				53DD78C34C7380FE69F7B5A612CCAFCB /* Foundation.framework */,
+				C0668811627B7D2F8BCBAE2B55FC16B1 /* Metal.framework */,
+				385CC06582E1C6EF9837E53C1894DC9E /* MetalPerformanceShaders.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		9D3261CE6AEE22112D2B7CB6454D13FF /* Encoders */ = {
+			isa = PBXGroup;
+			children = (
+				4FC91570CA390C50052713C19D726FB9 /* BlockSize.swift */,
+				E9AE9210273D9F36C8134D56956FA99E /* MaxEncoder.swift */,
+				D57AA399924219D2EBA90702977A4FD1 /* MeanEncoder.swift */,
+				2A36C58EC119B5C5D2D1EAA1A7E8CCE2 /* MinEncoder.swift */,
+				13C0C3127F830C9A5569AE3655991657 /* TextureCopy.swift */,
 			);
 			name = Encoders;
 			path = Alloy/Encoders;
 			sourceTree = "<group>";
 		};
-		737371275C5128696C2FE6588DF036A1 /* Shaders */ = {
+		A59A41CFD2C7827CDA5CBEBF423715DF /* Alloy */ = {
 			isa = PBXGroup;
 			children = (
-				6138409D6D0B65E14BA8BA8375B3ED07 /* Encoders */,
-				79BDD5B703CEF4802074BCE53FD3425E /* Shaders */,
+				29A3EDFA43EFE32707B093DD9DBC8F00 /* Core */,
+				79E11AB84D6388CA305A099ECF21D3A2 /* ML */,
+				6DFD0F748E4D66E33CDA9189ECE13312 /* Pod */,
+				836F72A2631371C514500FD662137BBF /* Shaders */,
+				3707D9CF8069DC7B3D31DDFCAD26BF19 /* Support Files */,
 			);
-			name = Shaders;
+			name = Alloy;
+			path = ../..;
 			sourceTree = "<group>";
 		};
-		79BDD5B703CEF4802074BCE53FD3425E /* Shaders */ = {
+		A6D5688FF12291F2A596C3F09484855A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				0DB852B9B9BD6F8A09E14BBA2794DC70 /* ColorConversion.h */,
-				2B404447650344F553CA1E734B1E2B8F /* Shaders.metal */,
+				2904654A1CAC9FE241CB502461254F57 /* Alloy.framework */,
+				10F3BF1A3B8943B9CB49AECA22A0182E /* Alloy.framework */,
+				6A43301A72299AC6D57E5776BB728425 /* Alloy.framework */,
+				011F8EFD8AD4E11009AF7BB5B9A98841 /* Alloy.framework */,
+				B6394EB77034E56ABF9F74F8CFA9C74E /* Pods_AlloyTests.framework */,
+				21060D210B1A445BC98E4EE47BAE4005 /* Pods_Demo.framework */,
+				32A6EFCDE8F8EFF16CF143C972F0C8AB /* Pods_DemoApp.framework */,
+				E0203D075C390C7A23FD20C8A2B74AF6 /* Pods_DemoAppTests.framework */,
 			);
-			name = Shaders;
-			path = Alloy/Shaders;
-			sourceTree = "<group>";
-		};
-		A55BF8155D63099B594C1ABE03A9CB0E /* iOS */ = {
-			isa = PBXGroup;
-			children = (
-				800DDAE67C5BBE4077CCD8DBAAF1474E /* CoreVideo.framework */,
-				59B8B26D2906DD2B431E74EE74F2CA65 /* Foundation.framework */,
-				97A9660576A6ECA5AA495E8BC80DCE62 /* Metal.framework */,
-			);
-			name = iOS;
+			name = Products;
 			sourceTree = "<group>";
 		};
 		ACFBD13AA7D5EADCF004AEA37C5E2656 /* Pods-DemoAppTests */ = {
@@ -479,92 +618,31 @@
 			isa = PBXGroup;
 			children = (
 				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
-				53A73220BE023C7D7038D3E2CF561D36 /* Development Pods */,
-				312B48D08B6C882DD9406CF191DCA5CC /* Frameworks */,
-				F16054CE9E42CE7847ADE26F11AE7515 /* Products */,
+				68D22A77510B9B18AD46F2D5329F160D /* Development Pods */,
+				5527E058B07AC138422C4EE7E90C3B53 /* Frameworks */,
+				A6D5688FF12291F2A596C3F09484855A /* Products */,
 				1FF199F95FAD21D1519E5AD87E01406F /* Targets Support Files */,
 			);
-			sourceTree = "<group>";
-		};
-		D6E54830762F58928BD6BAEAB9504A2B /* Alloy */ = {
-			isa = PBXGroup;
-			children = (
-				DAD305B3FB6765E5ED29BF9A688D489A /* Core */,
-				EFB081EADC8956C8A1376C1553A2A982 /* Pod */,
-				737371275C5128696C2FE6588DF036A1 /* Shaders */,
-				400E4166ED506F9F30F45F43B26ACA54 /* Support Files */,
-			);
-			name = Alloy;
-			path = ../..;
-			sourceTree = "<group>";
-		};
-		DAD305B3FB6765E5ED29BF9A688D489A /* Core */ = {
-			isa = PBXGroup;
-			children = (
-				1A2EFF6FDBCDAC2C4A4A99C125EC86FC /* ComputeCommand.swift */,
-				CFE81536851FF0DB2ED59DCDD944C6AD /* CVPixelBuffer+MTLTexture.swift */,
-				5EEA59BE30E4E87E58D555A318D1EF8F /* Float16.swift */,
-				803469064342242C0EAEAE8F52B07B64 /* Metal.swift */,
-				BFCD1EF453F5D5185FCE9988011CE78D /* MPSImage+Extensions.swift */,
-				65003111F656ED6A4863CA1EA3708E76 /* MTLBlitCommandEncoder+Extensions.swift */,
-				F07F57D769F441469C12DA15B9C8EFE3 /* MTLBuffer+Extensions.swift */,
-				7B17DE1C19A24160105BAE4933EB5CAC /* MTLClearColor+Extensions.swift */,
-				0DD3F4DC2DD5CC5042C758C5D649503A /* MTLCommandBuffer+Extensions.swift */,
-				285FD63111B2E28565B7A99142DE0737 /* MTLComputeCommandEncoder+Extensions.swift */,
-				7A3D01DEEDE7EBCE9D73887ACB6A5354 /* MTLComputePipelineState+Threads.swift */,
-				F6D6E9C25218A173F7F3906774A71607 /* MTLLibrary+Extensions.swift */,
-				425F6805ECDE4A2BB4D4B558D76ECD46 /* MTLOffscreenRenderer.swift */,
-				EEF635C85B52FD473442B91551C4499D /* MTLOrigin+Extensions.swift */,
-				9F933F66CD79C49C2AEC5A23AEB97776 /* MTLRegion+Extensions.swift */,
-				72594B329664FE921DD09AB57EAB01DE /* MTLRenderCommandEncoder+Extensions.swift */,
-				756C13986A2038510BE79FD0B791E44C /* MTLResource+Extensions.swift */,
-				8F2A0EB29033367831049560B6CBCB90 /* MTLSizeAndAlign+Extensions.swift */,
-				72C3DECEE93B77FECEC2BE9F1B09420B /* MTLTexture+Extensions.swift */,
-				091B8D4F994D3153017576131952CFD2 /* Sequence+Utils.swift */,
-			);
-			name = Core;
-			sourceTree = "<group>";
-		};
-		EFB081EADC8956C8A1376C1553A2A982 /* Pod */ = {
-			isa = PBXGroup;
-			children = (
-				8672E4D441EE53E6094EA00BB0C72BD8 /* Alloy.podspec */,
-				8D85A3CC1C2C5C810F42D34A7FB4316C /* LICENSE */,
-				7FF359AF32FCF8DA3DB3C4128AB2EBBC /* README.md */,
-			);
-			name = Pod;
-			sourceTree = "<group>";
-		};
-		F16054CE9E42CE7847ADE26F11AE7515 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				27DA9D46DF926855DDB26012208008D5 /* Alloy.framework */,
-				611E79E37BAB82D760F981CA7C546150 /* Alloy.framework */,
-				9F417FD6C03BC490FC6AA9FD7875A65E /* Alloy.framework */,
-				DE9C5461C3D912251B45B557C0102579 /* Pods_AlloyTests.framework */,
-				7484CD888D2A4446976563418086EE41 /* Pods_Demo.framework */,
-				162DD501C7776EDD80DC57CCEBDE4DE8 /* Pods_DemoApp.framework */,
-				306AA28B04D834BC12901D8224FEEDC3 /* Pods_DemoAppTests.framework */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		349823D8B66CB2C722E47518BF6125D0 /* Headers */ = {
+		0F53240CC6778DEA5763BB3E8BF4D67B /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				704ACFCF9842CCE5C7EED6786CFE7DF8 /* Pods-Demo-umbrella.h in Headers */,
+				64065216AA231C45DD4D3901D0F0AED0 /* Alloy.default-ML-Shaders-macOS-umbrella.h in Headers */,
+				0619539F71388130EEC7EBF06F19ABFD /* ColorConversion.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		5C08A8B4606A15471C5A0DF450DDCBDE /* Headers */ = {
+		22CD5869283AF5B392D4EF3C7EB1B6A0 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E21EC53454EBCDD76E5BBBED8F6A3664 /* Pods-DemoApp-umbrella.h in Headers */,
+				40FD052B6E35C18CE578F1888714A4AA /* Alloy.default-ML-Shaders-iOS-umbrella.h in Headers */,
+				0108390A77203DE54AD4EEEEA2263716 /* ColorConversion.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -584,20 +662,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		997B8FCAF472444C45E01D35DEEC15B5 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				503973FF6078FB275B5D0A996F79EEDE /* Alloy.default-Shaders-umbrella.h in Headers */,
-				7FAB426925E3928EBA9F1430D6FB7F74 /* ColorConversion.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		9A6CEEE260200C99D8749361ED446EC2 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				8CDC83A7224F24B48D24CE7C39FC5523 /* Alloy-iOS-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B93B18003605023E17B3FED6786A2E81 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				728582D61EA3E5277B5470CDACD31E4A /* Pods-DemoApp-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EE2508F0C92B1C7D5AE18C1604A11C75 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A9CCFB9477B0F3C55D03F6FB194DE6DB /* Pods-Demo-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -612,22 +697,78 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		37E6D81D91AFC85575A29ED317FCC3FF /* Alloy.default-Shaders */ = {
+		0E8A1A2802EA4973886EEE9BFA12741C /* Pods-DemoApp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F6C11F068713FD897753E49309BE5555 /* Build configuration list for PBXNativeTarget "Alloy.default-Shaders" */;
+			buildConfigurationList = F06855ABAFA2B8710A9B8B6BF3667316 /* Build configuration list for PBXNativeTarget "Pods-DemoApp" */;
 			buildPhases = (
-				997B8FCAF472444C45E01D35DEEC15B5 /* Headers */,
-				7209AD7B52322DDACA4A7319FF016987 /* Sources */,
-				E420DCA85A6DBF9059CCB29F269FF65A /* Frameworks */,
-				F6C3136A89293E3252B3E81DBFC8B9B5 /* Resources */,
+				B93B18003605023E17B3FED6786A2E81 /* Headers */,
+				63A38E5A918B868D45E6A994DD621AF4 /* Sources */,
+				9304D802BA4B2438D8D90B94058EDB3F /* Frameworks */,
+				D8B0A89F770BE4E6F171ABCD03FFC81B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B5E8B4654A0BC49A0DF3B552F6722743 /* PBXTargetDependency */,
+			);
+			name = "Pods-DemoApp";
+			productName = "Pods-DemoApp";
+			productReference = 32A6EFCDE8F8EFF16CF143C972F0C8AB /* Pods_DemoApp.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		4B3A57C1151A1B0568F9FA53BF19BCDB /* Pods-Demo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 11EC8DB8952692D8D0FF896362B948F5 /* Build configuration list for PBXNativeTarget "Pods-Demo" */;
+			buildPhases = (
+				EE2508F0C92B1C7D5AE18C1604A11C75 /* Headers */,
+				929BC0062B124D0B0DE76CAF0834CB52 /* Sources */,
+				B095B62E88071FE16D5D5A1BD5EE2910 /* Frameworks */,
+				4A1DEEC906297D81CCBEBB5DA836323B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E80973627027AD9B294B242B2B19512E /* PBXTargetDependency */,
+			);
+			name = "Pods-Demo";
+			productName = "Pods-Demo";
+			productReference = 21060D210B1A445BC98E4EE47BAE4005 /* Pods_Demo.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		6FBB367C526D3A44C924CD512B590730 /* Alloy.default-ML-Shaders-iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 19D3B48791FDC647D482D5DB2756940F /* Build configuration list for PBXNativeTarget "Alloy.default-ML-Shaders-iOS" */;
+			buildPhases = (
+				22CD5869283AF5B392D4EF3C7EB1B6A0 /* Headers */,
+				D2AFB03DC9DE6E9CCB5B3B845AEF7ED5 /* Sources */,
+				6AAA99F8BD802A18189BFD6E1130F965 /* Frameworks */,
+				E2A5A0FE8C78A3B718BB98BDA7AE9E42 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = "Alloy.default-Shaders";
-			productName = "Alloy.default-Shaders";
-			productReference = 9F417FD6C03BC490FC6AA9FD7875A65E /* Alloy.framework */;
+			name = "Alloy.default-ML-Shaders-iOS";
+			productName = "Alloy.default-ML-Shaders-iOS";
+			productReference = 6A43301A72299AC6D57E5776BB728425 /* Alloy.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		71F61A3165EDA1E769B475591888D227 /* Alloy.default-ML-Shaders-macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 30F8B40B915404BCBADA170A6EFB6055 /* Build configuration list for PBXNativeTarget "Alloy.default-ML-Shaders-macOS" */;
+			buildPhases = (
+				0F53240CC6778DEA5763BB3E8BF4D67B /* Headers */,
+				533BA4C6434DC04876AFED775CFB07EA /* Sources */,
+				1F5850496C770D18645349353AED06C4 /* Frameworks */,
+				4F1CFB824402CF2CFAA77A416179D344 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Alloy.default-ML-Shaders-macOS";
+			productName = "Alloy.default-ML-Shaders-macOS";
+			productReference = 011F8EFD8AD4E11009AF7BB5B9A98841 /* Alloy.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		994EF47A3561B985CDDF080702BF5D58 /* Alloy-iOS */ = {
@@ -645,7 +786,7 @@
 			);
 			name = "Alloy-iOS";
 			productName = "Alloy-iOS";
-			productReference = 27DA9D46DF926855DDB26012208008D5 /* Alloy.framework */;
+			productReference = 2904654A1CAC9FE241CB502461254F57 /* Alloy.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		9F3AE269F675ADFD180628B386DB95B4 /* Pods-AlloyTests */ = {
@@ -664,26 +805,7 @@
 			);
 			name = "Pods-AlloyTests";
 			productName = "Pods-AlloyTests";
-			productReference = DE9C5461C3D912251B45B557C0102579 /* Pods_AlloyTests.framework */;
-			productType = "com.apple.product-type.framework";
-		};
-		D955D4E207575DE3C483A3210701C8CF /* Pods-DemoApp */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = A1CBBB2BC1EA08F2B18CC2A8559E4F85 /* Build configuration list for PBXNativeTarget "Pods-DemoApp" */;
-			buildPhases = (
-				5C08A8B4606A15471C5A0DF450DDCBDE /* Headers */,
-				551471058DFB7660FE1CAFB72F78777D /* Sources */,
-				C5F2FDDE9A96E50661AC0FD82F68FABD /* Frameworks */,
-				A884C989453A9D359C7CF219DD8AA89C /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				20BB44FC2B2DF777CBD252BFCF37DA11 /* PBXTargetDependency */,
-			);
-			name = "Pods-DemoApp";
-			productName = "Pods-DemoApp";
-			productReference = 162DD501C7776EDD80DC57CCEBDE4DE8 /* Pods_DemoApp.framework */;
+			productReference = B6394EB77034E56ABF9F74F8CFA9C74E /* Pods_AlloyTests.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		DE08C48F313B36DA073AF474D8EC3E14 /* Alloy-macOS */ = {
@@ -701,7 +823,7 @@
 			);
 			name = "Alloy-macOS";
 			productName = "Alloy-macOS";
-			productReference = 611E79E37BAB82D760F981CA7C546150 /* Alloy.framework */;
+			productReference = 10F3BF1A3B8943B9CB49AECA22A0182E /* Alloy.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		F0861DFD82C24AEB46DC06B25FBF981E /* Pods-DemoAppTests */ = {
@@ -720,26 +842,7 @@
 			);
 			name = "Pods-DemoAppTests";
 			productName = "Pods-DemoAppTests";
-			productReference = 306AA28B04D834BC12901D8224FEEDC3 /* Pods_DemoAppTests.framework */;
-			productType = "com.apple.product-type.framework";
-		};
-		FB83C49CD1F00AFDBE18A533216A4D04 /* Pods-Demo */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = C27197BFB2E339B963674A12B84CF949 /* Build configuration list for PBXNativeTarget "Pods-Demo" */;
-			buildPhases = (
-				349823D8B66CB2C722E47518BF6125D0 /* Headers */,
-				BB6A113135094F503DD8F5DE94025163 /* Sources */,
-				37E9620824D4F730A72642F04B298423 /* Frameworks */,
-				9E86F5BEED974F8F401322CF90300ED4 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				7E40AA5C33EAEA63BC8BF5EA6A789E88 /* PBXTargetDependency */,
-			);
-			name = "Pods-Demo";
-			productName = "Pods-Demo";
-			productReference = 7484CD888D2A4446976563418086EE41 /* Pods_Demo.framework */;
+			productReference = E0203D075C390C7A23FD20C8A2B74AF6 /* Pods_DemoAppTests.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -759,16 +862,17 @@
 				en,
 			);
 			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
-			productRefGroup = F16054CE9E42CE7847ADE26F11AE7515 /* Products */;
+			productRefGroup = A6D5688FF12291F2A596C3F09484855A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				994EF47A3561B985CDDF080702BF5D58 /* Alloy-iOS */,
 				DE08C48F313B36DA073AF474D8EC3E14 /* Alloy-macOS */,
-				37E6D81D91AFC85575A29ED317FCC3FF /* Alloy.default-Shaders */,
+				6FBB367C526D3A44C924CD512B590730 /* Alloy.default-ML-Shaders-iOS */,
+				71F61A3165EDA1E769B475591888D227 /* Alloy.default-ML-Shaders-macOS */,
 				9F3AE269F675ADFD180628B386DB95B4 /* Pods-AlloyTests */,
-				FB83C49CD1F00AFDBE18A533216A4D04 /* Pods-Demo */,
-				D955D4E207575DE3C483A3210701C8CF /* Pods-DemoApp */,
+				4B3A57C1151A1B0568F9FA53BF19BCDB /* Pods-Demo */,
+				0E8A1A2802EA4973886EEE9BFA12741C /* Pods-DemoApp */,
 				F0861DFD82C24AEB46DC06B25FBF981E /* Pods-DemoAppTests */,
 			);
 		};
@@ -782,6 +886,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4A1DEEC906297D81CCBEBB5DA836323B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4C32D7F2100D6219C068614DC93A91AA /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -789,14 +900,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		9E86F5BEED974F8F401322CF90300ED4 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A884C989453A9D359C7CF219DD8AA89C /* Resources */ = {
+		4F1CFB824402CF2CFAA77A416179D344 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -810,14 +914,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F1B3E0C3210019EF9FE4F53D930C375E /* Resources */ = {
+		D8B0A89F770BE4E6F171ABCD03FFC81B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F6C3136A89293E3252B3E81DBFC8B9B5 /* Resources */ = {
+		E2A5A0FE8C78A3B718BB98BDA7AE9E42 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1B3E0C3210019EF9FE4F53D930C375E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -835,45 +946,46 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		551471058DFB7660FE1CAFB72F78777D /* Sources */ = {
+		533BA4C6434DC04876AFED775CFB07EA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2A41D17939C86BC15581939BF6D5C73B /* Pods-DemoApp-dummy.m in Sources */,
+				AA966F03BB938DCD1900547B3422A903 /* Alloy.default-ML-Shaders-macOS-dummy.m in Sources */,
+				609395A6EF7FD8CFED7F25C552AE9476 /* BlockSize.swift in Sources */,
+				1695E810B7E865BA291CA38966E24FB7 /* ComputeCommand.swift in Sources */,
+				FD4CEFFE358F9DB37F0E1B97A3433EC2 /* CVPixelBuffer+MTLTexture.swift in Sources */,
+				FFDD4B452BFB6C30E518B304FCF5A8EA /* Float16.swift in Sources */,
+				FC97A7494E2E8696ECB2653B0DAE64DB /* MaxEncoder.swift in Sources */,
+				A05BADDA8A054981AA063CE06A666E3E /* MeanEncoder.swift in Sources */,
+				56E2B3B6B2FEAC568871AF96FE82943F /* Metal.swift in Sources */,
+				330D263166E6FF1BB878422A1DB7AA9E /* MinEncoder.swift in Sources */,
+				5A6125CCFEFC3F9F39C0D1F8E42CDFD3 /* MPSImage+Extensions.swift in Sources */,
+				9DA046589F65F00BB0CCF21F3FD61F82 /* MTLBlitCommandEncoder+Extensions.swift in Sources */,
+				8809E0DECAFBF9E0EB0C1FDF178786F4 /* MTLBuffer+Extensions.swift in Sources */,
+				32A70B9FBDABFC9782AA1E974AE65DA9 /* MTLClearColor+Extensions.swift in Sources */,
+				6B4D5AC92BDD6A4418E98A805AE6C1F9 /* MTLCommandBuffer+Extensions.swift in Sources */,
+				617BD1A069891C7B5FC8CA001BFB39EF /* MTLComputeCommandEncoder+Extensions.swift in Sources */,
+				99317D3D5CEE542416C63D90FAC1B7B9 /* MTLComputePipelineState+Threads.swift in Sources */,
+				2922335AAB4E55D5286AB0830DAD1FCF /* MTLLibrary+Extensions.swift in Sources */,
+				F674054F324607023EDD0ED122BEBC6F /* MTLOffscreenRenderer.swift in Sources */,
+				184BEE90C0EADCC3F7431A9C5C47867B /* MTLOrigin+Extensions.swift in Sources */,
+				5B35C8BFD7D3EA5173487DC854120A66 /* MTLRegion+Extensions.swift in Sources */,
+				04E5447598888F1356D4D5C0F0AE0008 /* MTLRenderCommandEncoder+Extensions.swift in Sources */,
+				C253F5FD57E5A47708D1B8981A7150B2 /* MTLResource+Extensions.swift in Sources */,
+				349EEB72BE22129C1CF538829C61E180 /* MTLSizeAndAlign+Extensions.swift in Sources */,
+				F20E585A48CC3CA69FC20B0F03A25863 /* MTLTexture+Extensions.swift in Sources */,
+				33193D617BCCF85BCCA1F4C8E6E0FEF9 /* PoolPadding.swift in Sources */,
+				601791AD3B7FDEEA750B2516FE4115EC /* Sequence+Utils.swift in Sources */,
+				4AE55E782F62B25447126F0DA22E71E0 /* Shaders.metal in Sources */,
+				B0CCE57748B596FF83CD57A1586DF244 /* TextureCopy.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		7209AD7B52322DDACA4A7319FF016987 /* Sources */ = {
+		63A38E5A918B868D45E6A994DD621AF4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				75570AEDCAF21A3CD37A5EC3D9710E52 /* Alloy.default-Shaders-dummy.m in Sources */,
-				A58D27BC0F4DAF5005AD8E3463D25FED /* BlockSize.swift in Sources */,
-				C711B473CFB3CB1A71C02D470680EBAF /* ComputeCommand.swift in Sources */,
-				766B36B10DDD55E83C7C562458BBF1C0 /* CVPixelBuffer+MTLTexture.swift in Sources */,
-				EA12FA761F51C5712DB1D2DB09E83440 /* Float16.swift in Sources */,
-				9A8DD17004A0D8AEC76AE8AAA52AF26D /* MaxEncoder.swift in Sources */,
-				4BADC656506B480B30F451688A01C245 /* MeanEncoder.swift in Sources */,
-				A195DF93CC433857E69B80969D6E29DB /* Metal.swift in Sources */,
-				561F9EAAE7D3F62AEEAB21E8F7184C82 /* MinEncoder.swift in Sources */,
-				ACAE0BAABDBDBD104D8BF38745A5EF04 /* MPSImage+Extensions.swift in Sources */,
-				B61ACA20B272FAB19325F5D3F39C806C /* MTLBlitCommandEncoder+Extensions.swift in Sources */,
-				149C94BD997311739B61AF61C9D522F1 /* MTLBuffer+Extensions.swift in Sources */,
-				0B9CC1060D2ACEA5FF07A9FDDFD9D826 /* MTLClearColor+Extensions.swift in Sources */,
-				B30066FD35B36DED6C4AC1F55CF54523 /* MTLCommandBuffer+Extensions.swift in Sources */,
-				4B646083B2E550344D7FB47F6CA4A12B /* MTLComputeCommandEncoder+Extensions.swift in Sources */,
-				119E243B51FE0FC61FE5EE504F361AD2 /* MTLComputePipelineState+Threads.swift in Sources */,
-				FE232D40ADAC7C557DEC93A300A21895 /* MTLLibrary+Extensions.swift in Sources */,
-				C7A80781ECEDBD355F3B80F7E5AA75B7 /* MTLOffscreenRenderer.swift in Sources */,
-				64AD2E3A5BD062F7C1767970EA1A6351 /* MTLOrigin+Extensions.swift in Sources */,
-				FCC26CA98C719EA7A834112EEE8F2FA9 /* MTLRegion+Extensions.swift in Sources */,
-				289F0EF1E3BDC100310BDB44E938F989 /* MTLRenderCommandEncoder+Extensions.swift in Sources */,
-				DDA1355982349AD6DE97276FDF8EF28B /* MTLResource+Extensions.swift in Sources */,
-				0E68DD21705630E07C91946A469D271A /* MTLSizeAndAlign+Extensions.swift in Sources */,
-				3FED9FBD8EB90AD3266A8916B72E9B92 /* MTLTexture+Extensions.swift in Sources */,
-				3585110430DFDBCEA6CAFAC20FCC551F /* Sequence+Utils.swift in Sources */,
-				232DACF634A9A06B799DCA4AE74D895F /* Shaders.metal in Sources */,
-				924803F2691751C0981AC0AE865D6F81 /* TextureCopy.swift in Sources */,
+				A837790B9CA7633B5C622D93C4BD532B /* Pods-DemoApp-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -882,6 +994,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				AE6D4FD8802AED7763D78AC3811D09D4 /* Pods-AlloyTests-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		929BC0062B124D0B0DE76CAF0834CB52 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8AE7AA5AA3086C37886E64AA6755FF0F /* Pods-Demo-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -913,11 +1033,38 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		BB6A113135094F503DD8F5DE94025163 /* Sources */ = {
+		D2AFB03DC9DE6E9CCB5B3B845AEF7ED5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F1401726EFF0A959C02A2A45180AB568 /* Pods-Demo-dummy.m in Sources */,
+				802B29FDF8A4B64A439305FA8671D3EC /* Alloy.default-ML-Shaders-iOS-dummy.m in Sources */,
+				8E0DBB5822E3874A73107ED97BA6D914 /* BlockSize.swift in Sources */,
+				94358231D66F58B13FC0152EA220345B /* ComputeCommand.swift in Sources */,
+				4924CEFAD0161EEF1C863CAE35AA04F1 /* CVPixelBuffer+MTLTexture.swift in Sources */,
+				BBD6B4827AA30C4D6D7C2CE5A63FD6F8 /* Float16.swift in Sources */,
+				F29713FCBB4532DD83176B21E0773759 /* MaxEncoder.swift in Sources */,
+				21F9788EF92AB10C13AD93754B89FB1A /* MeanEncoder.swift in Sources */,
+				30FFDAA84003C3CA1E73EF7640399A7D /* Metal.swift in Sources */,
+				C9AB72A932BF2EF58DE1B2A9D47272B2 /* MinEncoder.swift in Sources */,
+				AEED26AF8149768EFFE1AA87F76DD447 /* MPSImage+Extensions.swift in Sources */,
+				DDAF792A2C656154EACA42655A07EE99 /* MTLBlitCommandEncoder+Extensions.swift in Sources */,
+				FCE6AE743D0B002BC3AEF1ED4AF1B501 /* MTLBuffer+Extensions.swift in Sources */,
+				9A34ADBA43D9141353833DD150A45272 /* MTLClearColor+Extensions.swift in Sources */,
+				DFDC84DB47464A000615A4C7E26462AD /* MTLCommandBuffer+Extensions.swift in Sources */,
+				FA6A6F22D38B85D03DCFFEED1C923E7E /* MTLComputeCommandEncoder+Extensions.swift in Sources */,
+				D4A00098B0111D6C329D882DA6DFEC5D /* MTLComputePipelineState+Threads.swift in Sources */,
+				1C84742ACE8C458808F19B6D9EAA8C19 /* MTLLibrary+Extensions.swift in Sources */,
+				1388884C9D35581DB35C6ECE79EB60BD /* MTLOffscreenRenderer.swift in Sources */,
+				11DD657C3BA34997CCD2A1B397BF5316 /* MTLOrigin+Extensions.swift in Sources */,
+				1B0EF9B20E5303A92C46FDE06B175CA0 /* MTLRegion+Extensions.swift in Sources */,
+				0B13AC28AC216E34BE128D1CE025902D /* MTLRenderCommandEncoder+Extensions.swift in Sources */,
+				2F25590A4B889C18C91595DC931DB54E /* MTLResource+Extensions.swift in Sources */,
+				6759F9B0749E3C3ACF80D4BBA506C515 /* MTLSizeAndAlign+Extensions.swift in Sources */,
+				88B8F7778DF87ABCD30C3B9D04002854 /* MTLTexture+Extensions.swift in Sources */,
+				31D7B5CE08177351A5B5AF45F14E31E1 /* PoolPadding.swift in Sources */,
+				6458A0E474CB47B2B75B60E7EE00858C /* Sequence+Utils.swift in Sources */,
+				2FD1561FBEA04B47B0477736AC7AE858 /* Shaders.metal in Sources */,
+				A6DE926505051420F003B966775EBB7C /* TextureCopy.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -952,12 +1099,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		20BB44FC2B2DF777CBD252BFCF37DA11 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "Alloy-iOS";
-			target = 994EF47A3561B985CDDF080702BF5D58 /* Alloy-iOS */;
-			targetProxy = 2318737C006EDB9C21266D6922BDEDD8 /* PBXContainerItemProxy */;
-		};
 		39F0B968EBA759802E0A2602743DA3C3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "Alloy-macOS";
@@ -970,11 +1111,17 @@
 			target = 994EF47A3561B985CDDF080702BF5D58 /* Alloy-iOS */;
 			targetProxy = 789314B9337D640DC58CC46C7BCBB5D6 /* PBXContainerItemProxy */;
 		};
-		7E40AA5C33EAEA63BC8BF5EA6A789E88 /* PBXTargetDependency */ = {
+		B5E8B4654A0BC49A0DF3B552F6722743 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = "Alloy.default-Shaders";
-			target = 37E6D81D91AFC85575A29ED317FCC3FF /* Alloy.default-Shaders */;
-			targetProxy = C25B58B346E32AFE4EF200FDD061051B /* PBXContainerItemProxy */;
+			name = "Alloy.default-ML-Shaders-iOS";
+			target = 6FBB367C526D3A44C924CD512B590730 /* Alloy.default-ML-Shaders-iOS */;
+			targetProxy = 6BEF895651AE96071C9B24CCE29D74F9 /* PBXContainerItemProxy */;
+		};
+		E80973627027AD9B294B242B2B19512E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Alloy.default-ML-Shaders-macOS";
+			target = 71F61A3165EDA1E769B475591888D227 /* Alloy.default-ML-Shaders-macOS */;
+			targetProxy = 3A103A4A2CD3186355C37AD6C83F7550 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1044,79 +1191,39 @@
 			};
 			name = Debug;
 		};
-		1178186894E4583C1FBB39D20443BB1A /* Debug */ = {
+		1F9E919CEB271645029413BED68EEBD7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4AD1B50B3FB191C0003C65F6E9F5AAB8 /* Pods-Demo.debug.xcconfig */;
+			baseConfigurationReference = CDEE2E9C8332AEFA0CECA42F24797FEF /* Pods-DemoApp.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_VERSION = A;
-				INFOPLIST_FILE = "Target Support Files/Pods-Demo/Pods-Demo-Info.plist";
+				INFOPLIST_FILE = "Target Support Files/Pods-DemoApp/Pods-DemoApp-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
-					"@executable_path/../Frameworks",
+					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
 				MACH_O_TYPE = staticlib;
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				MODULEMAP_FILE = "Target Support Files/Pods-Demo/Pods-Demo.modulemap";
+				MODULEMAP_FILE = "Target Support Files/Pods-DemoApp/Pods-DemoApp.modulemap";
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOLFLAGS = "";
 				PODS_ROOT = "$(SRCROOT)";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = macosx;
+				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		1C768AD4D0A1CAB46B2369F6FD0C68C2 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8786F99181836A7D28613C7F310B1456 /* Alloy.default-Shaders.xcconfig */;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_VERSION = A;
-				GCC_PREFIX_HEADER = "Target Support Files/Alloy.default-Shaders/Alloy.default-Shaders-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/Alloy.default-Shaders/Alloy.default-Shaders-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				MODULEMAP_FILE = "Target Support Files/Alloy.default-Shaders/Alloy.default-Shaders.modulemap";
-				PRODUCT_MODULE_NAME = Alloy;
-				PRODUCT_NAME = Alloy;
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -1124,7 +1231,7 @@
 		};
 		2D41CA214D888022DA05F6BFE0E206EF /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7D3C991571997F9BE7825884DE98426A /* Alloy-macOS.xcconfig */;
+			baseConfigurationReference = E5BE9B8DF176A7B4DDD1806B0A012901 /* Alloy-macOS.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
@@ -1198,6 +1305,42 @@
 			};
 			name = Debug;
 		};
+		3988ED9D59BFF6E3F6AAA27D8710A8C5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0616BD77231FAD00C4CD494AF4FBC1D0 /* Alloy.default-ML-Shaders-iOS.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/Alloy.default-ML-Shaders-iOS/Alloy.default-ML-Shaders-iOS-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/Alloy.default-ML-Shaders-iOS/Alloy.default-ML-Shaders-iOS-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/Alloy.default-ML-Shaders-iOS/Alloy.default-ML-Shaders-iOS.modulemap";
+				PRODUCT_MODULE_NAME = Alloy;
+				PRODUCT_NAME = Alloy;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
 		4D6499B17086E43C7C58F7434B83A653 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5521A4F7F9808D7AE83137222F134C50 /* Pods-DemoAppTests.release.xcconfig */;
@@ -1237,9 +1380,9 @@
 			};
 			name = Release;
 		};
-		668FCD29014EC6F787FA4DE584770D0F /* Release */ = {
+		895F17D56149E0E4B9DE705D8F2CC207 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8786F99181836A7D28613C7F310B1456 /* Alloy.default-Shaders.xcconfig */;
+			baseConfigurationReference = F9C2C80FB56D8703A299942E4A192C27 /* Alloy.default-ML-Shaders-macOS.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
@@ -1254,8 +1397,8 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
-				GCC_PREFIX_HEADER = "Target Support Files/Alloy.default-Shaders/Alloy.default-Shaders-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/Alloy.default-Shaders/Alloy.default-Shaders-Info.plist";
+				GCC_PREFIX_HEADER = "Target Support Files/Alloy.default-ML-Shaders-macOS/Alloy.default-ML-Shaders-macOS-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/Alloy.default-ML-Shaders-macOS/Alloy.default-ML-Shaders-macOS-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1263,7 +1406,7 @@
 					"@loader_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				MODULEMAP_FILE = "Target Support Files/Alloy.default-Shaders/Alloy.default-Shaders.modulemap";
+				MODULEMAP_FILE = "Target Support Files/Alloy.default-ML-Shaders-macOS/Alloy.default-ML-Shaders-macOS.modulemap";
 				PRODUCT_MODULE_NAME = Alloy;
 				PRODUCT_NAME = Alloy;
 				SDKROOT = macosx;
@@ -1275,41 +1418,40 @@
 			};
 			name = Release;
 		};
-		80BC8824B0814256678B2279AEAC4CF9 /* Release */ = {
+		8ECCC302DFEC39A6B52F23C1824BAC86 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C8B683276963D080CC66BC351E3EC7D4 /* Pods-Demo.release.xcconfig */;
+			baseConfigurationReference = 5FFFC6092BB1C1EF9A6FC21E14DB5DA6 /* Pods-DemoApp.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_VERSION = A;
-				INFOPLIST_FILE = "Target Support Files/Pods-Demo/Pods-Demo-Info.plist";
+				INFOPLIST_FILE = "Target Support Files/Pods-DemoApp/Pods-DemoApp-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
-					"@executable_path/../Frameworks",
+					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
 				MACH_O_TYPE = staticlib;
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				MODULEMAP_FILE = "Target Support Files/Pods-Demo/Pods-Demo.modulemap";
+				MODULEMAP_FILE = "Target Support Files/Pods-DemoApp/Pods-DemoApp.modulemap";
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOLFLAGS = "";
 				PODS_ROOT = "$(SRCROOT)";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = macosx;
+				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -1376,48 +1518,9 @@
 			};
 			name = Release;
 		};
-		9FCEB56322243F729BA3BE7EED2324A1 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5FFFC6092BB1C1EF9A6FC21E14DB5DA6 /* Pods-DemoApp.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "Target Support Files/Pods-DemoApp/Pods-DemoApp-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-DemoApp/Pods-DemoApp.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
 		A97B267BF09D9D55F2F6C28692E27723 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7D3C991571997F9BE7825884DE98426A /* Alloy-macOS.xcconfig */;
+			baseConfigurationReference = E5BE9B8DF176A7B4DDD1806B0A012901 /* Alloy-macOS.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
@@ -1453,9 +1556,49 @@
 			};
 			name = Debug;
 		};
+		B2C6DE07643C83561E256CB5D3A9B047 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4AD1B50B3FB191C0003C65F6E9F5AAB8 /* Pods-Demo.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = "Target Support Files/Pods-Demo/Pods-Demo-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MODULEMAP_FILE = "Target Support Files/Pods-Demo/Pods-Demo.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
 		B5661A96710151E6AE4C45B71AE9E0C5 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D855A2917A5AE88E87BE2651E713B4A3 /* Alloy-iOS.xcconfig */;
+			baseConfigurationReference = 5D3D4AF16C8E54C34CE428A8F397FB85 /* Alloy-iOS.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "";
@@ -1570,11 +1713,88 @@
 			};
 			name = Release;
 		};
-		CC43501D51414F10E4AF14F87681B48B /* Debug */ = {
+		CD74A4D837AD1C3C2AE09EFA78A789B7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CDEE2E9C8332AEFA0CECA42F24797FEF /* Pods-DemoApp.debug.xcconfig */;
+			baseConfigurationReference = F9C2C80FB56D8703A299942E4A192C27 /* Alloy.default-ML-Shaders-macOS.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				GCC_PREFIX_HEADER = "Target Support Files/Alloy.default-ML-Shaders-macOS/Alloy.default-ML-Shaders-macOS-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/Alloy.default-ML-Shaders-macOS/Alloy.default-ML-Shaders-macOS-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MODULEMAP_FILE = "Target Support Files/Alloy.default-ML-Shaders-macOS/Alloy.default-ML-Shaders-macOS.modulemap";
+				PRODUCT_MODULE_NAME = Alloy;
+				PRODUCT_NAME = Alloy;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 4.2;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		D349C930BD01E9C722197736189F0AD9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C8B683276963D080CC66BC351E3EC7D4 /* Pods-Demo.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = "Target Support Files/Pods-Demo/Pods-Demo-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MODULEMAP_FILE = "Target Support Files/Pods-Demo/Pods-Demo.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		D89557758A27993988D88F885BA8E3F4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0616BD77231FAD00C4CD494AF4FBC1D0 /* Alloy.default-ML-Shaders-iOS.xcconfig */;
+			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -1585,32 +1805,32 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "Target Support Files/Pods-DemoApp/Pods-DemoApp-Info.plist";
+				GCC_PREFIX_HEADER = "Target Support Files/Alloy.default-ML-Shaders-iOS/Alloy.default-ML-Shaders-iOS-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/Alloy.default-ML-Shaders-iOS/Alloy.default-ML-Shaders-iOS-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-DemoApp/Pods-DemoApp.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				MODULEMAP_FILE = "Target Support Files/Alloy.default-ML-Shaders-iOS/Alloy.default-ML-Shaders-iOS.modulemap";
+				PRODUCT_MODULE_NAME = Alloy;
+				PRODUCT_NAME = Alloy;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Debug;
+			name = Release;
 		};
 		DF0B37256D49997EC8ECF58B41AD3D5D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D855A2917A5AE88E87BE2651E713B4A3 /* Alloy-iOS.xcconfig */;
+			baseConfigurationReference = 5D3D4AF16C8E54C34CE428A8F397FB85 /* Alloy-iOS.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "";
@@ -1656,11 +1876,38 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		11EC8DB8952692D8D0FF896362B948F5 /* Build configuration list for PBXNativeTarget "Pods-Demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B2C6DE07643C83561E256CB5D3A9B047 /* Debug */,
+				D349C930BD01E9C722197736189F0AD9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		19D3B48791FDC647D482D5DB2756940F /* Build configuration list for PBXNativeTarget "Alloy.default-ML-Shaders-iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3988ED9D59BFF6E3F6AAA27D8710A8C5 /* Debug */,
+				D89557758A27993988D88F885BA8E3F4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		1B46BDFD685A162E2C7276663DCD67A2 /* Build configuration list for PBXNativeTarget "Alloy-macOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A97B267BF09D9D55F2F6C28692E27723 /* Debug */,
 				2D41CA214D888022DA05F6BFE0E206EF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		30F8B40B915404BCBADA170A6EFB6055 /* Build configuration list for PBXNativeTarget "Alloy.default-ML-Shaders-macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CD74A4D837AD1C3C2AE09EFA78A789B7 /* Debug */,
+				895F17D56149E0E4B9DE705D8F2CC207 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1683,15 +1930,6 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A1CBBB2BC1EA08F2B18CC2A8559E4F85 /* Build configuration list for PBXNativeTarget "Pods-DemoApp" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				CC43501D51414F10E4AF14F87681B48B /* Debug */,
-				9FCEB56322243F729BA3BE7EED2324A1 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		A79B62301D872BF926FF825A8F7AE5DA /* Build configuration list for PBXNativeTarget "Pods-AlloyTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -1701,20 +1939,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C27197BFB2E339B963674A12B84CF949 /* Build configuration list for PBXNativeTarget "Pods-Demo" */ = {
+		F06855ABAFA2B8710A9B8B6BF3667316 /* Build configuration list for PBXNativeTarget "Pods-DemoApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1178186894E4583C1FBB39D20443BB1A /* Debug */,
-				80BC8824B0814256678B2279AEAC4CF9 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		F6C11F068713FD897753E49309BE5555 /* Build configuration list for PBXNativeTarget "Alloy.default-Shaders" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				1C768AD4D0A1CAB46B2369F6FD0C68C2 /* Debug */,
-				668FCD29014EC6F787FA4DE584770D0F /* Release */,
+				1F9E919CEB271645029413BED68EEBD7 /* Debug */,
+				8ECCC302DFEC39A6B52F23C1824BAC86 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

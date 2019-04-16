@@ -14,7 +14,12 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Alloy.default-Shaders.xcscheme</key>
+		<key>Alloy.default-ML-Shaders-iOS.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Alloy.default-ML-Shaders-macOS.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
