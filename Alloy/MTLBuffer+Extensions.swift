@@ -15,6 +15,13 @@ public extension MTLBuffer {
     func pointer<T>(of type: T.Type) -> UnsafeMutablePointer<T>? {
         guard self.isAccessibleOnCPU
         else { return nil }
+        
+        #if DEBUG
+        if self.length >= MemoryLayout<T>.stride {
+            fatalError("Buffer length check failed")
+        }
+        #endif
+        
         let bindedPointer = self.contents().assumingMemoryBound(to: type)
         return bindedPointer
     }
