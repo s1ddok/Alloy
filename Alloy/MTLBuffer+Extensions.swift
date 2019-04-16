@@ -17,7 +17,7 @@ public extension MTLBuffer {
         else { return nil }
         
         #if DEBUG
-        if self.length >= MemoryLayout<T>.stride {
+        guard self.length >= MemoryLayout<T>.stride else {
             fatalError("Buffer length check failed")
         }
         #endif
