@@ -8,6 +8,7 @@
 
 #include <metal_stdlib>
 #include "ColorConversion.h"
+#include "ShaderStructures.h"
 
 using namespace metal;
 
@@ -178,4 +179,30 @@ kernel void mean(texture2d<half, access::sample> input_texture [[ texture(0) ]],
         result = float4(mean_value);
     }
 
+}
+
+// MARK: - Rectangle Rendering
+
+struct RectVertexOut {
+    float4 position [[ position ]];
+};
+
+vertex RectVertexOut rectVertex(constant RectVertices& rectVertices [[ buffer(0) ]],
+                                uint vid [[vertex_id]]) {
+    RectVertexOut out;
+
+    const Vertex vertices[] = {
+        rectVertices.topLeft, rectVertices.bottomLeft,
+        rectVertices.topRight, rectVertices.bottomRight
+    };
+
+    out.position = float4(vertices[vid].position, 0.0, 1.0);
+
+    return out;
+}
+
+fragment half4 rectFragment(RectVertexOut in [[stage_in]],
+                            constant float4& color [[ buffer(0) ]]) {
+    half4 originalColor = (half4)color;
+    return originalColor;
 }
