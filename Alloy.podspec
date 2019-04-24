@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
   end
 
   s.subspec 'Shaders' do |shaders|
-    shaders.source_files    = 'Alloy/Shaders/*.{metal,h}', 'Alloy/Encoders/*.{swift}'
+    shaders.source_files    = 'Alloy/Shaders/*.{metal,h}', 'Alloy/Encoders/*.{swift}', 'Alloy/Renderers/*.{swift}'
     shaders.frameworks      = 'Metal', 'CoreVideo'
     shaders.dependency 'Alloy/Core'
   end

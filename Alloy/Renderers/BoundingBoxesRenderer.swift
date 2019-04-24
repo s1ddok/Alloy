@@ -17,8 +17,21 @@ final public class BoundingBoxesRenderer {
 
     // MARK: - Properties
 
+    /// Rectrangles in a normalized coodrinate system describing bounding boxes.
+    public var normalizedRects: [CGRect] = []
+    /// Rrefered fill color of the bounding boxes.
+    public var color: CGColor = .black {
+        didSet {
+            self.rectangleRenderer.color = self.color
+        }
+    }
+    /// Prefered line width of the bounding boxes in pixels.
+    public var lineWidth: Int = 20
+
+    /// Size of the render target texture.
+    public var renderTargetSize: MTLSize = .zero
+
     private let rectangleRenderer: RectangleRenderer
-    private var renderTargetSize: MTLSize!
 
     // MARK: - Life Cicle
 
@@ -26,8 +39,9 @@ final public class BoundingBoxesRenderer {
     ///
     /// - Parameter context: Alloy's Metal context.
     /// - Throws: library or function creation errors.
-    public init(context: MTLContext) throws {
-        self.rectangleRenderer = try RectangleRenderer(context: context)
+    public init(context: MTLContext, pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
+        self.rectangleRenderer = try RectangleRenderer(context: context,
+                                                       pixelFormat: pixelFormat)
     }
 
     // MARK: - Helpers
@@ -101,41 +115,50 @@ final public class BoundingBoxesRenderer {
         return boundingBoxesRects
     }
 
-    // MARK: - Drawing
+}
 
-    /// Set MTLTexure render target.
+@available(iOS 11.3, tvOS 11.3, macOS 10.13, *)
+extension BoundingBoxesRenderer: DebugRenderer {
+
+    /// Draw bounding boxes in a target texture.
     ///
-    /// - Parameter texture: texture to render in.
-    /// - Throws: Error if texture's `.usage` doesn't contain `.renderTarget`.
-    public func setRenderTarget(texture: MTLTexture) throws {
-        self.renderTargetSize = texture.size
-        try self.rectangleRenderer.setRenderTarget(texture: texture)
+    /// - Parameters:
+    ///   - renderPassDescriptor: render pass descriptor to be used.
+    ///   - commandBuffer: command buffer to put the GPU work items into.
+    public func draw(renderPassDescriptor: MTLRenderPassDescriptor,
+                     commandBuffer: MTLCommandBuffer) throws {
+        // Check render target.
+        guard let renderTarget = renderPassDescriptor.colorAttachments[0].texture
+        else { throw Errors.missingRenderTarget }
+        guard renderTarget.usage.contains(.renderTarget)
+        else { throw Errors.wrongRenderTargetTextureUsage }
+
+        self.renderTargetSize = renderTarget.size
+
+        // Draw.
+        commandBuffer.render(descriptor: renderPassDescriptor) { renderEncoder in
+            self.draw(using: renderEncoder)
+        }
     }
 
     /// Draw bounding boxes in a target texture.
     ///
     /// - Parameters:
-    ///   - rects: rectrangle in a normalized coodrinate system describing bounding boxes.
-    ///   - color: prefered color of the bounding boxes.
-    ///   - lineWidth: prefered line width of the bounding boxes in pixels.
-    ///   - commandBuffer: command buffer to put the GPU work items into.
-    public func draw(normalizedRects: [CGRect],
-                     of color: CGColor,
-                     with lineWidth: Int,
-                     using commandBuffer: MTLCommandBuffer) {
-        commandBuffer.pushDebugGroup("Draw Bounding Box Geometry")
-
-        let boundingBoxesRects = self.calculateBBoxesRects(from: normalizedRects,
-                                                           with: lineWidth,
+    ///   - renderEncoder: container to put the rendering work into.
+    public func draw(using renderEncoder: MTLRenderCommandEncoder) {
+        let boundingBoxesRects = self.calculateBBoxesRects(from: self.normalizedRects,
+                                                           with: self.lineWidth,
                                                            textureWidth: self.renderTargetSize.width,
                                                            textureHeight: self.renderTargetSize.height)
 
-        boundingBoxesRects.forEach {
-            self.rectangleRenderer.draw(normalizedRect: $0,
-                                        of: color,
-                                        using: commandBuffer)
+        renderEncoder.pushDebugGroup("Draw Bounding Box Geometry")
+
+        boundingBoxesRects.forEach { boundingBoxComponent in
+            self.rectangleRenderer.normalizedRect = boundingBoxComponent
+            self.rectangleRenderer.draw(using: renderEncoder)
         }
 
-        commandBuffer.popDebugGroup()
+        renderEncoder.popDebugGroup()
     }
+
 }
