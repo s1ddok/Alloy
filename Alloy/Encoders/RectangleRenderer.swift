@@ -22,14 +22,20 @@ final public class RectangleRenderer {
         didSet {
             if oldValue.colorAttachments[0].pixelFormat !=
                 self.renderPipelineDescriptor.colorAttachments[0].pixelFormat {
-                self.renderPipelineState = try! self.context.device
-                    .makeRenderPipelineState(descriptor: self.renderPipelineDescriptor)
+                if let newRenderPipelineState = try? self.context.device
+                    .makeRenderPipelineState(descriptor: self.renderPipelineDescriptor) {
+                    self.renderPipelineState = newRenderPipelineState
+                }
             }
         }
     }
-    private var renderPipelineState: MTLRenderPipelineState
+    private var renderPipelineState: MTLRenderPipelineState!
     private var renderPassDescriptor: MTLRenderPassDescriptor
 
+    /// Creates a new instance of RectangleRenderer.
+    ///
+    /// - Parameter context: Alloy's Metal context.
+    /// - Throws: library or function creation errors.
     public init(context: MTLContext) throws {
         self.context = context
 
@@ -48,13 +54,19 @@ final public class RectangleRenderer {
         renderPipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
         self.renderPipelineDescriptor = renderPipelineDescriptor
 
-        self.renderPipelineState = try self.context.device.makeRenderPipelineState(descriptor: self.renderPipelineDescriptor)
+        self.renderPipelineState = try? self.context.device
+            .makeRenderPipelineState(descriptor: self.renderPipelineDescriptor)
 
-        self.renderPassDescriptor = MTLRenderPassDescriptor()
-        self.renderPassDescriptor.colorAttachments[0].loadAction = .load
-        self.renderPassDescriptor.colorAttachments[0].clearColor = .clear
+        let renderPassDescriptor = MTLRenderPassDescriptor()
+        renderPassDescriptor.colorAttachments[0].loadAction = .load
+        renderPassDescriptor.colorAttachments[0].clearColor = .clear
+        self.renderPassDescriptor = renderPassDescriptor
     }
 
+    /// Set MTLTexure render target.
+    ///
+    /// - Parameter texture: texture to render in.
+    /// - Throws: Error if texture's `.usage` doesn't contain `.renderTarget`.
     public func setRenderTarget(texture: MTLTexture) throws {
         guard texture.usage.contains(.renderTarget)
         else { throw Errors.wrongTextureUsage }
@@ -64,6 +76,12 @@ final public class RectangleRenderer {
         self.renderPipelineDescriptor = renderPipelineDescriptor
     }
 
+    /// Draw a rectangle in a target texture.
+    ///
+    /// - Parameters:
+    ///   - normalizedRect: rectrangle in a normalized coodrinate system.
+    ///   - color: rectangle fill color.
+    ///   - commandBuffer: command buffer to put the GPU work item into.
     public func draw(normalizedRect: CGRect,
                      of color: CGColor,
                      using commandBuffer: MTLCommandBuffer) {

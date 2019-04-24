@@ -11,11 +11,6 @@ import simd
 @available(iOS 11.3, tvOS 11.3, macOS 10.13, *)
 final public class BoundingBoxesRenderer {
 
-    public enum Errors: Error {
-        case functionCreationFailed
-        case libraryCreationFailed
-    }
-
     private enum ComponentRectType {
         case leftRect, topRect, rightRect, bottomRect
     }
@@ -27,6 +22,10 @@ final public class BoundingBoxesRenderer {
 
     // MARK: - Life Cicle
 
+    /// Creates a new instance of BoundingBoxesRenderer.
+    ///
+    /// - Parameter context: Alloy's Metal context.
+    /// - Throws: library or function creation errors.
     public init(context: MTLContext) throws {
         self.rectangleRenderer = try RectangleRenderer(context: context)
     }
@@ -104,18 +103,29 @@ final public class BoundingBoxesRenderer {
 
     // MARK: - Drawing
 
+    /// Set MTLTexure render target.
+    ///
+    /// - Parameter texture: texture to render in.
+    /// - Throws: Error if texture's `.usage` doesn't contain `.renderTarget`.
     public func setRenderTarget(texture: MTLTexture) throws {
         self.renderTargetSize = texture.size
         try self.rectangleRenderer.setRenderTarget(texture: texture)
     }
 
-    public func draw(rects: [CGRect],
+    /// Draw bounding boxes in a target texture.
+    ///
+    /// - Parameters:
+    ///   - rects: rectrangle in a normalized coodrinate system describing bounding boxes.
+    ///   - color: prefered color of the bounding boxes.
+    ///   - lineWidth: prefered line width of the bounding boxes in pixels.
+    ///   - commandBuffer: command buffer to put the GPU work items into.
+    public func draw(normalizedRects: [CGRect],
                      of color: CGColor,
                      with lineWidth: Int,
                      using commandBuffer: MTLCommandBuffer) {
         commandBuffer.pushDebugGroup("Draw Bounding Box Geometry")
 
-        let boundingBoxesRects = self.calculateBBoxesRects(from: rects,
+        let boundingBoxesRects = self.calculateBBoxesRects(from: normalizedRects,
                                                            with: lineWidth,
                                                            textureWidth: self.renderTargetSize.width,
                                                            textureHeight: self.renderTargetSize.height)
