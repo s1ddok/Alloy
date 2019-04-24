@@ -26,43 +26,52 @@ class AlloyTests: XCTestCase {
     var gpuIterations = 4
 
     override func setUp() {
+        super.setUp()
         self.context = MTLContext(device: Metal.device)
 
-        guard let library = self.context.shaderLibrary(for: AlloyTests.self) ?? self.context.standardLibrary else {
-            fatalError("Could not load shader library")
-        }
+        guard let library = self.context.shaderLibrary(for: AlloyTests.self) ??
+                self.context.standardLibrary
+        else { fatalError("Could not load shader library") }
 
-        self.evenInitState = try! library.computePipelineState(function: "initialize_even")
+        guard let evenInitState = try? library.computePipelineState(function: "initialize_even")
+        else { fatalError("Could not create compute pipeline state") }
+        self.evenInitState = evenInitState
 
         let computeStateDescriptor = MTLComputePipelineDescriptor()
         computeStateDescriptor.computeFunction = library.makeFunction(name: "initialize_even")!
         computeStateDescriptor.threadGroupSizeIsMultipleOfThreadExecutionWidth = true
 
-        self.evenOptimizedInitState = try! self.context
-                                               .device
-                                               .makeComputePipelineState(descriptor: computeStateDescriptor,
-                                                                         options: [],
-                                                                         reflection: nil)
+        guard let evenOptimizedInitState = try? self.context
+            .device
+            .makeComputePipelineState(descriptor: computeStateDescriptor,
+                                      options: [],
+                                      reflection: nil)
+        else { fatalError("Could not create compute pipeline state") }
+        self.evenOptimizedInitState = evenOptimizedInitState
 
-        self.exactInitState = try! library.computePipelineState(function: "initialize_exact")
+        guard let exactInitState = try? library.computePipelineState(function: "initialize_exact")
+        else { fatalError("Could not create compute pipeline state") }
+        self.exactInitState = exactInitState
 
-        self.evenProcessState = try! library.computePipelineState(function: "process_even")
+        guard let evenProcessState = try? library.computePipelineState(function: "process_even")
+        else { fatalError("Could not create compute pipeline state") }
+        self.evenProcessState = evenProcessState
 
         let processComputeStateDescriptor = MTLComputePipelineDescriptor()
         processComputeStateDescriptor.computeFunction = library.makeFunction(name: "process_even")!
         processComputeStateDescriptor.threadGroupSizeIsMultipleOfThreadExecutionWidth = true
 
-        self.evenOptimizedProcessState = try! self.context
+        guard let evenOptimizedProcessState = try? self.context
             .device
             .makeComputePipelineState(descriptor: processComputeStateDescriptor,
                                       options: [],
                                       reflection: nil)
+        else { fatalError("Could not create compute pipeline state") }
+        self.evenOptimizedProcessState = evenOptimizedProcessState
 
-        self.exactProcessState = try! library.computePipelineState(function: "process_exact")
-    }
-
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        guard let exactProcessState = try? library.computePipelineState(function: "process_exact")
+        else { fatalError("Could not create compute pipeline state") }
+        self.exactProcessState = exactProcessState
     }
 
     func testEvenPerformance() {
@@ -109,11 +118,11 @@ class AlloyTests: XCTestCase {
 
         for wd in 0..<maximumThreadgroupSize.width {
             for ht in 0..<maximumThreadgroupSize.height {
-                var texture = self.context.texture(width:  self.textureBaseWidth + wd,
+                var texture = self.context.texture(width: self.textureBaseWidth + wd,
                                                    height: self.textureBaseHeight + ht,
                                                    pixelFormat: .rgba8Unorm)!
 
-                var outputTexture = self.context.texture(width:  self.textureBaseWidth + wd,
+                var outputTexture = self.context.texture(width: self.textureBaseWidth + wd,
                                                          height: self.textureBaseHeight + ht,
                                                          pixelFormat: .rgba8Unorm)!
 
@@ -151,25 +160,32 @@ class IdealSizeTests: XCTestCase {
     var gpuIterations = 256
 
     override func setUp() {
+        super.setUp()
         self.context = MTLContext(device: Metal.device)
 
-        guard let library = self.context.shaderLibrary(for: IdealSizeTests.self) ?? self.context.standardLibrary else {
-            fatalError("Could not load shader library")
-        }
+        guard let library = self.context.shaderLibrary(for: IdealSizeTests.self) ??
+            self.context.standardLibrary
+        else { fatalError("Could not load shader library") }
 
-        self.evenState = try! library.computePipelineState(function: "fill_with_threadgroup_size_even")
+        guard let evenState = try? library.computePipelineState(function: "fill_with_threadgroup_size_even")
+        else { fatalError("Could not create compute pipeline state") }
+        self.evenState = evenState
 
         let computeStateDescriptor = MTLComputePipelineDescriptor()
         computeStateDescriptor.computeFunction = library.makeFunction(name: "fill_with_threadgroup_size_even")!
         computeStateDescriptor.threadGroupSizeIsMultipleOfThreadExecutionWidth = true
 
-        self.evenOptimizedState = try! self.context
+        guard let evenOptimizedState = try? self.context
             .device
             .makeComputePipelineState(descriptor: computeStateDescriptor,
                                       options: [],
                                       reflection: nil)
+        else { fatalError("Could not create compute pipeline state") }
+        self.evenOptimizedState = evenOptimizedState
 
-        self.exactState = try! library.computePipelineState(function: "fill_with_threadgroup_size_exact")
+        guard let exactState = try? library.computePipelineState(function: "fill_with_threadgroup_size_exact")
+        else { fatalError("Could not create compute pipeline state") }
+        self.exactState = exactState
     }
 
     func testSpeedOnIdealSize() {

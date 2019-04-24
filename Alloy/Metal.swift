@@ -129,7 +129,7 @@ public final class MTLContext {
         
         let sampleDesc = MTLTextureDescriptor()
         sampleDesc.textureType = MTLTextureType.type2DMultisample
-        sampleDesc.width  = width
+        sampleDesc.width = width
         sampleDesc.height = height
         sampleDesc.sampleCount = sampleCount
         sampleDesc.pixelFormat = pixelFormat
@@ -138,9 +138,10 @@ public final class MTLContext {
         #endif
         sampleDesc.usage = .renderTarget
         
-        guard let mainTex = device.makeTexture(descriptor: mainDesc),
-              let sampleTex = device.makeTexture(descriptor: sampleDesc)
-        else { return nil}
+        guard
+            let mainTex = device.makeTexture(descriptor: mainDesc),
+            let sampleTex = device.makeTexture(descriptor: sampleDesc)
+        else { return nil }
         
         return (main: sampleTex, resolve: mainTex)
     }
@@ -149,7 +150,7 @@ public final class MTLContext {
         let options: [MTKTextureLoader.Option: Any] = [
             // Note: the SRGB option should be set to false, otherwise the image
             // appears way too dark, since it wasn't actually saved as SRGB.
-            .SRGB : false, // image.colorSpace == CGColorSpace(name: CGColorSpace.sRGB)
+            .SRGB: false, // image.colorSpace == CGColorSpace(name: CGColorSpace.sRGB)
             .textureUsage: NSNumber(value: usage.rawValue)
         ]
         
@@ -192,7 +193,6 @@ public final class MTLContext {
         #else
         textureDescriptor.storageMode = storageMode ?? .private
         #endif
-        
         
         let texture = device.makeTexture(descriptor: textureDescriptor)
         return texture

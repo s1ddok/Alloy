@@ -66,8 +66,8 @@ public class PyTorchPoolPadding: NSObject, MPSNNPadding {
 
         let centeringPolicy = 0
 
-        let leftExtraPixels = (extraSizeX + centeringPolicy) / 2;
-        let topExtraPixels = (extraSizeY + centeringPolicy) / 2;
+        let leftExtraPixels = (extraSizeX + centeringPolicy) / 2
+        let topExtraPixels = (extraSizeY + centeringPolicy) / 2
 
         cnnKernel.offset = .init(x: correctionX - leftExtraPixels,
                                  y: correctionY - topExtraPixels,

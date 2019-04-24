@@ -39,7 +39,6 @@ class ViewController: NSViewController {
                                                usage: [.shaderRead, .shaderWrite])
         else { return }
         
-
         try? self.context.scheduleAndWait { buffer in
             self.brightnessEncoder.intensity = sender.floatValue
             self.brightnessEncoder.encode(input: texture,
