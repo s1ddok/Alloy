@@ -181,29 +181,68 @@ kernel void mean(texture2d<half, access::sample> input_texture [[ texture(0) ]],
 
 }
 
-// MARK: - Rectangle Rendering
 
-struct RectVertexOut {
+// MARK: - Rendering
+
+struct VertexOut {
     float4 position [[ position ]];
     half4 fillColor;
 };
 
-vertex RectVertexOut rectVertex(constant Rectangle& rectangle [[ buffer(0) ]],
-                                uint vid [[vertex_id]]) {
-    RectVertexOut out;
+// MARK: - Rectangle Rendering
 
+vertex VertexOut rectVertex(constant Rectangle& rectangle [[ buffer(0) ]],
+                                uint vid [[vertex_id]]) {
     const float2 positions[] = {
         rectangle.topLeft, rectangle.bottomLeft,
         rectangle.topRight, rectangle.bottomRight
     };
 
+    VertexOut out;
     out.position = float4(positions[vid], 0.0, 1.0);
     out.fillColor = (half4)rectangle.fillColor;
 
     return out;
 }
 
-fragment half4 rectFragment(RectVertexOut in [[ stage_in ]]) {
+fragment half4 rectFragment(VertexOut in [[ stage_in ]]) {
     half4 originalColor = in.fillColor;
     return originalColor;
+}
+
+// MARK: - Lines Rendering
+
+inline float2 perp(float2 in) {
+    return float2(-in.y, in.x);
+}
+
+vertex VertexOut linesVertex(constant Line *lines [[ buffer(0) ]],
+                       uint vertexId [[vertex_id]],
+                       uint instanceId [[instance_id]]) {
+    Line line = lines[instanceId];
+
+    float2 startPoint = line.startPoint;
+    float2 endPoint = line.endPoint;
+
+    float2 vector = startPoint - endPoint;
+    float2 perpendicularVector = perp(normalize(vector));
+    float halfWidth = line.width / 2;
+
+    const float2 vertexPositions[] = {
+        startPoint, endPoint,
+        startPoint, endPoint,
+    };
+    const float offsetFactors[] = {
+        -1.0, -1.0,
+        1.0, 1.0,
+    };
+
+    VertexOut out;
+    out.position = float4(vertexPositions[vertexId] +
+                          offsetFactors[vertexId] * perpendicularVector * halfWidth,
+                          0.0,
+                          1.0);
+    out.fillColor = (half4)line.fillColor;
+
+    return out;
 }

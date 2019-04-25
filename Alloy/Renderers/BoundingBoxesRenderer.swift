@@ -11,8 +11,8 @@ import simd
 @available(iOS 11.3, tvOS 11.3, macOS 10.13, *)
 final public class BoundingBoxesRenderer {
 
-    private enum ComponentRectType {
-        case leftRect, topRect, rightRect, bottomRect
+    private enum ComponentType {
+        case leftLine, topLine, rightLine, bottomLine
     }
 
     // MARK: - Properties
@@ -20,18 +20,14 @@ final public class BoundingBoxesRenderer {
     /// Rectrangles in a normalized coodrinate system describing bounding boxes.
     public var normalizedRects: [CGRect] = []
     /// Rrefered fill color of the bounding boxes.
-    public var color: CGColor = .black {
-        didSet {
-            self.rectangleRenderer.color = self.color
-        }
-    }
+    public var color: CGColor = .black
     /// Prefered line width of the bounding boxes in pixels.
     public var lineWidth: Int = 20
 
     /// Size of the render target texture.
     public var renderTargetSize: MTLSize = .zero
 
-    private let rectangleRenderer: RectangleRenderer
+    private let linesRenderer: LinesRenderer
 
     // MARK: - Life Cicle
 
@@ -40,79 +36,90 @@ final public class BoundingBoxesRenderer {
     /// - Parameter context: Alloy's Metal context.
     /// - Throws: library or function creation errors.
     public init(context: MTLContext, pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
-        self.rectangleRenderer = try RectangleRenderer(context: context,
-                                                       pixelFormat: pixelFormat)
+        self.linesRenderer = try LinesRenderer(context: context,
+                                               pixelFormat: pixelFormat)
     }
 
     // MARK: - Helpers
 
-    private func calculateComponentRect(bboxRect: CGRect,
+    private func calculateComponentLine(bboxRect: CGRect,
                                         lineWidth: CGFloat,
                                         textureWidth: CGFloat,
                                         textureHeight: CGFloat,
-                                        for componentRectType: ComponentRectType) -> CGRect {
-        let normalizedLineHorizontalWidth = lineWidth / textureHeight
-        let normalizedLineVerticalWidth = lineWidth / textureWidth
+                                        for componentType: ComponentType) -> Line {
+        let horizontalWidth = lineWidth / textureHeight
+        let verticalWidth = lineWidth / textureWidth
 
-        let normalizedToMetalBBoxRect = CGRect(x: -1 + bboxRect.minX * 2,
+        let rect = CGRect(x: -1 + bboxRect.minX * 2,
                                                y: -1 + ((1 - bboxRect.maxY) * 2),
                                                width: bboxRect.width * 2,
                                                height: bboxRect.height * 2)
 
-        switch componentRectType {
-        case .leftRect:
-            return CGRect(x: normalizedToMetalBBoxRect.minX - normalizedLineVerticalWidth / 2,
-                          y: normalizedToMetalBBoxRect.minY + normalizedLineHorizontalWidth / 2,
-                          width: normalizedLineVerticalWidth,
-                          height: normalizedToMetalBBoxRect.height + normalizedLineHorizontalWidth)
-        case .topRect:
-            return CGRect(x: normalizedToMetalBBoxRect.minX + normalizedLineVerticalWidth / 2,
-                          y: normalizedToMetalBBoxRect.maxY + normalizedLineHorizontalWidth / 2,
-                          width: normalizedToMetalBBoxRect.width - normalizedLineVerticalWidth,
-                          height: normalizedLineHorizontalWidth)
-        case .rightRect:
-            return CGRect(x: normalizedToMetalBBoxRect.maxX - normalizedLineVerticalWidth / 2,
-                          y: normalizedToMetalBBoxRect.minY + normalizedLineHorizontalWidth / 2,
-                          width: normalizedLineVerticalWidth,
-                          height: normalizedToMetalBBoxRect.height + normalizedLineHorizontalWidth)
-        case .bottomRect:
-            return CGRect(x: normalizedToMetalBBoxRect.minX + normalizedLineVerticalWidth / 2,
-                          y: normalizedToMetalBBoxRect.minY + normalizedLineHorizontalWidth / 2,
-                          width: normalizedToMetalBBoxRect.width - normalizedLineVerticalWidth,
-                          height: normalizedLineHorizontalWidth)
+        let colorComponents = (self.color.components ?? [1, 1, 1, 1]).map { Float($0) }
+        let color = float4(colorComponents)
+
+        switch componentType {
+        case .leftLine:
+            return Line(startPoint: vector_float2(Float(rect.minX),
+                                                  Float(rect.minY - horizontalWidth / 2)),
+                        endPoint: vector_float2(Float(rect.minX),
+                                                Float(rect.maxY + horizontalWidth / 2)),
+                        width: Float(verticalWidth),
+                        fillColor: color)
+        case .topLine:
+            return Line(startPoint: vector_float2(Float(rect.minX + verticalWidth / 2),
+                                                  Float(rect.maxY)),
+                        endPoint: vector_float2(Float(rect.maxX - verticalWidth / 2),
+                                                Float(rect.maxY)),
+                        width: Float(horizontalWidth),
+                        fillColor: color)
+        case .rightLine:
+            return Line(startPoint: vector_float2(Float(rect.maxX),
+                                                  Float(rect.maxY + horizontalWidth / 2)),
+                        endPoint: vector_float2(Float(rect.maxX),
+                                                Float(rect.minY - horizontalWidth / 2)),
+                        width: Float(verticalWidth),
+                        fillColor: color)
+        case .bottomLine:
+            return Line(startPoint: vector_float2(Float(rect.maxX - verticalWidth / 2),
+                                                  Float(rect.minY)),
+                        endPoint: vector_float2(Float(rect.minX + verticalWidth / 2),
+                                                Float(rect.minY)),
+                        width: Float(horizontalWidth),
+                        fillColor: color)
         }
     }
 
-    private func calculateBBoxComponentRects(bboxRect: CGRect,
+    private func calculateBBoxComponentLines(bboxRect: CGRect,
                                              lineWidth: CGFloat,
                                              textureWidth: CGFloat,
-                                             textureHeight: CGFloat) -> [CGRect] {
-        let boundingBoxComponents: [ComponentRectType] = [.leftRect,
-                                                          .topRect,
-                                                          .rightRect,
-                                                          .bottomRect]
-        let boundingBoxComponentRects: [CGRect] = boundingBoxComponents.map { componentRectType in
-            self.calculateComponentRect(bboxRect: bboxRect,
+                                             textureHeight: CGFloat) -> [Line] {
+        let boundingBoxComponents: [ComponentType] = [.leftLine,
+                                                      .topLine,
+                                                      .rightLine,
+                                                      .bottomLine]
+        let boundingBoxComponentLines: [Line] = boundingBoxComponents.map { componentType in
+            self.calculateComponentLine(bboxRect: bboxRect,
                                         lineWidth: lineWidth,
                                         textureWidth: textureWidth,
                                         textureHeight: textureHeight,
-                                        for: componentRectType)
+                                        for: componentType)
         }
-        return boundingBoxComponentRects
+        return boundingBoxComponentLines
     }
 
-    private func calculateBBoxesRects(from rects: [CGRect],
+    private func calculateBBoxesLines(from rects: [CGRect],
                                       with lineWidth: Int,
                                       textureWidth: Int,
-                                      textureHeight: Int) -> [CGRect] {
-        let boundingBoxesRects = (rects.map {
-            self.calculateBBoxComponentRects(bboxRect: $0,
+                                      textureHeight: Int) -> [Line] {
+        let boundingBoxesLines = (rects.map {
+            self.calculateBBoxComponentLines(bboxRect: $0,
                                              lineWidth: CGFloat(lineWidth),
                                              textureWidth: CGFloat(textureWidth),
                                              textureHeight: CGFloat(textureHeight))
 
         }).flatMap { $0 }
-        return boundingBoxesRects
+        return boundingBoxesLines
     }
 
 }
@@ -146,17 +153,15 @@ extension BoundingBoxesRenderer: DebugRenderer {
     /// - Parameters:
     ///   - renderEncoder: container to put the rendering work into.
     public func draw(using renderEncoder: MTLRenderCommandEncoder) {
-        let boundingBoxesRects = self.calculateBBoxesRects(from: self.normalizedRects,
+        let boundingBoxesLines = self.calculateBBoxesLines(from: self.normalizedRects,
                                                            with: self.lineWidth,
                                                            textureWidth: self.renderTargetSize.width,
                                                            textureHeight: self.renderTargetSize.height)
 
         renderEncoder.pushDebugGroup("Draw Bounding Box Geometry")
 
-        boundingBoxesRects.forEach { boundingBoxComponent in
-            self.rectangleRenderer.normalizedRect = boundingBoxComponent
-            self.rectangleRenderer.draw(using: renderEncoder)
-        }
+        self.linesRenderer.lines = boundingBoxesLines
+        self.linesRenderer.draw(using: renderEncoder)
 
         renderEncoder.popDebugGroup()
     }
