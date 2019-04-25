@@ -185,24 +185,25 @@ kernel void mean(texture2d<half, access::sample> input_texture [[ texture(0) ]],
 
 struct RectVertexOut {
     float4 position [[ position ]];
+    half4 fillColor;
 };
 
-vertex RectVertexOut rectVertex(constant RectVertices& rectVertices [[ buffer(0) ]],
+vertex RectVertexOut rectVertex(constant Rectangle& rectangle [[ buffer(0) ]],
                                 uint vid [[vertex_id]]) {
     RectVertexOut out;
 
-    const Vertex vertices[] = {
-        rectVertices.topLeft, rectVertices.bottomLeft,
-        rectVertices.topRight, rectVertices.bottomRight
+    const float2 positions[] = {
+        rectangle.topLeft, rectangle.bottomLeft,
+        rectangle.topRight, rectangle.bottomRight
     };
 
-    out.position = float4(vertices[vid].position, 0.0, 1.0);
+    out.position = float4(positions[vid], 0.0, 1.0);
+    out.fillColor = (half4)rectangle.fillColor;
 
     return out;
 }
 
-fragment half4 rectFragment(RectVertexOut in [[stage_in]],
-                            constant float4& color [[ buffer(0) ]]) {
-    half4 originalColor = (half4)color;
+fragment half4 rectFragment(RectVertexOut in [[ stage_in ]]) {
+    half4 originalColor = in.fillColor;
     return originalColor;
 }

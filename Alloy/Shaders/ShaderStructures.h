@@ -10,15 +10,19 @@
 
 #include <simd/simd.h>
 
-typedef struct Vertex {
-    vector_float2 position;
-} Vertex;
+typedef struct Rectangle {
+    vector_float2 topLeft;
+    vector_float2 bottomLeft;
+    vector_float2 topRight;
+    vector_float2 bottomRight;
+    vector_float4 fillColor;
+} Rectangle;
 
-typedef struct RectVertices {
-    Vertex topLeft;
-    Vertex bottomLeft;
-    Vertex topRight;
-    Vertex bottomRight;
-} RectVertices;
+typedef struct Line {
+    vector_float2 startPoint;
+    vector_float2 endPoint;
+    float width;
+    vector_float4 fillColor;
+} Line;
 
 #endif /* ShaderStructures_h */

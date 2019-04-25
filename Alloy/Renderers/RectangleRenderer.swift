@@ -45,6 +45,28 @@ final public class RectangleRenderer {
             .makeRenderPipelineState(descriptor: renderPipelineDescriptor)
     }
 
+    // MARK: - Helpers
+
+    private func constructRectangle(from cgRect: CGRect, with fillColor: CGColor) -> Rectangle {
+        let topLeftPosition = float2(Float(cgRect.minX),
+                                     Float(cgRect.maxY))
+        let bottomLeftPosition = float2(Float(cgRect.minX),
+                                        Float(cgRect.minY))
+        let topRightPosition = float2(Float(cgRect.maxX),
+                                      Float(cgRect.maxY))
+        let bottomRightPosition = float2(Float(cgRect.maxX),
+                                         Float(cgRect.minY))
+
+        let colorComponents = (fillColor.components ?? [1, 1, 1, 1]).map { Float($0) }
+        let color = float4(colorComponents)
+
+        return Rectangle(topLeft: topLeftPosition,
+                         bottomLeft: bottomLeftPosition,
+                         topRight: topRightPosition,
+                         bottomRight: bottomRightPosition,
+                         fillColor: color)
+    }
+
     private static let vertexFunctionName = "rectVertex"
     private static let fragmentFunctionName = "rectFragment"
 
@@ -83,40 +105,18 @@ extension RectangleRenderer: DebugRenderer {
         // Set render command encoder state.
         renderEncoder.setRenderPipelineState(self.renderPipelineState)
         // Set any buffers fed into our render pipeline.
-        var rectVertices = normalizedRect.convertToRectVertices()
-        renderEncoder.setVertexBytes(&rectVertices,
-                                     length: MemoryLayout<RectVertices>.stride,
+
+        var rectangle = self.constructRectangle(from: self.normalizedRect,
+                                                with: self.color)
+        renderEncoder.setVertexBytes(&rectangle,
+                                     length: MemoryLayout<Rectangle>.stride,
                                      index: 0)
-        let colorComponents = (color.components ?? [1, 1, 1, 1]).map { Float($0) }
-        var color = float4(colorComponents)
-        renderEncoder.setFragmentBytes(&color,
-                                       length: MemoryLayout<float4>.stride,
-                                       index: 0)
         // Draw.
         renderEncoder.drawPrimitives(type: .triangleStrip,
                                      vertexStart: 0,
                                      vertexCount: 4)
 
         renderEncoder.popDebugGroup()
-    }
-
-}
-
-private extension CGRect {
-
-    func convertToRectVertices() -> RectVertices {
-        let topLeftVertex = Vertex(position: float2(Float(self.minX),
-                                                    Float(self.maxY)))
-        let bottomLeftVertex = Vertex(position: float2(Float(self.minX),
-                                                       Float(self.minY)))
-        let topRightVertex = Vertex(position: float2(Float(self.maxX),
-                                                     Float(self.maxY)))
-        let bottomRightVertex = Vertex(position: float2(Float(self.maxX),
-                                                        Float(self.minY)))
-        return RectVertices(topLeft: topLeftVertex,
-                            bottomLeft: bottomLeftVertex,
-                            topRight: topRightVertex,
-                            bottomRight: bottomRightVertex)
     }
 
 }
