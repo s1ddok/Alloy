@@ -256,11 +256,13 @@ struct PointVertexOut {
 };
 
 vertex PointVertexOut pointVertex(constant SimplePoint* points [[ buffer(0) ]],
+                                  constant float& pointSize [[ buffer(1) ]],
                                   uint instanceId [[instance_id]]) {
     PointVertexOut out;
     const SimplePoint point = points[instanceId];
-    out.position = float4(point.position, 0, 1);
-    out.size = point.size;
+    out.position = float4(float2(-1 + (point.position.x * 2),
+                                 -1 + ((1 - point.position.y) * 2)), 0, 1);
+    out.size = pointSize;
     return out;
 }
 
@@ -269,6 +271,6 @@ fragment float4 pointFragment(PointVertexOut in [[stage_in]],
                               constant float4& pointColor [[ buffer(0) ]]) {
     const float distanceFromCenter = length(2 * (pointCenter - 0.5));
     float4 color = pointColor;
-    color.a = 1.0 - smoothstep(0.4, 0.5, distanceFromCenter);
+    color.a = 1.0 - smoothstep(0.1, 0.9, distanceFromCenter);
     return color;
 }

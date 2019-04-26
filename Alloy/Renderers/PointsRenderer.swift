@@ -20,44 +20,35 @@ final public class PointsRenderer {
 
     // MARK: - Properties
 
-    /// Lines described in a normalized coodrinate system to draw.
-    public var points: [SimplePoint]? {
+    /// Points described in a normalized coodrinate system to draw.
+    public var points: [SimplePoint] {
         set {
-            if let newValue = newValue {
-                var convertedToMetalPoints = newValue
-                    .map { SimplePoint(position: packed_float2(x: -1 + ($0.position.x * 2),
-                                                               y: -1 + ((1 - $0.position.y) * 2)),
-                                       size: $0.size) }
-                
-                self.pointsBuffer = self.context.device
-                    .makeBuffer(bytes: &convertedToMetalPoints,
-                                length: MemoryLayout<SimplePoint>.stride * convertedToMetalPoints.count,
-                                options: .storageModeShared)
-            }
+            var points = newValue
+            self.pointCount = points.count
+            self.pointsBuffer = self.context.device
+                .makeBuffer(bytes: &points,
+                            length: MemoryLayout<SimplePoint>.stride * points.count,
+                            options: .storageModeShared)
         }
-
         get {
             if let pointsBuffer = self.pointsBuffer,
-                let convertedToMetalPoints = pointsBuffer
+                let points = pointsBuffer
                     .array(of: SimplePoint.self,
                            count: pointsBuffer.length / MemoryLayout<SimplePoint>.stride) {
-                let normalPoints = convertedToMetalPoints
-                    .map { SimplePoint(position: packed_float2(x: ($0.position.x + 1) / 2,
-                                                               y: 1 - (($0.position.y + 1) / 2)),
-                                       size: $0.size)
-                }
-                return normalPoints
+                return points
             } else {
-                return nil
+                return []
             }
         }
     }
+    public var color: vector_float4 = .init(1, 0, 0, 1) // red
+    public var pointSize: Float = 40 // size in pixels
+
     private var pointsBuffer: MTLBuffer?
-    public var renderTargetAspectRatio: Float = 1
-    public var color: vector_float4 = .init()
+    private var pointCount: Int = 0
 
     private let context: MTLContext
-    private var renderPipelineState: MTLRenderPipelineState!
+    private let renderPipelineState: MTLRenderPipelineState
 
     // MARK: - Life Cycle
 
@@ -83,19 +74,10 @@ final public class PointsRenderer {
 
         if let colorAttachmentsDescriptor = renderPipelineDescriptor.colorAttachments[0] {
             colorAttachmentsDescriptor.pixelFormat = pixelFormat
-
-            colorAttachmentsDescriptor.isBlendingEnabled = true
-
-            colorAttachmentsDescriptor.rgbBlendOperation = .add
-            colorAttachmentsDescriptor.sourceRGBBlendFactor = .sourceAlpha
-            colorAttachmentsDescriptor.destinationRGBBlendFactor = .oneMinusSourceAlpha
-
-            colorAttachmentsDescriptor.alphaBlendOperation = .add
-            colorAttachmentsDescriptor.sourceAlphaBlendFactor = .sourceAlpha
-            colorAttachmentsDescriptor.destinationAlphaBlendFactor = .oneMinusSourceAlpha
+            colorAttachmentsDescriptor.setup(blending: .add)
         }
 
-        self.renderPipelineState = try? context.device
+        self.renderPipelineState = try context.device
             .makeRenderPipelineState(descriptor: renderPipelineDescriptor)
     }
 
@@ -112,55 +94,56 @@ extension PointsRenderer {
     /// - Parameters:
     ///   - renderPassDescriptor: render pass descriptor to be used.
     ///   - commandBuffer: command buffer to put the rendering work items into.
-    public func draw(renderPassDescriptor: MTLRenderPassDescriptor,
-                     commandBuffer: MTLCommandBuffer) throws {
+    public func render(renderPassDescriptor: MTLRenderPassDescriptor,
+                       commandBuffer: MTLCommandBuffer) throws {
         #if DEBUG
         // Check render target.
-        guard let renderTarget = renderPassDescriptor.colorAttachments[0].texture
+        guard
+            let renderTarget = renderPassDescriptor.colorAttachments[0].texture
         else { throw Errors.missingRenderTarget }
-        guard renderTarget.usage.contains(.renderTarget)
+        guard
+            renderTarget.usage.contains(.renderTarget)
         else { throw Errors.wrongRenderTargetTextureUsage }
         #endif
 
-        self.renderTargetAspectRatio =
-            Float(renderTarget.width) / Float(renderTarget.height)
-
         // Draw.
         commandBuffer.render(descriptor: renderPassDescriptor) { renderEncoder in
-            self.draw(using: renderEncoder)
+            self.render(using: renderEncoder)
         }
+
+        commandBuffer.render(descriptor: renderPassDescriptor, self.render(using:))
     }
 
     /// Draw a rectangle in a target texture.
     ///
     /// - Parameters:
     ///   - renderEncoder: container to put the rendering work into.
-    public func draw(using renderEncoder: MTLRenderCommandEncoder) {
+    public func render(using renderEncoder: MTLRenderCommandEncoder) {
+        if self.pointCount != 0 {
 
-        // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool.
-        renderEncoder.pushDebugGroup("Draw Points Geometry")
+            // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool.
+            renderEncoder.pushDebugGroup("Draw Points Geometry")
 
-        // Set render command encoder state.
-        renderEncoder.setRenderPipelineState(self.renderPipelineState)
-        // Set any buffers fed into our render pipeline.
-        renderEncoder.setVertexBuffer(self.pointsBuffer,
-                                      offset: 0,
-                                      index: 0)
+            // Set render command encoder state.
+            renderEncoder.setRenderPipelineState(self.renderPipelineState)
+            // Set any buffers fed into our render pipeline.
+            renderEncoder.setVertexBuffer(self.pointsBuffer,
+                                          offset: 0,
+                                          index: 0)
+            renderEncoder.set(vertexValue: self.pointSize,
+                              at: 1)
 
-        renderEncoder.setFragmentBytes(&self.color,
-                                       length: MemoryLayout<vector_float4>.stride,
-                                       index: 0)
+            renderEncoder.set(fragmentValue: self.color,
+                              at: 0)
 
-        // Draw.
-        if let pointsBuffer = self.pointsBuffer {
-            let pointCount = pointsBuffer.length / MemoryLayout<SimplePoint>.stride
+            // Draw.
             renderEncoder.drawPrimitives(type: .point,
                                          vertexStart: 0,
                                          vertexCount: 1,
-                                         instanceCount: pointCount)
-        }
+                                         instanceCount: self.pointCount)
 
-        renderEncoder.popDebugGroup()
+            renderEncoder.popDebugGroup()
+        }
     }
 
 }

@@ -24,8 +24,7 @@ typedef struct Line {
 } Line;
 
 typedef struct SimplePoint {
-    packed_float2 position;
-    float size;
+    vector_float2 position;
 } SimplePoint;
 
 #endif /* ShaderStructures_h */
