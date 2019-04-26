@@ -29,6 +29,7 @@ final public class LinesRenderer {
         }
     }
     private var linesBuffer: MTLBuffer?
+    public var renderTargetAspectRatio: Float = 1
 
     private let context: MTLContext
     private var renderPipelineState: MTLRenderPipelineState!
@@ -81,6 +82,9 @@ extension LinesRenderer {
         guard renderTarget.usage.contains(.renderTarget)
         else { throw Errors.wrongRenderTargetTextureUsage }
 
+        self.renderTargetAspectRatio =
+            Float(renderTarget.width) / Float(renderTarget.height)
+
         // Draw.
         commandBuffer.render(descriptor: renderPassDescriptor) { renderEncoder in
             self.draw(using: renderEncoder)
@@ -102,6 +106,10 @@ extension LinesRenderer {
         renderEncoder.setVertexBuffer(self.linesBuffer,
                                       offset: 0,
                                       index: 0)
+
+        renderEncoder.setVertexBytes(&self.renderTargetAspectRatio,
+                                      length: MemoryLayout<Float>.stride,
+                                      index: 1)
 
         // Draw.
         renderEncoder.drawPrimitives(type: .triangleStrip,

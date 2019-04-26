@@ -30,7 +30,12 @@ final public class BoundingBoxesRenderer {
     public var lineWidth: Int = 20
 
     /// Size of the render target texture.
-    public var renderTargetSize: MTLSize = .zero
+    public var renderTargetSize: MTLSize = .zero {
+        didSet {
+            self.linesRenderer.renderTargetAspectRatio =
+                Float(self.renderTargetSize.width) / Float(self.renderTargetSize.height)
+        }
+    }
 
     private let linesRenderer: LinesRenderer
 

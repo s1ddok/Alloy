@@ -212,20 +212,23 @@ fragment half4 rectFragment(VertexOut in [[ stage_in ]]) {
 
 // MARK: - Lines Rendering
 
-inline float2 perp(float2 in) {
-    return float2(-in.y, in.x);
+float2 perpendicular(float2 vector) {
+    return float2(-vector.y, vector.x);
 }
 
 vertex VertexOut linesVertex(constant Line *lines [[ buffer(0) ]],
-                       uint vertexId [[vertex_id]],
-                       uint instanceId [[instance_id]]) {
+                             constant float& aspectRatio [[buffer(1)]],
+                             uint vertexId [[vertex_id]],
+                             uint instanceId [[instance_id]]) {
     Line line = lines[instanceId];
 
     float2 startPoint = line.startPoint;
     float2 endPoint = line.endPoint;
 
     float2 vector = startPoint - endPoint;
-    float2 perpendicularVector = perp(normalize(vector));
+    float2 perpendicularVector = perpendicular(normalize(vector));
+    perpendicularVector.x /= aspectRatio;
+    perpendicularVector.y *= aspectRatio;
     float halfWidth = line.width / 2;
 
     const float2 vertexPositions[] = {
