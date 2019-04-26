@@ -52,12 +52,12 @@ final public class BoundingBoxesRenderer {
 
     // MARK: - Helpers
 
-    private func calculateBBoxComponentLines(bboxRect: CGRect,
-                                             lineWidth: CGFloat,
-                                             textureWidth: CGFloat,
-                                             textureHeight: CGFloat) -> [Line] {
-        let horizontalWidth = lineWidth / textureHeight
-        let verticalWidth = lineWidth / textureWidth
+    private func calculateBBoxComponentLines(bboxRect: CGRect) -> [Line] {
+        let textureWidth = Float(self.renderTargetSize.width)
+        let textureHeight = Float(self.renderTargetSize.height)
+        let aspectRatio = textureWidth / textureHeight
+        let horizontalWidth = Float(self.lineWidth) / textureWidth
+        let verticalWidth = Float(self.lineWidth) / textureHeight
 
         let rect = CGRect(x: -1 + bboxRect.minX * 2,
                           y: -1 + ((1 - bboxRect.maxY) * 2),
@@ -65,20 +65,20 @@ final public class BoundingBoxesRenderer {
                           height: bboxRect.height * 2)
 
         let startPoints: [vector_float2] = [.init(Float(rect.minX),
-                                                  Float(rect.minY - horizontalWidth / 2)),
-                                            .init(Float(rect.minX + verticalWidth / 2),
+                                                  Float(rect.minY) - horizontalWidth / 2 * aspectRatio),
+                                            .init(Float(rect.minX) + verticalWidth / 2 / aspectRatio,
                                                   Float(rect.maxY)),
                                             .init(Float(rect.maxX),
-                                                  Float(rect.maxY + horizontalWidth / 2)),
-                                            .init(Float(rect.maxX - verticalWidth / 2),
+                                                  Float(rect.maxY) + horizontalWidth / 2 * aspectRatio),
+                                            .init(Float(rect.maxX) - verticalWidth / 2 / aspectRatio,
                                                   Float(rect.minY))]
         let endPoints: [vector_float2] = [.init(Float(rect.minX),
-                                                Float(rect.maxY + horizontalWidth / 2)),
-                                          .init(Float(rect.maxX - verticalWidth / 2),
+                                                Float(rect.maxY) + horizontalWidth / 2 * aspectRatio),
+                                          .init(Float(rect.maxX) - verticalWidth / 2 / aspectRatio,
                                                 Float(rect.maxY)),
                                           .init(Float(rect.maxX),
-                                                Float(rect.minY - horizontalWidth / 2)),
-                                          .init(Float(rect.minX + verticalWidth / 2),
+                                                Float(rect.minY) - horizontalWidth / 2 * aspectRatio),
+                                          .init(Float(rect.minX) + verticalWidth / 2 / aspectRatio,
                                                 Float(rect.minY))]
         let widths: [Float] = [Float(verticalWidth),
                                Float(horizontalWidth),
@@ -94,15 +94,9 @@ final public class BoundingBoxesRenderer {
         return boundingBoxComponentLines
     }
 
-    private func calculateBBoxesLines(from rects: [CGRect],
-                                      with lineWidth: Int,
-                                      textureWidth: Int,
-                                      textureHeight: Int) -> [Line] {
+    private func calculateBBoxesLines(from rects: [CGRect]) -> [Line] {
         let boundingBoxesLines = (rects.map {
-            self.calculateBBoxComponentLines(bboxRect: $0,
-                                             lineWidth: CGFloat(lineWidth),
-                                             textureWidth: CGFloat(textureWidth),
-                                             textureHeight: CGFloat(textureHeight))
+            self.calculateBBoxComponentLines(bboxRect: $0)
 
         }).flatMap { $0 }
         return boundingBoxesLines
@@ -139,10 +133,7 @@ extension BoundingBoxesRenderer {
     /// - Parameters:
     ///   - renderEncoder: container to put the rendering work into.
     public func draw(using renderEncoder: MTLRenderCommandEncoder) {
-        let boundingBoxesLines = self.calculateBBoxesLines(from: self.normalizedRects,
-                                                           with: self.lineWidth,
-                                                           textureWidth: self.renderTargetSize.width,
-                                                           textureHeight: self.renderTargetSize.height)
+        let boundingBoxesLines = self.calculateBBoxesLines(from: self.normalizedRects)
 
         renderEncoder.pushDebugGroup("Draw Bounding Box Geometry")
 
