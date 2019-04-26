@@ -11,15 +11,15 @@
 #include <simd/simd.h>
 
 typedef struct Rectangle {
-    packed_float2 topLeft;
-    packed_float2 bottomLeft;
-    packed_float2 topRight;
-    packed_float2 bottomRight;
+    vector_float2 topLeft;
+    vector_float2 bottomLeft;
+    vector_float2 topRight;
+    vector_float2 bottomRight;
 } Rectangle;
 
 typedef struct Line {
-    packed_float2 startPoint;
-    packed_float2 endPoint;
+    vector_float2 startPoint;
+    vector_float2 endPoint;
     float width;
 } Line;
 

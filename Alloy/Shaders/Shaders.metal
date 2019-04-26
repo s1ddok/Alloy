@@ -181,7 +181,6 @@ kernel void mean(texture2d<half, access::sample> input_texture [[ texture(0) ]],
 
 }
 
-
 // MARK: - Rendering
 
 struct VertexOut {
@@ -192,7 +191,7 @@ struct VertexOut {
 // MARK: - Rectangle Rendering
 
 vertex VertexOut rectVertex(constant Rectangle& rectangle [[ buffer(0) ]],
-                                uint vid [[vertex_id]]) {
+                            uint vid [[vertex_id]]) {
     const float2 positions[] = {
         rectangle.topLeft, rectangle.bottomLeft,
         rectangle.topRight, rectangle.bottomRight
@@ -216,7 +215,6 @@ float2 perpendicular(float2 vector) {
 }
 
 vertex VertexOut linesVertex(constant Line *lines [[ buffer(0) ]],
-                             constant float& aspectRatio [[buffer(1)]],
                              uint vertexId [[vertex_id]],
                              uint instanceId [[instance_id]]) {
     Line line = lines[instanceId];
@@ -226,8 +224,6 @@ vertex VertexOut linesVertex(constant Line *lines [[ buffer(0) ]],
 
     float2 vector = startPoint - endPoint;
     float2 perpendicularVector = perpendicular(normalize(vector));
-    perpendicularVector.x /= aspectRatio;
-    perpendicularVector.y *= aspectRatio;
     float halfWidth = line.width / 2;
 
     const float2 vertexPositions[] = {
@@ -240,8 +236,9 @@ vertex VertexOut linesVertex(constant Line *lines [[ buffer(0) ]],
     };
 
     VertexOut out;
-    out.position = float4(vertexPositions[vertexId] +
-                          offsetFactors[vertexId] * perpendicularVector * halfWidth,
+    float2 position = vertexPositions[vertexId] + offsetFactors[vertexId] * perpendicularVector * halfWidth;
+    out.position = float4(float2(-1 + (position.x * 2),
+                                 -1 + ((1 - position.y) * 2)),
                           0.0,
                           1.0);
 

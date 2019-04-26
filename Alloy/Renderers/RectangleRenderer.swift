@@ -21,7 +21,7 @@ final public class RectangleRenderer {
     // MARK: - Properties
 
     /// Rectangle fill color.
-    public var color: vector_float4 = .init()
+    public var color: vector_float4 = .init(1, 0, 0, 1) // red
     /// Rectrangle in a normalized coodrinate system to draw.
     public var normalizedRect: CGRect = .zero
 
@@ -82,27 +82,28 @@ extension RectangleRenderer {
     /// - Parameters:
     ///   - renderPassDescriptor: render pass descriptor to be used.
     ///   - commandBuffer: command buffer to put the rendering work items into.
-    public func draw(renderPassDescriptor: MTLRenderPassDescriptor,
-                     commandBuffer: MTLCommandBuffer) throws {
+    public func render(renderPassDescriptor: MTLRenderPassDescriptor,
+                       commandBuffer: MTLCommandBuffer) throws {
         #if DEBUG
         // Check render target.
-        guard let renderTarget = renderPassDescriptor.colorAttachments[0].texture
+        guard
+            let renderTarget = renderPassDescriptor.colorAttachments[0].texture
         else { throw Errors.missingRenderTarget }
-        guard renderTarget.usage.contains(.renderTarget)
+        guard
+            renderTarget.usage.contains(.renderTarget)
         else { throw Errors.wrongRenderTargetTextureUsage }
         #endif
 
         // Draw.
-        commandBuffer.render(descriptor: renderPassDescriptor) { renderEncoder in
-            self.draw(using: renderEncoder)
-        }
+        commandBuffer.render(descriptor: renderPassDescriptor,
+                             render(using:))
     }
 
     /// Draw a rectangle in a target texture.
     ///
     /// - Parameters:
     ///   - renderEncoder: container to put the rendering work into.
-    public func draw(using renderEncoder: MTLRenderCommandEncoder) {
+    public func render(using renderEncoder: MTLRenderCommandEncoder) {
         // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool.
         renderEncoder.pushDebugGroup("Draw Rectangle Geometry")
 
@@ -110,13 +111,12 @@ extension RectangleRenderer {
         renderEncoder.setRenderPipelineState(self.renderPipelineState)
         // Set any buffers fed into our render pipeline.
 
-        var rectangle = self.constructRectangle(from: self.normalizedRect)
-        renderEncoder.setVertexBytes(&rectangle,
-                                     length: MemoryLayout<Rectangle>.stride,
-                                     index: 0)
-        renderEncoder.setFragmentBytes(&self.color,
-                                       length: MemoryLayout<vector_float4>.stride,
-                                       index: 0)
+        let rectangle = self.constructRectangle(from: self.normalizedRect)
+        renderEncoder.set(vertexValue: rectangle,
+                          at: 0)
+        renderEncoder.set(fragmentValue: self.color,
+                          at: 0)
+
         // Draw.
         renderEncoder.drawPrimitives(type: .triangleStrip,
                                      vertexStart: 0,
