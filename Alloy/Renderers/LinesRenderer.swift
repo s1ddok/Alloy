@@ -21,11 +21,36 @@ final public class LinesRenderer {
     // MARK: - Properties
 
     /// Lines described in a normalized coodrinate system to draw.
-    public var lines: [Line] = [] {
-        didSet {
-            self.linesBuffer = self.context.device.makeBuffer(bytes: self.lines,
-                                                              length: MemoryLayout<Line>.stride * self.lines.count,
-                                                              options: .storageModeShared)
+    public var lines: [Line]? {
+        set {
+            if let newValue = newValue {
+                var convertedToMetalLines = newValue
+                    .map { Line(startPoint: .init(x: -1 + ($0.startPoint.x * 2),
+                                                  y: -1 + ((1 - $0.startPoint.y) * 2)),
+                                endPoint: .init(x: -1 + ($0.endPoint.x * 2),
+                                                y: -1 + ((1 - $0.endPoint.y) * 2)),
+                                width: $0.width) }
+                self.linesBuffer = self.context.device
+                    .makeBuffer(bytes: &convertedToMetalLines,
+                                length: MemoryLayout<Line>.stride * convertedToMetalLines.count,
+                                options: .storageModeShared)
+            }
+        }
+        get {
+            if let linesBuffer = self.linesBuffer,
+                let convertedToMetalLines = linesBuffer
+                    .array(of: Line.self,
+                           count: linesBuffer.length / MemoryLayout<Line>.stride) {
+                let normalLines = convertedToMetalLines
+                    .map { Line(startPoint: .init(x: ($0.startPoint.x + 1) / 2,
+                                                  y: 1 - (($0.startPoint.y + 1) / 2)),
+                                endPoint: .init(x: ($0.endPoint.x + 1) / 2,
+                                                y: 1 - (($0.endPoint.y + 1) / 2)),
+                                width: $0.width) }
+                return normalLines
+            } else {
+                return nil
+            }
         }
     }
     private var linesBuffer: MTLBuffer?
@@ -118,10 +143,13 @@ extension LinesRenderer {
                                        index: 0)
 
         // Draw.
-        renderEncoder.drawPrimitives(type: .triangleStrip,
-                                     vertexStart: 0,
-                                     vertexCount: 4,
-                                     instanceCount: self.lines.count)
+        if let linesBuffer = self.linesBuffer {
+            let linesCount = linesBuffer.length / MemoryLayout<Line>.stride
+            renderEncoder.drawPrimitives(type: .triangleStrip,
+                                         vertexStart: 0,
+                                         vertexCount: 4,
+                                         instanceCount: linesCount)
+        }
 
         renderEncoder.popDebugGroup()
     }

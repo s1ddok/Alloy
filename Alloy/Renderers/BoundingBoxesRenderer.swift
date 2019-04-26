@@ -59,27 +59,22 @@ final public class BoundingBoxesRenderer {
         let horizontalWidth = Float(self.lineWidth) / textureWidth
         let verticalWidth = Float(self.lineWidth) / textureHeight
 
-        let rect = CGRect(x: -1 + bboxRect.minX * 2,
-                          y: -1 + ((1 - bboxRect.maxY) * 2),
-                          width: bboxRect.width * 2,
-                          height: bboxRect.height * 2)
-
-        let startPoints: [vector_float2] = [.init(Float(rect.minX),
-                                                  Float(rect.minY) - horizontalWidth / 2 * aspectRatio),
-                                            .init(Float(rect.minX) + verticalWidth / 2 / aspectRatio,
-                                                  Float(rect.maxY)),
-                                            .init(Float(rect.maxX),
-                                                  Float(rect.maxY) + horizontalWidth / 2 * aspectRatio),
-                                            .init(Float(rect.maxX) - verticalWidth / 2 / aspectRatio,
-                                                  Float(rect.minY))]
-        let endPoints: [vector_float2] = [.init(Float(rect.minX),
-                                                Float(rect.maxY) + horizontalWidth / 2 * aspectRatio),
-                                          .init(Float(rect.maxX) - verticalWidth / 2 / aspectRatio,
-                                                Float(rect.maxY)),
-                                          .init(Float(rect.maxX),
-                                                Float(rect.minY) - horizontalWidth / 2 * aspectRatio),
-                                          .init(Float(rect.minX) + verticalWidth / 2 / aspectRatio,
-                                                Float(rect.minY))]
+        let startPoints: [vector_float2] = [.init(Float(bboxRect.minX),
+                                                  Float(bboxRect.minY) - horizontalWidth / 2 * aspectRatio),
+                                            .init(Float(bboxRect.minX) + verticalWidth / 2 / aspectRatio,
+                                                  Float(bboxRect.maxY)),
+                                            .init(Float(bboxRect.maxX),
+                                                  Float(bboxRect.maxY) + horizontalWidth / 2 * aspectRatio),
+                                            .init(Float(bboxRect.maxX) - verticalWidth / 2 / aspectRatio,
+                                                  Float(bboxRect.minY))]
+        let endPoints: [vector_float2] = [.init(Float(bboxRect.minX),
+                                                Float(bboxRect.maxY) + horizontalWidth / 2 * aspectRatio),
+                                          .init(Float(bboxRect.maxX) - verticalWidth / 2 / aspectRatio,
+                                                Float(bboxRect.maxY)),
+                                          .init(Float(bboxRect.maxX),
+                                                Float(bboxRect.minY) - horizontalWidth / 2 * aspectRatio),
+                                          .init(Float(bboxRect.minX) + verticalWidth / 2 / aspectRatio,
+                                                Float(bboxRect.minY))]
         let widths: [Float] = [Float(verticalWidth),
                                Float(horizontalWidth),
                                Float(verticalWidth),
