@@ -247,3 +247,28 @@ vertex VertexOut linesVertex(constant Line *lines [[ buffer(0) ]],
 
     return out;
 }
+
+// MARK: - Points Rendering
+
+struct PointVertexOut {
+    float4 position [[ position ]];
+    float size [[ point_size ]];
+};
+
+vertex PointVertexOut pointVertex(constant SimplePoint* points [[ buffer(0) ]],
+                                  uint instanceId [[instance_id]]) {
+    PointVertexOut out;
+    const SimplePoint point = points[instanceId];
+    out.position = float4(point.position, 0, 1);
+    out.size = point.size;
+    return out;
+}
+
+fragment float4 pointFragment(PointVertexOut in [[stage_in]],
+                              const float2 pointCenter [[ point_coord ]],
+                              constant float4& pointColor [[ buffer(0) ]]) {
+    const float distanceFromCenter = length(2 * (pointCenter - 0.5));
+    float4 color = pointColor;
+    color.a = 1.0 - smoothstep(0.4, 0.5, distanceFromCenter);
+    return color;
+}

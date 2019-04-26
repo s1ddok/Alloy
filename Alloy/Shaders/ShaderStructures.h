@@ -23,4 +23,9 @@ typedef struct Line {
     float width;
 } Line;
 
+typedef struct SimplePoint {
+    packed_float2 position;
+    float size;
+} SimplePoint;
+
 #endif /* ShaderStructures_h */
