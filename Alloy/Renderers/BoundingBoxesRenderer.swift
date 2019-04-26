@@ -16,10 +16,6 @@ final public class BoundingBoxesRenderer {
         case missingRenderTarget
     }
 
-    private enum ComponentType {
-        case leftLine, topLine, rightLine, bottomLine
-    }
-
     // MARK: - Properties
 
     /// Rectrangles in a normalized coodrinate system describing bounding boxes.
@@ -52,68 +48,44 @@ final public class BoundingBoxesRenderer {
 
     // MARK: - Helpers
 
-    private func calculateComponentLine(bboxRect: CGRect,
-                                        lineWidth: CGFloat,
-                                        textureWidth: CGFloat,
-                                        textureHeight: CGFloat,
-                                        for componentType: ComponentType) -> Line {
-        let horizontalWidth = lineWidth / textureHeight
-        let verticalWidth = lineWidth / textureWidth
-
-        let rect = CGRect(x: -1 + bboxRect.minX * 2,
-                                               y: -1 + ((1 - bboxRect.maxY) * 2),
-                                               width: bboxRect.width * 2,
-                                               height: bboxRect.height * 2)
-
-        let colorComponents = (self.color.components ?? [1, 1, 1, 1]).map { Float($0) }
-        let color = float4(colorComponents)
-
-        switch componentType {
-        case .leftLine:
-            return Line(startPoint: vector_float2(Float(rect.minX),
-                                                  Float(rect.minY - horizontalWidth / 2)),
-                        endPoint: vector_float2(Float(rect.minX),
-                                                Float(rect.maxY + horizontalWidth / 2)),
-                        width: Float(verticalWidth),
-                        fillColor: color)
-        case .topLine:
-            return Line(startPoint: vector_float2(Float(rect.minX + verticalWidth / 2),
-                                                  Float(rect.maxY)),
-                        endPoint: vector_float2(Float(rect.maxX - verticalWidth / 2),
-                                                Float(rect.maxY)),
-                        width: Float(horizontalWidth),
-                        fillColor: color)
-        case .rightLine:
-            return Line(startPoint: vector_float2(Float(rect.maxX),
-                                                  Float(rect.maxY + horizontalWidth / 2)),
-                        endPoint: vector_float2(Float(rect.maxX),
-                                                Float(rect.minY - horizontalWidth / 2)),
-                        width: Float(verticalWidth),
-                        fillColor: color)
-        case .bottomLine:
-            return Line(startPoint: vector_float2(Float(rect.maxX - verticalWidth / 2),
-                                                  Float(rect.minY)),
-                        endPoint: vector_float2(Float(rect.minX + verticalWidth / 2),
-                                                Float(rect.minY)),
-                        width: Float(horizontalWidth),
-                        fillColor: color)
-        }
-    }
-
     private func calculateBBoxComponentLines(bboxRect: CGRect,
                                              lineWidth: CGFloat,
                                              textureWidth: CGFloat,
                                              textureHeight: CGFloat) -> [Line] {
-        let boundingBoxComponents: [ComponentType] = [.leftLine,
-                                                      .topLine,
-                                                      .rightLine,
-                                                      .bottomLine]
-        let boundingBoxComponentLines: [Line] = boundingBoxComponents.map { componentType in
-            self.calculateComponentLine(bboxRect: bboxRect,
-                                        lineWidth: lineWidth,
-                                        textureWidth: textureWidth,
-                                        textureHeight: textureHeight,
-                                        for: componentType)
+        let horizontalWidth = lineWidth / textureHeight
+        let verticalWidth = lineWidth / textureWidth
+
+        let rect = CGRect(x: -1 + bboxRect.minX * 2,
+                          y: -1 + ((1 - bboxRect.maxY) * 2),
+                          width: bboxRect.width * 2,
+                          height: bboxRect.height * 2)
+
+        let startPoints: [vector_float2] = [.init(Float(rect.minX),
+                                                  Float(rect.minY - horizontalWidth / 2)),
+                                            .init(Float(rect.minX + verticalWidth / 2),
+                                                  Float(rect.maxY)),
+                                            .init(Float(rect.maxX),
+                                                  Float(rect.maxY + horizontalWidth / 2)),
+                                            .init(Float(rect.maxX - verticalWidth / 2),
+                                                  Float(rect.minY))]
+        let endPoints: [vector_float2] = [.init(Float(rect.minX),
+                                                Float(rect.maxY + horizontalWidth / 2)),
+                                          .init(Float(rect.maxX - verticalWidth / 2),
+                                                Float(rect.maxY)),
+                                          .init(Float(rect.maxX),
+                                                Float(rect.minY - horizontalWidth / 2)),
+                                          .init(Float(rect.minX + verticalWidth / 2),
+                                                Float(rect.minY))]
+        let widths: [Float] = [Float(verticalWidth),
+                               Float(horizontalWidth),
+                               Float(verticalWidth),
+                               Float(horizontalWidth)]
+
+        var boundingBoxComponentLines: [Line] = []
+        for i in 0 ..< 4 {
+            boundingBoxComponentLines.append(Line(startPoint: startPoints[i],
+                                                  endPoint: endPoints[i],
+                                                  width: widths[i]))
         }
         return boundingBoxComponentLines
     }
