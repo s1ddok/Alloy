@@ -12,10 +12,3 @@ public protocol DebugRenderer {
     func draw(renderPassDescriptor: MTLRenderPassDescriptor,
               commandBuffer: MTLCommandBuffer) throws
 }
-
-public enum Errors: Error {
-    case functionCreationFailed
-    case libraryCreationFailed
-    case wrongRenderTargetTextureUsage
-    case missingRenderTarget
-}

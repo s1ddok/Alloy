@@ -11,6 +11,11 @@ import simd
 @available(iOS 11.3, tvOS 11.3, macOS 10.13, *)
 final public class BoundingBoxesRenderer {
 
+    public enum Errors: Error {
+        case wrongRenderTargetTextureUsage
+        case missingRenderTarget
+    }
+
     private enum ComponentType {
         case leftLine, topLine, rightLine, bottomLine
     }

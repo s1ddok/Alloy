@@ -11,6 +11,13 @@ import simd
 @available(iOS 11.3, tvOS 11.3, macOS 10.13, *)
 final public class LinesRenderer {
 
+    public enum Errors: Error {
+        case functionCreationFailed
+        case libraryCreationFailed
+        case wrongRenderTargetTextureUsage
+        case missingRenderTarget
+    }
+
     // MARK: - Properties
 
     /// Lines described in a normalized coodrinate system to draw.
