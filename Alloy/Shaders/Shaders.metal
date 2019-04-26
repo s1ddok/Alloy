@@ -200,14 +200,13 @@ vertex VertexOut rectVertex(constant Rectangle& rectangle [[ buffer(0) ]],
 
     VertexOut out;
     out.position = float4(positions[vid], 0.0, 1.0);
-    out.fillColor = (half4)rectangle.fillColor;
 
     return out;
 }
 
-fragment half4 rectFragment(VertexOut in [[ stage_in ]]) {
-    half4 originalColor = in.fillColor;
-    return originalColor;
+fragment half4 primitivesFragment(VertexOut in [[ stage_in ]],
+                                  constant float4& color [[ buffer(0) ]]) {
+    return (half4)color;
 }
 
 // MARK: - Lines Rendering
@@ -245,7 +244,6 @@ vertex VertexOut linesVertex(constant Line *lines [[ buffer(0) ]],
                           offsetFactors[vertexId] * perpendicularVector * halfWidth,
                           0.0,
                           1.0);
-    out.fillColor = (half4)line.fillColor;
 
     return out;
 }

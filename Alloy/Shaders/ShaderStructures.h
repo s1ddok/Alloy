@@ -15,14 +15,12 @@ typedef struct Rectangle {
     vector_float2 bottomLeft;
     vector_float2 topRight;
     vector_float2 bottomRight;
-    vector_float4 fillColor;
 } Rectangle;
 
 typedef struct Line {
     vector_float2 startPoint;
     vector_float2 endPoint;
     float width;
-    vector_float4 fillColor;
 } Line;
 
 #endif /* ShaderStructures_h */

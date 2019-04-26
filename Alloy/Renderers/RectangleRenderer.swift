@@ -21,7 +21,7 @@ final public class RectangleRenderer {
     // MARK: - Properties
 
     /// Rectangle fill color.
-    public var color: CGColor = .black
+    public var color: vector_float4 = .init()
     /// Rectrangle in a normalized coodrinate system to draw.
     public var normalizedRect: CGRect = .zero
 
@@ -54,7 +54,7 @@ final public class RectangleRenderer {
 
     // MARK: - Helpers
 
-    private func constructRectangle(from cgRect: CGRect, with fillColor: CGColor) -> Rectangle {
+    private func constructRectangle(from cgRect: CGRect) -> Rectangle {
         let topLeftPosition = float2(Float(cgRect.minX),
                                      Float(cgRect.maxY))
         let bottomLeftPosition = float2(Float(cgRect.minX),
@@ -63,19 +63,14 @@ final public class RectangleRenderer {
                                       Float(cgRect.maxY))
         let bottomRightPosition = float2(Float(cgRect.maxX),
                                          Float(cgRect.minY))
-
-        let colorComponents = (fillColor.components ?? [1, 1, 1, 1]).map { Float($0) }
-        let color = float4(colorComponents)
-
         return Rectangle(topLeft: topLeftPosition,
                          bottomLeft: bottomLeftPosition,
                          topRight: topRightPosition,
-                         bottomRight: bottomRightPosition,
-                         fillColor: color)
+                         bottomRight: bottomRightPosition)
     }
 
     private static let vertexFunctionName = "rectVertex"
-    private static let fragmentFunctionName = "rectFragment"
+    private static let fragmentFunctionName = "primitivesFragment"
 
 }
 
@@ -113,11 +108,13 @@ extension RectangleRenderer {
         renderEncoder.setRenderPipelineState(self.renderPipelineState)
         // Set any buffers fed into our render pipeline.
 
-        var rectangle = self.constructRectangle(from: self.normalizedRect,
-                                                with: self.color)
+        var rectangle = self.constructRectangle(from: self.normalizedRect)
         renderEncoder.setVertexBytes(&rectangle,
                                      length: MemoryLayout<Rectangle>.stride,
                                      index: 0)
+        renderEncoder.setFragmentBytes(&self.color,
+                                       length: MemoryLayout<vector_float4>.stride,
+                                       index: 0)
         // Draw.
         renderEncoder.drawPrimitives(type: .triangleStrip,
                                      vertexStart: 0,

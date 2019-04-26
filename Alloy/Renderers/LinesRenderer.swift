@@ -30,6 +30,7 @@ final public class LinesRenderer {
     }
     private var linesBuffer: MTLBuffer?
     public var renderTargetAspectRatio: Float = 1
+    public var color: vector_float4 = .init()
 
     private let context: MTLContext
     private var renderPipelineState: MTLRenderPipelineState!
@@ -62,7 +63,7 @@ final public class LinesRenderer {
     }
 
     private static let vertexFunctionName = "linesVertex"
-    private static let fragmentFunctionName = "rectFragment"
+    private static let fragmentFunctionName = "primitivesFragment"
 
 }
 
@@ -110,6 +111,9 @@ extension LinesRenderer {
         renderEncoder.setVertexBytes(&self.renderTargetAspectRatio,
                                       length: MemoryLayout<Float>.stride,
                                       index: 1)
+        renderEncoder.setFragmentBytes(&self.color,
+                                       length: MemoryLayout<vector_float4>.stride,
+                                       index: 0)
 
         // Draw.
         renderEncoder.drawPrimitives(type: .triangleStrip,

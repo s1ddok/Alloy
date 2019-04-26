@@ -21,7 +21,11 @@ final public class BoundingBoxesRenderer {
     /// Rectrangles in a normalized coodrinate system describing bounding boxes.
     public var normalizedRects: [CGRect] = []
     /// Rrefered fill color of the bounding boxes.
-    public var color: CGColor = .black
+    public var color: vector_float4 = .init() {
+        didSet {
+            self.linesRenderer.color = self.color
+        }
+    }
     /// Prefered line width of the bounding boxes in pixels.
     public var lineWidth: Int = 20
 
