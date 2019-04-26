@@ -25,7 +25,7 @@ final public class RectangleRenderer {
     /// Rectrangle in a normalized coodrinate system to draw.
     public var normalizedRect: CGRect = .zero
 
-    private var renderPipelineState: MTLRenderPipelineState!
+    private let renderPipelineState: MTLRenderPipelineState
 
     // MARK: - Life Cycle
 
@@ -48,7 +48,7 @@ final public class RectangleRenderer {
         renderPipelineDescriptor.fragmentFunction = fragmentFunction
         renderPipelineDescriptor.colorAttachments[0].pixelFormat = pixelFormat
 
-        self.renderPipelineState = try? context.device
+        self.renderPipelineState = try context.device
             .makeRenderPipelineState(descriptor: renderPipelineDescriptor)
     }
 
