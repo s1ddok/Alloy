@@ -204,9 +204,9 @@ vertex VertexOut rectVertex(constant Rectangle& rectangle [[ buffer(0) ]],
     return out;
 }
 
-fragment half4 primitivesFragment(VertexOut in [[ stage_in ]],
+fragment float4 primitivesFragment(VertexOut in [[ stage_in ]],
                                   constant float4& color [[ buffer(0) ]]) {
-    return (half4)color;
+    return color;
 }
 
 // MARK: - Lines Rendering
