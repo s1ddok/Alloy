@@ -80,7 +80,7 @@ final public class RectangleRenderer {
 }
 
 @available(iOS 11.3, tvOS 11.3, macOS 10.13, *)
-extension RectangleRenderer: DebugRenderer {
+extension RectangleRenderer {
 
     /// Draw a rectangle in a target texture.
     ///

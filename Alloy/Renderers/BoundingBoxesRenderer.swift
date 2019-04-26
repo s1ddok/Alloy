@@ -130,7 +130,7 @@ final public class BoundingBoxesRenderer {
 }
 
 @available(iOS 11.3, tvOS 11.3, macOS 10.13, *)
-extension BoundingBoxesRenderer: DebugRenderer {
+extension BoundingBoxesRenderer {
 
     /// Draw bounding boxes in a target texture.
     ///

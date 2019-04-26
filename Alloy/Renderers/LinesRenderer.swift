@@ -66,7 +66,7 @@ final public class LinesRenderer {
 }
 
 @available(iOS 11.3, tvOS 11.3, macOS 10.13, *)
-extension LinesRenderer: DebugRenderer {
+extension LinesRenderer {
 
     /// Draw a rectangle in a target texture.
     ///
