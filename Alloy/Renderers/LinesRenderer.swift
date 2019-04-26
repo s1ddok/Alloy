@@ -77,11 +77,13 @@ extension LinesRenderer {
     ///   - commandBuffer: command buffer to put the rendering work items into.
     public func draw(renderPassDescriptor: MTLRenderPassDescriptor,
                      commandBuffer: MTLCommandBuffer) throws {
+        #if DEBUG
         // Check render target.
         guard let renderTarget = renderPassDescriptor.colorAttachments[0].texture
         else { throw Errors.missingRenderTarget }
         guard renderTarget.usage.contains(.renderTarget)
         else { throw Errors.wrongRenderTargetTextureUsage }
+        #endif
 
         self.renderTargetAspectRatio =
             Float(renderTarget.width) / Float(renderTarget.height)
