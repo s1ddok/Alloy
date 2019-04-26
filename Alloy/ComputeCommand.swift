@@ -93,11 +93,11 @@ public final class ComputeCommand {
             }
             
             // Check if passed argument is threadgroup memory length
-            if input.hasSuffix(ComputeCommand.threadgroupMemoryOffsetPostFix)
-            && input.count > ComputeCommand.threadgroupMemoryOffsetPostFix.count {
+            if input.hasSuffix(ComputeCommand.threadgroupMemoryLengthPostFix)
+            && input.count > ComputeCommand.threadgroupMemoryLengthPostFix.count {
                 self.threadgroupMemoryLengths[input] = newValue
                 
-                let threadgroupArgumentName = String(input.dropLast(ComputeCommand.threadgroupMemoryOffsetPostFix.count))
+                let threadgroupArgumentName = String(input.dropLast(ComputeCommand.threadgroupMemoryLengthPostFix.count))
                 // if there are not such threadgroup memory, user tries to assign something else
                 if let _ = self.threadgroupMemoryArguments[threadgroupArgumentName] {
                     self.threadgroupMemoryLengths[threadgroupArgumentName] = newValue
@@ -110,23 +110,15 @@ public final class ComputeCommand {
     }
     
     public func encode(commandBuffer: MTLCommandBuffer, threadsInfo: @autoclosure () -> ThreadsInfo) {
-        guard let encoder = commandBuffer.makeComputeCommandEncoder() else {
-            fatalError("Couldn't create compute command encoder")
+        commandBuffer.compute { encoder in
+            self.encode(using: encoder, threadsInfo: threadsInfo)
         }
-        
-        self.encode(using: encoder, threadsInfo: threadsInfo)
-        
-        encoder.endEncoding()
     }
     
     public func encode(commandBuffer: MTLCommandBuffer, gridInfo: @autoclosure () -> GridInfo) {
-        guard let encoder = commandBuffer.makeComputeCommandEncoder() else {
-            fatalError("Couldn't create compute command encoder")
+        commandBuffer.compute { encoder in
+            self.encode(using: encoder, gridInfo: gridInfo)
         }
-        
-        self.encode(using: encoder, gridInfo: gridInfo)
-        
-        encoder.endEncoding()
     }
     
     public func encode(using encoder: MTLComputeCommandEncoder, threadsInfo: @autoclosure () -> ThreadsInfo) {
@@ -147,10 +139,18 @@ public final class ComputeCommand {
             
             encoder.setTexture(texture, index: argument.index)
         }
+
+        for (name, argument) in self.samplerArguments {
+            guard let sampler = self.samplerValues[name] else {
+                 fatalError("\(#function): Missing sampler value for \(name) argument")
+            }
+
+            encoder.setSamplerState(sampler, index: argument.index)
+        }
         
         for (name, argument) in bufferArguments {
             guard let buffer = self.bufferValues[name] else {
-                fatalError("\(#function): Missing buffer value for \(name) =argument")
+                fatalError("\(#function): Missing buffer value for \(name) argument")
             }
             
             let offset = self.bufferOffsetValues[name] ?? 0
@@ -185,5 +185,5 @@ public final class ComputeCommand {
     }
     
     fileprivate static let bufferOffsetPostFix = "Offset"
-    fileprivate static let threadgroupMemoryOffsetPostFix = "MemoryLength"
+    fileprivate static let threadgroupMemoryLengthPostFix = "MemoryLength"
 }
