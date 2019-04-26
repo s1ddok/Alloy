@@ -461,7 +461,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Demo/Pods-Demo-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Alloy.default-Shaders/Alloy.framework",
+				"${BUILT_PRODUCTS_DIR}/Alloy.default-ML-Shaders-macOS/Alloy.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
@@ -505,7 +505,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-DemoApp/Pods-DemoApp-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Alloy-iOS/Alloy.framework",
+				"${BUILT_PRODUCTS_DIR}/Alloy.default-ML-Shaders-iOS/Alloy.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (

@@ -3,6 +3,7 @@ use_frameworks!
 target 'Demo' do
   pod 'Alloy', :path => '../'
   pod 'Alloy/Shaders', :path => '../'
+  pod 'Alloy/ML', :path => '../'
 end
 
 target 'AlloyTests' do
@@ -11,6 +12,8 @@ end
 
 target 'DemoApp' do
   pod 'Alloy', :path => '../'
+  pod 'Alloy/Shaders', :path => '../'
+  pod 'Alloy/ML', :path => '../'
 end
 
 target 'DemoAppTests' do
