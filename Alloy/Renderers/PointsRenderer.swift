@@ -20,31 +20,33 @@ final public class PointsRenderer {
 
     // MARK: - Properties
 
-    /// Points described in a normalized coodrinate system to draw.
-    public var points: [SimplePoint] {
+    /// Point positions described in a normalized coodrinate system.
+    public var pointsPositions: [simd_float2] {
         set {
-            var points = newValue
-            self.pointCount = points.count
-            self.pointsBuffer = self.context.device
-                .makeBuffer(bytes: &points,
-                            length: MemoryLayout<SimplePoint>.stride * points.count,
+            var pointsPositions = newValue
+            self.pointCount = pointsPositions.count
+            self.pointsPositionsBuffer = self.context.device
+                .makeBuffer(bytes: &pointsPositions,
+                            length: MemoryLayout<simd_float2>.stride * pointsPositions.count,
                             options: .storageModeShared)
         }
         get {
-            if let pointsBuffer = self.pointsBuffer,
-                let points = pointsBuffer
-                    .array(of: SimplePoint.self,
-                           count: pointsBuffer.length / MemoryLayout<SimplePoint>.stride) {
-                return points
+            if let pointsPositionsBuffer = self.pointsPositionsBuffer,
+                let pointsPositions = pointsPositionsBuffer
+                    .array(of: simd_float2.self,
+                           count: pointsPositionsBuffer.length / MemoryLayout<simd_float2>.stride) {
+                return pointsPositions
             } else {
                 return []
             }
         }
     }
-    public var color: vector_float4 = .init(1, 0, 0, 1) // red
-    public var pointSize: Float = 40 // size in pixels
+    /// Point color. Red in default.
+    public var color: vector_float4 = .init(1, 0, 0, 1)
+    /// Point size in pixels
+    public var pointSize: Float = 40
 
-    private var pointsBuffer: MTLBuffer?
+    private var pointsPositionsBuffer: MTLBuffer?
     private var pointCount: Int = 0
 
     private let context: MTLContext

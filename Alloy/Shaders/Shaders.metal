@@ -255,13 +255,13 @@ struct PointVertexOut {
     float size [[ point_size ]];
 };
 
-vertex PointVertexOut pointVertex(constant SimplePoint* points [[ buffer(0) ]],
+vertex PointVertexOut pointVertex(constant float2* pointsPositions [[ buffer(0) ]],
                                   constant float& pointSize [[ buffer(1) ]],
                                   uint instanceId [[instance_id]]) {
+    const float2 pointPosition = pointsPositions[instanceId];
     PointVertexOut out;
-    const SimplePoint point = points[instanceId];
-    out.position = float4(float2(-1 + (point.position.x * 2),
-                                 -1 + ((1 - point.position.y) * 2)), 0, 1);
+    out.position = float4(float2(-1 + (pointPosition.x * 2),
+                                 -1 + ((1 - pointPosition.y) * 2)), 0, 1);
     out.size = pointSize;
     return out;
 }
