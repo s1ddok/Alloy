@@ -55,15 +55,25 @@ final public class PointsRenderer {
 
     /// Creates a new instance of PointsRenderer.
     ///
-    /// - Parameter context: Alloy's Metal context.
-    /// - Throws: library or function creation errors.
-    public init(context: MTLContext, pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
-        self.context = context
-
+    /// - Parameters:
+    ///   - context: Alloy's Metal context.
+    ///   - pixelFormat: Color attachment's pixel format.
+    /// - Throws: Library or function creation errors.
+    public convenience init(context: MTLContext, pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
         guard
-            let library = context.shaderLibrary(for: Bundle(for: PointsRenderer.self))
+            let library = context.shaderLibrary(for: PointsRenderer.self)
         else { throw Errors.libraryCreationFailed }
 
+        try self.init(library: library, pixelFormat: pixelFormat)
+    }
+
+    /// Creates a new instance of PointsRenderer.
+    ///
+    /// - Parameters:
+    ///   - library: Alloy's shader library.
+    ///   - pixelFormat: Color attachment's pixel format.
+    /// - Throws: Function creation error.
+    public init(library: MTLLibrary, pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
         guard
             let vertexFunction = library.makeFunction(name: PointsRenderer.vertexFunctionName),
             let fragmentFunction = library.makeFunction(name: PointsRenderer.fragmentFunctionName)
@@ -72,13 +82,10 @@ final public class PointsRenderer {
         let renderPipelineDescriptor = MTLRenderPipelineDescriptor()
         renderPipelineDescriptor.vertexFunction = vertexFunction
         renderPipelineDescriptor.fragmentFunction = fragmentFunction
+        renderPipelineDescriptor.colorAttachments[0].pixelFormat = pixelFormat
+        renderPipelineDescriptor.colorAttachments[0].setup(blending: .alpha)
 
-        if let colorAttachmentsDescriptor = renderPipelineDescriptor.colorAttachments[0] {
-            colorAttachmentsDescriptor.pixelFormat = pixelFormat
-            colorAttachmentsDescriptor.setup(blending: .alpha)
-        }
-
-        self.renderPipelineState = try context.device
+        self.renderPipelineState = try library.device
             .makeRenderPipelineState(descriptor: renderPipelineDescriptor)
     }
 
