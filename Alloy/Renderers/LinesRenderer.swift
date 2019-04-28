@@ -107,7 +107,7 @@ final public class LinesRenderer {
 
         // Render.
         commandBuffer.render(descriptor: renderPassDescriptor,
-                             render(using:))
+                             self.render(using:))
     }
 
     /// Render lines in a target texture.
