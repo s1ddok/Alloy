@@ -32,18 +32,18 @@ final public class PointsRenderer {
         }
         get {
             if let pointsPositionsBuffer = self.pointsPositionsBuffer,
-                let pointsPositions = pointsPositionsBuffer
-                    .array(of: simd_float2.self,
-                           count: self.pointCount) {
+               let pointsPositions = pointsPositionsBuffer
+                   .array(of: simd_float2.self,
+                          count: self.pointCount) {
                 return pointsPositions
             } else {
                 return []
             }
         }
     }
-    /// Point color. Red in default.
+    /// Point color. Red is default.
     public var color: vector_float4 = .init(1, 0, 0, 1)
-    /// Point size in pixels.
+    /// Point size in pixels. 40 is default.
     public var pointSize: Float = 40
 
     private var pointsPositionsBuffer: MTLBuffer?
@@ -94,8 +94,8 @@ final public class PointsRenderer {
     /// Render points in a target texture.
     ///
     /// - Parameters:
-    ///   - renderPassDescriptor: render pass descriptor to be used.
-    ///   - commandBuffer: command buffer to put the rendering work items into.
+    ///   - renderPassDescriptor: Render pass descriptor to be used.
+    ///   - commandBuffer: Command buffer to put the rendering work items into.
     public func render(renderPassDescriptor: MTLRenderPassDescriptor,
                        commandBuffer: MTLCommandBuffer) throws {
         #if DEBUG
@@ -115,8 +115,7 @@ final public class PointsRenderer {
 
     /// Render points in a target texture.
     ///
-    /// - Parameters:
-    ///   - renderEncoder: container to put the rendering work into.
+    /// - Parameter renderEncoder: Container to put the rendering work into.
     public func render(using renderEncoder: MTLRenderCommandEncoder) {
         guard self.pointCount != 0 else { return }
 

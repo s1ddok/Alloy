@@ -20,13 +20,13 @@ final public class BoundingBoxesRenderer {
 
     /// Rectrangles in a normalized coodrinate system describing bounding boxes.
     public var normalizedRects: [CGRect] = []
-    /// Rrefered fill color of the bounding boxes.
-    public var color: vector_float4 = .init() {
+    /// Rrefered fill color of the bounding boxes. Red is default.
+    public var color: vector_float4 = .init(1, 0, 0, 1) {
         didSet {
             self.linesRenderer.color = self.color
         }
     }
-    /// Prefered line width of the bounding boxes in pixels.
+    /// Prefered line width of the bounding boxes in pixels. 20 is default.
     public var lineWidth: Int = 20
     /// Size of the render target texture.
     public var renderTargetSize: MTLSize = .zero
@@ -37,10 +37,23 @@ final public class BoundingBoxesRenderer {
 
     /// Creates a new instance of BoundingBoxesRenderer.
     ///
-    /// - Parameter context: Alloy's Metal context.
-    /// - Throws: library or function creation errors.
+    /// - Parameters:
+    ///   - context: Alloy's Metal context.
+    ///   - pixelFormat: Color attachment's pixel format.
+    /// - Throws: Library or function creation errors.
     public init(context: MTLContext, pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
         self.linesRenderer = try LinesRenderer(context: context,
+                                               pixelFormat: pixelFormat)
+    }
+
+    /// Creates a new instance of BoundingBoxesRenderer.
+    ///
+    /// - Parameters:
+    ///   - library: Alloy's shader library.
+    ///   - pixelFormat: Color attachment's pixel format.
+    /// - Throws: Function creation error.
+    public init(library: MTLLibrary, pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
+        self.linesRenderer = try LinesRenderer(library: library,
                                                pixelFormat: pixelFormat)
     }
 
@@ -90,16 +103,13 @@ final public class BoundingBoxesRenderer {
         return boundingBoxesLines
     }
 
-}
+    // MARK: - Rendering
 
-@available(iOS 11.3, tvOS 11.3, macOS 10.13, *)
-extension BoundingBoxesRenderer {
-
-    /// Draw bounding boxes in a target texture.
+    /// Render bounding boxes in a target texture.
     ///
     /// - Parameters:
-    ///   - renderPassDescriptor: render pass descriptor to be used.
-    ///   - commandBuffer: command buffer to put the GPU work items into.
+    ///   - renderPassDescriptor: Render pass descriptor to be used.
+    ///   - commandBuffer: Command buffer to put the rendering work items into.
     public func render(renderPassDescriptor: MTLRenderPassDescriptor,
                        commandBuffer: MTLCommandBuffer) throws {
         #if DEBUG
@@ -114,21 +124,22 @@ extension BoundingBoxesRenderer {
 
         self.renderTargetSize = renderTarget.size
 
-        // Draw.
+        // Render.
         commandBuffer.render(descriptor: renderPassDescriptor,
-                             render(using:))
+                             self.render(using:))
     }
 
-    /// Draw bounding boxes in a target texture.
+    /// Render bounding boxes in a target texture.
     ///
-    /// - Parameters:
-    ///   - renderEncoder: container to put the rendering work into.
+    /// - Parameter renderEncoder: Container to put the rendering work into.
     public func render(using renderEncoder: MTLRenderCommandEncoder) {
         let boundingBoxesLines = self.calculateBBoxesLines(from: self.normalizedRects)
 
+        // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool.
         renderEncoder.pushDebugGroup("Draw Bounding Box Geometry")
-
+        // Set the lines to render.
         self.linesRenderer.lines = boundingBoxesLines
+        // Render.
         self.linesRenderer.render(using: renderEncoder)
 
         renderEncoder.popDebugGroup()

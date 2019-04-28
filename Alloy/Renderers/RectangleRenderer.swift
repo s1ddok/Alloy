@@ -20,9 +20,9 @@ final public class RectangleRenderer {
 
     // MARK: - Properties
 
-    /// Rectangle fill color.
-    public var color: vector_float4 = .init(1, 0, 0, 1) // red
-    /// Rectrangle in a normalized coodrinate system to draw.
+    /// Rectangle fill color. Red in default.
+    public var color: vector_float4 = .init(1, 0, 0, 1)
+    /// Rectrangle cescribed in a normalized coodrinate system.
     public var normalizedRect: CGRect = .zero
 
     private let renderPipelineState: MTLRenderPipelineState
@@ -31,13 +31,25 @@ final public class RectangleRenderer {
 
     /// Creates a new instance of RectangleRenderer.
     ///
-    /// - Parameter context: Alloy's Metal context.
-    /// - Throws: library or function creation errors.
-    public init(context: MTLContext, pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
+    /// - Parameters:
+    ///   - context: Alloy's Metal context.
+    ///   - pixelFormat: Color attachment's pixel format.
+    /// - Throws: Library or function creation errors.
+    public convenience init(context: MTLContext, pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
         guard
-            let library = context.shaderLibrary(for: Bundle(for: RectangleRenderer.self))
+            let library = context.shaderLibrary(for: RectangleRenderer.self)
         else { throw Errors.libraryCreationFailed }
 
+        try self.init(library: library, pixelFormat: pixelFormat)
+    }
+
+    /// Creates a new instance of RectangleRenderer.
+    ///
+    /// - Parameters:
+    ///   - library: Alloy's shader library.
+    ///   - pixelFormat: Color attachment's pixel format.
+    /// - Throws: Function creation error.
+    public init(library: MTLLibrary, pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
         guard
             let vertexFunction = library.makeFunction(name: RectangleRenderer.vertexFunctionName),
             let fragmentFunction = library.makeFunction(name: RectangleRenderer.fragmentFunctionName)
@@ -48,7 +60,7 @@ final public class RectangleRenderer {
         renderPipelineDescriptor.fragmentFunction = fragmentFunction
         renderPipelineDescriptor.colorAttachments[0].pixelFormat = pixelFormat
 
-        self.renderPipelineState = try context.device
+        self.renderPipelineState = try library.device
             .makeRenderPipelineState(descriptor: renderPipelineDescriptor)
     }
 
@@ -69,19 +81,13 @@ final public class RectangleRenderer {
                          bottomRight: bottomRightPosition)
     }
 
-    private static let vertexFunctionName = "rectVertex"
-    private static let fragmentFunctionName = "primitivesFragment"
+    // MARK: - Rendering
 
-}
-
-@available(iOS 11.3, tvOS 11.3, macOS 10.13, *)
-extension RectangleRenderer {
-
-    /// Draw a rectangle in a target texture.
+    /// Render a rectangle in a target texture.
     ///
     /// - Parameters:
-    ///   - renderPassDescriptor: render pass descriptor to be used.
-    ///   - commandBuffer: command buffer to put the rendering work items into.
+    ///   - renderPassDescriptor: Render pass descriptor to be used.
+    ///   - commandBuffer: Command buffer to put the rendering work items into.
     public func render(renderPassDescriptor: MTLRenderPassDescriptor,
                        commandBuffer: MTLCommandBuffer) throws {
         #if DEBUG
@@ -94,16 +100,18 @@ extension RectangleRenderer {
         else { throw Errors.wrongRenderTargetTextureUsage }
         #endif
 
-        // Draw.
+        // Render.
         commandBuffer.render(descriptor: renderPassDescriptor,
-                             render(using:))
+                             self.render(using:))
     }
 
-    /// Draw a rectangle in a target texture.
+    /// Render a rectangle in a target texture.
     ///
     /// - Parameters:
-    ///   - renderEncoder: container to put the rendering work into.
+    ///   - renderEncoder: Container to put the rendering work into.
     public func render(using renderEncoder: MTLRenderCommandEncoder) {
+        guard self.normalizedRect != .zero else { return }
+
         // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool.
         renderEncoder.pushDebugGroup("Draw Rectangle Geometry")
 
@@ -124,5 +132,8 @@ extension RectangleRenderer {
 
         renderEncoder.popDebugGroup()
     }
+
+    private static let vertexFunctionName = "rectVertex"
+    private static let fragmentFunctionName = "primitivesFragment"
 
 }
