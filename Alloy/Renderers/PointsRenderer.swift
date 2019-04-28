@@ -25,7 +25,7 @@ final public class PointsRenderer {
         set {
             var pointsPositions = newValue
             self.pointCount = pointsPositions.count
-            self.pointsPositionsBuffer = self.context.device
+            self.pointsPositionsBuffer = self.renderPipelineState.device
                 .makeBuffer(bytes: &pointsPositions,
                             length: MemoryLayout<simd_float2>.stride * pointsPositions.count,
                             options: .storageModeShared)
@@ -49,7 +49,6 @@ final public class PointsRenderer {
     private var pointsPositionsBuffer: MTLBuffer?
     private var pointCount: Int = 0
 
-    private let context: MTLContext
     private let renderPipelineState: MTLRenderPipelineState
 
     // MARK: - Life Cycle
