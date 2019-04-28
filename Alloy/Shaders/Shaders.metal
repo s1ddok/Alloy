@@ -188,6 +188,15 @@ struct VertexOut {
     half4 fillColor;
 };
 
+float2 perpendicular(float2 vector) {
+    return float2(-vector.y, vector.x);
+}
+
+float2 convertToMetalCoordinateSystem(float2 vector) {
+    return float2(-1 + (vector.x * 2),
+                  -1 + ((1 - vector.y) * 2));
+}
+
 // MARK: - Rectangle Rendering
 
 vertex VertexOut rectVertex(constant Rectangle& rectangle [[ buffer(0) ]],
@@ -198,7 +207,8 @@ vertex VertexOut rectVertex(constant Rectangle& rectangle [[ buffer(0) ]],
     };
 
     VertexOut out;
-    out.position = float4(positions[vid], 0.0, 1.0);
+    float2 position = convertToMetalCoordinateSystem(positions[vid]);
+    out.position = float4(position, 0.0, 1.0);
 
     return out;
 }
@@ -209,10 +219,6 @@ fragment float4 primitivesFragment(VertexOut in [[ stage_in ]],
 }
 
 // MARK: - Lines Rendering
-
-float2 perpendicular(float2 vector) {
-    return float2(-vector.y, vector.x);
-}
 
 vertex VertexOut linesVertex(constant Line *lines [[ buffer(0) ]],
                              uint vertexId [[vertex_id]],
@@ -226,21 +232,23 @@ vertex VertexOut linesVertex(constant Line *lines [[ buffer(0) ]],
     float2 perpendicularVector = perpendicular(normalize(vector));
     float halfWidth = line.width / 2;
 
-    const float2 vertexPositions[] = {
-        startPoint, endPoint,
-        startPoint, endPoint,
+    struct PositionAndOffsetFactor {
+        float2 vertexPosition;
+        float offsetFactor;
     };
-    const float offsetFactors[] = {
-        -1.0, -1.0,
-        1.0, 1.0,
+
+    const PositionAndOffsetFactor positionsAndOffsetFactors[] = {
+        PositionAndOffsetFactor { startPoint, -1.0 },
+        PositionAndOffsetFactor { endPoint, -1.0 },
+        PositionAndOffsetFactor { startPoint, 1.0 },
+        PositionAndOffsetFactor { endPoint, 1.0 }
     };
 
     VertexOut out;
-    float2 position = vertexPositions[vertexId] + offsetFactors[vertexId] * perpendicularVector * halfWidth;
-    out.position = float4(float2(-1 + (position.x * 2),
-                                 -1 + ((1 - position.y) * 2)),
-                          0.0,
-                          1.0);
+    const float2 vertexPosition = positionsAndOffsetFactors[vertexId].vertexPosition;
+    const float offsetFactor = positionsAndOffsetFactors[vertexId].offsetFactor;
+    float2 position = convertToMetalCoordinateSystem(vertexPosition + offsetFactor * perpendicularVector * halfWidth);
+    out.position = float4(position, 0.0, 1.0);
 
     return out;
 }
@@ -257,8 +265,8 @@ vertex PointVertexOut pointVertex(constant float2* pointsPositions [[ buffer(0) 
                                   uint instanceId [[instance_id]]) {
     const float2 pointPosition = pointsPositions[instanceId];
     PointVertexOut out;
-    out.position = float4(float2(-1 + (pointPosition.x * 2),
-                                 -1 + ((1 - pointPosition.y) * 2)), 0, 1);
+    float2 position = convertToMetalCoordinateSystem(pointPosition);
+    out.position = float4(position, 0, 1);
     out.size = pointSize;
     return out;
 }
