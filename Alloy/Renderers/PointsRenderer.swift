@@ -121,7 +121,6 @@ final public class PointsRenderer {
 
         // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool.
         renderEncoder.pushDebugGroup("Draw Points Geometry")
-
         // Set render command encoder state.
         renderEncoder.setRenderPipelineState(self.renderPipelineState)
         // Set any buffers fed into our render pipeline.
@@ -132,13 +131,11 @@ final public class PointsRenderer {
                           at: 1)
         renderEncoder.set(fragmentValue: self.color,
                           at: 0)
-
         // Draw.
         renderEncoder.drawPrimitives(type: .point,
                                      vertexStart: 0,
                                      vertexCount: 1,
                                      instanceCount: self.pointCount)
-
         renderEncoder.popDebugGroup()
     }
 

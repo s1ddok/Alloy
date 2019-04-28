@@ -118,7 +118,6 @@ final public class LinesRenderer {
 
         // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool.
         renderEncoder.pushDebugGroup("Draw Line Geometry")
-
         // Set render command encoder state.
         renderEncoder.setRenderPipelineState(self.renderPipelineState)
         // Set any buffers fed into our render pipeline.
@@ -127,13 +126,11 @@ final public class LinesRenderer {
                                       index: 0)
         renderEncoder.set(fragmentValue: self.color,
                           at: 0)
-
         // Draw.
         renderEncoder.drawPrimitives(type: .triangleStrip,
                                      vertexStart: 0,
                                      vertexCount: 4,
                                      instanceCount: self.linesCount)
-
         renderEncoder.popDebugGroup()
     }
 

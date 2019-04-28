@@ -114,22 +114,18 @@ final public class RectangleRenderer {
 
         // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool.
         renderEncoder.pushDebugGroup("Draw Rectangle Geometry")
-
         // Set render command encoder state.
         renderEncoder.setRenderPipelineState(self.renderPipelineState)
         // Set any buffers fed into our render pipeline.
-
         let rectangle = self.constructRectangle(from: self.normalizedRect)
         renderEncoder.set(vertexValue: rectangle,
                           at: 0)
         renderEncoder.set(fragmentValue: self.color,
                           at: 0)
-
         // Draw.
         renderEncoder.drawPrimitives(type: .triangleStrip,
                                      vertexStart: 0,
                                      vertexCount: 4)
-
         renderEncoder.popDebugGroup()
     }
 
