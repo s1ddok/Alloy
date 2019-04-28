@@ -34,7 +34,7 @@ final public class PointsRenderer {
             if let pointsPositionsBuffer = self.pointsPositionsBuffer,
                 let pointsPositions = pointsPositionsBuffer
                     .array(of: simd_float2.self,
-                           count: pointsPositionsBuffer.length / MemoryLayout<simd_float2>.stride) {
+                           count: self.pointCount) {
                 return pointsPositions
             } else {
                 return []
