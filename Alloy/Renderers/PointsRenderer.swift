@@ -76,7 +76,7 @@ final public class PointsRenderer {
 
         if let colorAttachmentsDescriptor = renderPipelineDescriptor.colorAttachments[0] {
             colorAttachmentsDescriptor.pixelFormat = pixelFormat
-            colorAttachmentsDescriptor.setup(blending: .add)
+            colorAttachmentsDescriptor.setup(blending: .alpha)
         }
 
         self.renderPipelineState = try context.device
