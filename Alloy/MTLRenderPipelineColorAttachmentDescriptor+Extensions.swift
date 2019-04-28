@@ -36,6 +36,7 @@ public extension MTLRenderPipelineColorAttachmentDescriptor {
     /// - Parameter blending: Blending mode.
     func setup(blending: BlendingMode) {
         // Default
+        self.isBlendingEnabled = true
         self.rgbBlendOperation = .add
         self.sourceRGBBlendFactor = .one
         self.destinationRGBBlendFactor = .zero
@@ -47,35 +48,27 @@ public extension MTLRenderPipelineColorAttachmentDescriptor {
         case .none:
             self.isBlendingEnabled = false
         case .alpha:
-            self.isBlendingEnabled = true
             self.sourceRGBBlendFactor = .sourceAlpha
             self.destinationRGBBlendFactor = .oneMinusSourceAlpha
         case .premultipliedAlpha:
-            self.isBlendingEnabled = true
             self.sourceRGBBlendFactor = .one
             self.destinationRGBBlendFactor = .oneMinusSourceAlpha
         case .add:
-            self.isBlendingEnabled = true
             self.sourceRGBBlendFactor = .one
             self.destinationRGBBlendFactor = .one
         case .multiply:
-            self.isBlendingEnabled = true
             self.sourceRGBBlendFactor = .destinationColor
             self.destinationRGBBlendFactor = .zero
         case .multiplicative:
-            self.isBlendingEnabled = true
             self.sourceRGBBlendFactor = .destinationColor
             self.destinationRGBBlendFactor = .oneMinusSourceAlpha
         case .addWithAlpha:
-            self.isBlendingEnabled = true
             self.sourceRGBBlendFactor = .sourceAlpha
             self.destinationRGBBlendFactor = .zero
         case .screen:
-            self.isBlendingEnabled = true
             self.sourceRGBBlendFactor = .oneMinusDestinationColor
             self.destinationRGBBlendFactor = .one
         case .dodge:
-            self.isBlendingEnabled = true
             self.sourceRGBBlendFactor = .oneMinusSourceAlpha
             self.destinationRGBBlendFactor = .one
         }

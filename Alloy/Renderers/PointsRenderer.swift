@@ -43,7 +43,7 @@ final public class PointsRenderer {
     }
     /// Point color. Red in default.
     public var color: vector_float4 = .init(1, 0, 0, 1)
-    /// Point size in pixels
+    /// Point size in pixels.
     public var pointSize: Float = 40
 
     private var pointsPositionsBuffer: MTLBuffer?
