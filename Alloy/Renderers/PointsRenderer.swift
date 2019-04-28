@@ -54,7 +54,7 @@ final public class PointsRenderer {
 
     // MARK: - Life Cycle
 
-    /// Creates a new instance of RectangleRenderer.
+    /// Creates a new instance of PointsRenderer.
     ///
     /// - Parameter context: Alloy's Metal context.
     /// - Throws: library or function creation errors.
@@ -62,7 +62,7 @@ final public class PointsRenderer {
         self.context = context
 
         guard
-            let library = context.shaderLibrary(for: Bundle(for: RectangleRenderer.self))
+            let library = context.shaderLibrary(for: Bundle(for: PointsRenderer.self))
         else { throw Errors.libraryCreationFailed }
 
         guard
@@ -83,15 +83,9 @@ final public class PointsRenderer {
             .makeRenderPipelineState(descriptor: renderPipelineDescriptor)
     }
 
-    private static let vertexFunctionName = "pointVertex"
-    private static let fragmentFunctionName = "pointFragment"
+    // MARK: - Rendering
 
-}
-
-@available(iOS 11.3, tvOS 11.3, macOS 10.13, *)
-extension PointsRenderer {
-
-    /// Draw a rectangle in a target texture.
+    /// Render points in a target texture.
     ///
     /// - Parameters:
     ///   - renderPassDescriptor: render pass descriptor to be used.
@@ -108,44 +102,42 @@ extension PointsRenderer {
         else { throw Errors.wrongRenderTargetTextureUsage }
         #endif
 
-        // Draw.
-        commandBuffer.render(descriptor: renderPassDescriptor) { renderEncoder in
-            self.render(using: renderEncoder)
-        }
-
-        commandBuffer.render(descriptor: renderPassDescriptor, self.render(using:))
+        // Render.
+        commandBuffer.render(descriptor: renderPassDescriptor,
+                             self.render(using:))
     }
 
-    /// Draw a rectangle in a target texture.
+    /// Render points in a target texture.
     ///
     /// - Parameters:
     ///   - renderEncoder: container to put the rendering work into.
     public func render(using renderEncoder: MTLRenderCommandEncoder) {
-        if self.pointCount != 0 {
+        guard self.pointCount != 0 else { return }
 
-            // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool.
-            renderEncoder.pushDebugGroup("Draw Points Geometry")
+        // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool.
+        renderEncoder.pushDebugGroup("Draw Points Geometry")
 
-            // Set render command encoder state.
-            renderEncoder.setRenderPipelineState(self.renderPipelineState)
-            // Set any buffers fed into our render pipeline.
-            renderEncoder.setVertexBuffer(self.pointsBuffer,
-                                          offset: 0,
-                                          index: 0)
-            renderEncoder.set(vertexValue: self.pointSize,
-                              at: 1)
+        // Set render command encoder state.
+        renderEncoder.setRenderPipelineState(self.renderPipelineState)
+        // Set any buffers fed into our render pipeline.
+        renderEncoder.setVertexBuffer(self.pointsPositionsBuffer,
+                                      offset: 0,
+                                      index: 0)
+        renderEncoder.set(vertexValue: self.pointSize,
+                          at: 1)
+        renderEncoder.set(fragmentValue: self.color,
+                          at: 0)
 
-            renderEncoder.set(fragmentValue: self.color,
-                              at: 0)
+        // Draw.
+        renderEncoder.drawPrimitives(type: .point,
+                                     vertexStart: 0,
+                                     vertexCount: 1,
+                                     instanceCount: self.pointCount)
 
-            // Draw.
-            renderEncoder.drawPrimitives(type: .point,
-                                         vertexStart: 0,
-                                         vertexCount: 1,
-                                         instanceCount: self.pointCount)
-
-            renderEncoder.popDebugGroup()
-        }
+        renderEncoder.popDebugGroup()
     }
+
+    private static let vertexFunctionName = "pointVertex"
+    private static let fragmentFunctionName = "pointFragment"
 
 }
