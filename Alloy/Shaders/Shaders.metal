@@ -271,6 +271,6 @@ fragment float4 pointFragment(PointVertexOut in [[stage_in]],
                               constant float4& pointColor [[ buffer(0) ]]) {
     const float distanceFromCenter = length(2 * (pointCenter - 0.5));
     float4 color = pointColor;
-    color.a = 1.0 - smoothstep(0.1, 0.9, distanceFromCenter);
+    color.a = 1.0 - smoothstep(0.9, 1.0, distanceFromCenter);
     return color;
 }
