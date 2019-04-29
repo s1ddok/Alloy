@@ -79,6 +79,7 @@ final public class LinesRenderer {
         renderPipelineDescriptor.vertexFunction = vertexFunction
         renderPipelineDescriptor.fragmentFunction = fragmentFunction
         renderPipelineDescriptor.colorAttachments[0].pixelFormat = pixelFormat
+        renderPipelineDescriptor.colorAttachments[0].setup(blending: .alpha)
 
         self.renderPipelineState = try library.device
             .makeRenderPipelineState(descriptor: renderPipelineDescriptor)
