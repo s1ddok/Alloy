@@ -20,7 +20,7 @@ final public class BoundingBoxesRenderer {
 
     /// Rectrangles in a normalized coodrinate system describing bounding boxes.
     public var normalizedRects: [CGRect] = []
-    /// Rrefered fill color of the bounding boxes. Red is default.
+    /// Prefered border color of the bounding boxes. Red is default.
     public var color: vector_float4 = .init(1, 0, 0, 1) {
         didSet {
             self.linesRenderer.color = self.color
