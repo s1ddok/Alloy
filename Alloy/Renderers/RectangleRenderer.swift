@@ -14,8 +14,6 @@ final public class RectangleRenderer {
     public enum Errors: Error {
         case functionCreationFailed
         case libraryCreationFailed
-        case wrongRenderTargetTextureUsage
-        case missingRenderTarget
     }
 
     // MARK: - Properties
