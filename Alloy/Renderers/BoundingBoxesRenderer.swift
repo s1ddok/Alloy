@@ -28,9 +28,8 @@ final public class BoundingBoxesRenderer {
     }
     /// Prefered line width of the bounding boxes in pixels. 20 is default.
     public var lineWidth: Int = 20
-    /// Size of the render target texture.
-    public var renderTargetSize: MTLSize = .zero
 
+    private var renderTargetSize: MTLSize = .zero
     private let linesRenderer: LinesRenderer
 
     // MARK: - Life Cicle
