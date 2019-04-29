@@ -94,11 +94,10 @@ final public class BoundingBoxesRenderer {
         return boundingBoxComponentLines
     }
 
-    private func calculateBBoxesLines(from rects: [CGRect]) -> [Line] {
-        let boundingBoxesLines = (rects.map {
-            self.calculateBBoxComponentLines(bboxRect: $0)
-
-        }).flatMap { $0 }
+    private func calculateBBoxesLines() -> [Line] {
+        let boundingBoxesLines = (self.normalizedRects
+            .map { self.calculateBBoxComponentLines(bboxRect: $0) })
+            .flatMap { $0 }
         return boundingBoxesLines
     }
 
