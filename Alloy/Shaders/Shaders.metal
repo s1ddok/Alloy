@@ -8,6 +8,7 @@
 
 #include <metal_stdlib>
 #include "ColorConversion.h"
+#include "ShaderStructures.h"
 
 using namespace metal;
 
@@ -178,4 +179,146 @@ kernel void mean(texture2d<half, access::sample> input_texture [[ texture(0) ]],
         result = float4(mean_value);
     }
 
+}
+
+// MARK: - Rendering
+
+float2 perpendicular(float2 vector) {
+    return float2(-vector.y, vector.x);
+}
+
+float2 convertToScreenSpace(float2 vector) {
+    return float2(-1 + (vector.x * 2),
+                  -1 + ((1 - vector.y) * 2));
+}
+
+// MARK: - Rectangle Rendering
+
+struct VertexOut {
+    float4 position [[ position ]];
+};
+
+vertex VertexOut rectVertex(constant Rectangle& rectangle [[ buffer(0) ]],
+                            uint vid [[vertex_id]]) {
+    const float2 positions[] = {
+        rectangle.topLeft, rectangle.bottomLeft,
+        rectangle.topRight, rectangle.bottomRight
+    };
+
+    VertexOut out;
+    float2 position = convertToScreenSpace(positions[vid]);
+    out.position = float4(position, 0.0, 1.0);
+
+    return out;
+}
+
+fragment float4 primitivesFragment(VertexOut in [[ stage_in ]],
+                                   constant float4& color [[ buffer(0) ]]) {
+    return color;
+}
+
+// MARK: - Mask Rendering
+
+struct MaskVertexOut {
+    float4 position [[ position ]];
+    float2 uv;
+};
+
+vertex MaskVertexOut maskVertex(constant Rectangle& rectangle [[ buffer(0) ]],
+                                 uint vid [[vertex_id]]) {
+    struct Vertex {
+        float2 position;
+        float2 uv;
+    };
+
+    const Vertex vertices[] = {
+        Vertex { rectangle.topLeft, float2(0.0, 1.0) },
+        Vertex { rectangle.bottomLeft, float2(0.0, 0.0) },
+        Vertex { rectangle.topRight, float2(1.0, 1.0) },
+        Vertex { rectangle.bottomRight, float2(1.0, 0.0) }
+    };
+
+    MaskVertexOut out;
+    float2 position = convertToScreenSpace(vertices[vid].position);
+    out.position = float4(position, 0.0, 1.0);
+    out.uv = vertices[vid].uv;
+
+    return out;
+}
+
+fragment float4 maskFragment(MaskVertexOut in [[ stage_in ]],
+                              texture2d<half, access::sample> maskTexture [[ texture(0) ]],
+                              constant float4& color [[ buffer(0) ]]) {
+    constexpr sampler s(coord::normalized,
+                        address::clamp_to_zero,
+                        filter::linear);
+    float4 maskValue = (float4)maskTexture.sample(s, in.uv).rrrr;
+    float4 resultColor = maskValue * color;
+
+    return resultColor;
+}
+
+// MARK: - Lines Rendering
+
+vertex VertexOut linesVertex(constant Line *lines [[ buffer(0) ]],
+                             uint vertexId [[vertex_id]],
+                             uint instanceId [[instance_id]]) {
+    Line line = lines[instanceId];
+
+    float2 startPoint = line.startPoint;
+    float2 endPoint = line.endPoint;
+
+    float2 vector = startPoint - endPoint;
+    float2 perpendicularVector = perpendicular(normalize(vector));
+    float halfWidth = line.width / 2;
+
+    struct PositionAndOffsetFactor {
+        float2 vertexPosition;
+        float offsetFactor;
+    };
+
+    const PositionAndOffsetFactor positionsAndOffsetFactors[] = {
+        PositionAndOffsetFactor { startPoint, -1.0 },
+        PositionAndOffsetFactor { endPoint, -1.0 },
+        PositionAndOffsetFactor { startPoint, 1.0 },
+        PositionAndOffsetFactor { endPoint, 1.0 }
+    };
+
+    VertexOut out;
+    const float2 vertexPosition = positionsAndOffsetFactors[vertexId].vertexPosition;
+    const float offsetFactor = positionsAndOffsetFactors[vertexId].offsetFactor;
+    float2 position = convertToScreenSpace(vertexPosition + offsetFactor * perpendicularVector * halfWidth);
+    out.position = float4(position, 0.0, 1.0);
+
+    return out;
+}
+
+// MARK: - Points Rendering
+
+struct PointVertexOut {
+    float4 position [[ position ]];
+    float size [[ point_size ]];
+};
+
+vertex PointVertexOut pointVertex(constant float2* pointsPositions [[ buffer(0) ]],
+                                  constant float& pointSize [[ buffer(1) ]],
+                                  uint instanceId [[instance_id]]) {
+    const float2 pointPosition = pointsPositions[instanceId];
+
+    PointVertexOut out;
+    float2 position = convertToScreenSpace(pointPosition);
+    out.position = float4(position, 0, 1);
+    out.size = pointSize;
+
+    return out;
+}
+
+fragment float4 pointFragment(PointVertexOut in [[stage_in]],
+                              const float2 pointCenter [[ point_coord ]],
+                              constant float4& pointColor [[ buffer(0) ]]) {
+    const float distanceFromCenter = length(2 * (pointCenter - 0.5));
+    float4 color = pointColor;
+    color.a = 1.0 - smoothstep(0.9, 1.0, distanceFromCenter);
+
+    return color;
 }
