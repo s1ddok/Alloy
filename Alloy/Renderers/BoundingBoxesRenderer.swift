@@ -115,11 +115,10 @@ final public class BoundingBoxesRenderer {
     ///
     /// - Parameter renderEncoder: Container to put the rendering work into.
     public func render(using renderEncoder: MTLRenderCommandEncoder) {
-        let boundingBoxesLines = self.calculateBBoxesLines(from: self.normalizedRects)
         // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool.
         renderEncoder.pushDebugGroup("Draw Bounding Box Geometry")
         // Set the lines to render.
-        self.linesRenderer.lines = boundingBoxesLines
+        self.linesRenderer.lines = self.calculateBBoxesLines()
         // Render.
         self.linesRenderer.render(using: renderEncoder)
         renderEncoder.popDebugGroup()

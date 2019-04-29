@@ -64,15 +64,15 @@ final public class RectangleRenderer {
 
     // MARK: - Helpers
 
-    private func constructRectangle(from cgRect: CGRect) -> Rectangle {
-        let topLeftPosition = float2(Float(cgRect.minX),
-                                     Float(cgRect.maxY))
-        let bottomLeftPosition = float2(Float(cgRect.minX),
-                                        Float(cgRect.minY))
-        let topRightPosition = float2(Float(cgRect.maxX),
-                                      Float(cgRect.maxY))
-        let bottomRightPosition = float2(Float(cgRect.maxX),
-                                         Float(cgRect.minY))
+    private func constructRectangle() -> Rectangle {
+        let topLeftPosition = float2(Float(self.normalizedRect.minX),
+                                     Float(self.normalizedRect.maxY))
+        let bottomLeftPosition = float2(Float(self.normalizedRect.minX),
+                                        Float(self.normalizedRect.minY))
+        let topRightPosition = float2(Float(self.normalizedRect.maxX),
+                                      Float(self.normalizedRect.maxY))
+        let bottomRightPosition = float2(Float(self.normalizedRect.maxX),
+                                         Float(self.normalizedRect.minY))
         return Rectangle(topLeft: topLeftPosition,
                          bottomLeft: bottomLeftPosition,
                          topRight: topRightPosition,
@@ -105,7 +105,7 @@ final public class RectangleRenderer {
         // Set render command encoder state.
         renderEncoder.setRenderPipelineState(self.renderPipelineState)
         // Set any buffers fed into our render pipeline.
-        let rectangle = self.constructRectangle(from: self.normalizedRect)
+        let rectangle = self.constructRectangle()
         renderEncoder.set(vertexValue: rectangle,
                           at: 0)
         renderEncoder.set(fragmentValue: self.color,
