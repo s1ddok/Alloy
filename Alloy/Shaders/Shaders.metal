@@ -183,11 +183,6 @@ kernel void mean(texture2d<half, access::sample> input_texture [[ texture(0) ]],
 
 // MARK: - Rendering
 
-struct VertexOut {
-    float4 position [[ position ]];
-    half4 fillColor;
-};
-
 float2 perpendicular(float2 vector) {
     return float2(-vector.y, vector.x);
 }
@@ -198,6 +193,10 @@ float2 convertToScreenSpace(float2 vector) {
 }
 
 // MARK: - Rectangle Rendering
+
+struct VertexOut {
+    float4 position [[ position ]];
+};
 
 vertex VertexOut rectVertex(constant Rectangle& rectangle [[ buffer(0) ]],
                             uint vid [[vertex_id]]) {
