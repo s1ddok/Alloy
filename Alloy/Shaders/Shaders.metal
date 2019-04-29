@@ -192,7 +192,7 @@ float2 perpendicular(float2 vector) {
     return float2(-vector.y, vector.x);
 }
 
-float2 convertToMetalCoordinateSystem(float2 vector) {
+float2 convertToScreenSpace(float2 vector) {
     return float2(-1 + (vector.x * 2),
                   -1 + ((1 - vector.y) * 2));
 }
@@ -207,7 +207,7 @@ vertex VertexOut rectVertex(constant Rectangle& rectangle [[ buffer(0) ]],
     };
 
     VertexOut out;
-    float2 position = convertToMetalCoordinateSystem(positions[vid]);
+    float2 position = convertToScreenSpace(positions[vid]);
     out.position = float4(position, 0.0, 1.0);
 
     return out;
@@ -247,7 +247,7 @@ vertex VertexOut linesVertex(constant Line *lines [[ buffer(0) ]],
     VertexOut out;
     const float2 vertexPosition = positionsAndOffsetFactors[vertexId].vertexPosition;
     const float offsetFactor = positionsAndOffsetFactors[vertexId].offsetFactor;
-    float2 position = convertToMetalCoordinateSystem(vertexPosition + offsetFactor * perpendicularVector * halfWidth);
+    float2 position = convertToScreenSpace(vertexPosition + offsetFactor * perpendicularVector * halfWidth);
     out.position = float4(position, 0.0, 1.0);
 
     return out;
@@ -264,10 +264,12 @@ vertex PointVertexOut pointVertex(constant float2* pointsPositions [[ buffer(0) 
                                   constant float& pointSize [[ buffer(1) ]],
                                   uint instanceId [[instance_id]]) {
     const float2 pointPosition = pointsPositions[instanceId];
+
     PointVertexOut out;
-    float2 position = convertToMetalCoordinateSystem(pointPosition);
+    float2 position = convertToScreenSpace(pointPosition);
     out.position = float4(position, 0, 1);
     out.size = pointSize;
+
     return out;
 }
 
