@@ -95,8 +95,7 @@ final public class RectangleRenderer {
 
     /// Render a rectangle in a target texture.
     ///
-    /// - Parameters:
-    ///   - renderEncoder: Container to put the rendering work into.
+    /// - Parameter renderEncoder: Container to put the rendering work into.
     public func render(using renderEncoder: MTLRenderCommandEncoder) {
         guard self.normalizedRect != .zero else { return }
 
