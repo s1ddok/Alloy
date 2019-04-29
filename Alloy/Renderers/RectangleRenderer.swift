@@ -20,7 +20,7 @@ final public class RectangleRenderer {
 
     /// Rectangle fill color. Red in default.
     public var color: vector_float4 = .init(1, 0, 0, 1)
-    /// Rectrangle cescribed in a normalized coodrinate system.
+    /// Rectrangle described in a normalized coodrinate system.
     public var normalizedRect: CGRect = .zero
 
     private let renderPipelineState: MTLRenderPipelineState
