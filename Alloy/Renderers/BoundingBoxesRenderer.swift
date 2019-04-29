@@ -11,11 +11,6 @@ import simd
 @available(iOS 11.3, tvOS 11.3, macOS 10.13, *)
 final public class BoundingBoxesRenderer {
 
-    public enum Errors: Error {
-        case wrongRenderTargetTextureUsage
-        case missingRenderTarget
-    }
-
     // MARK: - Properties
 
     /// Rectrangles in a normalized coodrinate system describing bounding boxes.
@@ -110,17 +105,7 @@ final public class BoundingBoxesRenderer {
     ///   - commandBuffer: Command buffer to put the rendering work items into.
     public func render(renderPassDescriptor: MTLRenderPassDescriptor,
                        commandBuffer: MTLCommandBuffer) throws {
-        #if DEBUG
-        // Check render target.
-        guard
-            let renderTarget = renderPassDescriptor.colorAttachments[0].texture
-        else { throw Errors.missingRenderTarget }
-        guard
-            renderTarget.usage.contains(.renderTarget)
-        else { throw Errors.wrongRenderTargetTextureUsage }
-        #endif
-
-        self.renderTargetSize = renderTarget.size
+        self.renderTargetSize = renderPassDescriptor.colorAttachments[0].texture?.size ?? .zero
         // Render.
         commandBuffer.render(descriptor: renderPassDescriptor,
                              self.render(using:))
