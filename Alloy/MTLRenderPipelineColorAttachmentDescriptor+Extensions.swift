@@ -50,27 +50,43 @@ public extension MTLRenderPipelineColorAttachmentDescriptor {
         case .alpha:
             self.sourceRGBBlendFactor = .sourceAlpha
             self.destinationRGBBlendFactor = .oneMinusSourceAlpha
+            self.sourceAlphaBlendFactor = .sourceAlpha
+            self.destinationAlphaBlendFactor = .oneMinusSourceAlpha
         case .premultipliedAlpha:
             self.sourceRGBBlendFactor = .one
             self.destinationRGBBlendFactor = .oneMinusSourceAlpha
+            self.sourceAlphaBlendFactor = .one
+            self.destinationAlphaBlendFactor = .oneMinusSourceAlpha
         case .add:
             self.sourceRGBBlendFactor = .one
             self.destinationRGBBlendFactor = .one
+            self.sourceAlphaBlendFactor = .one
+            self.destinationAlphaBlendFactor = .one
         case .multiply:
             self.sourceRGBBlendFactor = .destinationColor
             self.destinationRGBBlendFactor = .zero
+            self.sourceAlphaBlendFactor = .destinationColor
+            self.destinationAlphaBlendFactor = .zero
         case .multiplicative:
             self.sourceRGBBlendFactor = .destinationColor
             self.destinationRGBBlendFactor = .oneMinusSourceAlpha
+            self.sourceAlphaBlendFactor = .destinationColor
+            self.destinationAlphaBlendFactor = .oneMinusSourceAlpha
         case .addWithAlpha:
             self.sourceRGBBlendFactor = .sourceAlpha
             self.destinationRGBBlendFactor = .zero
+            self.sourceAlphaBlendFactor = .sourceAlpha
+            self.destinationAlphaBlendFactor = .zero
         case .screen:
             self.sourceRGBBlendFactor = .oneMinusDestinationColor
             self.destinationRGBBlendFactor = .one
+            self.sourceAlphaBlendFactor = .oneMinusDestinationColor
+            self.destinationAlphaBlendFactor = .one
         case .dodge:
             self.sourceRGBBlendFactor = .oneMinusSourceAlpha
             self.destinationRGBBlendFactor = .one
+            self.sourceAlphaBlendFactor = .oneMinusSourceAlpha
+            self.destinationAlphaBlendFactor = .one
         }
     }
 
