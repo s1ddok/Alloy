@@ -79,10 +79,15 @@ let buffer = context.buffer(for: InstanceUniforms.self,
 
 ## Other Alloy-specific types
 
-Other objects that are introduces my Alloy are
+Other types that are introduces my Alloy are
 
 - `MTLOffscreenRenderer`: this is a class that lets you create simple off-screen renderers to draw something into arbitary `MTLTextures`
 - `ComputeCommand`: this is an *experimental class* that does a reflection over Metal kernels and lets you assign arguments by name instead of index. This is a subject for improvements.
+- `BlendingMode`: this type contains the enumeration of eight Alloy's built-in blending modes. You can easily setup one of them just by calling `setup(blending:)` function.
+  ```swift
+  let renderPipelineDescriptor = MTLRenderPipelineDescriptor()
+  renderPipelineDescriptor.colorAttachments[0].setup(blending: .alpha)
+  ```
 
 ## MTLContext minimal usage example
 
@@ -149,7 +154,7 @@ With this approach you can easily stack and build your GPU pipeline layers, grou
 
 ## CocoaPods
 
-[CocoaPods](https://cocoapods.org) is a dependency manager for Cocoa projects. For usage and installation instructions, visit their website. To integrate Alamofire into your Xcode project using CocoaPods, specify it in your `Podfile`:
+[CocoaPods](https://cocoapods.org) is a dependency manager for Cocoa projects. For usage and installation instructions, visit their website. To integrate Alloy into your Xcode project using CocoaPods, specify it in your `Podfile`:
 
 ```ruby
 # Optionally add version, i.e. '~> 0.9.0'
