@@ -16,7 +16,7 @@ public class MTLIndexBuffer {
     public let count: Int
     public let type: MTLIndexType
 
-    public init(device: MTLDevice, _ indexArray: [UInt16], options: MTLResourceOptions = []) throws {
+    public init(device: MTLDevice, indexArray: [UInt16], options: MTLResourceOptions = []) throws {
         guard let allocatedBuffer = device.makeBuffer(bytes: indexArray,
                                                       length: indexArray.count * MemoryLayout<UInt16>.stride,
                                                       options: options)
@@ -27,7 +27,7 @@ public class MTLIndexBuffer {
         self.type = .uint16
     }
 
-    public init(device: MTLDevice, _ indexArray: [UInt32], options: MTLResourceOptions = []) throws {
+    public init(device: MTLDevice, indexArray: [UInt32], options: MTLResourceOptions = []) throws {
         guard let allocatedBuffer = device.makeBuffer(bytes: indexArray,
                                                       length: indexArray.count * MemoryLayout<UInt32>.stride,
                                                       options: options)
