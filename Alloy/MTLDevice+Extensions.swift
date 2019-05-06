@@ -18,7 +18,10 @@ public extension MTLDevice {
             maxSide = 16_384
         }
 
-        guard desiredSize.width > 0, desiredSize.height > 0 else { return .zero }
+        guard desiredSize.width > 0,
+            desiredSize.height > 0
+        else { return .zero }
+
         let aspectRatio = desiredSize.width / desiredSize.height
         if aspectRatio > 1 {
             let resultWidth = min(desiredSize.width, maxSide)
