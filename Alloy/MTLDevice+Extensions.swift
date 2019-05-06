@@ -14,9 +14,9 @@ public extension MTLDevice {
     func maxTextureSize(desiredSize: CGSize) -> CGSize {
         let maxSide: CGFloat
         if self.supportsOnly8K() {
-            maxSide = 8192 * metalSafeMultiplier
+            maxSide = 8192
         } else {
-            maxSide = 16_384 * metalSafeMultiplier
+            maxSide = 16_384
         }
 
         guard desiredSize.width > 0, desiredSize.height > 0 else { return .zero }
@@ -46,8 +46,3 @@ public extension MTLDevice {
         #endif
     }
 }
-
-/// MTLTexture cannot be created if the size is very close to the documented limit.
-/// We make images smaller to make sure they can be processed.
-/// It also avoids memory issues.
-private let metalSafeMultiplier: CGFloat = 0.75
