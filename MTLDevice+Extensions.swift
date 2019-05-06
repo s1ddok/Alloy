@@ -9,9 +9,9 @@ import Metal
 import CoreGraphics
 
 @available(iOS 11.0, macOS 10.12, *)
-extension MTLDevice {
+public extension MTLDevice {
 
-    public func maxTextureSize(desiredSize: CGSize) -> CGSize {
+    func maxTextureSize(desiredSize: CGSize) -> CGSize {
         let maxSide: CGFloat
         if self.supportsOnly8K() {
             maxSide = 8192 * metalSafeMultiplier
