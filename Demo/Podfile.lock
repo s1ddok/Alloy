@@ -1,10 +1,10 @@
 PODS:
-  - Alloy (0.10.0):
-    - Alloy/Core (= 0.10.0)
-  - Alloy/Core (0.10.0)
-  - Alloy/ML (0.10.0):
+  - Alloy (0.10.1):
+    - Alloy/Core (= 0.10.1)
+  - Alloy/Core (0.10.1)
+  - Alloy/ML (0.10.1):
     - Alloy/Core
-  - Alloy/Shaders (0.10.0):
+  - Alloy/Shaders (0.10.1):
     - Alloy/Core
 
 DEPENDENCIES:
@@ -17,7 +17,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Alloy: 249ea5dd795b9dde8f32191187b01169d4992754
+  Alloy: 102d3c166e2262963e9e70abc737557088570ade
 
 PODFILE CHECKSUM: 2d654793f7e5bb7d711c71a333c8f15de1d729f3
 
