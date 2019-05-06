@@ -22,15 +22,15 @@ public extension MTLDevice {
             desiredSize.height > 0
         else { return .zero }
 
-        let aspectRatio = desiredSize.width / desiredSize.height
+        let aspectRatio = Float(desiredSize.width) / Float(desiredSize.height)
         if aspectRatio > 1 {
             let resultWidth = min(desiredSize.width, maxSide)
-            let resultHeight = resultWidth / aspectRatio
-            return MTLSize(width: resultWidth, height: resultHeight, depth: 0)
+            let resultHeight = Float(resultWidth) / aspectRatio
+            return MTLSize(width: resultWidth, height: Int(resultHeight.rounded()), depth: 0)
         } else {
             let resultHeight = min(desiredSize.height, maxSide)
-            let resultWidth = resultHeight * aspectRatio
-            return MTLSize(width: resultWidth, height: resultHeight, depth: 0)
+            let resultWidth = Float(resultHeight) * aspectRatio
+            return MTLSize(width: Int(resultWidth.rounded()), height: resultHeight, depth: 0)
         }
     }
 
