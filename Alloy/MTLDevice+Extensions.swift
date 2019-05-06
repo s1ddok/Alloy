@@ -6,13 +6,12 @@
 //
 
 import Metal
-import CoreGraphics
 
 @available(iOS 11.0, macOS 10.12, *)
 public extension MTLDevice {
 
-    func maxTextureSize(desiredSize: CGSize) -> CGSize {
-        let maxSide: CGFloat
+    func maxTextureSize(desiredSize: MTLSize) -> MTLSize {
+        let maxSide: Int
         if self.supportsOnly8K() {
             maxSide = 8192
         } else {
@@ -24,11 +23,11 @@ public extension MTLDevice {
         if aspectRatio > 1 {
             let resultWidth = min(desiredSize.width, maxSide)
             let resultHeight = resultWidth / aspectRatio
-            return CGSize(width: resultWidth, height: resultHeight)
+            return MTLSize(width: resultWidth, height: resultHeight, depth: 0)
         } else {
             let resultHeight = min(desiredSize.height, maxSide)
             let resultWidth = resultHeight * aspectRatio
-            return CGSize(width: resultWidth, height: resultHeight)
+            return MTLSize(width: resultWidth, height: resultHeight, depth: 0)
         }
     }
 
