@@ -40,10 +40,6 @@ public extension MTLDevice {
         #else
         if self.supportsFeatureSet(.iOS_GPUFamily1_v4) { return true }
         if self.supportsFeatureSet(.iOS_GPUFamily2_v4) { return true }
-        if #available(iOS 12.0, *) {
-            if self.supportsFeatureSet(.iOS_GPUFamily1_v5) { return true }
-            if self.supportsFeatureSet(.iOS_GPUFamily2_v5) { return true }
-        }
         return false
         #endif
     }
