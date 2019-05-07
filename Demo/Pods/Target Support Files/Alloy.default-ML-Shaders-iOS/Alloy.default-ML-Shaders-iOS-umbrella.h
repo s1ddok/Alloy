@@ -11,7 +11,6 @@
 #endif
 
 #import "ColorConversion.h"
-#import "ShaderStructures.h"
 
 FOUNDATION_EXPORT double AlloyVersionNumber;
 FOUNDATION_EXPORT const unsigned char AlloyVersionString[];
