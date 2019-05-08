@@ -66,28 +66,46 @@ public typealias Scales = (height: Int, width: Int)
         let inputWidth = sourceImages[0].width
 
         if self.isTranspose {
-            inDescriptor.height = (inputHeight - 1) * self.strides.height
-                                - self.pads.top - self.pads.bottom
-                                + self.kernel.height + self.outputPadding.height
-            inDescriptor.width = (inputWidth - 1) * self.strides.width
-                               - self.pads.left - self.pads.right
-                               + self.kernel.width + self.outputPadding.width
             let conv = kernel as! MPSCNNConvolutionTranspose
             conv.offset = MPSOffset(x: 0, y: 0, z: 0)
             conv.edgeMode = .zero
             conv.kernelOffsetX = self.kernel.width / 2 - self.kernel.width + 1 + self.pads.left
             conv.kernelOffsetY = self.kernel.height / 2 - self.kernel.height + 1 + self.pads.top
         } else {
-            inDescriptor.height = (inputHeight + self.pads.top + self.pads.bottom - self.kernel.height) / self.strides.height + 1
-            inDescriptor.width = (inputWidth + self.pads.left + self.pads.right - self.kernel.width) / self.strides.width + 1
             let conv = kernel as! MPSCNNConvolution
             conv.offset = MPSOffset(x: self.kernel.width / 2 - self.pads.left,
                                     y: self.kernel.height / 2 - self.pads.top,
                                     z: 0)
             conv.edgeMode = .zero
         }
+        let paddedSize = self.paddedSize(inputWidth: inputWidth,
+                                         inputHeight: inputHeight)
+        inDescriptor.height = paddedSize.height
+        inDescriptor.width = paddedSize.width
 
         return inDescriptor
+    }
+
+    public func paddedSize(inputWidth: Int,
+                           inputHeight: Int) -> (width: Int, height: Int) {
+        let height: Int
+        let width: Int
+        if self.isTranspose {
+            height = (inputHeight - 1) * self.strides.height
+                - self.pads.top - self.pads.bottom
+                + self.kernel.height + self.outputPadding.height
+            width = (inputWidth - 1) * self.strides.width
+                - self.pads.left - self.pads.right
+                + self.kernel.width + self.outputPadding.width
+        } else {
+            height = (inputHeight + self.pads.top
+                + self.pads.bottom - self.kernel.height)
+                / self.strides.height + 1
+            width = (inputWidth + self.pads.left
+                + self.pads.right - self.kernel.width)
+                / self.strides.width + 1
+        }
+        return (width, height)
     }
 
     public static var supportsSecureCoding: Bool = true

@@ -51,8 +51,10 @@ public class PyTorchPoolPadding: NSObject, MPSNNPadding {
         let inputHeight = sourceImages[0].height
 
         // this is an offical formula from PyTorch documentation
-        inDescriptor.width = Int(Float(inputWidth + 2 * self.paddingWidth - self.kernelWidth) / Float(self.strideInPixelsX) + 1.0)
-        inDescriptor.height = Int(Float(inputHeight + 2 * self.paddingHeight - self.kernelHeight) / Float(self.strideInPixelsY) + 1.0)
+        let paddedSize = self.paddedSize(inputWidth: inputWidth,
+                                         inputHeight: inputHeight)
+        inDescriptor.width = paddedSize.width
+        inDescriptor.height = paddedSize.height
 
         // The correction needed to adjust from position of left edge to center per MPSOffset definition
         let correctionX = self.kernelWidth / 2
@@ -66,8 +68,8 @@ public class PyTorchPoolPadding: NSObject, MPSNNPadding {
 
         let centeringPolicy = 0
 
-        let leftExtraPixels = (extraSizeX + centeringPolicy) / 2;
-        let topExtraPixels = (extraSizeY + centeringPolicy) / 2;
+        let leftExtraPixels = (extraSizeX + centeringPolicy) / 2
+        let topExtraPixels = (extraSizeY + centeringPolicy) / 2
 
         cnnKernel.offset = .init(x: correctionX - leftExtraPixels,
                                  y: correctionY - topExtraPixels,
@@ -88,6 +90,15 @@ public class PyTorchPoolPadding: NSObject, MPSNNPadding {
 
     public required init?(coder aDecoder: NSCoder) {
         fatalError("NSCoding is not supported yet")
+    }
+
+    public func paddedSize(inputWidth: Int,
+                           inputHeight: Int) -> (width: Int, height: Int) {
+        let width = Int(Float(inputWidth + 2 * self.paddingWidth
+            - self.kernelWidth) / Float(self.strideInPixelsX) + 1.0)
+        let height = Int(Float(inputHeight + 2 * self.paddingHeight
+            - self.kernelHeight) / Float(self.strideInPixelsY) + 1.0)
+        return (width, height)
     }
 
 }
