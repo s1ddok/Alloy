@@ -78,16 +78,16 @@ public typealias Scales = (height: Int, width: Int)
                                     z: 0)
             conv.edgeMode = .zero
         }
-        let size = self.calculatePaddingSize(inputWidth: inputWidth,
-                                             inputHeight: inputHeight)
-        inDescriptor.height = size.height
-        inDescriptor.width = size.width
+        let paddedSize = self.paddedSize(inputWidth: inputWidth,
+                                         inputHeight: inputHeight)
+        inDescriptor.height = paddedSize.height
+        inDescriptor.width = paddedSize.width
 
         return inDescriptor
     }
 
-    public func calculatePaddingSize(inputWidth: Int,
-                                     inputHeight: Int) -> (width: Int, height: Int) {
+    public func paddedSize(inputWidth: Int,
+                           inputHeight: Int) -> (width: Int, height: Int) {
         let height: Int
         let width: Int
         if self.isTranspose {
