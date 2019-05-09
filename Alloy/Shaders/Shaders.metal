@@ -12,12 +12,14 @@
 
 using namespace metal;
 
-constant bool device_supports_features_of_gpu_family4_v1 [[function_constant(0)]];
+constant bool deviceSupportsNonuniformThreadgroups [[function_constant(0)]];
 
 struct BlockSize {
     ushort width;
     ushort height;
 };
+
+// MARK: - General Purpose
 
 kernel void textureCopy(texture2d<half, access::read> texture_1 [[ texture(0) ]],
                         texture2d<half, access::write> texture_2 [[ texture(1) ]],
@@ -26,7 +28,7 @@ kernel void textureCopy(texture2d<half, access::read> texture_1 [[ texture(0) ]]
     const ushort input_texture_width = texture_1.get_width();
     const ushort input_texture_height = texture_1.get_height();
 
-    if (!device_supports_features_of_gpu_family4_v1) {
+    if (!deviceSupportsNonuniformThreadgroups) {
         if (thread_position_in_grid.x >= input_texture_width || thread_position_in_grid.y >= input_texture_height) {
             return;
         }
@@ -179,6 +181,30 @@ kernel void mean(texture2d<half, access::sample> input_texture [[ texture(0) ]],
         result = float4(mean_value);
     }
 
+}
+
+// MARK: - ML
+
+kernel void normalize(texture2d<half, access::read> inputTexture [[ texture(0) ]],
+                      texture2d<half, access::write> outputTexture [[ texture(1) ]],
+                      constant float3& mean [[ buffer(0) ]],
+                      constant float3& std [[ buffer(1) ]],
+                      uint2 position [[thread_position_in_grid]]) {
+    const ushort2 textureSize = ushort2(inputTexture.get_width(),
+                                        inputTexture.get_height());
+    if (!deviceSupportsNonuniformThreadgroups) {
+        if (position.x >= textureSize.x || position.y >= textureSize.y) {
+            return;
+        }
+    }
+    // Read mpsnngraph result value.
+    const half4 originalValue = inputTexture.read(position);
+    const half3 meanValue = (half3)mean;
+    const half3 stdValue = (half3)std;
+    half4 normalizedValue = originalValue;
+    normalizedValue.rgb -= meanValue;
+    normalizedValue.rgb /= stdValue;
+    outputTexture.write(normalizedValue, position);
 }
 
 // MARK: - Rendering
