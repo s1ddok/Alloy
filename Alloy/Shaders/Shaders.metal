@@ -39,6 +39,53 @@ kernel void textureCopy(texture2d<half, access::read> texture_1 [[ texture(0) ]]
     texture_2.write(c_1, thread_position_in_grid);
 }
 
+kernel void textureMask(texture2d<half, access::read> inputTexture [[ texture(0) ]],
+                        texture2d<half, access::sample> mask [[ texture(1) ]],
+                        texture2d<half, access::write> outputTexture [[ texture(2) ]],
+                        const ushort2 thread_position_in_grid [[thread_position_in_grid]]) {
+    const ushort inputWidth = inputTexture.get_width();
+    const ushort inputHeight = inputTexture.get_height();
+
+    if (!deviceSupportsNonuniformThreadgroups) {
+        if (thread_position_in_grid.x >= inputWidth || thread_position_in_grid.y >= inputHeight) {
+            return;
+        }
+    }
+
+    const half4 originalPixel = inputTexture.read(thread_position_in_grid);
+
+    constexpr sampler s(coord::normalized,
+                        address::clamp_to_zero,
+                        filter::linear);
+
+    const half4 maskValue = mask.sample(s, (float2(thread_position_in_grid) + 0.5) / float2(inputWidth, inputHeight));
+
+    const half4 maskedPixel = originalPixel * maskValue.r;
+
+    outputTexture.write(maskedPixel, thread_position_in_grid);
+}
+
+
+kernel void textureSum(texture2d<half, access::read> inputTexture1 [[ texture(0) ]],
+                       texture2d<half, access::read> inputTexture2 [[ texture(1) ]],
+                       texture2d<half, access::write> outputTexture [[ texture(2) ]],
+                       const ushort2 thread_position_in_grid [[thread_position_in_grid]]) {
+    const ushort inputWidth = inputTexture1.get_width();
+    const ushort inputHeight = inputTexture1.get_height();
+
+    if (!deviceSupportsNonuniformThreadgroups) {
+        if (thread_position_in_grid.x >= inputWidth || thread_position_in_grid.y >= inputHeight) {
+            return;
+        }
+    }
+
+    const half4 inputPixel1 = inputTexture1.read(thread_position_in_grid);
+    const half4 inputPixel2 = inputTexture2.read(thread_position_in_grid);
+
+    outputTexture.write(inputPixel1 + inputPixel2, thread_position_in_grid);
+}
+
+
 kernel void max(texture2d<half, access::sample> input_texture [[ texture(0) ]],
                 constant BlockSize& input_block_size [[ buffer(0) ]],
                 device float4& result [[ buffer(1) ]],
@@ -93,7 +140,6 @@ kernel void min(texture2d<half, access::sample> input_texture [[ texture(0) ]],
                 const ushort thread_index_in_threadgroup [[ thread_index_in_threadgroup ]],
                 const ushort2 thread_position_in_grid [[ thread_position_in_grid ]],
                 const ushort2 threads_per_threadgroup [[ threads_per_threadgroup ]]) {
-
     const ushort2 input_texture_size = ushort2(input_texture.get_width(), input_texture.get_height());
 
     ushort2 original_block_size = ushort2(input_block_size.width, input_block_size.height);
@@ -140,7 +186,6 @@ kernel void mean(texture2d<half, access::sample> input_texture [[ texture(0) ]],
                  const ushort thread_index_in_threadgroup [[ thread_index_in_threadgroup ]],
                  const ushort2 thread_position_in_grid [[ thread_position_in_grid ]],
                  const ushort2 threads_per_threadgroup [[ threads_per_threadgroup ]]) {
-
     const ushort2 input_texture_size = ushort2(input_texture.get_width(), input_texture.get_height());
 
     ushort2 original_block_size = ushort2(input_block_size.width, input_block_size.height);
@@ -251,7 +296,7 @@ struct MaskVertexOut {
 };
 
 vertex MaskVertexOut maskVertex(constant Rectangle& rectangle [[ buffer(0) ]],
-                                 uint vid [[vertex_id]]) {
+                                uint vid [[vertex_id]]) {
     struct Vertex {
         float2 position;
         float2 uv;
