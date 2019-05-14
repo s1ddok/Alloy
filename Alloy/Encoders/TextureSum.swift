@@ -34,7 +34,7 @@ public class TextureSum {
             let input1 = self.inputTexture1,
             let input2 = self.inputTexture2,
             let output = self.outputTexture
-            else { return }
+        else { return }
 
         encoder.set(textures: [input1, input2, output])
 
