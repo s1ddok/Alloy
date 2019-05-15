@@ -7,6 +7,8 @@
 
 import Metal
 
+public typealias BlendingMode = MTLRenderPipelineColorAttachmentDescriptor.BlendingMode
+
 public extension MTLRenderPipelineColorAttachmentDescriptor {
 
     /// Blend Mode Options
