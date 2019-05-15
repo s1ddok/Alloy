@@ -9,10 +9,6 @@ import Metal
 import simd
 
 public class SimpleGeometryRenderer {
-    public enum Errors: Error {
-        case metalInitializationFailed
-    }
-
     public let pipelineState: MTLRenderPipelineState
 
     public init(library: MTLLibrary,
@@ -22,9 +18,8 @@ public class SimpleGeometryRenderer {
         guard
             let fragment = library.makeFunction(name: "plainColorFragment"),
             let vertex = library.makeFunction(name: "simpleVertex")
-        else { throw Errors.metalInitializationFailed }
+        else { throw CommonErrors.metalInitializationFailed }
 
-        // Create a reusable pipeline state for rendering voxel id geometry
         let renderPipelineStateDescriptor = MTLRenderPipelineDescriptor()
         renderPipelineStateDescriptor.label = label
         renderPipelineStateDescriptor.vertexFunction = vertex
