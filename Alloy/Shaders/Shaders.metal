@@ -223,6 +223,23 @@ kernel void mean(texture2d<half, access::sample> input_texture [[ texture(0) ]],
 
 }
 
+kernel void textureCrop(texture2d<half, access::read> inputTexture [[ texture(0) ]],
+                        texture2d<half, access::write> outputTexture [[ texture(1) ]],
+                        constant CropRect& cropRect [[ buffer(0) ]],
+                        const ushort2 position [[thread_position_in_grid]]) {
+    const ushort textureWidth = outputTexture.get_width();
+    const ushort textureHeight = outputTexture.get_height();
+    
+    if (!deviceSupportsNonuniformThreadgroups) {
+        if (position.x >= textureWidth || position.y >= textureHeight) {
+            return;
+        }
+    }
+    
+    const half4 value = inputTexture.read(ushort2((short2)position + (short2)cropRect.origin));
+    outputTexture.write(value, position);
+}
+
 // MARK: - ML
 
 kernel void normalize(texture2d<half, access::read> inputTexture [[ texture(0) ]],

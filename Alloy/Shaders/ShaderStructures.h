@@ -27,4 +27,10 @@ typedef struct BlockSize {
     ushort width;
     ushort height;
 } BlockSize;
+
+typedef struct CropRect {
+    vector_int2 origin;
+    vector_int2 size;
+} CropRect;
+
 #endif /* ShaderStructures_h */
