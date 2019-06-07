@@ -14,11 +14,6 @@ using namespace metal;
 
 constant bool deviceSupportsNonuniformThreadgroups [[function_constant(0)]];
 
-struct BlockSize {
-    ushort width;
-    ushort height;
-};
-
 // MARK: - General Purpose
 
 kernel void textureCopy(texture2d<half, access::read> texture_1 [[ texture(0) ]],

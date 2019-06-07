@@ -23,4 +23,8 @@ typedef struct Line {
     float width;
 } Line;
 
+typedef struct BlockSize {
+    ushort width;
+    ushort height;
+} BlockSize;
 #endif /* ShaderStructures_h */
