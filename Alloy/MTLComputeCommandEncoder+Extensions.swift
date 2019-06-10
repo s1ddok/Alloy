@@ -14,7 +14,7 @@ public extension MTLComputeCommandEncoder {
         self.setBytes(&t, length: MemoryLayout<T>.stride, index: index)
     }
     
-    func set<T>(_ value: T, at index: Int) where T: Collection {
+    func set<T>(_ value: [T], at index: Int) {
         var t = value
         self.setBytes(&t, length: MemoryLayout<T>.stride * value.count, index: index)
     }
