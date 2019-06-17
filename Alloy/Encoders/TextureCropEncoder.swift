@@ -78,7 +78,7 @@ final public class TextureCropEncoder {
                        outputTexture: MTLTexture,
                        cropRect: CropRect,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.pushDebugGroup("Texture Crop")
+        encoder.label = "Texture Crop"
         encoder.set(textures: [inputTexture, outputTexture])
         encoder.set(cropRect, at: 0)
         if self.deviceSupportsNonuniformThreadgroups {
@@ -88,7 +88,6 @@ final public class TextureCropEncoder {
             encoder.dispatch2d(state: self.pipelineState,
                                covering: outputTexture.size)
         }
-        encoder.popDebugGroup()
     }
     
     private static let functionName = "textureCrop"
