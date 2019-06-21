@@ -30,13 +30,14 @@ public class MeanEncoder {
                                   height: UInt16((inputTexture.height + threadgroupSize.height - 1) / threadgroupSize.height))
 
         commandBuffer.compute { (encoder) in
+            encoder.label = "Mean Encoder"
             encoder.setTexture(inputTexture, index: 0)
             encoder.set(blockSize, at: 0)
             encoder.setBuffer(resultBuffer,
                               offset: 0,
                               index: 1)
 
-            encoder.setThreadgroupMemoryLength(threadgroupSize.width * threadgroupSize.height * 4 * MemoryLayout<Float16>.stride,
+            encoder.setThreadgroupMemoryLength(threadgroupSize.width * threadgroupSize.height * 4 * MemoryLayout<Float>.stride,
                                                index: 0)
             encoder.dispatch2d(state: self.pipelineState,
                                covering: MTLSize(width: 1, height: 1, depth: 1))

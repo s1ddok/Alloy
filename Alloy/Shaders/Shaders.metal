@@ -174,10 +174,10 @@ kernel void min(texture2d<half, access::sample> input_texture [[ texture(0) ]],
 
 }
 
-kernel void mean(texture2d<half, access::sample> input_texture [[ texture(0) ]],
+kernel void mean(texture2d<float, access::sample> input_texture [[ texture(0) ]],
                  constant BlockSize& input_block_size [[ buffer(0) ]],
                  device float4& result [[ buffer(1) ]],
-                 threadgroup half4* shared_memory [[ threadgroup(0) ]],
+                 threadgroup float4* shared_memory [[ threadgroup(0) ]],
                  const ushort thread_index_in_threadgroup [[ thread_index_in_threadgroup ]],
                  const ushort2 thread_position_in_grid [[ thread_position_in_grid ]],
                  const ushort2 threads_per_threadgroup [[ threads_per_threadgroup ]]) {
@@ -192,12 +192,12 @@ kernel void mean(texture2d<half, access::sample> input_texture [[ texture(0) ]],
         block_size = original_block_size - (read_territory - input_texture_size);
     }
 
-    half4 total_sum_in_block = half4(0, 0, 0, 0);
-
+    float4 total_sum_in_block = float4(0, 0, 0, 0);
+    
     for (ushort x = 0; x < block_size.x; x++) {
         for (ushort y = 0; y < block_size.y; y++) {
             const ushort2 read_position = block_start_position + ushort2(x, y);
-            const half4 current_value = input_texture.read(read_position);
+            const float4 current_value = input_texture.read(read_position);
             total_sum_in_block += current_value;
         }
     }
@@ -208,17 +208,16 @@ kernel void mean(texture2d<half, access::sample> input_texture [[ texture(0) ]],
 
     if (thread_index_in_threadgroup == 0) {
 
-        half4 total_sum = shared_memory[0];
+        float4 total_sum = shared_memory[0];
         const ushort threads_in_threadgroup = threads_per_threadgroup.x * threads_per_threadgroup.y;
         for (ushort i = 1; i < threads_in_threadgroup; i++) {
-            half4 total_sum_in_block = shared_memory[i];
+            float4 total_sum_in_block = shared_memory[i];
             total_sum += total_sum_in_block;
         }
-
-        half grid_size = input_texture.get_width() * input_texture.get_height();
-        half4 mean_value = total_sum / grid_size;
-
-        result = float4(mean_value);
+        
+        const float gridSize = (float)input_texture.get_width() * (float)input_texture.get_height();
+        
+        result = total_sum / gridSize;
     }
 
 }
