@@ -133,7 +133,7 @@ public final class MTLContext {
         sampleDesc.height = height
         sampleDesc.sampleCount = sampleCount
         sampleDesc.pixelFormat = pixelFormat
-        #if !os(macOS)
+        #if !os(macOS) && !targetEnvironment(UIKitForMac)
         sampleDesc.storageMode = .memoryless
         #endif
         sampleDesc.usage = .renderTarget
@@ -187,7 +187,7 @@ public final class MTLContext {
         textureDescriptor.height = height
         textureDescriptor.pixelFormat = .depth32Float
         textureDescriptor.usage = usage.union([.renderTarget])
-        #if !os(macOS)
+        #if !os(macOS) && !targetEnvironment(UIKitForMac)
         textureDescriptor.storageMode = storageMode ?? .memoryless
         #else
         textureDescriptor.storageMode = storageMode ?? .private
