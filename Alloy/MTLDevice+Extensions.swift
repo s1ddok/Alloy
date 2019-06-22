@@ -35,11 +35,14 @@ public extension MTLDevice {
     }
 
     private func supportsOnly8K() -> Bool {
-        #if os(macOS)
+        #if targetEnvironment(UIKitForMac)
+        return !self.supportsFamily(.familyApple3) && !self.supportsFamily(.familyMac1)
+        #elseif os(macOS)
         return false
         #else
-        if self.supportsFeatureSet(.iOS_GPUFamily1_v4) { return true }
-        if self.supportsFeatureSet(.iOS_GPUFamily2_v4) { return true }
+        if !self.supportsFeatureSet(.iOS_GPUFamily1_v4)
+        || !self.supportsFeatureSet(.iOS_GPUFamily2_v4) { return true }
+        
         return false
         #endif
     }
