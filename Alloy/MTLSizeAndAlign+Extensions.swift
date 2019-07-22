@@ -8,7 +8,7 @@
 import Metal.MTLHeap
 
 // Returns a size of the 'inSize' aligned to 'align' as long as align is a power of 2
-func alignUp(size: Int, align: Int) -> Int {
+public func alignUp(size: Int, align: Int) -> Int {
     #if DEBUG
     precondition(((align-1) & align) == 0, "Align must be a power of two")
     #endif
