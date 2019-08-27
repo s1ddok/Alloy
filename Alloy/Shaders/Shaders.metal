@@ -20,11 +20,10 @@ struct BlockSize {
 };
 
 // MARK: - General Purpose
-
-kernel void textureCopy(texture2d<half, access::read> texture_1 [[ texture(0) ]],
-                        texture2d<half, access::write> texture_2 [[ texture(1) ]],
-                        const ushort2 thread_position_in_grid [[thread_position_in_grid]]) {
-
+template <typename T>
+void textureCopy(texture2d<T, access::read> texture_1,
+                 texture2d<T, access::write> texture_2,
+                 const ushort2 thread_position_in_grid) {
     const ushort input_texture_width = texture_1.get_width();
     const ushort input_texture_height = texture_1.get_height();
 
@@ -34,10 +33,47 @@ kernel void textureCopy(texture2d<half, access::read> texture_1 [[ texture(0) ]]
         }
     }
 
-    const half4 c_1 = texture_1.read(thread_position_in_grid);
+    const auto c_1 = texture_1.read(thread_position_in_grid);
 
     texture_2.write(c_1, thread_position_in_grid);
 }
+
+kernel void textureCopy_float(texture2d<float, access::read> texture_1 [[ texture(0) ]],
+                              texture2d<float, access::write> texture_2 [[ texture(1) ]],
+                              const ushort2 thread_position_in_grid [[thread_position_in_grid]]) {
+    textureCopy(texture_1, texture_2, thread_position_in_grid);
+}
+
+kernel void textureCopy_half(texture2d<half, access::read> texture_1 [[ texture(0) ]],
+                             texture2d<half, access::write> texture_2 [[ texture(1) ]],
+                             const ushort2 thread_position_in_grid [[thread_position_in_grid]]) {
+    textureCopy(texture_1, texture_2, thread_position_in_grid);
+}
+
+kernel void textureCopy_int(texture2d<int, access::read> texture_1 [[ texture(0) ]],
+                            texture2d<int, access::write> texture_2 [[ texture(1) ]],
+                            const ushort2 thread_position_in_grid [[thread_position_in_grid]]) {
+    textureCopy(texture_1, texture_2, thread_position_in_grid);
+}
+
+kernel void textureCopy_uint(texture2d<uint, access::read> texture_1 [[ texture(0) ]],
+                             texture2d<uint, access::write> texture_2 [[ texture(1) ]],
+                             const ushort2 thread_position_in_grid [[thread_position_in_grid]]) {
+    textureCopy(texture_1, texture_2, thread_position_in_grid);
+}
+
+kernel void textureCopy_short(texture2d<short, access::read> texture_1 [[ texture(0) ]],
+                              texture2d<short, access::write> texture_2 [[ texture(1) ]],
+                              const ushort2 thread_position_in_grid [[thread_position_in_grid]]) {
+    textureCopy(texture_1, texture_2, thread_position_in_grid);
+}
+
+kernel void textureCopy_ushort(texture2d<ushort, access::read> texture_1 [[ texture(0) ]],
+                               texture2d<ushort, access::write> texture_2 [[ texture(1) ]],
+                               const ushort2 thread_position_in_grid [[thread_position_in_grid]]) {
+    textureCopy(texture_1, texture_2, thread_position_in_grid);
+}
+
 
 kernel void textureMask(texture2d<half, access::read> inputTexture [[ texture(0) ]],
                         texture2d<half, access::sample> mask [[ texture(1) ]],

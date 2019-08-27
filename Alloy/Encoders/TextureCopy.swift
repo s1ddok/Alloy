@@ -9,6 +9,10 @@ import Metal
 
 @available(iOS 11.3, tvOS 11.3, macOS 10.13, *)
 final public class TextureCopy {
+    public enum ScalarType: String {
+        case float, half, ushort, short, uint, int
+    }
+
     public let library: MTLLibrary
 
     public var inputTexture: MTLTexture!
@@ -17,7 +21,8 @@ final public class TextureCopy {
     private let pipelineState: MTLComputePipelineState
     private let deviceSupportsNonuniformThreadgroups: Bool
 
-    public init(library: MTLLibrary) throws {
+    public init(library: MTLLibrary,
+                scalarType: ScalarType = .half) throws {
         self.library = library
         #if os(iOS) || os(tvOS)
         self.deviceSupportsNonuniformThreadgroups = library.device.supportsFeatureSet(.iOS_GPUFamily4_v1)
@@ -30,7 +35,7 @@ final public class TextureCopy {
                                         type: .bool,
                                         index: 0)
 
-        self.pipelineState = try library.computePipelineState(function: TextureCopy.functionName,
+        self.pipelineState = try library.computePipelineState(function: TextureCopy.functionName + "_" + scalarType.rawValue,
                                                               constants: constantValues)
     }
 
