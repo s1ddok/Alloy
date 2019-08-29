@@ -72,7 +72,7 @@ public class MTLTextureCodableBox: Codable {
             let pointer = p.baseAddress!
 
             guard let pixelFormatSize = texture.pixelFormat.size
-                else { throw MTLTextureSerializationErrors.unsupportedPixelFormat }
+            else { throw MTLTextureSerializationErrors.unsupportedPixelFormat }
 
             var offset = 0
 
