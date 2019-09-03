@@ -25,9 +25,6 @@ final public class SwitchDataFormatEncoder {
 
     // MARK: - Propertires
 
-    /// adsa
-    ///
-    /// sadfasdfsdf
     private let pipelineState: MTLComputePipelineState
     private let deviceSupportsNonuniformThreadgroups: Bool
 

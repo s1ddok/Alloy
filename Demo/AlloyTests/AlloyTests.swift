@@ -331,7 +331,6 @@ class TextureCachingTests: XCTestCase {
     private var euclideanDistanceFloat: EuclideanDistanceEncoder!
     private var euclideanDistanceUInt: EuclideanDistanceEncoder!
     private var denormalize: SwitchDataFormatEncoder!
-    private var textures: [MTLTexture]!
 
     // MARK: - Setup
 
@@ -361,14 +360,14 @@ class TextureCachingTests: XCTestCase {
 
     func testTextureCaching() {
         do {
-            var results: [Float] = []
-
             let normalizedPixelFormats: [MTLPixelFormat] = [
                 .rgba8Unorm, .rgba16Unorm, .rgba16Float, .rgba32Float
             ]
             let unsignedIntegerPixelFormats: [MTLPixelFormat] = [
                 .rgba8Uint, .rgba16Uint, .rgba32Uint
             ]
+
+            var results: [Float] = []
 
             try normalizedPixelFormats.forEach { results += try self.test(pixelFormat: $0) }
             try unsignedIntegerPixelFormats.forEach { results += try self.test(pixelFormat: $0) }

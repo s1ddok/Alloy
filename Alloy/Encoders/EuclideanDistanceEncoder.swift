@@ -12,7 +12,7 @@ final public class EuclideanDistanceEncoder {
 
     // MARK: - Properties
 
-    private let pipelineState: MTLComputePipelineState
+    public let pipelineState: MTLComputePipelineState
 
     // MARK: - Life Cycle
 

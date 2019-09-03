@@ -96,11 +96,11 @@ kernel void switchDataFormat(texture2d<float, access::read_write> normalizedText
 
     if (conversionTypeDenormalize) {
         float4 floatValue = normalizedTexture.read(position);
-        uint4 intValue = uint4(floatValue * 255);
-        unnormalizedTexture.write(intValue, position);
+        uint4 uintValue = uint4(floatValue * 255);
+        unnormalizedTexture.write(uintValue, position);
     } else {
-        uint4 intValue = unnormalizedTexture.read(position);
-        float4 floatValue = float4(intValue) / 255;
+        uint4 uintValue = unnormalizedTexture.read(position);
+        float4 floatValue = float4(uintValue) / 255;
         normalizedTexture.write(floatValue, position);
     }
 }
