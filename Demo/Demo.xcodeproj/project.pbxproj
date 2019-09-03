@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		18B1A081231E72CF000A9BAB /* MTLTexture+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B1A080231E72CF000A9BAB /* MTLTexture+Extensions.swift */; };
-		18B1A082231E72CF000A9BAB /* MTLTexture+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B1A080231E72CF000A9BAB /* MTLTexture+Extensions.swift */; };
 		18B1A084231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B1A083231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift */; };
 		18B1A085231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B1A083231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift */; };
 		18B1A087231E7867000A9BAB /* SwitchDataFormatEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B1A086231E7867000A9BAB /* SwitchDataFormatEncoder.swift */; };
@@ -31,7 +29,6 @@
 		93B3E27D21F51983008835A0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 93B3E27B21F51983008835A0 /* LaunchScreen.storyboard */; };
 		93B3E29021F51997008835A0 /* AlloyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93B3E23F21F505E1008835A0 /* AlloyTests.swift */; };
 		93B3E29121F51AAF008835A0 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 93B3E24721F50722008835A0 /* Shaders.metal */; };
-		93B3E29221F51AAF008835A0 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 93B3E24721F50722008835A0 /* Shaders.metal */; };
 		976BADA1B6251B5D76DBE718 /* Pods_DemoApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9072BB7C76F22B60656C7DC4 /* Pods_DemoApp.framework */; };
 		FBA6536BCD817E7560FAAD80 /* Pods_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2B4B2DF0C4BB8540ACD5124 /* Pods_Demo.framework */; };
 /* End PBXBuildFile section */
@@ -56,7 +53,6 @@
 /* Begin PBXFileReference section */
 		07B12E24C5F750F1302A3A3F /* Pods-DemoApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DemoApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-DemoApp/Pods-DemoApp.release.xcconfig"; sourceTree = "<group>"; };
 		0BF7AAD9917E49917E0506BE /* Pods-AlloyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AlloyTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AlloyTests/Pods-AlloyTests.debug.xcconfig"; sourceTree = "<group>"; };
-		18B1A080231E72CF000A9BAB /* MTLTexture+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MTLTexture+Extensions.swift"; sourceTree = "<group>"; };
 		18B1A083231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MTLPixelFormat+Extensions.swift"; sourceTree = "<group>"; };
 		18B1A086231E7867000A9BAB /* SwitchDataFormatEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchDataFormatEncoder.swift; sourceTree = "<group>"; };
 		18B1A08C231E796D000A9BAB /* Definitions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Definitions.h; sourceTree = "<group>"; };
@@ -144,7 +140,6 @@
 		18B1A08E231E7A32000A9BAB /* Metal */ = {
 			isa = PBXGroup;
 			children = (
-				18B1A080231E72CF000A9BAB /* MTLTexture+Extensions.swift */,
 				18B1A083231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift */,
 			);
 			path = Metal;
@@ -610,7 +605,6 @@
 				93B3E24821F50722008835A0 /* Shaders.metal in Sources */,
 				18B1A084231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift in Sources */,
 				93B3E24021F505E1008835A0 /* AlloyTests.swift in Sources */,
-				18B1A081231E72CF000A9BAB /* MTLTexture+Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -618,7 +612,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				93B3E29221F51AAF008835A0 /* Shaders.metal in Sources */,
 				93B3E27521F51982008835A0 /* ViewController.swift in Sources */,
 				93B3E27321F51982008835A0 /* AppDelegate.swift in Sources */,
 			);
@@ -632,7 +625,6 @@
 				93B3E29121F51AAF008835A0 /* Shaders.metal in Sources */,
 				18B1A085231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift in Sources */,
 				93B3E29021F51997008835A0 /* AlloyTests.swift in Sources */,
-				18B1A082231E72CF000A9BAB /* MTLTexture+Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
