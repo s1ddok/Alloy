@@ -17,14 +17,14 @@ final public class EuclideanDistanceEncoder {
     // MARK: - Life Cycle
 
     convenience public init(metalContext: MTLContext,
-                            scalarType: PixelFormatScalarType = .half) throws {
+                            scalarType: MTLPixelFormat.ScalarType = .half) throws {
         guard let alloyLibrary = metalContext.shaderLibrary(for: type(of: self))
         else { throw CommonErrors.metalInitializationFailed }
         try self.init(library: alloyLibrary, scalarType: scalarType)
     }
 
     public init(library: MTLLibrary,
-                scalarType: PixelFormatScalarType = .half) throws {
+                scalarType: MTLPixelFormat.ScalarType = .half) throws {
         self.pipelineState = try library.computePipelineState(function: type(of: self)
                                         .functionName + "_" + scalarType.rawValue)
     }

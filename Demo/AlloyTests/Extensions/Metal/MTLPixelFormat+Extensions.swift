@@ -44,7 +44,7 @@ extension MTLPixelFormat {
         }
     }
 
-    func componentColorType(precisionFormat: PrecisionFormat) -> PixelFormatScalarType {
+    func scalarType(precisionFormat: PrecisionFormat) -> ScalarType? {
         switch self.dataFormat {
         case .signedInteger:
             switch precisionFormat {
@@ -62,7 +62,7 @@ extension MTLPixelFormat {
             case .singlePrecision: return .float
             }
         case .unknown:
-            return .unknown
+            return nil
         }
     }
 
