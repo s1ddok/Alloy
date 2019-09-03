@@ -236,6 +236,83 @@ class IdealSizeTests: XCTestCase {
 
 }
 
+class EuclideanDistanceTests: XCTestCase {
+
+    // MARK: - Errors
+
+    enum Errors: Error {
+        case cgImageCreationFailed
+        case textureCreationFailed
+        case bufferCreationFailed
+    }
+
+    // MARK: - Properties
+
+    private var metalContext: MTLContext!
+    private var euclideanDistanceFloat: EuclideanDistanceEncoder!
+    private var textureAddConstantFloat: TextureAddConstantEncoder!
+
+    // MARK: - Setup
+
+    override func setUp() {
+        do {
+            self.metalContext = .init(device: Metal.device)
+            self.euclideanDistanceFloat = try .init(metalContext: self.metalContext,
+                                                    scalarType: .float)
+            self.textureAddConstantFloat = try .init(metalContext: self.metalContext,
+                                                     scalarType: .float)
+        } catch {
+            fatalError(error.localizedDescription)
+        }
+    }
+
+    // MARK: - Testing
+
+    func testEuclideanDistance() {
+        do {
+            var zeroValue = Float()
+            guard let resultBuffer = self.metalContext
+                                         .device
+                                         .makeBuffer(bytes: &zeroValue,
+                                                     length: MemoryLayout<Float>.stride,
+                                                     options: .storageModeShared)
+            else { throw Errors.bufferCreationFailed }
+
+            let image = #imageLiteral(resourceName: "255")
+            guard let cgImage = image.cgImage
+            else { throw Errors.cgImageCreationFailed }
+            let originalTexture = try self.metalContext
+                                          .texture(from: cgImage,
+                                                   usage: [.shaderRead, .shaderWrite])
+            guard let modifiedTexture = originalTexture.matchingTexture()
+            else { throw Errors.textureCreationFailed }
+
+            let constant = Float(-0.1)
+            let euclideanDistance = Float(originalTexture.width * originalTexture.height) * sqrt(4 * (pow(constant, 2)))
+
+            try self.metalContext.scheduleAndWait { commandBuffer in
+                self.textureAddConstantFloat.encode(sourceTexture: originalTexture,
+                                                    destinationTexture: modifiedTexture,
+                                                    constant: .init(-0.1),
+                                                    in: commandBuffer)
+
+                self.euclideanDistanceFloat.encode(textureOne: originalTexture,
+                                                   textureTwo: modifiedTexture,
+                                                   resultBuffer: resultBuffer,
+                                                   in: commandBuffer)
+            }
+
+            let result = resultBuffer.pointer(of: Float.self)!.pointee
+            let diff = abs(result - euclideanDistance)
+
+            XCTAssert(diff < 40)
+        } catch {
+            fatalError(error.localizedDescription)
+        }
+    }
+
+}
+
 class TextureCachingTests: XCTestCase {
 
     // MARK: - Errors
