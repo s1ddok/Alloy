@@ -369,9 +369,10 @@ class TextureCachingTests: XCTestCase {
                     var height = originalTexture.height
 
                     while (width + height > 32) {
+                        
                         guard
-                            let originalTextureView = originalTexture.getLevel(level),
-                            let decodedTextureView = decodedTexture.getLevel(level)
+                            let originalTextureView = originalTexture.view(level: level),
+                            let decodedTextureView = decodedTexture.view(level: level)
                         else { throw Errors.textureCreationFailed }
 
                         euclideanDistance.encode(textureOne: originalTextureView,
