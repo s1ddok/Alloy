@@ -235,18 +235,214 @@ class IdealSizeTests: XCTestCase {
     }
 
 }
-                }
 
-                buffer.addCompletedHandler({ buffer in
-                    results.append(("Exact", buffer.gpuExecutionTime))
-                })
-            }
+class TextureCachingTests: XCTestCase {
 
-            results.sort { $0.1 < $1.1 }
-            bestTimeCounter[results.first!.0, default: 0] += 1
+    // MARK: - Errors
+
+    enum Errors: Error {
+        case cgImageCreationFailed
+        case textureCreationFailed
+        case libraryCreationFailed
+        case bufferCreationFailed
+        case unsutablePixelFormat
+    }
+
+    // MARK: - Properties
+
+    private var metalContext: MTLContext!
+    private var euclideanDistanceFloat: EuclideanDistanceEncoder!
+    private var euclideanDistanceUInt: EuclideanDistanceEncoder!
+    private var denormalize: SwitchDataFormatEncoder!
+    private var textures: [MTLTexture]!
+
+    // MARK: - Setup
+
+    override func setUp() {
+        do {
+            self.metalContext = .init(device: Metal.device)
+
+            guard
+                let alloyLibrary = self.metalContext
+                                       .shaderLibrary(for: EuclideanDistanceEncoder.self),
+                let alloyTestsLibrary = self.metalContext
+                                            .shaderLibrary(for: SwitchDataFormatEncoder.self)
+            else { throw Errors.libraryCreationFailed }
+
+            self.euclideanDistanceFloat = try .init(library: alloyLibrary,
+                                                    scalarType: .float)
+            self.euclideanDistanceUInt = try .init(library: alloyLibrary,
+                                                   scalarType: .uint)
+            self.denormalize = try .init(library: alloyTestsLibrary,
+                                         conversionType: .denormalize)
+        } catch {
+            fatalError(error.localizedDescription)
+        }
+    }
+
+    // MARK: - Testing
+
+    func testTextureCaching() {
+        do {
+            var results: [Float] = []
+
+            let normalizedPixelFormats: [MTLPixelFormat] = [
+                .rgba8Unorm, .rgba16Unorm, .rgba16Float, .rgba32Float
+            ]
+            let unsignedIntegerPixelFormats: [MTLPixelFormat] = [
+                .rgba8Uint, .rgba16Uint, .rgba32Uint
+            ]
+
+            try normalizedPixelFormats.forEach { results += try self.test(pixelFormat: $0) }
+            try unsignedIntegerPixelFormats.forEach { results += try self.test(pixelFormat: $0) }
+
+            let result = results.reduce(0, +)
+
+            XCTAssert(result == 0)
+        } catch {
+            fatalError(error.localizedDescription)
+        }
+    }
+
+    private func test(pixelFormat: MTLPixelFormat) throws -> [Float] {
+        let euclideanDistance: EuclideanDistanceEncoder
+
+        switch pixelFormat.dataFormat {
+        case .normalized:
+            euclideanDistance = self.euclideanDistanceFloat
+        case .unsignedInteger:
+            euclideanDistance = self.euclideanDistanceUInt
+        default: throw Errors.unsutablePixelFormat
         }
 
-        print(bestTimeCounter)
+        let jsonEncoder = JSONEncoder()
+        let jsonDecoder = JSONDecoder()
+
+        var zeroValue = Float()
+        guard let resultBuffer = self.metalContext
+                                     .device
+                                     .makeBuffer(bytes: &zeroValue,
+                                                 length: MemoryLayout<Float>.stride,
+                                                 options: .storageModeShared)
+        else { throw Errors.bufferCreationFailed }
+
+        let image_255x121 = #imageLiteral(resourceName: "255")
+        let image_512x512 = #imageLiteral(resourceName: "512")
+        let image_1024x1024 = #imageLiteral(resourceName: "1024")
+        let images = [image_255x121,
+                      image_512x512,
+                      image_1024x1024]
+
+        var originalTextures: [MTLTexture] = []
+        var results: [Float] = []
+
+        // Create textures.
+        try autoreleasepool {
+            try self.metalContext.scheduleAndWait { commadBuffer in
+                for image in images {
+                    guard let cgImage = image.cgImage
+                    else { throw Errors.cgImageCreationFailed }
+                    let texture = try self.createTexture(from: cgImage,
+                                                         pixelFormat: pixelFormat,
+                                                         generateMipmaps: true,
+                                                         in: commadBuffer)
+                    originalTextures.append(texture)
+                }
+            }
+        }
+
+        // Test
+        try originalTextures.forEach { originalTexture in
+            let originalTextureCodableBox = try originalTexture.codable()
+            let encodedData = try jsonEncoder.encode(originalTextureCodableBox)
+
+            let decodedTextureCodableBox = try jsonDecoder.decode(MTLTextureCodableBox.self,
+                                                                  from: encodedData)
+            let decodedTexture = try decodedTextureCodableBox.texture(device: self.metalContext.device)
+
+            try self.metalContext.scheduleAndWait { commadBuffer in
+
+                if originalTexture.mipmapLevelCount > 1 {
+
+                    var level: Int = 0
+                    var width = originalTexture.width
+                    var height = originalTexture.height
+
+                    while (width + height > 32) {
+                        guard
+                            let originalTextureView = originalTexture.getLevel(level),
+                            let decodedTextureView = decodedTexture.getLevel(level)
+                        else { throw Errors.textureCreationFailed }
+
+                        euclideanDistance.encode(textureOne: originalTextureView,
+                                                 textureTwo: decodedTextureView,
+                                                 resultBuffer: resultBuffer,
+                                                 in: commadBuffer)
+
+                        width = originalTextureView.width
+                        height = originalTextureView.height
+                        level += 1
+                    }
+
+                } else {
+                    euclideanDistance.encode(textureOne: originalTexture,
+                                             textureTwo: decodedTexture,
+                                             resultBuffer: resultBuffer,
+                                             in: commadBuffer)
+                }
+            }
+
+            results.append(resultBuffer.pointer(of: Float.self)!.pointee)
+        }
+
+        return results
+    }
+
+    private func createTexture(from cgImage: CGImage,
+                               pixelFormat: MTLPixelFormat,
+                               generateMipmaps: Bool,
+                               in commandBuffer: MTLCommandBuffer) throws -> MTLTexture {
+        var generateMipmaps = generateMipmaps
+        let resultTexture: MTLTexture
+
+        switch pixelFormat.dataFormat {
+        case .normalized:
+            resultTexture = try self.metalContext.texture(from: cgImage,
+                                                          usage: [.shaderRead, .shaderWrite],
+                                                          generateMipmaps: generateMipmaps)
+        case .unsignedInteger:
+            generateMipmaps = false
+
+            let normalizedTexture = try self.metalContext.texture(from: cgImage,
+                                                                  usage: [.shaderRead, .shaderWrite])
+
+            let unnormalizedTextureDescriptor = MTLTextureDescriptor()
+            unnormalizedTextureDescriptor.width = cgImage.width
+            unnormalizedTextureDescriptor.height = cgImage.height
+            unnormalizedTextureDescriptor.pixelFormat = pixelFormat
+            unnormalizedTextureDescriptor.usage = [.shaderRead, .shaderWrite]
+            unnormalizedTextureDescriptor.storageMode = .shared
+
+            guard let unnormalizedTexture = self.metalContext
+                                                .device
+                                                .makeTexture(descriptor: unnormalizedTextureDescriptor)
+            else { throw Errors.textureCreationFailed }
+
+            self.denormalize.encode(normalizedTexture: normalizedTexture,
+                                    unnormalizedTexture: unnormalizedTexture,
+                                    in: commandBuffer)
+
+            resultTexture = unnormalizedTexture
+        default: throw Errors.unsutablePixelFormat
+        }
+
+        if generateMipmaps {
+            commandBuffer.blit { encoder in
+                encoder.generateMipmaps(for: resultTexture)
+            }
+        }
+
+        return resultTexture
     }
 
 }
