@@ -7,7 +7,6 @@
 
 import Metal
 
-@available(iOS 11.0, tvOS 11.0, macOS 10.13, *)
 final public class EuclideanDistanceEncoder {
 
     // MARK: - Properties
@@ -16,9 +15,9 @@ final public class EuclideanDistanceEncoder {
 
     // MARK: - Life Cycle
 
-    convenience public init(metalContext: MTLContext,
+    convenience public init(context: MTLContext,
                             scalarType: MTLPixelFormat.ScalarType = .half) throws {
-        guard let alloyLibrary = metalContext.shaderLibrary(for: type(of: self))
+        guard let alloyLibrary = context.shaderLibrary(for: type(of: self))
         else { throw CommonErrors.metalInitializationFailed }
         try self.init(library: alloyLibrary, scalarType: scalarType)
     }
