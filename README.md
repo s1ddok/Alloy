@@ -70,6 +70,17 @@ let buffer = context.buffer(for: InstanceUniforms.self,
                             options: .storageModeShared)
 ```
 
+### Serialize and deserialize MTLTexture 
+
+```swift
+let encoder = JSONEncoder()
+let data = try encoder.encode(texture.codable())
+
+let decoder = JSONDecoder()
+let decodableTexture = try decoder.decode(MTLTextureCodableBox.self, from: data)
+let decodedTexture = try decodableTexture.texture(device: self.context.device)
+```
+
 ### Other things
 - Create multi-sample render target pairs
 - Create textures
