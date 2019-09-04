@@ -13,7 +13,6 @@ import Alloy
 /// Convinience encoder for conversion
 /// from **float** / **half** to **uint** / **ushort**
 /// and backwards.
-@available(iOS 11.0, macOS 10.13, *)
 final public class SwitchDataFormatEncoder {
 
     // MARK: - Types
@@ -25,7 +24,7 @@ final public class SwitchDataFormatEncoder {
 
     // MARK: - Propertires
 
-    private let pipelineState: MTLComputePipelineState
+    public let pipelineState: MTLComputePipelineState
     private let deviceSupportsNonuniformThreadgroups: Bool
 
     // MARK: - Life Cycle
@@ -41,9 +40,10 @@ final public class SwitchDataFormatEncoder {
     public init(library: MTLLibrary,
                 conversionType: ConversionType) throws {
         self.deviceSupportsNonuniformThreadgroups = library.device.supports(feature: .nonUniformThreadgroups)
+
         var convertFloatToUInt = conversionType == .denormalize
-        let constantValues = MTLFunctionConstantValues()
         var dispatchFlag = self.deviceSupportsNonuniformThreadgroups
+        let constantValues = MTLFunctionConstantValues()
         constantValues.setConstantValue(&dispatchFlag,
                                         type: .bool,
                                         index: 0)
@@ -70,7 +70,8 @@ final public class SwitchDataFormatEncoder {
     public func encode(normalizedTexture: MTLTexture,
                        unnormalizedTexture: MTLTexture,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [normalizedTexture, unnormalizedTexture])
+        encoder.set(textures: [normalizedTexture,
+                               unnormalizedTexture])
 
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: self.pipelineState,
