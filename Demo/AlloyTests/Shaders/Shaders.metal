@@ -7,7 +7,8 @@
 //
 
 #include <metal_stdlib>
-#include "Definitions.h"
+#include "../../../Alloy/Shaders/Definitions.h"
+
 using namespace metal;
 
 constant bool deviceSupportsNonuniformThreadgroups [[ function_constant(0) ]];
