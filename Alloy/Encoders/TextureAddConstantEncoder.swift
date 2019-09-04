@@ -17,9 +17,9 @@ final public class TextureAddConstantEncoder {
 
     // MARK: - Init
 
-    public convenience init(metalContext: MTLContext,
+    public convenience init(context: MTLContext,
                             scalarType: MTLPixelFormat.ScalarType = .half) throws {
-        guard let alloyLibrary = metalContext.shaderLibrary(for: type(of: self).self)
+        guard let alloyLibrary = context.shaderLibrary(for: type(of: self).self)
         else { throw CommonErrors.metalInitializationFailed }
 
         try self.init(library: alloyLibrary,
