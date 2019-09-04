@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1804316E231FE33A006F2ED3 /* EuclideanDistanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1804316D231FE33A006F2ED3 /* EuclideanDistanceTests.swift */; };
+		1804316F231FE33A006F2ED3 /* EuclideanDistanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1804316D231FE33A006F2ED3 /* EuclideanDistanceTests.swift */; };
+		18043171231FE45D006F2ED3 /* TextureCachingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18043170231FE45D006F2ED3 /* TextureCachingTests.swift */; };
+		18043172231FE45D006F2ED3 /* TextureCachingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18043170231FE45D006F2ED3 /* TextureCachingTests.swift */; };
 		18B1A084231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B1A083231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift */; };
 		18B1A085231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B1A083231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift */; };
 		18B1A087231E7867000A9BAB /* SwitchDataFormatEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B1A086231E7867000A9BAB /* SwitchDataFormatEncoder.swift */; };
@@ -53,9 +57,10 @@
 /* Begin PBXFileReference section */
 		07B12E24C5F750F1302A3A3F /* Pods-DemoApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DemoApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-DemoApp/Pods-DemoApp.release.xcconfig"; sourceTree = "<group>"; };
 		0BF7AAD9917E49917E0506BE /* Pods-AlloyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AlloyTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AlloyTests/Pods-AlloyTests.debug.xcconfig"; sourceTree = "<group>"; };
+		1804316D231FE33A006F2ED3 /* EuclideanDistanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EuclideanDistanceTests.swift; sourceTree = "<group>"; };
+		18043170231FE45D006F2ED3 /* TextureCachingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextureCachingTests.swift; sourceTree = "<group>"; };
 		18B1A083231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MTLPixelFormat+Extensions.swift"; sourceTree = "<group>"; };
 		18B1A086231E7867000A9BAB /* SwitchDataFormatEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchDataFormatEncoder.swift; sourceTree = "<group>"; };
-		18B1A08C231E796D000A9BAB /* Definitions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Definitions.h; sourceTree = "<group>"; };
 		1E76F10B8D3E3E672C003BC2 /* Pods-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Demo/Pods-Demo.debug.xcconfig"; sourceTree = "<group>"; };
 		1EB46CA57B050108AAE74226 /* Pods-DemoApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DemoApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DemoApp/Pods-DemoApp.debug.xcconfig"; sourceTree = "<group>"; };
 		2D410A4283563A9FD82489DB /* Pods-Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.release.xcconfig"; path = "Pods/Target Support Files/Pods-Demo/Pods-Demo.release.xcconfig"; sourceTree = "<group>"; };
@@ -157,7 +162,6 @@
 			isa = PBXGroup;
 			children = (
 				93B3E24721F50722008835A0 /* Shaders.metal */,
-				18B1A08C231E796D000A9BAB /* Definitions.h */,
 			);
 			path = Shaders;
 			sourceTree = "<group>";
@@ -218,6 +222,8 @@
 			isa = PBXGroup;
 			children = (
 				93B3E23F21F505E1008835A0 /* AlloyTests.swift */,
+				1804316D231FE33A006F2ED3 /* EuclideanDistanceTests.swift */,
+				18043170231FE45D006F2ED3 /* TextureCachingTests.swift */,
 				18B1A08F231E7A3A000A9BAB /* Encoders */,
 				18B1A08D231E7A26000A9BAB /* Extensions */,
 				18B1A090231E7A43000A9BAB /* Shaders */,
@@ -604,7 +610,9 @@
 				18B1A087231E7867000A9BAB /* SwitchDataFormatEncoder.swift in Sources */,
 				93B3E24821F50722008835A0 /* Shaders.metal in Sources */,
 				18B1A084231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift in Sources */,
+				1804316E231FE33A006F2ED3 /* EuclideanDistanceTests.swift in Sources */,
 				93B3E24021F505E1008835A0 /* AlloyTests.swift in Sources */,
+				18043171231FE45D006F2ED3 /* TextureCachingTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -624,7 +632,9 @@
 				18B1A088231E7867000A9BAB /* SwitchDataFormatEncoder.swift in Sources */,
 				93B3E29121F51AAF008835A0 /* Shaders.metal in Sources */,
 				18B1A085231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift in Sources */,
+				1804316F231FE33A006F2ED3 /* EuclideanDistanceTests.swift in Sources */,
 				93B3E29021F51997008835A0 /* AlloyTests.swift in Sources */,
+				18043172231FE45D006F2ED3 /* TextureCachingTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
