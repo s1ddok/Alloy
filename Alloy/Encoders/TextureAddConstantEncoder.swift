@@ -8,8 +8,7 @@
 import Metal
 import simd
 
-@available(iOS 11.0, tvOS 11.0, macOS 10.13, *)
-public class TextureAddConstantEncoder {
+final public class TextureAddConstantEncoder {
 
     // MARK: - Properties
 
@@ -37,8 +36,8 @@ public class TextureAddConstantEncoder {
                                         type: .bool,
                                         index: 0)
 
-        self.pipelineState = try library.computePipelineState(function: type(of: self)
-                                        .functionName + "_" + scalarType.rawValue,
+        let functionName = type(of: self).functionName + "_" + scalarType.rawValue
+        self.pipelineState = try library.computePipelineState(function: functionName,
                                                               constants: constantValues)
     }
 
