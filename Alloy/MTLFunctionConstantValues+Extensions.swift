@@ -60,4 +60,36 @@ public extension MTLFunctionConstantValues {
                  startingAt: startIndex)
     }
 
+    // MARK: - Int
+
+    func set(_ value: Int,
+             at index: Int) {
+        self.set(value,
+                 type: .int,
+                 at: index)
+    }
+
+    func set(_ values: [Int],
+             startingAt startIndex: Int = 0) {
+        self.set(values,
+                 type: .int,
+                 startingAt: startIndex)
+    }
+
+    // MARK: - UInt
+
+    func set(_ value: UInt,
+             at index: Int) {
+        self.set(value,
+                 type: .uint,
+                 at: index)
+    }
+
+    func set(_ values: [UInt],
+             startingAt startIndex: Int = 0) {
+        self.set(values,
+                 type: .uint,
+                 startingAt: startIndex)
+    }
+
 }
