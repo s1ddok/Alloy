@@ -15,9 +15,8 @@ public extension MTLSize {
                   depth: value)
     }
 
-    public static var one: MTLSize {
-        return self.init(repeating: 1)
-    }
+    public static let one = MTLSize(repeating: 1)
+
 }
 
 public extension MTLOrigin {
@@ -28,9 +27,7 @@ public extension MTLOrigin {
                   z: value)
     }
 
-    public static var one: MTLOrigin {
-        return self.init(repeating: 1)
-    }
+    public static let one = MTLSize(repeating: 1)
 
 }
 
