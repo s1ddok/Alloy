@@ -7,24 +7,29 @@
 
 import Metal
 
-// MARK: - Init
-
-extension MTLSize {
+public extension MTLSize {
     
-    public init (repeating value: Int) {
+    public init(repeating value: Int) {
         self.init(width: value,
                   height: value,
                   depth: value)
     }
 
+    public static var one: MTLSize {
+        return self.init(repeating: 1)
+    }
 }
 
-extension MTLOrigin {
+public extension MTLOrigin {
 
-    public init (repeating value: Int) {
+    public init(repeating value: Int) {
         self.init(x: value,
                   y: value,
                   z: value)
+    }
+
+    public static var one: MTLOrigin {
+        return self.init(repeating: 1)
     }
 
 }

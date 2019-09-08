@@ -39,7 +39,7 @@ public class MeanEncoder {
             encoder.setThreadgroupMemoryLength(threadgroupSize.width * threadgroupSize.height * 4 * MemoryLayout<Float16>.stride,
                                                index: 0)
             encoder.dispatch2d(state: self.pipelineState,
-                               covering: MTLSize(repeating: 1),
+                               covering: .one,
                                threadgroupSize: threadgroupSize)
 
         }
