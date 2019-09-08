@@ -27,7 +27,7 @@ public extension MTLOrigin {
                   z: value)
     }
 
-    public static let one = MTLSize(repeating: 1)
+    public static let one = MTLOrigin(repeating: 1)
 
 }
 
