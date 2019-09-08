@@ -230,7 +230,7 @@ kernel void mean(texture2d<half, access::sample> input_texture [[ texture(0) ]],
 
 kernel void maskGuidedBlurRowPass(texture2d<float, access::read> sourceTexture [[ texture(0) ]],
                                   texture2d<float, access::sample> maskTexture [[ texture(1) ]],
-                                  texture2d<float, access::write> destintaionTexture [[ texture(2) ]],
+                                  texture2d<float, access::write> destinationTexture [[ texture(2) ]],
                                   constant float& sigma [[ buffer(0) ]],
                                   ushort2 position [[thread_position_in_grid]]) {
     const ushort sourceTextureWidth = sourceTexture.get_width();
@@ -269,12 +269,12 @@ kernel void maskGuidedBlurRowPass(texture2d<float, access::read> sourceTexture [
 
     result /= normalizingConstant;
 
-    destintaionTexture.write(float4(result, 1.0f), position);
+    destinationTexture.write(float4(result, 1.0f), position);
 }
 
 kernel void maskGuidedBlurColumnPass(texture2d<float, access::read> sourceTexture [[ texture(0) ]],
                                      texture2d<float, access::sample> maskTexture [[ texture(1) ]],
-                                     texture2d<float, access::write> destintaionTexture [[ texture(2) ]],
+                                     texture2d<float, access::write> destinationTexture [[ texture(2) ]],
                                      constant float& sigma [[ buffer(0) ]],
                                      ushort2 position [[thread_position_in_grid]]) {
     const ushort sourceTextureWidth = sourceTexture.get_width();
@@ -313,7 +313,7 @@ kernel void maskGuidedBlurColumnPass(texture2d<float, access::read> sourceTextur
 
     result /= normalizingConstant;
 
-    destintaionTexture.write(float4(result, 1.0f), position);
+    destinationTexture.write(float4(result, 1.0f), position);
 }
 
 // MARK: - ML
