@@ -60,19 +60,49 @@ public extension MTLFunctionConstantValues {
                  startingAt: startIndex)
     }
 
-    // MARK: - Int
+    // MARK: - Int32
 
-    func set(_ value: Int,
+    func set(_ value: Int32,
              at index: Int) {
         self.set(value,
                  type: .int,
                  at: index)
     }
 
-    func set(_ values: [Int],
+    func set(_ values: [Int32],
              startingAt startIndex: Int = 0) {
         self.set(values,
                  type: .int,
+                 startingAt: startIndex)
+    }
+
+    // MARK: - Int
+
+    func set(_ value: Int,
+             at index: Int) {
+        self.set(Int32(value),
+                 at: index)
+    }
+
+    func set(_ values: [Int],
+             startingAt startIndex: Int = 0) {
+        self.set(values.map { Int32($0) },
+                 startingAt: startIndex)
+    }
+
+    // MARK: - UInt32
+
+    func set(_ value: UInt32,
+             at index: Int) {
+        self.set(value,
+                 type: .uint,
+                 at: index)
+    }
+
+    func set(_ values: [UInt32],
+             startingAt startIndex: Int = 0) {
+        self.set(values,
+                 type: .uint,
                  startingAt: startIndex)
     }
 
@@ -80,15 +110,13 @@ public extension MTLFunctionConstantValues {
 
     func set(_ value: UInt,
              at index: Int) {
-        self.set(value,
-                 type: .uint,
+        self.set(UInt32(value),
                  at: index)
     }
 
     func set(_ values: [UInt],
              startingAt startIndex: Int = 0) {
-        self.set(values,
-                 type: .uint,
+        self.set(values.map { UInt32($0) },
                  startingAt: startIndex)
     }
 
