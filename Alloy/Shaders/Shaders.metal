@@ -229,6 +229,94 @@ kernel void mean(texture2d<half, access::sample> input_texture [[ texture(0) ]],
 
 }
 
+kernel void maskGuidedBlurRowPass(texture2d<float, access::read> sourceTexture [[ texture(0) ]],
+                                  texture2d<float, access::sample> maskTexture [[ texture(1) ]],
+                                  texture2d<float, access::write> destinationTexture [[ texture(2) ]],
+                                  constant float& sigma [[ buffer(0) ]],
+                                  ushort2 position [[thread_position_in_grid]]) {
+    const ushort sourceTextureWidth = sourceTexture.get_width();
+    const ushort sourceTextureHeight = sourceTexture.get_height();
+
+    if (!deviceSupportsNonuniformThreadgroups) {
+        if (position.x >= sourceTextureWidth || position.y >= sourceTextureHeight) {
+            return;
+        }
+    }
+
+    constexpr sampler s(filter::linear, coord::normalized);
+
+    const float2 srcTid = float2(float(position.x) / sourceTextureWidth,
+                                 float(position.y) / sourceTextureHeight);
+
+    const float maskValue = maskTexture.sample(s, srcTid).r;
+
+    const float sigma_ = (1.0f - maskValue) * sigma;
+    const int kernelRadius = int(2.0f * sigma_);
+
+    float normalizingConstant = 0.0f;
+    float3 result = float3(0.0f);
+
+    for (int drow = -kernelRadius; drow <= kernelRadius; drow++) {
+        const float kernelValue = exp(float(-drow * drow) / (2.0f * sigma_ * sigma_ + 1e-5f));
+        const uint2 coordinate = uint2(clamp(int(position.x) + drow, 0, sourceTextureWidth - 1),
+                                       position.y);
+        const float2 maskTid = float2(float(coordinate.x) / sourceTextureWidth,
+                                      float(coordinate.y) / sourceTextureHeight);
+        const float maskMultiplier = 1.0f - maskTexture.sample(s, maskTid).r + 1e-5f;
+        const float totalFactor = kernelValue * maskMultiplier;
+        normalizingConstant += totalFactor;
+        result += sourceTexture.read(coordinate).rgb * totalFactor;
+    }
+
+    result /= normalizingConstant;
+
+    destinationTexture.write(float4(result, 1.0f), position);
+}
+
+kernel void maskGuidedBlurColumnPass(texture2d<float, access::read> sourceTexture [[ texture(0) ]],
+                                     texture2d<float, access::sample> maskTexture [[ texture(1) ]],
+                                     texture2d<float, access::write> destinationTexture [[ texture(2) ]],
+                                     constant float& sigma [[ buffer(0) ]],
+                                     ushort2 position [[thread_position_in_grid]]) {
+    const ushort sourceTextureWidth = sourceTexture.get_width();
+    const ushort sourceTextureHeight = sourceTexture.get_height();
+
+    if (!deviceSupportsNonuniformThreadgroups) {
+        if (position.x >= sourceTextureWidth || position.y >= sourceTextureHeight) {
+            return;
+        }
+    }
+
+    constexpr sampler s(filter::linear, coord::normalized);
+
+    const float2 srcTid = float2(float(position.x) / sourceTextureWidth,
+                                 float(position.y) / sourceTextureHeight);
+
+    const float maskValue = maskTexture.sample(s, srcTid).r;
+
+    const float sigma_ = (1.0f - maskValue) * sigma;
+    const int kernelRadius = int(2.0f * sigma_);
+
+    float normalizingConstant = 0.0f;
+    float3 result = float3(0.0f);
+
+    for (int dcol = -kernelRadius; dcol <= kernelRadius; dcol++) {
+        const float kernelValue = exp(float(-dcol * dcol) / (2.0f * sigma_ * sigma_ + 1e-5f));
+        const uint2 coordinate = uint2(position.x,
+                                       clamp(int(position.y) + dcol, 0, sourceTextureHeight - 1));
+        const float2 maskTid = float2(float(coordinate.x) / sourceTextureWidth,
+                                      float(coordinate.y) / sourceTextureHeight);
+        const float maskMultiplier = 1.0f - maskTexture.sample(s, maskTid).r + 1e-5f;
+        const float totalFactor = kernelValue * maskMultiplier;
+        normalizingConstant += totalFactor;
+        result += sourceTexture.read(coordinate).rgb * totalFactor;
+    }
+
+    result /= normalizingConstant;
+
+    destinationTexture.write(float4(result, 1.0f), position);
+}
+
 float euclideanDistance(float4 firstValue, float4 secondValue) {
     const float4 diff = firstValue - secondValue;
     return sqrt(dot(pow(diff, 2), 1));
