@@ -187,6 +187,11 @@ public extension MTLTexture {
                                     levels: levels ?? 0..<1,
                                     slices: slice..<(slice + 1))
     }
+
+    func view(level: Int) -> MTLTexture? {
+        let levels = level ..< (level + 1)
+        return self.view(slice: 0, levels: levels)
+    }
 }
 
 /* Utility functions for converting of MTLTextures to floating point arrays. */

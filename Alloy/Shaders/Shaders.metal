@@ -9,6 +9,7 @@
 #include <metal_stdlib>
 #include "ColorConversion.h"
 #include "ShaderStructures.h"
+#include "Definitions.h"
 
 using namespace metal;
 
@@ -315,6 +316,117 @@ kernel void maskGuidedBlurColumnPass(texture2d<float, access::read> sourceTextur
 
     destinationTexture.write(float4(result, 1.0f), position);
 }
+
+float euclideanDistance(float4 firstValue, float4 secondValue) {
+    const float4 diff = firstValue - secondValue;
+    return sqrt(dot(pow(diff, 2), 1));
+}
+
+template <typename T>
+void euclideanDistance(texture2d<T, access::sample> textureOne,
+                       texture2d<T, access::sample> textureTwo,
+                       constant BlockSize& inputBlockSize,
+                       device float& result,
+                       threadgroup float* sharedMemory,
+                       const ushort index,
+                       const ushort2 position,
+                       const ushort2 threadsPerThreadgroup) {
+    const ushort2 textureSize = ushort2(textureOne.get_width(),
+                                        textureOne.get_height());
+
+    ushort2 originalBlockSize = ushort2(inputBlockSize.width,
+                                        inputBlockSize.height);
+    const ushort2 blockStartPosition = position * originalBlockSize;
+
+    ushort2 blockSize = originalBlockSize;
+    if (position.x == threadsPerThreadgroup.x || position.y == threadsPerThreadgroup.y) {
+        const ushort2 readTerritory = blockStartPosition + originalBlockSize;
+        blockSize = originalBlockSize - (readTerritory - textureSize);
+    }
+
+    float euclideanDistanceSumInBlock = 0.0f;
+
+    for (ushort x = 0; x < blockSize.x; x++) {
+        for (ushort y = 0; y < blockSize.y; y++) {
+            const ushort2 readPosition = blockStartPosition + ushort2(x, y);
+            const float4 textureOneValue = float4(textureOne.read(readPosition));
+            const float4 textureTwoValue = float4(textureTwo.read(readPosition));
+            euclideanDistanceSumInBlock += euclideanDistance(textureOneValue,
+                                                             textureTwoValue);
+        }
+    }
+
+    sharedMemory[index] = euclideanDistanceSumInBlock;
+
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+
+    if (index == 0) {
+        float totalEuclideanDistanceSum = sharedMemory[0];
+        const ushort threadsInThreadgroup = threadsPerThreadgroup.x * threadsPerThreadgroup.y;
+        for (ushort i = 1; i < threadsInThreadgroup; i++) {
+            totalEuclideanDistanceSum += sharedMemory[i];
+        }
+
+        result = totalEuclideanDistanceSum;
+    }
+
+}
+
+#define outerArguments(T)                                          \
+(texture2d<T, access::sample> textureOne [[ texture(0) ]],         \
+texture2d<T, access::sample> textureTwo [[ texture(1) ]],          \
+constant BlockSize& inputBlockSize [[ buffer(0) ]],                \
+device float& result [[ buffer(1) ]],                              \
+threadgroup float* sharedMemory [[ threadgroup(0) ]],              \
+const ushort index [[ thread_index_in_threadgroup ]],              \
+const ushort2 position [[ thread_position_in_grid ]],              \
+const ushort2 threadsPerThreadgroup [[ threads_per_threadgroup ]])
+
+#define innerArguments \
+(textureOne,           \
+textureTwo,            \
+inputBlockSize,        \
+result,                \
+sharedMemory,          \
+index,                 \
+position,              \
+threadsPerThreadgroup)
+
+generateKernels(euclideanDistance)
+
+#undef outerArguments
+#undef innerArguments
+
+template <typename T>
+void addConstant(texture2d<T, access::read> sourceTexture,
+                 texture2d<T, access::write> destinationTexture,
+                 constant float4& constantValue,
+                 const ushort2 position) {
+    const ushort2 textureSize = ushort2(sourceTexture.get_width(),
+                                        sourceTexture.get_height());
+    checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
+
+    auto sourceTextureValue = sourceTexture.read(position);
+    auto destinationTextureValue = sourceTextureValue + vec<T, 4>(constantValue);
+    destinationTexture.write(destinationTextureValue, position);
+}
+
+#define outerArguments(T)                                        \
+(texture2d<T, access::read> sourceTexture [[ texture(0) ]],      \
+texture2d<T, access::write> destinationTexture [[ texture(1) ]], \
+constant float4& constantValue [[ buffer(0) ]],                  \
+const ushort2 position [[ thread_position_in_grid ]])
+
+#define innerArguments \
+(sourceTexture,        \
+destinationTexture,    \
+constantValue,         \
+position)
+
+generateKernels(addConstant)
+
+#undef outerArguments
+#undef innerArguments
 
 // MARK: - ML
 
