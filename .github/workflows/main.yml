@@ -1,0 +1,17 @@
+name: CI
+
+on:
+  push:
+    branches:
+    - master
+    
+jobs:
+  build:
+
+    runs-on: macOS-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: Publish to CocoaPod register
+      run: |
+        pod trunk push Alloy.podspec --skip-import-validation --allow-warnings
