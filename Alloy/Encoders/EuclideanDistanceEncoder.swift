@@ -19,7 +19,8 @@ final public class EuclideanDistanceEncoder {
                             scalarType: MTLPixelFormat.ScalarType = .half) throws {
         guard let alloyLibrary = context.shaderLibrary(for: type(of: self))
         else { throw CommonErrors.metalInitializationFailed }
-        try self.init(library: alloyLibrary, scalarType: scalarType)
+        try self.init(library: alloyLibrary,
+                      scalarType: scalarType)
     }
 
     public init(library: MTLLibrary,
@@ -35,6 +36,7 @@ final public class EuclideanDistanceEncoder {
                        resultBuffer: MTLBuffer,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
+            encoder.label = "Euclidean Distance"
             self.encode(textureOne: textureOne,
                             textureTwo: textureTwo,
                             resultBuffer: resultBuffer,
