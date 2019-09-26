@@ -132,6 +132,46 @@ generateKernels(textureMix)
 #undef outerArguments
 #undef innerArguments
 
+// MARK: - Texture Multiply Add
+
+template <typename T>
+void textureMultiplyAdd(texture2d<T, access::read> sourceTextureOne,
+                        texture2d<T, access::read> sourceTextureTwo,
+                        constant float& multiplier,
+                        texture2d<T, access::write> destinationTexture,
+                        const ushort2 position) {
+    const ushort2 textureSize = ushort2(destinationTexture.get_width(),
+                                        destinationTexture.get_height());
+    checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
+
+    const auto sourceTextureOneValue = sourceTextureOne.read(position);
+    const auto sourceTextureTwoValue = sourceTextureTwo.read(position);
+    const auto destinationTextureValue = vec<T, 4>(fma(float4(sourceTextureTwoValue),
+                                                       multiplier,
+                                                       float4(sourceTextureOneValue)));
+    destinationTexture.write(destinationTextureValue,
+                             position);
+}
+
+#define outerArguments(T)                                        \
+(texture2d<T, access::read> sourceTextureOne [[ texture(0) ]],   \
+texture2d<T, access::read> sourceTextureTwo [[ texture(1) ]],    \
+constant float& multiplier [[ buffer(0) ]],                      \
+texture2d<T, access::write> destinationTexture [[ texture(2) ]], \
+const ushort2 position [[ thread_position_in_grid ]])            \
+
+#define innerArguments \
+(sourceTextureOne,     \
+sourceTextureTwo,      \
+multiplier,            \
+destinationTexture,    \
+position)              \
+
+generateKernels(textureMultiplyAdd)
+
+#undef outerArguments
+#undef innerArguments
+
 // MARK: - Texture Sum
 
 template <typename T>
