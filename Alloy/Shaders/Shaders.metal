@@ -436,6 +436,8 @@ kernel void maskGuidedBlurColumnPass(texture2d<float, access::read> sourceTextur
     destinationTexture.write(float4(result, 1.0f), position);
 }
 
+// MARK: - Euclidean Distance
+
 float euclideanDistance(float4 firstValue, float4 secondValue) {
     const float4 diff = firstValue - secondValue;
     return sqrt(dot(pow(diff, 2), 1));
@@ -515,6 +517,8 @@ generateKernels(euclideanDistance)
 
 #undef outerArguments
 #undef innerArguments
+
+// MARK: - Add Constant
 
 template <typename T>
 void addConstant(texture2d<T, access::read> sourceTexture,

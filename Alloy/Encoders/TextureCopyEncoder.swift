@@ -18,7 +18,7 @@ final public class TextureCopyEncoder {
 
     public convenience init(context: MTLContext,
                             scalarType: MTLPixelFormat.ScalarType = .half) throws {
-        guard let library = context.shaderLibrary(for: TextureCopyEncoder.self)
+        guard let library = context.shaderLibrary(for: type(of: self))
         else { throw CommonErrors.metalInitializationFailed }
         try self.init(library: library,
                       scalarType: scalarType)

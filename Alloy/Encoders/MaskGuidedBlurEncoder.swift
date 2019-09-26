@@ -19,7 +19,7 @@ final public class MaskGuidedBlurEncoder {
     // MARK: - Life Cycle
 
     public convenience init(context: MTLContext) throws {
-        guard let library = context.shaderLibrary(for: type(of: self).self)
+        guard let library = context.shaderLibrary(for: type(of: self))
         else { throw CommonErrors.metalInitializationFailed }
 
         try self.init(library: library)
