@@ -22,38 +22,36 @@ struct BlockSize {
 
 // MARK: - General Purpose
 
-kernel void textureCopy(texture2d<half, access::read> texture_1 [[ texture(0) ]],
-                        texture2d<half, access::write> texture_2 [[ texture(1) ]],
-                        const ushort2 thread_position_in_grid [[thread_position_in_grid]]) {
+// MARK: - Texture Copy
 
-    const ushort input_texture_width = texture_1.get_width();
-    const ushort input_texture_height = texture_1.get_height();
+template <typename T>
+void textureCopy(texture2d<T, access::read> sourceTexture,
+                 texture2d<T, access::write> destinationTexture,
+                 const ushort2 position) {
+    const ushort2 textureSize = ushort2(destinationTexture.get_width(),
+                                        destinationTexture.get_height());
+    checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
 
-    if (!deviceSupportsNonuniformThreadgroups) {
-        if (thread_position_in_grid.x >= input_texture_width || thread_position_in_grid.y >= input_texture_height) {
-            return;
-        }
-    }
+    const auto resultValue = sourceTexture.read(position);
 
-    const half4 c_1 = texture_1.read(thread_position_in_grid);
-
-    texture_2.write(c_1, thread_position_in_grid);
+    destinationTexture.write(resultValue, position);
 }
 
-kernel void textureMask(texture2d<half, access::read> inputTexture [[ texture(0) ]],
-                        texture2d<half, access::sample> mask [[ texture(1) ]],
-                        texture2d<half, access::write> outputTexture [[ texture(2) ]],
-                        const ushort2 thread_position_in_grid [[thread_position_in_grid]]) {
-    const ushort inputWidth = inputTexture.get_width();
-    const ushort inputHeight = inputTexture.get_height();
+#define outerArguments(T)                                        \
+(texture2d<T, access::read> sourceTexture [[ texture(0) ]],      \
+texture2d<T, access::write> destinationTexture [[ texture(1) ]], \
+const ushort2 position [[thread_position_in_grid]])              \
 
-    if (!deviceSupportsNonuniformThreadgroups) {
-        if (thread_position_in_grid.x >= inputWidth || thread_position_in_grid.y >= inputHeight) {
-            return;
-        }
-    }
+#define innerArguments \
+(sourceTexture,        \
+destinationTexture,    \
+position)              \
 
-    const half4 originalPixel = inputTexture.read(thread_position_in_grid);
+generateKernels(textureCopy)
+
+#undef outerArguments
+#undef innerArguments
+
 
     constexpr sampler s(coord::normalized,
                         address::clamp_to_zero,
