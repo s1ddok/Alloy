@@ -8,7 +8,6 @@
 import Foundation
 import CoreGraphics
 import MetalKit
-import GLKit
 import Accelerate
 
 public extension MTLTexture {
