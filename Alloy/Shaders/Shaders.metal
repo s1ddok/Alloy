@@ -65,25 +65,44 @@ generateKernels(textureCopy)
 }
 
 
-kernel void textureSum(texture2d<half, access::read> inputTexture1 [[ texture(0) ]],
-                       texture2d<half, access::read> inputTexture2 [[ texture(1) ]],
-                       texture2d<half, access::write> outputTexture [[ texture(2) ]],
-                       const ushort2 thread_position_in_grid [[thread_position_in_grid]]) {
-    const ushort inputWidth = inputTexture1.get_width();
-    const ushort inputHeight = inputTexture1.get_height();
+generateKernels(textureMask)
 
-    if (!deviceSupportsNonuniformThreadgroups) {
-        if (thread_position_in_grid.x >= inputWidth || thread_position_in_grid.y >= inputHeight) {
-            return;
-        }
-    }
+#undef outerArguments
+#undef innerArguments
 
-    const half4 inputPixel1 = inputTexture1.read(thread_position_in_grid);
-    const half4 inputPixel2 = inputTexture2.read(thread_position_in_grid);
+// MARK: - Texture Sum
 
-    outputTexture.write(inputPixel1 + inputPixel2, thread_position_in_grid);
+template <typename T>
+void textureSum(texture2d<T, access::read> sourceTextureOne,
+                texture2d<T, access::read> sourceTextureTwo,
+                texture2d<T, access::write> destinationTexture,
+                const ushort2 position [[thread_position_in_grid]]) {
+    const ushort2 textureSize = ushort2(destinationTexture.get_width(),
+                                        destinationTexture.get_height());
+    checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
+
+    const auto sourceValueOne = sourceTextureOne.read(position);
+    const auto sourceValueTwo = sourceTextureTwo.read(position);
+
+    destinationTexture.write(sourceValueOne + sourceValueTwo, position);
 }
 
+#define outerArguments(T)                                        \
+(texture2d<T, access::read> sourceTextureOne [[ texture(0) ]],   \
+texture2d<T, access::read> sourceTextureTwo [[ texture(1) ]],    \
+texture2d<T, access::write> destinationTexture [[ texture(2) ]], \
+const ushort2 position [[thread_position_in_grid]])              \
+
+#define innerArguments \
+(sourceTextureOne,     \
+sourceTextureTwo,      \
+destinationTexture,    \
+position)              \
+
+generateKernels(textureSum)
+
+#undef outerArguments
+#undef innerArguments
 
 // MARK: - Texture Max
 
