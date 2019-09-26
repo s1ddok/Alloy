@@ -6,7 +6,6 @@
 //
 
 import Metal
-import simd
 
 final public class TextureAddConstantEncoder {
 
@@ -21,7 +20,6 @@ final public class TextureAddConstantEncoder {
                             scalarType: MTLPixelFormat.ScalarType = .half) throws {
         guard let alloyLibrary = context.shaderLibrary(for: type(of: self).self)
         else { throw CommonErrors.metalInitializationFailed }
-
         try self.init(library: alloyLibrary,
                       scalarType: scalarType)
     }
