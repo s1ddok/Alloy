@@ -205,54 +205,104 @@ generateKernels(textureMax)
 
 }
 
-kernel void mean(texture2d<half, access::sample> input_texture [[ texture(0) ]],
-                 constant BlockSize& input_block_size [[ buffer(0) ]],
-                 device float4& result [[ buffer(1) ]],
-                 threadgroup half4* shared_memory [[ threadgroup(0) ]],
-                 const ushort thread_index_in_threadgroup [[ thread_index_in_threadgroup ]],
-                 const ushort2 thread_position_in_grid [[ thread_position_in_grid ]],
-                 const ushort2 threads_per_threadgroup [[ threads_per_threadgroup ]]) {
-    const ushort2 input_texture_size = ushort2(input_texture.get_width(), input_texture.get_height());
+#define outerArguments(T)                                          \
+(texture2d<T, access::read> sourceTexture [[ texture(0) ]],        \
+constant BlockSize& inputBlockSize [[ buffer(0) ]],                \
+device float4& result [[ buffer(1) ]],                             \
+threadgroup float4* sharedMemory [[ threadgroup(0) ]],             \
+const ushort index [[ thread_index_in_threadgroup ]],              \
+const ushort2 position [[ thread_position_in_grid ]],              \
+const ushort2 threadsPerThreadgroup [[ threads_per_threadgroup ]]) \
 
-    ushort2 original_block_size = ushort2(input_block_size.width, input_block_size.height);
-    const ushort2 block_start_position = thread_position_in_grid * original_block_size;
+#define innerArguments \
+(sourceTexture,        \
+inputBlockSize,        \
+result,                \
+sharedMemory,          \
+index,                 \
+position,              \
+threadsPerThreadgroup) \
 
-    ushort2 block_size = original_block_size;
-    if (thread_position_in_grid.x == threads_per_threadgroup.x || thread_position_in_grid.y == threads_per_threadgroup.y) {
-        const ushort2 read_territory = block_start_position + original_block_size;
-        block_size = original_block_size - (read_territory - input_texture_size);
+generateKernels(textureMin)
+
+#undef outerArguments
+#undef innerArguments
+
+// MARK: - Texture Mean
+
+template <typename T>
+void textureMean(texture2d<T, access::read> sourceTexture,
+                 constant BlockSize& inputBlockSize,
+                 device float4& result,
+                 threadgroup float4* sharedMemory,
+                 const ushort index,
+                 const ushort2 position,
+                 const ushort2 threadsPerThreadgroup) {
+    const ushort2 inputTextureSize = ushort2(sourceTexture.get_width(),
+                                             sourceTexture.get_height());
+
+    ushort2 originalBlockSize = ushort2(inputBlockSize.width,
+                                        inputBlockSize.height);
+    const ushort2 blockStartPosition = position * originalBlockSize;
+
+    ushort2 blockSize = originalBlockSize;
+    if (position.x == threadsPerThreadgroup.x || position.y == threadsPerThreadgroup.y) {
+        const ushort2 readTerritory = blockStartPosition + originalBlockSize;
+        blockSize = originalBlockSize - (readTerritory - inputTextureSize);
     }
 
-    half4 total_sum_in_block = half4(0, 0, 0, 0);
+    float4 totalSumInBlock = float4(0, 0, 0, 0);
 
-    for (ushort x = 0; x < block_size.x; x++) {
-        for (ushort y = 0; y < block_size.y; y++) {
-            const ushort2 read_position = block_start_position + ushort2(x, y);
-            const half4 current_value = input_texture.read(read_position);
-            total_sum_in_block += current_value;
+    for (ushort x = 0; x < blockSize.x; x++) {
+        for (ushort y = 0; y < blockSize.y; y++) {
+            const ushort2 read_position = blockStartPosition + ushort2(x, y);
+            const float4 currentValue = float4(sourceTexture.read(read_position));
+            totalSumInBlock += currentValue;
         }
     }
 
-    shared_memory[thread_index_in_threadgroup] = total_sum_in_block;
+    sharedMemory[index] = totalSumInBlock;
 
     threadgroup_barrier(mem_flags::mem_threadgroup);
 
-    if (thread_index_in_threadgroup == 0) {
+    if (index == 0) {
 
-        half4 total_sum = shared_memory[0];
-        const ushort threads_in_threadgroup = threads_per_threadgroup.x * threads_per_threadgroup.y;
-        for (ushort i = 1; i < threads_in_threadgroup; i++) {
-            half4 total_sum_in_block = shared_memory[i];
-            total_sum += total_sum_in_block;
+        float4 totalSum = sharedMemory[0];
+        const ushort threadsInThreadgroup = threadsPerThreadgroup.x * threadsPerThreadgroup.y;
+        for (ushort i = 1; i < threadsInThreadgroup; i++) {
+            float4 totalSumInBlock = sharedMemory[i];
+            totalSum += totalSumInBlock;
         }
 
-        half grid_size = input_texture.get_width() * input_texture.get_height();
-        half4 mean_value = total_sum / grid_size;
+        half gridSize = inputTextureSize.x * inputTextureSize.y;
+        float4 meanValue = totalSum / gridSize;
 
-        result = float4(mean_value);
+        result = meanValue;
     }
-
 }
+
+#define outerArguments(T)                                          \
+(texture2d<T, access::read> sourceTexture [[ texture(0) ]],        \
+constant BlockSize& inputBlockSize [[ buffer(0) ]],                \
+device float4& result [[ buffer(1) ]],                             \
+threadgroup float4* sharedMemory [[ threadgroup(0) ]],             \
+const ushort index [[ thread_index_in_threadgroup ]],              \
+const ushort2 position [[ thread_position_in_grid ]],              \
+const ushort2 threadsPerThreadgroup [[ threads_per_threadgroup ]]) \
+
+#define innerArguments \
+(sourceTexture,        \
+inputBlockSize,        \
+result,                \
+sharedMemory,          \
+index,                 \
+position,              \
+threadsPerThreadgroup) \
+
+generateKernels(textureMean)
+
+#undef outerArguments
+#undef innerArguments
 
 // MARK: - Mask Guided Blur
 
