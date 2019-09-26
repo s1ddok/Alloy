@@ -52,18 +52,40 @@ generateKernels(textureCopy)
 #undef outerArguments
 #undef innerArguments
 
+// MARK: - Texture Mask
+
+template <typename T>
+void textureMask(texture2d<T, access::read> sourceTexture,
+                 texture2d<T, access::sample> maskTexture,
+                 texture2d<T, access::write> destinationTexture,
+                 const ushort2 position [[thread_position_in_grid]]) {
+    const ushort2 textureSize = ushort2(destinationTexture.get_width(),
+                                        destinationTexture.get_height());
+    checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
+
+    const auto originalPixel = sourceTexture.read(position);
 
     constexpr sampler s(coord::normalized,
                         address::clamp_to_zero,
                         filter::linear);
 
-    const half4 maskValue = mask.sample(s, (float2(thread_position_in_grid) + 0.5) / float2(inputWidth, inputHeight));
+    const auto maskValue = maskTexture.sample(s, (float2(position) + 0.5) / float2(textureSize));
+    const auto resultValue = originalPixel * maskValue.r;
 
-    const half4 maskedPixel = originalPixel * maskValue.r;
-
-    outputTexture.write(maskedPixel, thread_position_in_grid);
+    destinationTexture.write(resultValue, position);
 }
 
+#define outerArguments(T)                                        \
+(texture2d<T, access::read> sourceTexture [[ texture(0) ]],      \
+texture2d<T, access::sample> maskTexture [[ texture(1) ]],       \
+texture2d<T, access::write> destinationTexture [[ texture(2) ]], \
+const ushort2 position [[thread_position_in_grid]])              \
+
+#define innerArguments \
+(sourceTexture,        \
+maskTexture,           \
+destinationTexture,    \
+position)              \
 
 generateKernels(textureMask)
 
