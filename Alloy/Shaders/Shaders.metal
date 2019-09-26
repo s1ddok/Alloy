@@ -229,6 +229,8 @@ kernel void mean(texture2d<half, access::sample> input_texture [[ texture(0) ]],
 
 }
 
+// MARK: - Mask Guided Blur
+
 kernel void maskGuidedBlurRowPass(texture2d<float, access::read> sourceTexture [[ texture(0) ]],
                                   texture2d<float, access::sample> maskTexture [[ texture(1) ]],
                                   texture2d<float, access::write> destinationTexture [[ texture(2) ]],
