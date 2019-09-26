@@ -95,30 +95,9 @@ generateKernels(textureMask)
 // MARK: - Texture Mix
 
 template <typename T>
-METAL_FUNC T mixNonFloatingPointValues(T x, T y, T a) {
-  return T(float4(x) + float4(y - x) * float4(a / 255));
-}
-
-METAL_FUNC int4 mix(int4 x, int4 y, int4 a) {
-  return mixNonFloatingPointValues(x, y, a);
-}
-
-METAL_FUNC uint4 mix(uint4 x, uint4 y, uint4 a) {
-  return mixNonFloatingPointValues(x, y, a);
-}
-
-METAL_FUNC short4 mix(short4 x, short4 y, short4 a) {
-  return mixNonFloatingPointValues(x, y, a);
-}
-
-METAL_FUNC ushort4 mix(ushort4 x, ushort4 y, ushort4 a) {
-  return mixNonFloatingPointValues(x, y, a);
-}
-
-template <typename T>
 void textureMix(texture2d<T, access::read> sourceTextureOne [[ texture(0) ]],
                 texture2d<T, access::read> sourceTextureTwo [[ texture(1) ]],
-                texture2d<T, access::read> maskTexture [[ texture(2) ]],
+                texture2d<float, access::read> maskTexture [[ texture(2) ]],
                 texture2d<T, access::write> destinationTexture [[ texture(3) ]],
                 const ushort2 position [[ thread_position_in_grid ]]) {
     const ushort2 textureSize = ushort2(destinationTexture.get_width(),
@@ -128,8 +107,8 @@ void textureMix(texture2d<T, access::read> sourceTextureOne [[ texture(0) ]],
     const auto sourceTextureOneValue = sourceTextureOne.read(position);
     const auto sourceTextureTwoValue = sourceTextureTwo.read(position);
     const auto maskTextureValue = maskTexture.read(position).r;
-    const auto resultValue = vec<T, 4>(mix(sourceTextureOneValue,
-                                           sourceTextureTwoValue,
+    const auto resultValue = vec<T, 4>(mix(float4(sourceTextureOneValue),
+                                           float4(sourceTextureTwoValue),
                                            maskTextureValue));
     destinationTexture.write(resultValue, position);
 }
@@ -137,7 +116,7 @@ void textureMix(texture2d<T, access::read> sourceTextureOne [[ texture(0) ]],
 #define outerArguments(T)                                        \
 (texture2d<T, access::read> sourceTextureOne [[ texture(0) ]],   \
 texture2d<T, access::read> sourceTextureTwo [[ texture(1) ]],    \
-texture2d<T, access::read> maskTexture [[ texture(2) ]],         \
+texture2d<float, access::read> maskTexture [[ texture(2) ]],         \
 texture2d<T, access::write> destinationTexture [[ texture(3) ]], \
 const ushort2 position [[ thread_position_in_grid ]])            \
 
