@@ -29,11 +29,8 @@ final public class TextureAddConstantEncoder {
         self.deviceSupportsNonuniformThreadgroups = library.device.supports(feature: .nonUniformThreadgroups)
 
         let constantValues = MTLFunctionConstantValues()
-        var dispatchFlag = self.deviceSupportsNonuniformThreadgroups
-        constantValues.setConstantValue(&dispatchFlag,
-                                        type: .bool,
-                                        index: 0)
-
+        constantValues.set(self.deviceSupportsNonuniformThreadgroups,
+                           at: 0)
         let functionName = type(of: self).functionName + "_" + scalarType.rawValue
         self.pipelineState = try library.computePipelineState(function: functionName,
                                                               constants: constantValues)

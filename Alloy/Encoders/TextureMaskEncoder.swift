@@ -30,8 +30,8 @@ final public class TextureMaskEncoder {
         let constantValues = MTLFunctionConstantValues()
         constantValues.set(self.deviceSupportsNonuniformThreadgroups,
                            at: 0)
-        self.pipelineState = try library.computePipelineState(function: type(of: self)
-                                        .functionName + "_" + scalarType.rawValue,
+        let functionName = type(of: self).functionName + "_" + scalarType.rawValue
+        self.pipelineState = try library.computePipelineState(function: functionName,
                                                               constants: constantValues)
     }
 

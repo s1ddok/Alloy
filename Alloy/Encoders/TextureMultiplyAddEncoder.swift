@@ -34,9 +34,9 @@ final public class TextureMultiplyAddEncoder {
         let constantValues = MTLFunctionConstantValues()
         constantValues.set(self.deviceSupportsNonuniformThreadgroups,
                            at: 0)
-        self.pipelineState = try library.computePipelineState(function: type(of: self)
-                                        .functionName + "_" + scalarType.rawValue,
-                              constants: constantValues)
+        let functionName = type(of: self).functionName + "_" + scalarType.rawValue
+        self.pipelineState = try library.computePipelineState(function: functionName,
+                                                              constants: constantValues)
         self.multiplier = multiplier
     }
 

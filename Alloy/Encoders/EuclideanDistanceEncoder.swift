@@ -25,8 +25,8 @@ final public class EuclideanDistanceEncoder {
 
     public init(library: MTLLibrary,
                 scalarType: MTLPixelFormat.ScalarType = .half) throws {
-        self.pipelineState = try library.computePipelineState(function: type(of: self)
-                                        .functionName + "_" + scalarType.rawValue)
+        let function = type(of: self).functionName + "_" + scalarType.rawValue
+        self.pipelineState = try library.computePipelineState(function: function)
     }
 
     // MARK: - Encode

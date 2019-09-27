@@ -24,8 +24,8 @@ final public class TextureMaxEncoder {
 
     public init(library: MTLLibrary,
                 scalarType: MTLPixelFormat.ScalarType = .half) throws {
-        self.pipelineState = try library.computePipelineState(function: type(of: self)
-                                        .functionName + "_" + scalarType.rawValue)
+        let functionName = type(of: self).functionName + "_" + scalarType.rawValue
+        self.pipelineState = try library.computePipelineState(function: functionName)
     }
 
     // MARK: - Encode
