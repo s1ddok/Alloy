@@ -8,7 +8,6 @@
 import Foundation
 import CoreGraphics
 import MetalKit
-import GLKit
 import Accelerate
 
 public extension MTLTexture {
@@ -19,6 +18,11 @@ public extension MTLTexture {
     #endif
     
     var cgImage: CGImage? {
+        #if targetEnvironment(macCatalyst)
+        guard self.storageMode == .managed || self.storageMode == .shared else {
+            return nil
+        }
+        #else
         #if os(macOS)
         guard self.storageMode == .managed || self.storageMode == .shared else {
             return nil
@@ -29,6 +33,7 @@ public extension MTLTexture {
         guard self.storageMode == .shared else {
             return nil
         }
+        #endif
         #endif
 
         switch self.pixelFormat {
@@ -247,10 +252,14 @@ public extension MTLTexture {
     /// - Returns: Swift array containing texture's pixel data.
 
     private func toArray<T>(width: Int, height: Int, featureChannels: Int, initial: T) -> [T]? {
+        #if targetEnvironment(macCatalyst)
+        guard self.storageMode == .shared || self.storageMode == .managed else { return nil }
+        #else
         #if os(iOS) || os(tvOS)
         guard self.storageMode == .shared else { return nil }
         #elseif os(macOS)
         guard self.storageMode == .shared || self.storageMode == .managed else { return nil }
+        #endif
         #endif
         guard featureChannels != 3 && featureChannels <= 4 else { return nil }
 

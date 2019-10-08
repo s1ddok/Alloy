@@ -9,14 +9,12 @@ import Metal
 
 public extension MTLCommandBuffer {
 
-    @available(iOS 10.3, tvOS 10.3, *)
-    @available(macOS, unavailable)
+    @available(macOS 10.15, iOS 10.3, tvOS 10.3, *)
     var gpuExecutionTime: CFTimeInterval {
         return self.gpuEndTime - self.gpuStartTime
     }
 
-    @available(iOS 10.3, tvOS 10.3, *)
-    @available(macOS, unavailable)
+    @available(macOS 10.15, iOS 10.3, tvOS 10.3, *)
     var kernelExecutionTime: CFTimeInterval {
         return self.kernelEndTime - self.kernelStartTime
     }

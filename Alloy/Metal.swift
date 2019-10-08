@@ -13,8 +13,13 @@ public final class Metal {
     
     public static let device: MTLDevice! = MTLCreateSystemDefaultDevice()
     
-    #if os(macOS)
-    @available(OSX 10.11, *)
+    #if (os(macOS) && targetEnvironment(macCatalyst)) || (os(iOS) && targetEnvironment(simulator))
+    @available(macOS 10.15, iOS 13.0, *)
+    public static let lowPowerDevice: MTLDevice? = {
+        return MTLCopyAllDevices().first { $0.isLowPower }
+    }()
+    #elseif os(macOS)
+    @available(macOS 10.11, *)
     public static let lowPowerDevice: MTLDevice? = {
         return MTLCopyAllDevices().first { $0.isLowPower }
     }()
@@ -133,7 +138,7 @@ public final class MTLContext {
         sampleDesc.height = height
         sampleDesc.sampleCount = sampleCount
         sampleDesc.pixelFormat = pixelFormat
-        #if !os(macOS)
+        #if !os(macOS) && !targetEnvironment(macCatalyst)
         sampleDesc.storageMode = .memoryless
         #endif
         sampleDesc.usage = .renderTarget
@@ -191,7 +196,7 @@ public final class MTLContext {
         textureDescriptor.height = height
         textureDescriptor.pixelFormat = .depth32Float
         textureDescriptor.usage = usage.union([.renderTarget])
-        #if !os(macOS)
+        #if !os(macOS) && !targetEnvironment(macCatalyst)
         textureDescriptor.storageMode = storageMode ?? .memoryless
         #else
         textureDescriptor.storageMode = storageMode ?? .private

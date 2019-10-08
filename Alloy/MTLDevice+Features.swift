@@ -15,18 +15,12 @@ public extension MTLDevice {
     func supports(feature: Feature) -> Bool {
         switch feature {
         case .nonUniformThreadgroups:
-            #if os(iOS)
-            if #available(iOS 11.0, *) {
-                return self.supportsFeatureSet(.iOS_GPUFamily4_v1)
-            } else {
-                return false
-            }
+            #if targetEnvironment(macCatalyst)
+            return self.supportsFamily(.common3)
+            #elseif os(iOS)
+            return self.supportsFeatureSet(.iOS_GPUFamily4_v1)
             #elseif os(macOS)
-            if #available(OSX 10.13, *) {
-                return self.supportsFeatureSet(.macOS_GPUFamily1_v3)
-            } else {
-                return false
-            }
+            return self.supportsFeatureSet(.macOS_GPUFamily1_v3)
             #endif
         }
     }

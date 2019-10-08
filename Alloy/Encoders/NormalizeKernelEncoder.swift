@@ -33,11 +33,7 @@ final public class NormalizeKernelEncoder {
     }
 
     public init(library: MTLLibrary) throws {
-        #if os(iOS) || os(tvOS)
-        self.deviceSupportsNonuniformThreadgroups = library.device.supportsFeatureSet(.iOS_GPUFamily4_v1)
-        #elseif os(macOS)
-        self.deviceSupportsNonuniformThreadgroups = library.device.supportsFeatureSet(.macOS_GPUFamily1_v3)
-        #endif
+        self.deviceSupportsNonuniformThreadgroups = library.device.supports(feature: .nonUniformThreadgroups)
         let constantValues = MTLFunctionConstantValues()
         var dispatchFlag = self.deviceSupportsNonuniformThreadgroups
         constantValues.setConstantValue(&dispatchFlag,
