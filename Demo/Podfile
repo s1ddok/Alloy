@@ -8,6 +8,8 @@ end
 
 target 'AlloyTests' do
   pod 'Alloy', :path => '../'
+  pod 'Alloy/Shaders', :path => '../'
+  pod 'Alloy/ML', :path => '../'
 end
 
 target 'DemoApp' do
@@ -18,4 +20,6 @@ end
 
 target 'DemoAppTests' do
   pod 'Alloy', :path => '../'
+  pod 'Alloy/Shaders', :path => '../'
+  pod 'Alloy/ML', :path => '../'
 end

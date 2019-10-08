@@ -150,12 +150,16 @@ public final class MTLContext {
         return (main: sampleTex, resolve: mainTex)
     }
     
-    public func texture(from image: CGImage, usage: MTLTextureUsage = [.shaderRead]) throws -> MTLTexture {
+    public func texture(from image: CGImage,
+                        srgb: Bool = false,
+                        usage: MTLTextureUsage = [.shaderRead],
+                        generateMipmaps: Bool = false) throws -> MTLTexture {
         let options: [MTKTextureLoader.Option: Any] = [
             // Note: the SRGB option should be set to false, otherwise the image
             // appears way too dark, since it wasn't actually saved as SRGB.
-            .SRGB : false, // image.colorSpace == CGColorSpace(name: CGColorSpace.sRGB)
-            .textureUsage: NSNumber(value: usage.rawValue)
+            .SRGB : srgb, // image.colorSpace == CGColorSpace(name: CGColorSpace.sRGB)
+            .textureUsage: NSNumber(value: usage.rawValue),
+            .generateMipmaps: generateMipmaps
         ]
         
         return try self.textureLoader

@@ -8,7 +8,7 @@
 import Metal.MTLHeap
 
 // Returns a size of the 'inSize' aligned to 'align' as long as align is a power of 2
-func alignUp(size: Int, align: Int) -> Int {
+public func alignUp(size: Int, align: Int) -> Int {
     #if DEBUG
     precondition(((align-1) & align) == 0, "Align must be a power of two")
     #endif
@@ -38,11 +38,18 @@ public extension Sequence where Element == MTLTextureDescriptor {
 }
 
 public extension MTLSize {
+    init(repeating value: Int) {
+        self.init(width: value,
+                  height: value,
+                  depth: value)
+    }
+
     func clamped(to size: MTLSize) -> MTLSize {
         return MTLSize(width:  min(max(self.width, 0), size.width),
                        height: min(max(self.height, 0), size.height),
                        depth:  min(max(self.depth, 0), size.depth))
     }
-    
-    static let zero = MTLSize(width: 0, height: 0, depth: 0)
+
+    static let one = MTLSize(repeating: 1)
+    static let zero = MTLSize(repeating: 0)
 }

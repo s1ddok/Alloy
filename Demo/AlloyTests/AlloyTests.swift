@@ -8,6 +8,7 @@
 
 import XCTest
 import Alloy
+import MetalKit
 
 class AlloyTests: XCTestCase {
 
@@ -102,41 +103,46 @@ class AlloyTests: XCTestCase {
     }
 
     func runGPUWork(encoding: (MTLComputeCommandEncoder, MTLTexture, MTLTexture) -> Void) {
-        let maximumThreadgroupSize = evenInitState.max2dThreadgroupSize
+        do {
+            let maximumThreadgroupSize = evenInitState.max2dThreadgroupSize
 
-        var totalGPUTime: CFTimeInterval = 0
-        var iterations = 0
+            var totalGPUTime: CFTimeInterval = 0
+            var iterations = 0
 
-        for wd in 0..<maximumThreadgroupSize.width {
-            for ht in 0..<maximumThreadgroupSize.height {
-                var texture = self.context.texture(width:  self.textureBaseWidth + wd,
-                                                   height: self.textureBaseHeight + ht,
-                                                   pixelFormat: .rgba8Unorm)!
+            for wd in 0..<maximumThreadgroupSize.width {
+                for ht in 0..<maximumThreadgroupSize.height {
+                    var texture = self.context.texture(width:  self.textureBaseWidth + wd,
+                                                       height: self.textureBaseHeight + ht,
+                                                       pixelFormat: .rgba8Unorm)!
 
-                var outputTexture = self.context.texture(width:  self.textureBaseWidth + wd,
-                                                         height: self.textureBaseHeight + ht,
-                                                         pixelFormat: .rgba8Unorm)!
+                    var outputTexture = self.context.texture(width:  self.textureBaseWidth + wd,
+                                                             height: self.textureBaseHeight + ht,
+                                                             pixelFormat: .rgba8Unorm)!
 
-                self.context.scheduleAndWait { buffer in
-                    buffer.compute { encoder in
-                        for _ in 0...self.gpuIterations {
-                            encoding(encoder, texture, outputTexture)
+                    try self.context.scheduleAndWait { buffer in
+                        buffer.compute { encoder in
+                            for _ in 0...self.gpuIterations {
+                                encoding(encoder, texture, outputTexture)
 
-                            swap(&texture, &outputTexture)
+                                swap(&texture, &outputTexture)
+                            }
                         }
-                    }
 
-                    buffer.addCompletedHandler { buffer in
-                        if #available(iOS 10.3, tvOS 10.3, *) {
-                            iterations += 1
-                            totalGPUTime += buffer.gpuExecutionTime
+                        buffer.addCompletedHandler { buffer in
+                            if #available(iOS 10.3, tvOS 10.3, *) {
+                                iterations += 1
+                                totalGPUTime += buffer.gpuExecutionTime
+                            }
                         }
                     }
                 }
+
             }
+
+            print("\(#function) average GPU Time: \(totalGPUTime / CFTimeInterval(iterations))")
         }
 
-        print("\(#function) average GPU Time: \(totalGPUTime / CFTimeInterval(iterations))")
+        catch { fatalError(error.localizedDescription) }
     }
 }
 
@@ -173,55 +179,59 @@ class IdealSizeTests: XCTestCase {
     }
 
     func testSpeedOnIdealSize() {
-        var bestTimeCounter: [String: Int] = [:]
+        do {
+            var bestTimeCounter: [String: Int] = [:]
 
-        for _ in 1...self.gpuIterations {
-            let size = self.evenState.max2dThreadgroupSize
-            let texture = self.context.texture(width: size.width * self.textureBaseMultiplier,
-                                               height: size.height * self.textureBaseMultiplier,
-                                               pixelFormat: .rg16Uint,
-                                               usage: .shaderWrite)!
+            for _ in 1...self.gpuIterations {
+                let size = self.evenState.max2dThreadgroupSize
+                let texture = self.context.texture(width: size.width * self.textureBaseMultiplier,
+                                                   height: size.height * self.textureBaseMultiplier,
+                                                   pixelFormat: .rg16Uint,
+                                                   usage: .shaderWrite)!
 
-            var results = [(String, CFTimeInterval)]()
+                var results = [(String, CFTimeInterval)]()
 
-            self.context.scheduleAndWait { buffer in
-                buffer.compute { encoder in
-                    encoder.setTexture(texture, index: 0)
-                    encoder.dispatch2d(state: self.evenState, covering: texture.size)
+                try self.context.scheduleAndWait { buffer in
+                    buffer.compute { encoder in
+                        encoder.setTexture(texture, index: 0)
+                        encoder.dispatch2d(state: self.evenState, covering: texture.size)
+                    }
+
+                    buffer.addCompletedHandler({ buffer in
+                        results.append(("Even", buffer.gpuExecutionTime))
+                    })
                 }
 
-                buffer.addCompletedHandler({ buffer in
-                    results.append(("Even", buffer.gpuExecutionTime))
-                })
-            }
+                try self.context.scheduleAndWait { buffer in
+                    buffer.compute { encoder in
+                        encoder.setTexture(texture, index: 0)
+                        encoder.dispatch2d(state: self.evenOptimizedState, covering: texture.size)
+                    }
 
-            self.context.scheduleAndWait { buffer in
-                buffer.compute { encoder in
-                    encoder.setTexture(texture, index: 0)
-                    encoder.dispatch2d(state: self.evenOptimizedState, covering: texture.size)
+                    buffer.addCompletedHandler({ buffer in
+                        results.append(("Even optimized", buffer.gpuExecutionTime))
+                    })
                 }
 
-                buffer.addCompletedHandler({ buffer in
-                    results.append(("Even optimized", buffer.gpuExecutionTime))
-                })
-            }
+                try self.context.scheduleAndWait { buffer in
+                    buffer.compute { encoder in
+                        encoder.setTexture(texture, index: 0)
+                        encoder.dispatch2d(state: self.exactState, exactly: texture.size)
+                    }
 
-            self.context.scheduleAndWait { buffer in
-                buffer.compute { encoder in
-                    encoder.setTexture(texture, index: 0)
-                    encoder.dispatch2d(state: self.exactState, exactly: texture.size)
+                    buffer.addCompletedHandler({ buffer in
+                        results.append(("Exact", buffer.gpuExecutionTime))
+                    })
                 }
 
-                buffer.addCompletedHandler({ buffer in
-                    results.append(("Exact", buffer.gpuExecutionTime))
-                })
+                results.sort { $0.1 < $1.1 }
+                bestTimeCounter[results.first!.0, default: 0] += 1
             }
 
-            results.sort { $0.1 < $1.1 }
-            bestTimeCounter[results.first!.0, default: 0] += 1
+            print(bestTimeCounter)
         }
 
-        print(bestTimeCounter)
+        catch { fatalError(error.localizedDescription) }
     }
 
 }

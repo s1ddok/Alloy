@@ -3,10 +3,18 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1804316E231FE33A006F2ED3 /* EuclideanDistanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1804316D231FE33A006F2ED3 /* EuclideanDistanceTests.swift */; };
+		1804316F231FE33A006F2ED3 /* EuclideanDistanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1804316D231FE33A006F2ED3 /* EuclideanDistanceTests.swift */; };
+		18043171231FE45D006F2ED3 /* TextureCachingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18043170231FE45D006F2ED3 /* TextureCachingTests.swift */; };
+		18043172231FE45D006F2ED3 /* TextureCachingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18043170231FE45D006F2ED3 /* TextureCachingTests.swift */; };
+		18B1A084231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B1A083231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift */; };
+		18B1A085231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B1A083231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift */; };
+		18B1A087231E7867000A9BAB /* SwitchDataFormatEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B1A086231E7867000A9BAB /* SwitchDataFormatEncoder.swift */; };
+		18B1A088231E7867000A9BAB /* SwitchDataFormatEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B1A086231E7867000A9BAB /* SwitchDataFormatEncoder.swift */; };
 		4FBA92F23EE96BEC3B50A6F4 /* Pods_AlloyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2C9B19EDEBD9C61E5137353 /* Pods_AlloyTests.framework */; };
 		63F9C6B2B8704ABC4263F909 /* Pods_DemoAppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A47635EFD74A558403F5CB4 /* Pods_DemoAppTests.framework */; };
 		930654D121D55DF700ACD3D7 /* BrightnessEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930654D021D55DF700ACD3D7 /* BrightnessEncoder.swift */; };
@@ -25,7 +33,6 @@
 		93B3E27D21F51983008835A0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 93B3E27B21F51983008835A0 /* LaunchScreen.storyboard */; };
 		93B3E29021F51997008835A0 /* AlloyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93B3E23F21F505E1008835A0 /* AlloyTests.swift */; };
 		93B3E29121F51AAF008835A0 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 93B3E24721F50722008835A0 /* Shaders.metal */; };
-		93B3E29221F51AAF008835A0 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 93B3E24721F50722008835A0 /* Shaders.metal */; };
 		976BADA1B6251B5D76DBE718 /* Pods_DemoApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9072BB7C76F22B60656C7DC4 /* Pods_DemoApp.framework */; };
 		FBA6536BCD817E7560FAAD80 /* Pods_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2B4B2DF0C4BB8540ACD5124 /* Pods_Demo.framework */; };
 /* End PBXBuildFile section */
@@ -50,6 +57,10 @@
 /* Begin PBXFileReference section */
 		07B12E24C5F750F1302A3A3F /* Pods-DemoApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DemoApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-DemoApp/Pods-DemoApp.release.xcconfig"; sourceTree = "<group>"; };
 		0BF7AAD9917E49917E0506BE /* Pods-AlloyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AlloyTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AlloyTests/Pods-AlloyTests.debug.xcconfig"; sourceTree = "<group>"; };
+		1804316D231FE33A006F2ED3 /* EuclideanDistanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EuclideanDistanceTests.swift; sourceTree = "<group>"; };
+		18043170231FE45D006F2ED3 /* TextureCachingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextureCachingTests.swift; sourceTree = "<group>"; };
+		18B1A083231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MTLPixelFormat+Extensions.swift"; sourceTree = "<group>"; };
+		18B1A086231E7867000A9BAB /* SwitchDataFormatEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchDataFormatEncoder.swift; sourceTree = "<group>"; };
 		1E76F10B8D3E3E672C003BC2 /* Pods-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Demo/Pods-Demo.debug.xcconfig"; sourceTree = "<group>"; };
 		1EB46CA57B050108AAE74226 /* Pods-DemoApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DemoApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DemoApp/Pods-DemoApp.debug.xcconfig"; sourceTree = "<group>"; };
 		2D410A4283563A9FD82489DB /* Pods-Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.release.xcconfig"; path = "Pods/Target Support Files/Pods-Demo/Pods-Demo.release.xcconfig"; sourceTree = "<group>"; };
@@ -123,6 +134,38 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		18B1A08D231E7A26000A9BAB /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				18B1A08E231E7A32000A9BAB /* Metal */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		18B1A08E231E7A32000A9BAB /* Metal */ = {
+			isa = PBXGroup;
+			children = (
+				18B1A083231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift */,
+			);
+			path = Metal;
+			sourceTree = "<group>";
+		};
+		18B1A08F231E7A3A000A9BAB /* Encoders */ = {
+			isa = PBXGroup;
+			children = (
+				18B1A086231E7867000A9BAB /* SwitchDataFormatEncoder.swift */,
+			);
+			path = Encoders;
+			sourceTree = "<group>";
+		};
+		18B1A090231E7A43000A9BAB /* Shaders */ = {
+			isa = PBXGroup;
+			children = (
+				93B3E24721F50722008835A0 /* Shaders.metal */,
+			);
+			path = Shaders;
+			sourceTree = "<group>";
+		};
 		2D8A4E1CF6AF61CD5A710B31 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -179,8 +222,12 @@
 			isa = PBXGroup;
 			children = (
 				93B3E23F21F505E1008835A0 /* AlloyTests.swift */,
+				1804316D231FE33A006F2ED3 /* EuclideanDistanceTests.swift */,
+				18043170231FE45D006F2ED3 /* TextureCachingTests.swift */,
+				18B1A08F231E7A3A000A9BAB /* Encoders */,
+				18B1A08D231E7A26000A9BAB /* Extensions */,
+				18B1A090231E7A43000A9BAB /* Shaders */,
 				93B3E24121F505E1008835A0 /* Info.plist */,
-				93B3E24721F50722008835A0 /* Shaders.metal */,
 			);
 			path = AlloyTests;
 			sourceTree = "<group>";
@@ -458,16 +505,11 @@
 			files = (
 			);
 			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Demo/Pods-Demo-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Alloy.default-ML-Shaders-macOS/Alloy.framework",
+				"${PODS_ROOT}/Target Support Files/Pods-Demo/Pods-Demo-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-			);
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alloy.framework",
+				"${PODS_ROOT}/Target Support Files/Pods-Demo/Pods-Demo-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -480,16 +522,11 @@
 			files = (
 			);
 			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AlloyTests/Pods-AlloyTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Alloy-macOS/Alloy.framework",
+				"${PODS_ROOT}/Target Support Files/Pods-AlloyTests/Pods-AlloyTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-			);
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alloy.framework",
+				"${PODS_ROOT}/Target Support Files/Pods-AlloyTests/Pods-AlloyTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -502,16 +539,11 @@
 			files = (
 			);
 			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-DemoApp/Pods-DemoApp-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Alloy.default-ML-Shaders-iOS/Alloy.framework",
+				"${PODS_ROOT}/Target Support Files/Pods-DemoApp/Pods-DemoApp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-			);
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alloy.framework",
+				"${PODS_ROOT}/Target Support Files/Pods-DemoApp/Pods-DemoApp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -524,16 +556,11 @@
 			files = (
 			);
 			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-DemoAppTests/Pods-DemoAppTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Alloy-iOS/Alloy.framework",
+				"${PODS_ROOT}/Target Support Files/Pods-DemoAppTests/Pods-DemoAppTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-			);
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alloy.framework",
+				"${PODS_ROOT}/Target Support Files/Pods-DemoAppTests/Pods-DemoAppTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -580,8 +607,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18B1A087231E7867000A9BAB /* SwitchDataFormatEncoder.swift in Sources */,
 				93B3E24821F50722008835A0 /* Shaders.metal in Sources */,
+				18B1A084231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift in Sources */,
+				1804316E231FE33A006F2ED3 /* EuclideanDistanceTests.swift in Sources */,
 				93B3E24021F505E1008835A0 /* AlloyTests.swift in Sources */,
+				18043171231FE45D006F2ED3 /* TextureCachingTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -589,7 +620,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				93B3E29221F51AAF008835A0 /* Shaders.metal in Sources */,
 				93B3E27521F51982008835A0 /* ViewController.swift in Sources */,
 				93B3E27321F51982008835A0 /* AppDelegate.swift in Sources */,
 			);
@@ -599,8 +629,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18B1A088231E7867000A9BAB /* SwitchDataFormatEncoder.swift in Sources */,
 				93B3E29121F51AAF008835A0 /* Shaders.metal in Sources */,
+				18B1A085231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift in Sources */,
+				1804316F231FE33A006F2ED3 /* EuclideanDistanceTests.swift in Sources */,
 				93B3E29021F51997008835A0 /* AlloyTests.swift in Sources */,
+				18043172231FE45D006F2ED3 /* TextureCachingTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -810,6 +844,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = PR6HV9J6AD;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Alloy-macOS/Alloy.framework/Headers\"",
+					"\"${PROJECT_FILE_PATH}/../Alloy/Shaders/Definitions.h\"",
+				);
 				INFOPLIST_FILE = AlloyTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -831,6 +870,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = PR6HV9J6AD;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Alloy-macOS/Alloy.framework/Headers\"",
+					"\"${PROJECT_FILE_PATH}/../Alloy/Shaders/Definitions.h\"",
+				);
 				INFOPLIST_FILE = AlloyTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -898,6 +942,11 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = PR6HV9J6AD;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Alloy-iOS/Alloy.framework/Headers\"",
+					"\"${PROJECT_FILE_PATH}/../Alloy/Shaders/Definitions.h\"",
+				);
 				INFOPLIST_FILE = DemoAppTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -923,6 +972,11 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = PR6HV9J6AD;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Alloy-iOS/Alloy.framework/Headers\"",
+					"\"${PROJECT_FILE_PATH}/../Alloy/Shaders/Definitions.h\"",
+				);
 				INFOPLIST_FILE = DemoAppTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = (
