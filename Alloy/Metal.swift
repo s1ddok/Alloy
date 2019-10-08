@@ -13,7 +13,7 @@ public final class Metal {
     
     public static let device: MTLDevice! = MTLCreateSystemDefaultDevice()
     
-    #if (os(macOS) && targetEnvironment(macCatalyst)) || (os(iOS) && targetEnvironment(simulator))
+    #if os(macOS) && targetEnvironment(macCatalyst)
     @available(macOS 10.15, iOS 13.0, *)
     public static let lowPowerDevice: MTLDevice? = {
         return MTLCopyAllDevices().first { $0.isLowPower }
