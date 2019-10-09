@@ -41,7 +41,7 @@ public extension MTLDevice {
         return false
         #else
         if #available(iOS 13.0, *) {
-            return !self.supportsFamily(.familyApple3)
+            return !self.supportsFamily(.apple3)
         } else {
             return !self.supportsFeatureSet(.iOS_GPUFamily3_v3)
         }
