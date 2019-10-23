@@ -8,36 +8,34 @@
 import Metal
 import MetalPerformanceShaders
 
-public class MaskGuidedBlurEncoder {
+final public class MaskGuidedBlurEncoder {
 
-    public enum Errors: Error {
-        case metalInitializationFailed
-    }
+    // MARK: - Propertires
 
-    private let blurRowPassState: MTLComputePipelineState
-    private let blurColumnPassState: MTLComputePipelineState
+    public let blurRowPassState: MTLComputePipelineState
+    public let blurColumnPassState: MTLComputePipelineState
     private let deviceSupportsNonuniformThreadgroups: Bool
 
-    public convenience init(context: MTLContext) throws {
-        guard let library = context.shaderLibrary(for: type(of: self).self)
-        else { throw Errors.metalInitializationFailed }
+    // MARK: - Life Cycle
 
+    public convenience init(context: MTLContext) throws {
+        guard let library = context.shaderLibrary(for: type(of: self))
+        else { throw CommonErrors.metalInitializationFailed }
         try self.init(library: library)
     }
 
     public init(library: MTLLibrary) throws {
         self.deviceSupportsNonuniformThreadgroups = library.device.supports(feature: .nonUniformThreadgroups)
         let constantValues = MTLFunctionConstantValues()
-        var dispatchFlag = self.deviceSupportsNonuniformThreadgroups
-        constantValues.setConstantValue(&dispatchFlag,
-                                        type: .bool,
-                                        index: 0)
-
+        constantValues.set(self.deviceSupportsNonuniformThreadgroups,
+                           at: 0)
         self.blurRowPassState = try library.computePipelineState(function: type(of: self).blurRowPassFunctionName,
                                                                  constants: constantValues)
         self.blurColumnPassState = try library.computePipelineState(function: type(of: self).blurColumnPassFunctionName,
                                                                     constants: constantValues)
     }
+
+    // MARK: - Encode
 
     public func encode(sourceTexture: MTLTexture,
                        maskTexture: MTLTexture,
@@ -58,6 +56,7 @@ public class MaskGuidedBlurEncoder {
                                    maskTexture,
                                    temporaryImage.texture])
             encoder.set(sigma, at: 0)
+
             if self.deviceSupportsNonuniformThreadgroups {
                 encoder.dispatch2d(state: self.blurRowPassState,
                                    exactly: sourceTexture.size)
@@ -70,6 +69,7 @@ public class MaskGuidedBlurEncoder {
                                    maskTexture,
                                    destinationTexture])
             encoder.set(sigma, at: 0)
+
             if self.deviceSupportsNonuniformThreadgroups {
                 encoder.dispatch2d(state: self.blurColumnPassState,
                                    exactly: sourceTexture.size)
@@ -80,7 +80,7 @@ public class MaskGuidedBlurEncoder {
         }
     }
 
-    private static let blurRowPassFunctionName = "maskGuidedBlurRowPass"
-    private static let blurColumnPassFunctionName = "maskGuidedBlurColumnPass"
+    public static let blurRowPassFunctionName = "maskGuidedBlurRowPass"
+    public static let blurColumnPassFunctionName = "maskGuidedBlurColumnPass"
 }
 
