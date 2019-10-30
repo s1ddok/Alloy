@@ -726,7 +726,7 @@ kernel void lookUpTable(texture2d<float, access::read> source [[ texture(0) ]],
     checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
 
     constexpr sampler s(coord::normalized,
-                        address::clamp_to_zero,
+                        address::clamp_to_edge,
                         filter::linear);
 
     // read original color
