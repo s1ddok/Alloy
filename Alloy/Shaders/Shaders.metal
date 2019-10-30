@@ -713,3 +713,30 @@ vertex float4 simpleVertex(constant float4* vertices [[ buffer(0) ]],
 fragment float4 plainColorFragment(constant float4& pointColor [[ buffer(0) ]]) {
     return pointColor;
 }
+
+// MARK: Look up table
+
+kernel void lookUpTable(texture2d<float, access::read> source [[ texture(0) ]],
+                        texture2d<float, access::write> destination [[ texture(1) ]],
+                        texture3d<float, access::sample> lut [[ texture(2) ]],
+                        constant float& intensity [[ buffer(0) ]],
+                        uint2 position [[thread_position_in_grid]]) {
+    const ushort2 textureSize = ushort2(destination.get_width(),
+                                        destination.get_height());
+    checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
+
+    constexpr sampler s(coord::normalized,
+                        address::clamp_to_edge,
+                        filter::linear);
+
+    // read original color
+    float4 sourceColor = source.read(position);
+
+    // use it to sample target color
+    sourceColor.rgb = mix(sourceColor.rgb,
+                          lut.sample(s, sourceColor.rgb).rgb,
+                          intensity);
+
+    // write it to destination texture
+    destination.write(sourceColor, position);
+}
