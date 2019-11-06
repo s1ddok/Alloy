@@ -40,19 +40,3 @@ public extension MTLContext {
         return videoTextureCache
     }
 }
-
-#if targetEnvironment(simulator)
-// This is a mimic for CoreVideo APIs that are not available on simulator
-// This is needed to release a library through CocoaPods
-public typealias CVMetalTexture = CVImageBuffer
-public class CVMetalTextureCache {}
-public func CVMetalTextureCacheCreate(_ allocator: CFAllocator?, _ cacheAttributes: CFDictionary?, _ metalDevice: MTLDevice, _ textureAttributes: CFDictionary?, _ cacheOut: UnsafeMutablePointer<CVMetalTextureCache?>) -> CVReturn {
-    return kCVReturnError
-}
-public func CVMetalTextureCacheCreateTextureFromImage(_ allocator: CFAllocator?, _ textureCache: CVMetalTextureCache, _ sourceImage: CVImageBuffer, _ textureAttributes: CFDictionary?, _ pixelFormat: MTLPixelFormat, _ width: Int, _ height: Int, _ planeIndex: Int, _ textureOut: UnsafeMutablePointer<CVMetalTexture?>) -> CVReturn {
-    return kCVReturnError
-}
-public func CVMetalTextureGetTexture(_ image: CVMetalTexture) -> MTLTexture? {
-    return nil
-}
-#endif
