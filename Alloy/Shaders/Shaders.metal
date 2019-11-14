@@ -52,6 +52,44 @@ generateKernels(textureCopy)
 #undef outerArguments
 #undef innerArguments
 
+// MARK: - Resize Texture
+
+template <typename T>
+void textureResize(texture2d<T, access::sample> sourceTexture,
+                   texture2d<T, access::write> destinationTexture,
+                   sampler sampler,
+                   const ushort2 position,
+                   const ushort2 totalThreads) {
+    const ushort2 textureSize = ushort2(destinationTexture.get_width(),
+                                        destinationTexture.get_height());
+    checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
+
+    const float2 normalizedCoord = float2((float(position.x) + 0.5) / textureSize.x,
+                                          (float(position.y) + 0.5) / textureSize.y);
+
+    const auto sampledlValue = sourceTexture.sample(sampler, normalizedCoord);
+    destinationTexture.write(sampledlValue, position);
+}
+
+#define outerArguments(T)                                        \
+(texture2d<T, access::sample> sourceTexture [[ texture(0) ]],    \
+texture2d<T, access::write> destinationTexture [[ texture(1) ]], \
+sampler s [[ sampler(0) ]],                                      \
+const ushort2 position [[ thread_position_in_grid ]],            \
+const ushort2 totalThreads [[ threads_per_grid ]])               \
+
+#define innerArguments \
+(sourceTexture,        \
+destinationTexture,    \
+s,                     \
+position,              \
+totalThreads)          \
+
+generateKernels(textureResize)
+
+#undef outerArguments
+#undef innerArguments
+
 // MARK: - Texture Mask
 
 template <typename T>
