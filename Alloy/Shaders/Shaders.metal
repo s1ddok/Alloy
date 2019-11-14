@@ -27,24 +27,33 @@ struct BlockSize {
 template <typename T>
 void textureCopy(texture2d<T, access::read> sourceTexture,
                  texture2d<T, access::write> destinationTexture,
+                 constant uint2& readOffset,
+                 constant uint2& writeOffset,
                  const ushort2 position) {
-    const ushort2 textureSize = ushort2(destinationTexture.get_width(),
-                                        destinationTexture.get_height());
-    checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
+    const ushort2 textureSize = ushort2(sourceTexture.get_width(),
+                                        sourceTexture.get_height());
 
-    const auto resultValue = sourceTexture.read(position);
+    const ushort2 readPosition = position + ushort2(readOffset);
+    const ushort2 writePosition = position + ushort2(writeOffset);
+    checkPosition(readPosition, textureSize, deviceSupportsNonuniformThreadgroups);
 
-    destinationTexture.write(resultValue, position);
+    const auto resultValue = sourceTexture.read(readPosition);
+
+    destinationTexture.write(resultValue, writePosition);
 }
 
 #define outerArguments(T)                                        \
 (texture2d<T, access::read> sourceTexture [[ texture(0) ]],      \
 texture2d<T, access::write> destinationTexture [[ texture(1) ]], \
+constant uint2& readOffset [[ buffer(0) ]],                      \
+constant uint2& writeOffset [[ buffer(1) ]],                     \
 const ushort2 position [[thread_position_in_grid]])              \
 
 #define innerArguments \
 (sourceTexture,        \
 destinationTexture,    \
+readOffset,            \
+writeOffset,           \
 position)              \
 
 generateKernels(textureCopy)

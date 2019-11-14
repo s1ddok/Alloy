@@ -51,18 +51,52 @@ final public class TextureCopyEncoder {
     public func encode(sourceTexture: MTLTexture,
                        destinationTexture: MTLTexture,
                        using encoder: MTLComputeCommandEncoder) {
+        self.copy(region: sourceTexture.region,
+                  from: sourceTexture,
+                  to: .zero,
+                  of: destinationTexture,
+                  using: encoder)
+    }
+
+    public func copy(region sourceTexureRegion: MTLRegion,
+                     from sourceTexture: MTLTexture,
+                     to destinationTextureOrigin: MTLOrigin,
+                     of destinationTexture: MTLTexture,
+                     in commandBuffer: MTLCommandBuffer) {
+        commandBuffer.compute { encoder in
+            encoder.label = "Texture Copy"
+            self.copy(region: sourceTexureRegion,
+                      from: sourceTexture,
+                      to: destinationTextureOrigin,
+                      of: destinationTexture,
+                      using: encoder)
+        }
+    }
+
+    public func copy(region sourceTexureRegion: MTLRegion,
+                     from sourceTexture: MTLTexture,
+                     to destinationTextureOrigin: MTLOrigin,
+                     of destinationTexture: MTLTexture,
+                     using encoder: MTLComputeCommandEncoder) {
+        let readOffset = SIMD2<UInt32>(x: UInt32(sourceTexureRegion.origin.x),
+                                       y: UInt32(sourceTexureRegion.origin.y))
+        let writeOffset = SIMD2<UInt32>(x: UInt32(destinationTextureOrigin.x),
+                                        y: UInt32(destinationTextureOrigin.y))
+
         encoder.set(textures: [sourceTexture,
                                destinationTexture])
 
+        encoder.set(readOffset, at: 0)
+        encoder.set(writeOffset, at: 1)
+
         if self.deviceSupportsNonuniformThreadgroups {
-            encoder.dispatch2d(state: pipelineState,
-                               exactly: destinationTexture.size)
+            encoder.dispatch2d(state: self.pipelineState,
+                               exactly: sourceTexureRegion.size)
         } else {
-            encoder.dispatch2d(state: pipelineState,
-                               covering: destinationTexture.size)
+            encoder.dispatch2d(state: self.pipelineState,
+                               covering: sourceTexureRegion.size)
         }
     }
 
     public static let functionName = "textureCopy"
 }
-
