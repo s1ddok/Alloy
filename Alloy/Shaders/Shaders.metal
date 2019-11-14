@@ -111,6 +111,145 @@ generateKernels(textureMask)
 #undef outerArguments
 #undef innerArguments
 
+// MARK: - Mask Bounds
+
+template <typename T>
+enable_if_t<is_integral_v<T>, bool>
+inline isMaskValue(T value) {
+   return value >= 128;
+}
+
+template <typename T>
+enable_if_t<is_floating_point_v<T>, bool>
+inline isMaskValue(T value) {
+   return value >= 0.5;
+}
+
+template <typename T>
+void maskBounds(texture2d<T, access::read> sourceTexture,
+                constant BlockSize& inputBlockSize,
+                device atomic_uint* minX,
+                device atomic_uint* minY,
+                device atomic_uint* maxX,
+                device atomic_uint* maxY,
+                device uint4& result,
+                const ushort index,
+                const ushort2 position,
+                const ushort2 threadsPerThreadgroup) {
+    const auto textureSize = ushort2(sourceTexture.get_width(),
+                                     sourceTexture.get_height());
+
+    auto originalBlockSize = ushort2(inputBlockSize.width,
+                                     inputBlockSize.height);
+    const auto blockStartPosition = position * originalBlockSize;
+
+    auto block_size = originalBlockSize;
+    if (position.x == threadsPerThreadgroup.x || position.y == threadsPerThreadgroup.y) {
+        const auto readTerritory = blockStartPosition + originalBlockSize;
+        block_size = originalBlockSize - (readTerritory - textureSize);
+    }
+
+    for (ushort x = 0; x < block_size.x; x++) {
+        for (ushort y = 0; y < block_size.y; y++) {
+            const auto readPosition = blockStartPosition + ushort2(x, y);
+            const auto currentValue = sourceTexture.read(readPosition).r;
+            if (isMaskValue(currentValue)) {
+                auto minXValue = atomic_load_explicit(minX,
+                                                      memory_order_relaxed);
+                auto minYValue = atomic_load_explicit(minY,
+                                                      memory_order_relaxed);
+                auto maxXValue = atomic_load_explicit(maxX,
+                                                      memory_order_relaxed);
+                auto maxYValue = atomic_load_explicit(maxY,
+                                                      memory_order_relaxed);
+
+                minXValue = min(minXValue,
+                                uint(readPosition.x));
+                minYValue = min(minYValue,
+                                uint(readPosition.y));
+                maxXValue = max(maxXValue,
+                                uint(readPosition.x));
+                maxYValue = max(maxYValue,
+                                uint(readPosition.y));
+
+                atomic_store_explicit(minX,
+                                      minXValue,
+                                      memory_order_relaxed);
+                atomic_store_explicit(minY,
+                                      minYValue,
+                                      memory_order_relaxed);
+                atomic_store_explicit(maxX,
+                                      maxXValue,
+                                      memory_order_relaxed);
+                atomic_store_explicit(maxY,
+                                      maxYValue,
+                                      memory_order_relaxed);
+            }
+        }
+    }
+
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+
+    if (index == 0) {
+        auto minXValue = atomic_load_explicit(minX,
+                                              memory_order_relaxed);
+        auto minYValue = atomic_load_explicit(minY,
+                                              memory_order_relaxed);
+        auto maxXValue = atomic_load_explicit(maxX,
+                                              memory_order_relaxed);
+        auto maxYValue = atomic_load_explicit(maxY,
+                                              memory_order_relaxed);
+
+        // Write the result.
+        result = uint4(minXValue, minYValue,
+                       maxXValue - minXValue,
+                       maxYValue - minYValue);
+
+        // Reset atomics to initial values.
+        atomic_store_explicit(minX,
+                              UINT_MAX,
+                              memory_order_relaxed);
+        atomic_store_explicit(minY,
+                              UINT_MAX,
+                              memory_order_relaxed);
+        atomic_store_explicit(maxX,
+                              0,
+                              memory_order_relaxed);
+        atomic_store_explicit(maxY,
+                              0,
+                              memory_order_relaxed);
+    }
+}
+
+#define outerArguments(T)                                          \
+(texture2d<T, access::read> sourceTexture [[ texture(0) ]],        \
+constant BlockSize& inputBlockSize [[ buffer(0) ]],                \
+device atomic_uint* minX [[ buffer(1) ]],                          \
+device atomic_uint* minY [[ buffer(2) ]],                          \
+device atomic_uint* maxX [[ buffer(3) ]],                          \
+device atomic_uint* maxY [[ buffer(4) ]],                          \
+device uint4& result [[ buffer(5) ]],                              \
+const ushort index [[ thread_index_in_threadgroup ]],              \
+const ushort2 position [[ thread_position_in_grid ]],              \
+const ushort2 threadsPerThreadgroup [[ threads_per_threadgroup ]]) \
+
+#define innerArguments \
+(sourceTexture,        \
+inputBlockSize,        \
+minX,                  \
+minY,                  \
+maxX,                  \
+maxY,                  \
+result,                \
+index,                 \
+position,              \
+threadsPerThreadgroup) \
+
+generateKernels(maskBounds)
+
+#undef outerArguments
+#undef innerArguments
+
 // MARK: - Texture Max
 
 template <typename T>
