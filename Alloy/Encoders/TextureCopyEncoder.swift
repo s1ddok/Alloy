@@ -78,10 +78,10 @@ final public class TextureCopyEncoder {
                      to destinationTextureOrigin: MTLOrigin,
                      of destinationTexture: MTLTexture,
                      using encoder: MTLComputeCommandEncoder) {
-        let readOffset = SIMD2<UInt32>(x: UInt32(sourceTexureRegion.origin.x),
-                                       y: UInt32(sourceTexureRegion.origin.y))
-        let writeOffset = SIMD2<UInt32>(x: UInt32(destinationTextureOrigin.x),
-                                        y: UInt32(destinationTextureOrigin.y))
+        let readOffset = SIMD2<UInt16>(x: UInt16(sourceTexureRegion.origin.x),
+                                       y: UInt16(sourceTexureRegion.origin.y))
+        let writeOffset = SIMD2<UInt16>(x: UInt16(destinationTextureOrigin.x),
+                                        y: UInt16(destinationTextureOrigin.y))
 
         encoder.set(textures: [sourceTexture,
                                destinationTexture])
