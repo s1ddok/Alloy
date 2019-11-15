@@ -33,8 +33,8 @@ void textureCopy(texture2d<T, access::read> sourceTexture,
     const ushort2 textureSize = ushort2(sourceTexture.get_width(),
                                         sourceTexture.get_height());
 
-    const ushort2 readPosition = position + ushort2(readOffset);
-    const ushort2 writePosition = position + ushort2(writeOffset);
+    const ushort2 readPosition = position + readOffset;
+    const ushort2 writePosition = position + writeOffset;
     checkPosition(readPosition, textureSize, deviceSupportsNonuniformThreadgroups);
 
     const auto resultValue = sourceTexture.read(readPosition);
