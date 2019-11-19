@@ -320,7 +320,7 @@ final public class MPSUnaryImageKernelsEncoder {
         let textureDescriptor = sourceTexture.descriptor
         textureDescriptor.usage = [.shaderRead, .shaderWrite]
         textureDescriptor.storageMode = .private
-        let temporaryImages = [Int](0 ..< self.kernelQueue.count).map { _ in
+        let temporaryImages = [Int](0 ..< self.kernelQueue.count - 1).map { _ in
             MPSTemporaryImage(commandBuffer: commandBuffer,
                               textureDescriptor: textureDescriptor)
         }
