@@ -149,56 +149,52 @@ void maskBounds(texture2d<T, access::read> sourceTexture,
         block_size = originalBlockSize - (readTerritory - textureSize);
     }
 
+    uint localMinX = UINT_MAX;
+    uint localMinY = UINT_MAX;
+    uint localMaxX = 0;
+    uint localMaxY = 0;
+
     for (ushort x = 0; x < block_size.x; x++) {
         for (ushort y = 0; y < block_size.y; y++) {
             const auto readPosition = blockStartPosition + ushort2(x, y);
             const auto currentValue = sourceTexture.read(readPosition).r;
             if (isMaskValue(currentValue)) {
-                auto minXValue = atomic_load_explicit(minX,
-                                                      memory_order_relaxed);
-                auto minYValue = atomic_load_explicit(minY,
-                                                      memory_order_relaxed);
-                auto maxXValue = atomic_load_explicit(maxX,
-                                                      memory_order_relaxed);
-                auto maxYValue = atomic_load_explicit(maxY,
-                                                      memory_order_relaxed);
+                const auto readPositionX = uint(readPosition.x);
+                const auto readPositionY = uint(readPosition.y);
 
-                minXValue = min(minXValue,
-                                uint(readPosition.x));
-                minYValue = min(minYValue,
-                                uint(readPosition.y));
-                maxXValue = max(maxXValue,
-                                uint(readPosition.x));
-                maxYValue = max(maxYValue,
-                                uint(readPosition.y));
+                localMinX = min(localMinX, readPositionX);
+                localMinY = min(localMinY, readPositionY);
 
-                atomic_store_explicit(minX,
-                                      minXValue,
-                                      memory_order_relaxed);
-                atomic_store_explicit(minY,
-                                      minYValue,
-                                      memory_order_relaxed);
-                atomic_store_explicit(maxX,
-                                      maxXValue,
-                                      memory_order_relaxed);
-                atomic_store_explicit(maxY,
-                                      maxYValue,
-                                      memory_order_relaxed);
+                localMaxX = max(localMaxX, readPositionX);
+                localMaxY = max(localMaxY, readPositionY);
             }
         }
     }
+
+    atomic_fetch_min_explicit(minX,
+                              localMinX,
+                              ::memory_order_relaxed);
+    atomic_fetch_min_explicit(minY,
+                              localMinY,
+                              ::memory_order_relaxed);
+    atomic_fetch_max_explicit(maxX,
+                              localMaxX,
+                              ::memory_order_relaxed);
+    atomic_fetch_max_explicit(maxY,
+                              localMaxY,
+                              ::memory_order_relaxed);
 
     threadgroup_barrier(mem_flags::mem_threadgroup);
 
     if (index == 0) {
         auto minXValue = atomic_load_explicit(minX,
-                                              memory_order_relaxed);
+                                              ::memory_order_relaxed);
         auto minYValue = atomic_load_explicit(minY,
-                                              memory_order_relaxed);
+                                              ::memory_order_relaxed);
         auto maxXValue = atomic_load_explicit(maxX,
-                                              memory_order_relaxed);
+                                              ::memory_order_relaxed);
         auto maxYValue = atomic_load_explicit(maxY,
-                                              memory_order_relaxed);
+                                              ::memory_order_relaxed);
 
         // Write the result.
         result = uint4(minXValue, minYValue,
@@ -208,16 +204,16 @@ void maskBounds(texture2d<T, access::read> sourceTexture,
         // Reset atomics to initial values.
         atomic_store_explicit(minX,
                               UINT_MAX,
-                              memory_order_relaxed);
+                              ::memory_order_relaxed);
         atomic_store_explicit(minY,
                               UINT_MAX,
-                              memory_order_relaxed);
+                              ::memory_order_relaxed);
         atomic_store_explicit(maxX,
                               0,
-                              memory_order_relaxed);
+                              ::memory_order_relaxed);
         atomic_store_explicit(maxY,
                               0,
-                              memory_order_relaxed);
+                              ::memory_order_relaxed);
     }
 }
 
