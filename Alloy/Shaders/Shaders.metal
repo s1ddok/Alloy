@@ -740,3 +740,29 @@ kernel void lookUpTable(texture2d<float, access::read> source [[ texture(0) ]],
     // write it to destination texture
     destination.write(sourceColor, position);
 }
+
+// MARK: Texture affine crop
+
+kernel void textureAffineCrop(texture2d<half, access::sample> source [[ texture(0) ]],
+                              texture2d<half, access::write> destination [[ texture(1) ]],
+                              constant float3x3& transform [[ buffer(0) ]],
+                              ushort2 position [[thread_position_in_grid]]) {
+    const ushort2 textureSize = ushort2(destination.get_width(),
+                                        destination.get_height());
+    checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
+
+    constexpr sampler s(coord::normalized,
+                        address::clamp_to_edge,
+                        filter::linear);
+
+    const float2 textureSizef = float2(textureSize);
+    const float2 normalizedPosition = float2(position) / textureSizef;
+
+    const float3 targetPosition = transform * float3(normalizedPosition, 1.0f);
+
+    // read original color
+    half4 sourceColor = source.sample(s, targetPosition.xy);
+
+    // write it to destination texture
+    destination.write(sourceColor, position);
+}
