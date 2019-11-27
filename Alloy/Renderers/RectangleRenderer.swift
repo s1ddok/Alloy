@@ -6,15 +6,8 @@
 //
 
 import Metal
-import simd
 
-@available(iOS 11.3, tvOS 11.3, macOS 10.13, *)
 final public class RectangleRenderer {
-
-    public enum Errors: Error {
-        case functionCreationFailed
-        case libraryCreationFailed
-    }
 
     // MARK: - Properties
 
@@ -33,12 +26,10 @@ final public class RectangleRenderer {
     ///   - context: Alloy's Metal context.
     ///   - pixelFormat: Color attachment's pixel format.
     /// - Throws: Library or function creation errors.
-    public convenience init(context: MTLContext, pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
-        guard
-            let library = context.shaderLibrary(for: RectangleRenderer.self)
-        else { throw Errors.libraryCreationFailed }
-
-        try self.init(library: library, pixelFormat: pixelFormat)
+    public convenience init(context: MTLContext,
+                            pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
+        try self.init(library: context.shaderLibrary(for: Self.self),
+                      pixelFormat: pixelFormat)
     }
 
     /// Creates a new instance of RectangleRenderer.
@@ -47,11 +38,10 @@ final public class RectangleRenderer {
     ///   - library: Alloy's shader library.
     ///   - pixelFormat: Color attachment's pixel format.
     /// - Throws: Function creation error.
-    public init(library: MTLLibrary, pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
-        guard
-            let vertexFunction = library.makeFunction(name: RectangleRenderer.vertexFunctionName),
-            let fragmentFunction = library.makeFunction(name: RectangleRenderer.fragmentFunctionName)
-        else { throw Errors.functionCreationFailed }
+    public init(library: MTLLibrary,
+                pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
+        let vertexFunction = try library.createFunction(name: Self.vertexFunctionName)
+        let fragmentFunction = try library.createFunction(name: Self.fragmentFunctionName)
 
         let renderPipelineDescriptor = MTLRenderPipelineDescriptor()
         renderPipelineDescriptor.vertexFunction = vertexFunction
@@ -59,7 +49,7 @@ final public class RectangleRenderer {
         renderPipelineDescriptor.colorAttachments[0].pixelFormat = pixelFormat
 
         self.renderPipelineState = try library.device
-            .makeRenderPipelineState(descriptor: renderPipelineDescriptor)
+                                              .makeRenderPipelineState(descriptor: renderPipelineDescriptor)
     }
 
     // MARK: - Helpers
@@ -88,7 +78,6 @@ final public class RectangleRenderer {
     ///   - commandBuffer: Command buffer to put the rendering work items into.
     public func render(renderPassDescriptor: MTLRenderPassDescriptor,
                        commandBuffer: MTLCommandBuffer) throws {
-        // Render.
         commandBuffer.render(descriptor: renderPassDescriptor,
                              self.render(using:))
     }
@@ -97,7 +86,8 @@ final public class RectangleRenderer {
     ///
     /// - Parameter renderEncoder: Container to put the rendering work into.
     public func render(using renderEncoder: MTLRenderCommandEncoder) {
-        guard self.normalizedRect != .zero else { return }
+        guard self.normalizedRect != .zero
+        else { return }
 
         // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool.
         renderEncoder.pushDebugGroup("Draw Rectangle Geometry")
@@ -116,7 +106,6 @@ final public class RectangleRenderer {
         renderEncoder.popDebugGroup()
     }
 
-    private static let vertexFunctionName = "rectVertex"
-    private static let fragmentFunctionName = "primitivesFragment"
-
+    public static let vertexFunctionName = "rectVertex"
+    public static let fragmentFunctionName = "primitivesFragment"
 }

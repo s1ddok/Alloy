@@ -17,15 +17,13 @@ final public class EuclideanDistanceEncoder {
 
     convenience public init(context: MTLContext,
                             scalarType: MTLPixelFormat.ScalarType = .half) throws {
-        guard let alloyLibrary = context.shaderLibrary(for: type(of: self))
-        else { throw CommonErrors.metalInitializationFailed }
-        try self.init(library: alloyLibrary,
+        try self.init(library: context.shaderLibrary(for: Self.self),
                       scalarType: scalarType)
     }
 
     public init(library: MTLLibrary,
                 scalarType: MTLPixelFormat.ScalarType = .half) throws {
-        let functionName = type(of: self).functionName + "_" + scalarType.rawValue
+        let functionName = Self.functionName + "_" + scalarType.rawValue
         self.pipelineState = try library.computePipelineState(function: functionName)
     }
 
@@ -61,7 +59,7 @@ final public class EuclideanDistanceEncoder {
         encoder.setThreadgroupMemoryLength(threadgroupSize.width * threadgroupSize.height * 4 * MemoryLayout<Float16>.stride,
                                            index: 0)
         encoder.dispatch2d(state: self.pipelineState,
-                           covering: .init(width: 1, height: 1, depth: 1),
+                           covering: .one,
                            threadgroupSize: threadgroupSize)
     }
 

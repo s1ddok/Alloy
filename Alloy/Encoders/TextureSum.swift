@@ -17,7 +17,8 @@ public class TextureSum {
     public var outputTexture: MTLTexture? = nil
 
     public init(library: MTLLibrary) throws {
-        self.deviceSupportsNonuniformThreadgroups = library.device.supports(feature: .nonUniformThreadgroups)
+        self.deviceSupportsNonuniformThreadgroups = library.device
+                                                          .supports(feature: .nonUniformThreadgroups)
 
         let constantValues = MTLFunctionConstantValues()
         var dispatchFlag = self.deviceSupportsNonuniformThreadgroups
@@ -25,18 +26,19 @@ public class TextureSum {
                                         type: .bool,
                                         index: 0)
 
-        self.pipelineState = try library.computePipelineState(function: TextureSum.functionName,
+        self.pipelineState = try library.computePipelineState(function: Self.functionName,
                                                               constants: constantValues)
     }
 
     public func encode(using encoder: MTLComputeCommandEncoder) {
-        guard
-            let input1 = self.inputTexture1,
-            let input2 = self.inputTexture2,
-            let output = self.outputTexture
+        guard let input1 = self.inputTexture1,
+              let input2 = self.inputTexture2,
+              let output = self.outputTexture
         else { return }
 
-        encoder.set(textures: [input1, input2, output])
+        encoder.set(textures: [input1,
+                               input2,
+                               output])
 
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: self.pipelineState,

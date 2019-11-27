@@ -17,14 +17,13 @@ final public class TextureAffineCropEncoder {
     // MARK: - Life Cycle
 
     public convenience init(context: MTLContext) throws {
-        guard let library = context.shaderLibrary(for: Self.self)
-        else { throw CommonErrors.metalInitializationFailed }
-        try self.init(library: library)
+        try self.init(library: context.shaderLibrary(for: Self.self))
     }
 
     public init(library: MTLLibrary) throws {
         let functionName = Self.functionName
-        self.deviceSupportsNonuniformThreadgroups = library.device.supports(feature: .nonUniformThreadgroups)
+        self.deviceSupportsNonuniformThreadgroups = library.device
+                                                           .supports(feature: .nonUniformThreadgroups)
         let constantValues = MTLFunctionConstantValues()
         constantValues.set(self.deviceSupportsNonuniformThreadgroups,
                            at: 0)

@@ -35,12 +35,10 @@ public class MaskRenderer {
     ///   - context: Alloy's Metal context.
     ///   - pixelFormat: Color attachment's pixel format.
     /// - Throws: Library or function creation errors.
-    public convenience init(context: MTLContext, pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
-        guard
-            let library = context.shaderLibrary(for: MaskRenderer.self)
-        else { throw Errors.libraryCreationFailed }
-
-        try self.init(library: library, pixelFormat: pixelFormat)
+    public convenience init(context: MTLContext,
+                            pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
+        try self.init(library: context.shaderLibrary(for: Self.self),
+                      pixelFormat: pixelFormat)
     }
 
     /// Creates a new instance of MaskRenderer.
@@ -49,10 +47,10 @@ public class MaskRenderer {
     ///   - library: Alloy's shader library.
     ///   - pixelFormat: Color attachment's pixel format.
     /// - Throws: Function creation error.
-    public init(library: MTLLibrary, pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
-        guard
-            let vertexFunction = library.makeFunction(name: MaskRenderer.vertexFunctionName),
-            let fragmentFunction = library.makeFunction(name: MaskRenderer.fragmentFunctionName)
+    public init(library: MTLLibrary,
+                pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
+        guard let vertexFunction = library.makeFunction(name: Self.vertexFunctionName),
+              let fragmentFunction = library.makeFunction(name: Self.fragmentFunctionName)
         else { throw Errors.functionCreationFailed }
 
         let renderPipelineDescriptor = MTLRenderPipelineDescriptor()
@@ -91,7 +89,6 @@ public class MaskRenderer {
     ///   - commandBuffer: Command buffer to put the rendering work items into.
     public func render(renderPassDescriptor: MTLRenderPassDescriptor,
                        commandBuffer: MTLCommandBuffer) throws {
-        // Render.
         commandBuffer.render(descriptor: renderPassDescriptor,
                              self.render(using:))
     }
@@ -100,7 +97,8 @@ public class MaskRenderer {
     ///
     /// - Parameter renderEncoder: Container to put the rendering work into.
     public func render(using renderEncoder: MTLRenderCommandEncoder) {
-        guard self.normalizedRect != .zero else { return }
+        guard self.normalizedRect != .zero
+        else { return }
 
         // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool.
         renderEncoder.pushDebugGroup("Draw Rectangle With Mask")

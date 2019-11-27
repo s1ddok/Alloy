@@ -7,17 +7,17 @@
 
 import Metal
 
-public enum MTLLibraryErrors: Error {
-    case missingFunction
-}
-
 public extension MTLLibrary {
-    func computePipelineState(function: String) throws -> MTLComputePipelineState {
-        guard let function = self.makeFunction(name: function) else {
-            throw MTLLibraryErrors.missingFunction
-        }
-        
-        return try self.device.makeComputePipelineState(function: function)
+
+    func createFunction(name functionName: String) throws -> MTLFunction {
+        guard let function = self.makeFunction(name: functionName)
+        else { throw CommonErrors.metalInitializationFailed }
+        return function
+    }
+
+    func computePipelineState(function functionName: String) throws -> MTLComputePipelineState {
+        return try self.device
+                       .makeComputePipelineState(function: self.createFunction(name: functionName))
     }
     
     @available(OSX 10.12, *)
@@ -25,7 +25,7 @@ public extension MTLLibrary {
                               constants: MTLFunctionConstantValues) throws -> MTLComputePipelineState {
         let function = try self.makeFunction(name: function,
                                              constantValues: constants)
-        
-        return try self.device.makeComputePipelineState(function: function)
+        return try self.device
+                       .makeComputePipelineState(function: function)
     }
 }

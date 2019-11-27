@@ -23,59 +23,59 @@ public extension MTLContext {
 
     func createMultisampleRenderTargetPair(width: Int, height: Int,
                                            pixelFormat: MTLPixelFormat,
-                                           sampleCount: Int = 4) -> (main: MTLTexture, resolve: MTLTexture)? {
-        return self.device
-                   .createMultisampleRenderTargetPair(width: width,
-                                                      height: height,
-                                                      pixelFormat: pixelFormat,
-                                                      sampleCount: sampleCount)
+                                           sampleCount: Int = 4) throws -> (main: MTLTexture,
+                                                                            resolve: MTLTexture) {
+        return try self.device
+                       .createMultisampleRenderTargetPair(width: width,
+                                                          height: height,
+                                                          pixelFormat: pixelFormat,
+                                                          sampleCount: sampleCount)
     }
 
     func texture(width: Int,
                  height: Int,
                  pixelFormat: MTLPixelFormat,
-                 usage: MTLTextureUsage = [.shaderRead]) -> MTLTexture? {
-        return self.device
-                   .texture(width: width,
-                            height: height,
-                            pixelFormat: pixelFormat,
-                            usage: usage)
+                 usage: MTLTextureUsage = [.shaderRead]) throws -> MTLTexture {
+        return try self.device
+                       .texture(width: width,
+                                height: height,
+                                pixelFormat: pixelFormat,
+                                usage: usage)
     }
 
     func depthState(depthCompareFunction: MTLCompareFunction,
-                    isDepthWriteEnabled: Bool = true) -> MTLDepthStencilState! {
-        return self.device
-                   .depthState(depthCompareFunction: depthCompareFunction,
-                               isDepthWriteEnabled: isDepthWriteEnabled)
+                    isDepthWriteEnabled: Bool = true) throws -> MTLDepthStencilState {
+        return try self.device
+                       .depthState(depthCompareFunction: depthCompareFunction,
+                                   isDepthWriteEnabled: isDepthWriteEnabled)
     }
 
     func depthBuffer(width: Int, height: Int,
                      usage: MTLTextureUsage = [],
-                     storageMode: MTLStorageMode? = nil) -> MTLTexture! {
-        return self.device
-                   .depthBuffer(width: width,
-                                height: height,
-                                usage: usage,
-                                storageMode: storageMode)
+                     storageMode: MTLStorageMode? = nil) throws -> MTLTexture {
+        return try self.device
+                       .depthBuffer(width: width,
+                                    height: height,
+                                    usage: usage,
+                                    storageMode: storageMode)
     }
 
     func buffer<T>(for type: T.Type,
                    count: Int = 1,
-                   options: MTLResourceOptions) -> MTLBuffer! {
-        return self.device
-                   .buffer(for: type,
-                           count: count,
-                           options: options)
+                   options: MTLResourceOptions) throws -> MTLBuffer {
+        return try self.device
+                       .buffer(for: type,
+                               count: count,
+                               options: options)
     }
 
-    @available(iOS 11.0, macOS 10.13, *)
     func heap(size: Int,
               storageMode: MTLStorageMode,
-              cpuCacheMode: MTLCPUCacheMode = .defaultCache) -> MTLHeap! {
-        return self.device
-                   .heap(size: size,
-                         storageMode: storageMode,
-                         cpuCacheMode: cpuCacheMode)
+              cpuCacheMode: MTLCPUCacheMode = .defaultCache) throws -> MTLHeap {
+        return try self.device
+                       .heap(size: size,
+                             storageMode: storageMode,
+                             cpuCacheMode: cpuCacheMode)
     }
 
     // MARK: - Vanilla API

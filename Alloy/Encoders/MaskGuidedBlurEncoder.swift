@@ -19,19 +19,18 @@ final public class MaskGuidedBlurEncoder {
     // MARK: - Life Cycle
 
     public convenience init(context: MTLContext) throws {
-        guard let library = context.shaderLibrary(for: type(of: self))
-        else { throw CommonErrors.metalInitializationFailed }
-        try self.init(library: library)
+        try self.init(library: context.shaderLibrary(for: Self.self))
     }
 
     public init(library: MTLLibrary) throws {
-        self.deviceSupportsNonuniformThreadgroups = library.device.supports(feature: .nonUniformThreadgroups)
+        self.deviceSupportsNonuniformThreadgroups = library.device
+                                                           .supports(feature: .nonUniformThreadgroups)
         let constantValues = MTLFunctionConstantValues()
         constantValues.set(self.deviceSupportsNonuniformThreadgroups,
                            at: 0)
-        self.blurRowPassState = try library.computePipelineState(function: type(of: self).blurRowPassFunctionName,
+        self.blurRowPassState = try library.computePipelineState(function: Self.blurRowPassFunctionName,
                                                                  constants: constantValues)
-        self.blurColumnPassState = try library.computePipelineState(function: type(of: self).blurColumnPassFunctionName,
+        self.blurColumnPassState = try library.computePipelineState(function: Self.blurColumnPassFunctionName,
                                                                     constants: constantValues)
     }
 

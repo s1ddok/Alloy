@@ -18,19 +18,18 @@ final public class TextureMixEncoder {
 
     public convenience init(context: MTLContext,
                             scalarType: MTLPixelFormat.ScalarType = .half) throws {
-        guard let library = context.shaderLibrary(for: type(of: self))
-        else { throw CommonErrors.metalInitializationFailed }
-        try self.init(library: library,
+        try self.init(library: context.shaderLibrary(for: Self.self),
                       scalarType: scalarType)
     }
 
     public init(library: MTLLibrary,
                 scalarType: MTLPixelFormat.ScalarType = .half) throws {
-        self.deviceSupportsNonuniformThreadgroups = library.device.supports(feature: .nonUniformThreadgroups)
+        self.deviceSupportsNonuniformThreadgroups = library.device
+                                                           .supports(feature: .nonUniformThreadgroups)
         let constantValues = MTLFunctionConstantValues()
         constantValues.set(self.deviceSupportsNonuniformThreadgroups,
                            at: 0)
-        let functionName = type(of: self).functionName + "_" + scalarType.rawValue
+        let functionName = Self.functionName + "_" + scalarType.rawValue
         self.pipelineState = try library.computePipelineState(function: functionName,
                                                               constants: constantValues)
     }

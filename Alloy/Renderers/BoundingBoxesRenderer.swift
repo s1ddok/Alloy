@@ -6,9 +6,7 @@
 //
 
 import Metal
-import simd
 
-@available(iOS 11.3, tvOS 11.3, macOS 10.13, *)
 final public class BoundingBoxesRenderer {
 
     // MARK: - Properties
@@ -39,9 +37,10 @@ final public class BoundingBoxesRenderer {
     ///   - context: Alloy's Metal context.
     ///   - pixelFormat: Color attachment's pixel format.
     /// - Throws: Library or function creation errors.
-    public init(context: MTLContext, pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
-        self.linesRenderer = try LinesRenderer(context: context,
-                                               pixelFormat: pixelFormat)
+    public init(context: MTLContext,
+                pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
+        self.linesRenderer = try .init(context: context,
+                                       pixelFormat: pixelFormat)
     }
 
     /// Creates a new instance of BoundingBoxesRenderer.
@@ -50,9 +49,10 @@ final public class BoundingBoxesRenderer {
     ///   - library: Alloy's shader library.
     ///   - pixelFormat: Color attachment's pixel format.
     /// - Throws: Function creation error.
-    public init(library: MTLLibrary, pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
-        self.linesRenderer = try LinesRenderer(library: library,
-                                               pixelFormat: pixelFormat)
+    public init(library: MTLLibrary,
+                pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
+        self.linesRenderer = try .init(library: library,
+                                       pixelFormat: pixelFormat)
     }
 
     // MARK: - Helpers
@@ -95,8 +95,8 @@ final public class BoundingBoxesRenderer {
 
     private func calculateBBoxesLines() -> [Line] {
         let boundingBoxesLines = (self.normalizedRects
-            .map { self.calculateBBoxComponentLines(bboxRect: $0) })
-            .flatMap { $0 }
+                                      .map { self.calculateBBoxComponentLines(bboxRect: $0) })
+                                      .flatMap { $0 }
         return boundingBoxesLines
     }
 
@@ -110,7 +110,6 @@ final public class BoundingBoxesRenderer {
     public func render(renderPassDescriptor: MTLRenderPassDescriptor,
                        commandBuffer: MTLCommandBuffer) throws {
         self.renderTargetSize = renderPassDescriptor.colorAttachments[0].texture?.size ?? .zero
-        // Render.
         commandBuffer.render(descriptor: renderPassDescriptor,
                              self.render(using:))
     }
