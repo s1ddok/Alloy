@@ -40,7 +40,7 @@ final public class TextureAddConstantEncoder {
 
     public func encode(sourceTexture: MTLTexture,
                        destinationTexture: MTLTexture,
-                       constant: float4,
+                       constant: SIMD4<Float>,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { commandEncoder in
             self.encode(sourceTexture: sourceTexture,
@@ -52,7 +52,7 @@ final public class TextureAddConstantEncoder {
 
     public func encode(sourceTexture: MTLTexture,
                        destinationTexture: MTLTexture,
-                       constant: float4,
+                       constant: SIMD4<Float>,
                        using encoder: MTLComputeCommandEncoder) {
         encoder.set(textures: [sourceTexture, destinationTexture])
         encoder.set(constant, at: 0)

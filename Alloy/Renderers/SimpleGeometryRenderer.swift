@@ -37,8 +37,8 @@ public class SimpleGeometryRenderer {
                        type: MTLPrimitiveType = .triangle,
                        fillMode: MTLTriangleFillMode = .fill,
                        indexBuffer: MTLIndexBuffer,
-                       matrix: float4x4 = float4x4(diagonal: float4(1)),
-                       color: float4 = float4(1, 0, 0, 1),
+                       matrix: float4x4 = float4x4(diagonal: .init(repeating: 1)),
+                       color: SIMD4<Float> = .init(1, 0, 0, 1),
                        using encoder: MTLRenderCommandEncoder) {
         encoder.setVertexBuffer(geometry, offset: 0, index: 0)
         encoder.set(vertexValue: matrix, at: 1)

@@ -68,14 +68,14 @@ public class MaskRenderer {
     // MARK: - Helpers
 
     private func constructRectangle() -> Rectangle {
-        let topLeftPosition = float2(Float(self.normalizedRect.minX),
-                                     Float(self.normalizedRect.maxY))
-        let bottomLeftPosition = float2(Float(self.normalizedRect.minX),
-                                        Float(self.normalizedRect.minY))
-        let topRightPosition = float2(Float(self.normalizedRect.maxX),
-                                      Float(self.normalizedRect.maxY))
-        let bottomRightPosition = float2(Float(self.normalizedRect.maxX),
-                                         Float(self.normalizedRect.minY))
+        let topLeftPosition = SIMD2<Float>(Float(self.normalizedRect.minX),
+                                           Float(self.normalizedRect.maxY))
+        let bottomLeftPosition = SIMD2<Float>(Float(self.normalizedRect.minX),
+                                              Float(self.normalizedRect.minY))
+        let topRightPosition = SIMD2<Float>(Float(self.normalizedRect.maxX),
+                                            Float(self.normalizedRect.maxY))
+        let bottomRightPosition = SIMD2<Float>(Float(self.normalizedRect.maxX),
+                                               Float(self.normalizedRect.minY))
         return Rectangle(topLeft: topLeftPosition,
                          bottomLeft: bottomLeftPosition,
                          topRight: topRightPosition,
