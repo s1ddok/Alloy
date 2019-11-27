@@ -4,7 +4,7 @@ target 'Demo' do
   pod 'Alloy', :path => '../'
   pod 'Alloy/Shaders', :path => '../'
   pod 'Alloy/ML', :path => '../'
-  pod 'SwiftMath', :path => '../../SwiftMath'
+  pod 'SwiftMath'
 end
 
 target 'AlloyTests' do
