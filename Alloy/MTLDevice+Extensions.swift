@@ -7,7 +7,6 @@
 
 import Metal
 
-@available(iOS 11.0, macOS 10.12, *)
 public extension MTLDevice {
 
     func compileShaderLibrary(from file: URL) throws -> MTLLibrary {

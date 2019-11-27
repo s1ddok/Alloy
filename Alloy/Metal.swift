@@ -74,13 +74,11 @@ public final class MTLContext {
                   commandQueue: commandQueue,
                   library: library)
     }
-    
-    @available(iOS 10.0, macOS 10.12, *)
+
     public func shaderLibrary(for anyclass: AnyClass) -> MTLLibrary? {
         return self.shaderLibrary(for: Bundle(for: anyclass))
     }
     
-    @available(iOS 10.0, macOS 10.12, *)
     public func shaderLibrary(for bundle: Bundle) -> MTLLibrary? {
         if let cachedLibrary = self.libraryCache[bundle] {
             return cachedLibrary

@@ -9,7 +9,7 @@ import Metal
 
 public extension MTLContext {
 
-    // MARK: - Alloy Device API
+    // MARK: - Alloy API
 
     func maxTextureSize(desiredSize: MTLSize) -> MTLSize {
         return self.device
@@ -78,7 +78,7 @@ public extension MTLContext {
                          cpuCacheMode: cpuCacheMode)
     }
 
-    // MARK: - Vanilla Device API
+    // MARK: - Vanilla API
 
     var maxThreadgroupMemoryLength: Int {
         self.device
