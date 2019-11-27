@@ -1,6 +1,6 @@
 //
 //  MTLBlitCommandEncoder+Extensions.swift
-//  AIBeauty
+//  Alloy
 //
 //  Created by Andrey Volodin on 03.10.2018.
 //

@@ -1,6 +1,6 @@
 //
 //  MTLCommandBuffer+Extensions.swift
-//  AIBeauty
+//  Alloy
 //
 //  Created by Andrey Volodin on 02/12/2018.
 //

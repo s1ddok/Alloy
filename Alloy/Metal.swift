@@ -1,6 +1,6 @@
 //
 //  Metal.swift
-//  LowPoly
+//  Alloy
 //
 //  Created by Andrey Volodin on 13.05.17.
 //  Copyright © 2017 s1ddok. All rights reserved.

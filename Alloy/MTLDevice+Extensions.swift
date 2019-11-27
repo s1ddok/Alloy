@@ -1,6 +1,6 @@
 //
 //  MTLDevice+Extensions.swift
-//  Alloy-iOS
+//  Alloy
 //
 //  Created by Vladimir Pavlov on 06/05/2019.
 //
