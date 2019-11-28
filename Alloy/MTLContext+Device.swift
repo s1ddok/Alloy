@@ -226,6 +226,9 @@ public extension MTLContext {
                                 plane: plane)
     }
 
+    #if !targetEnvironment(simulator)
+    // Probably it's a bug, but simulator's version of `MTLDevice`
+    // doesn't know about `makeSharedTexture`.
     @available(iOS 13.0, macOS 10.14, *)
     func makeSharedTexture(descriptor: MTLTextureDescriptor) -> MTLTexture? {
         return self.device
@@ -237,6 +240,7 @@ public extension MTLContext {
         return self.device
                    .makeSharedTexture(handle: sharedHandle)
     }
+    #endif
 
     func makeSamplerState(descriptor: MTLSamplerDescriptor) -> MTLSamplerState? {
         return self.device
