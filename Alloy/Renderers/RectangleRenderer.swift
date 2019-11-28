@@ -10,11 +10,6 @@ import simd
 
 final public class RectangleRenderer {
 
-    public enum Errors: Error {
-        case functionCreationFailed
-        case libraryCreationFailed
-    }
-
     // MARK: - Properties
 
     /// Rectangle fill color. Red in default.
@@ -33,9 +28,8 @@ final public class RectangleRenderer {
     ///   - pixelFormat: Color attachment's pixel format.
     /// - Throws: Library or function creation errors.
     public convenience init(context: MTLContext, pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
-        guard
-            let library = context.shaderLibrary(for: RectangleRenderer.self)
-        else { throw Errors.libraryCreationFailed }
+        guard let library = context.shaderLibrary(for: RectangleRenderer.self)
+        else { throw MetalError.device(.libraryCreationFailed) }
 
         try self.init(library: library, pixelFormat: pixelFormat)
     }
@@ -47,10 +41,9 @@ final public class RectangleRenderer {
     ///   - pixelFormat: Color attachment's pixel format.
     /// - Throws: Function creation error.
     public init(library: MTLLibrary, pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
-        guard
-            let vertexFunction = library.makeFunction(name: RectangleRenderer.vertexFunctionName),
-            let fragmentFunction = library.makeFunction(name: RectangleRenderer.fragmentFunctionName)
-        else { throw Errors.functionCreationFailed }
+        guard let vertexFunction = library.makeFunction(name: RectangleRenderer.vertexFunctionName),
+              let fragmentFunction = library.makeFunction(name: RectangleRenderer.fragmentFunctionName)
+        else { throw MetalError.library(.functionCreationFailed) }
 
         let renderPipelineDescriptor = MTLRenderPipelineDescriptor()
         renderPipelineDescriptor.vertexFunction = vertexFunction

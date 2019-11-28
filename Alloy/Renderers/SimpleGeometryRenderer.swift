@@ -15,10 +15,9 @@ public class SimpleGeometryRenderer {
                 pixelFormat: MTLPixelFormat,
                 blending: BlendingMode = .alpha,
                 label: String = "Simple Geometry Renderer") throws {
-        guard
-            let fragment = library.makeFunction(name: "plainColorFragment"),
-            let vertex = library.makeFunction(name: "simpleVertex")
-        else { throw CommonErrors.metalInitializationFailed }
+        guard let fragment = library.makeFunction(name: "plainColorFragment"),
+              let vertex = library.makeFunction(name: "simpleVertex")
+        else { throw MetalError.device(.libraryCreationFailed) }
 
         let renderPipelineStateDescriptor = MTLRenderPipelineDescriptor()
         renderPipelineStateDescriptor.label = label

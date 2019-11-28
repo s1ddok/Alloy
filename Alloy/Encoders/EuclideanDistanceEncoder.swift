@@ -18,7 +18,7 @@ final public class EuclideanDistanceEncoder {
     convenience public init(context: MTLContext,
                             scalarType: MTLPixelFormat.ScalarType = .half) throws {
         guard let alloyLibrary = context.shaderLibrary(for: type(of: self))
-        else { throw CommonErrors.metalInitializationFailed }
+        else { throw MetalError.device(.libraryCreationFailed) }
         try self.init(library: alloyLibrary,
                       scalarType: scalarType)
     }

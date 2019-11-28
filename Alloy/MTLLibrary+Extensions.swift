@@ -7,15 +7,10 @@
 
 import Metal
 
-public enum MTLLibraryErrors: Error {
-    case missingFunction
-}
-
 public extension MTLLibrary {
     func computePipelineState(function: String) throws -> MTLComputePipelineState {
-        guard let function = self.makeFunction(name: function) else {
-            throw MTLLibraryErrors.missingFunction
-        }
+        guard let function = self.makeFunction(name: function)
+        else { throw MetalError.library(.functionCreationFailed) }
         
         return try self.device.makeComputePipelineState(function: function)
     }

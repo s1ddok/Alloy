@@ -19,7 +19,7 @@ final public class NormalizeKernelEncoder {
 
     public convenience init(context: MTLContext) throws {
         guard let library = context.shaderLibrary(for: type(of: self))
-        else { throw CommonErrors.metalInitializationFailed }
+        else { throw MetalError.device(.libraryCreationFailed) }
         try self.init(library: library)
     }
 

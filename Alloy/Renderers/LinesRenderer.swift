@@ -10,11 +10,6 @@ import simd
 
 final public class LinesRenderer {
 
-    public enum Errors: Error {
-        case functionCreationFailed
-        case libraryCreationFailed
-    }
-
     // MARK: - Properties
 
     /// Lines described in a normalized coodrinate system.
@@ -55,9 +50,8 @@ final public class LinesRenderer {
     ///   - pixelFormat: Color attachment's pixel format.
     /// - Throws: Library or function creation errors.
     public convenience init(context: MTLContext, pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
-        guard
-            let library = context.shaderLibrary(for: LinesRenderer.self)
-        else { throw Errors.libraryCreationFailed }
+        guard let library = context.shaderLibrary(for: LinesRenderer.self)
+        else { throw MetalError.device(.libraryCreationFailed) }
 
         try self.init(library: library, pixelFormat: pixelFormat)
     }
@@ -69,10 +63,9 @@ final public class LinesRenderer {
     ///   - pixelFormat: Color attachment's pixel format.
     /// - Throws: Function creation error.
     public init(library: MTLLibrary, pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
-        guard
-            let vertexFunction = library.makeFunction(name: LinesRenderer.vertexFunctionName),
-            let fragmentFunction = library.makeFunction(name: LinesRenderer.fragmentFunctionName)
-        else { throw Errors.functionCreationFailed }
+        guard let vertexFunction = library.makeFunction(name: LinesRenderer.vertexFunctionName),
+              let fragmentFunction = library.makeFunction(name: LinesRenderer.fragmentFunctionName)
+        else { throw MetalError.library(.functionCreationFailed) }
 
         let renderPipelineDescriptor = MTLRenderPipelineDescriptor()
         renderPipelineDescriptor.vertexFunction = vertexFunction
