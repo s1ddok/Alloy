@@ -8,7 +8,6 @@
 import Metal
 import simd
 
-@available(iOS 11.3, tvOS 11.3, macOS 10.13, *)
 public class MaskRenderer {
 
     public enum Errors: Error {

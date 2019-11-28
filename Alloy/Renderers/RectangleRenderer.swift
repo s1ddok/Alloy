@@ -8,7 +8,6 @@
 import Metal
 import simd
 
-@available(iOS 11.3, tvOS 11.3, macOS 10.13, *)
 final public class RectangleRenderer {
 
     public enum Errors: Error {
