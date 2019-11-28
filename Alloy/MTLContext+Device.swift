@@ -16,9 +16,11 @@ public extension MTLContext {
                    .maxTextureSize(desiredSize: desiredSize)
     }
 
-    func compileShaderLibrary(from file: URL) throws -> MTLLibrary {
+    func compileShaderLibrary(from file: URL,
+                              options: MTLCompileOptions? = nil) throws -> MTLLibrary {
         return try self.device
-                       .compileShaderLibrary(from: file)
+            .compileShaderLibrary(from: file,
+                                  options: options)
     }
 
     func createMultisampleRenderTargetPair(width: Int, height: Int,
@@ -49,7 +51,8 @@ public extension MTLContext {
                                isDepthWriteEnabled: isDepthWriteEnabled)
     }
 
-    func depthBuffer(width: Int, height: Int,
+    func depthBuffer(width: Int,
+                     height: Int,
                      usage: MTLTextureUsage = [],
                      storageMode: MTLStorageMode? = nil) -> MTLTexture! {
         return self.device
@@ -68,7 +71,6 @@ public extension MTLContext {
                            options: options)
     }
 
-    @available(iOS 11.0, macOS 10.13, *)
     func heap(size: Int,
               storageMode: MTLStorageMode,
               cpuCacheMode: MTLCPUCacheMode = .defaultCache) -> MTLHeap! {
@@ -85,7 +87,7 @@ public extension MTLContext {
             .maxThreadgroupMemoryLength
     }
 
-    @available(iOS 12.0, *)
+    @available(iOS 12.0, macOS 10.14, *)
     var maxArgumentBufferSamplerCount: Int {
         self.device
             .maxArgumentBufferSamplerCount
@@ -96,13 +98,17 @@ public extension MTLContext {
             .areProgrammableSamplePositionsSupported
     }
 
+    #if os(iOS) && !targetEnvironment(macCatalyst)
     @available(iOS 13.0, *)
+    @available(macOS, unavailable)
+    @available(macCatalyst, unavailable)
     var sparseTileSizeInBytes: Int {
         self.device
             .sparseTileSizeInBytes
     }
+    #endif
 
-    @available(iOS 12.0, *)
+    @available(iOS 12.0, macOS 10.14, *)
     var maxBufferLength: Int {
         self.device
             .maxBufferLength
@@ -123,7 +129,7 @@ public extension MTLContext {
                    .maxThreadsPerThreadgroup
     }
 
-    @available(iOS 13.0, *)
+    @available(iOS 13.0, macOS 10.15, *)
     var hasUnifiedMemory: Bool {
         return self.device.hasUnifiedMemory
     }
@@ -220,13 +226,13 @@ public extension MTLContext {
                                 plane: plane)
     }
 
-    @available(iOS 13.0, *)
+    @available(iOS 13.0, macOS 10.14, *)
     func makeSharedTexture(descriptor: MTLTextureDescriptor) -> MTLTexture? {
         return self.device
                    .makeSharedTexture(descriptor: descriptor)
     }
 
-    @available(iOS 13.0, *)
+    @available(iOS 13.0, macOS 10.14, *)
     func makeSharedTexture(handle sharedHandle: MTLSharedTextureHandle) -> MTLTexture? {
         return self.device
                    .makeSharedTexture(handle: sharedHandle)
@@ -366,7 +372,7 @@ public extension MTLContext {
                    .supportsFeatureSet(featureSet)
     }
 
-    @available(iOS 13.0, *)
+    @available(iOS 13.0, macOS 10.15, *)
     func supportsFamily(_ gpuFamily: MTLGPUFamily) -> Bool {
         return self.device
                    .supportsFamily(gpuFamily)
@@ -382,12 +388,15 @@ public extension MTLContext {
                   .minimumLinearTextureAlignment(for: format)
     }
 
-    @available(iOS 12.0, *)
+    @available(iOS 12.0, macOS 10.14, *)
     func minimumTextureBufferAlignment(for format: MTLPixelFormat) -> Int {
         return self.device
                    .minimumTextureBufferAlignment(for: format)
     }
 
+    #if os(iOS) && !targetEnvironment(macCatalyst)
+    @available(macOS, unavailable)
+    @available(macCatalyst, unavailable)
     func makeRenderPipelineState(tileDescriptor descriptor: MTLTileRenderPipelineDescriptor,
                                  options: MTLPipelineOption,
                                  reflection: AutoreleasingUnsafeMutablePointer<MTLAutoreleasedRenderPipelineReflection?>?) throws -> MTLRenderPipelineState {
@@ -397,6 +406,8 @@ public extension MTLContext {
                                                 reflection: reflection)
     }
 
+    @available(macOS, unavailable)
+    @available(macCatalyst, unavailable)
     func makeRenderPipelineState(tileDescriptor descriptor: MTLTileRenderPipelineDescriptor,
                                  options: MTLPipelineOption,
                                  completionHandler: @escaping MTLNewRenderPipelineStateWithReflectionCompletionHandler) {
@@ -405,6 +416,7 @@ public extension MTLContext {
                                      options: options,
                                      completionHandler: completionHandler)
     }
+    #endif
 
     func __getDefaultSamplePositions(_ positions: UnsafeMutablePointer<MTLSamplePosition>,
                                      count: Int) {
@@ -417,19 +429,25 @@ public extension MTLContext {
                    .makeArgumentEncoder(arguments: arguments)
     }
 
+    #if os(iOS) && !targetEnvironment(macCatalyst)
     @available(iOS 13.0, *)
+    @available(macOS, unavailable)
+    @available(macCatalyst, unavailable)
     func supportsRasterizationRateMap(layerCount: Int) -> Bool {
         return self.device
                    .supportsRasterizationRateMap(layerCount: layerCount)
     }
 
     @available(iOS 13.0, *)
+    @available(macOS, unavailable)
+    @available(macCatalyst, unavailable)
     func makeRasterizationRateMap(descriptor: MTLRasterizationRateMapDescriptor) -> MTLRasterizationRateMap? {
         return self.device
                    .makeRasterizationRateMap(descriptor: descriptor)
     }
+    #endif
 
-    @available(iOS 12.0, *)
+    @available(iOS 12.0, macOS 10.14, *)
     func makeIndirectCommandBuffer(descriptor: MTLIndirectCommandBufferDescriptor,
                                    maxCommandCount maxCount: Int,
                                    options: MTLResourceOptions = []) -> MTLIndirectCommandBuffer? {
@@ -439,25 +457,28 @@ public extension MTLContext {
                                               options: options)
     }
 
-    @available(iOS 12.0, *)
+    @available(iOS 12.0, macOS 10.14, *)
     func makeEvent() -> MTLEvent? {
         return self.device
                    .makeEvent()
     }
 
-    @available(iOS 12.0, *)
+    @available(iOS 12.0, macOS 10.14, *)
     func makeSharedEvent() -> MTLSharedEvent? {
         return self.device
                    .makeSharedEvent()
     }
 
-    @available(iOS 12.0, *)
+    @available(iOS 12.0, macOS 10.14, *)
     func makeSharedEvent(handle sharedEventHandle: MTLSharedEventHandle) -> MTLSharedEvent? {
         return self.device
                    .makeSharedEvent(handle: sharedEventHandle)
     }
 
+    #if os(iOS) && !targetEnvironment(macCatalyst)
     @available(iOS 13.0, *)
+    @available(macOS, unavailable)
+    @available(macCatalyst, unavailable)
     func sparseTileSize(with textureType: MTLTextureType,
                         pixelFormat: MTLPixelFormat,
                         sampleCount: Int) -> MTLSize {
@@ -468,10 +489,13 @@ public extension MTLContext {
     }
 
     @available(iOS 13.0, *)
+    @available(macOS, unavailable)
+    @available(macCatalyst, unavailable)
     func supportsVertexAmplificationCount(_ count: Int) -> Bool {
         return self.device
                    .supportsVertexAmplificationCount(count)
     }
+    #endif
 
     func getDefaultSamplePositions(sampleCount: Int) -> [MTLSamplePosition] {
         return self.device

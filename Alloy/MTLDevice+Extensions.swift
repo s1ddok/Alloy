@@ -9,9 +9,11 @@ import Metal
 
 public extension MTLDevice {
 
-    func compileShaderLibrary(from file: URL) throws -> MTLLibrary {
+    func compileShaderLibrary(from file: URL,
+                              options: MTLCompileOptions? = nil) throws -> MTLLibrary {
         let shaderSource = try String(contentsOf: file)
-        return try self.makeLibrary(source: shaderSource, options: nil)
+        return try self.makeLibrary(source: shaderSource,
+                                    options: options)
     }
 
     func createMultisampleRenderTargetPair(width: Int, height: Int,
@@ -41,7 +43,6 @@ public extension MTLDevice {
         return (main: sampleTex, resolve: mainTex)
     }
 
-    @available(macOS 10.13, *)
     func heap(size: Int,
               storageMode: MTLStorageMode,
               cpuCacheMode: MTLCPUCacheMode = .defaultCache) -> MTLHeap! {
