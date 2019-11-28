@@ -19,8 +19,8 @@ public extension MTLContext {
     func compileShaderLibrary(from file: URL,
                               options: MTLCompileOptions? = nil) throws -> MTLLibrary {
         return try self.device
-            .compileShaderLibrary(from: file,
-                                  options: options)
+                       .compileShaderLibrary(from: file,
+                                             options: options)
     }
 
     func createMultisampleRenderTargetPair(width: Int, height: Int,
@@ -131,7 +131,8 @@ public extension MTLContext {
 
     @available(iOS 13.0, macOS 10.15, *)
     var hasUnifiedMemory: Bool {
-        return self.device.hasUnifiedMemory
+        return self.device
+                   .hasUnifiedMemory
     }
 
     var readWriteTextureSupport: MTLReadWriteTextureTier {
@@ -389,7 +390,7 @@ public extension MTLContext {
 
     func minimumLinearTextureAlignment(for format: MTLPixelFormat) -> Int {
         return self.device
-                  .minimumLinearTextureAlignment(for: format)
+                   .minimumLinearTextureAlignment(for: format)
     }
 
     @available(iOS 12.0, macOS 10.14, *)
@@ -424,8 +425,9 @@ public extension MTLContext {
 
     func __getDefaultSamplePositions(_ positions: UnsafeMutablePointer<MTLSamplePosition>,
                                      count: Int) {
-        self.device.__getDefaultSamplePositions(positions,
-                                                count: count)
+        self.device
+            .__getDefaultSamplePositions(positions,
+                                         count: count)
     }
 
     func makeArgumentEncoder(arguments: [MTLArgumentDescriptor]) -> MTLArgumentEncoder? {
