@@ -19,7 +19,7 @@ final public class TextureMaskEncoder {
     convenience public init(context: MTLContext,
                             scalarType: MTLPixelFormat.ScalarType = .half) throws {
         guard let alloyLibrary = context.shaderLibrary(for: type(of: self))
-        else { throw MetalErrors.MTLDeviceError.libraryCreationFailed }
+        else { throw MetalError.MTLDeviceError.libraryCreationFailed }
         try self.init(library: alloyLibrary,
                       scalarType: scalarType)
     }

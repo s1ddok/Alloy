@@ -18,7 +18,7 @@ final public class LookUpTableEncoder {
 
     public convenience init(context: MTLContext) throws {
         guard let library = context.shaderLibrary(for: type(of: self))
-        else { throw MetalErrors.MTLDeviceError.libraryCreationFailed }
+        else { throw MetalError.MTLDeviceError.libraryCreationFailed }
         try self.init(library: library)
     }
 

@@ -18,7 +18,7 @@ final public class TextureMaxEncoder {
     public convenience init(context: MTLContext,
                             scalarType: MTLPixelFormat.ScalarType = .half) throws {
         guard let library = context.shaderLibrary(for: type(of: self))
-        else { throw MetalErrors.MTLDeviceError.libraryCreationFailed }
+        else { throw MetalError.MTLDeviceError.libraryCreationFailed }
         try self.init(library: library)
     }
 

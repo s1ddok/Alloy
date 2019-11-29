@@ -22,7 +22,7 @@ public class MTLTextureCodableBox: Codable {
             let pointer = p.baseAddress!
 
             guard let pixelFormatSize = texture.pixelFormat.size
-            else { throw MetalErrors.MTLTextureSerializationError.unsupportedPixelFormat }
+            else { throw MetalError.MTLTextureSerializationError.unsupportedPixelFormat }
 
             var offset = 0
 
@@ -32,7 +32,7 @@ public class MTLTextureCodableBox: Codable {
                                                                     textureType: texture.textureType,
                                                                     levels: mipMaplevel..<mipMaplevel+1,
                                                                     slices: slice..<slice+1)
-                    else { throw MetalErrors.MTLTextureSerializationError.dataAccessFailure }
+                    else { throw MetalError.MTLTextureSerializationError.dataAccessFailure }
 
                     var bytesPerRow = pixelFormatSize * textureView.width
                     let bytesPerImage = bytesPerRow * textureView.height
@@ -58,13 +58,13 @@ public class MTLTextureCodableBox: Codable {
 
     public func texture(device: MTLDevice) throws -> MTLTexture {
         guard let texture = device.makeTexture(descriptor: self.descriptor.descriptor)
-        else { throw MetalErrors.MTLTextureSerializationError.allocationFailed }
+        else { throw MetalError.MTLTextureSerializationError.allocationFailed }
 
         try self.data.withUnsafeMutableBytes { p in
             let pointer = p.baseAddress!
 
             guard let pixelFormatSize = texture.pixelFormat.size
-            else { throw MetalErrors.MTLTextureSerializationError.unsupportedPixelFormat }
+            else { throw MetalError.MTLTextureSerializationError.unsupportedPixelFormat }
 
             var offset = 0
 
@@ -74,7 +74,7 @@ public class MTLTextureCodableBox: Codable {
                                                                     textureType: texture.textureType,
                                                                     levels: mipMaplevel..<mipMaplevel+1,
                                                                     slices: slice..<slice+1)
-                    else { throw MetalErrors.MTLTextureSerializationError.dataAccessFailure }
+                    else { throw MetalError.MTLTextureSerializationError.dataAccessFailure }
 
                     var bytesPerRow = pixelFormatSize * textureView.width
                     let bytesPerImage = bytesPerRow * textureView.height

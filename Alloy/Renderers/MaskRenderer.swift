@@ -31,7 +31,7 @@ public class MaskRenderer {
     /// - Throws: Library or function creation errors.
     public convenience init(context: MTLContext, pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
         guard let library = context.shaderLibrary(for: MaskRenderer.self)
-        else { throw MetalErrors.MTLDeviceError.libraryCreationFailed }
+        else { throw MetalError.MTLDeviceError.libraryCreationFailed }
 
         try self.init(library: library, pixelFormat: pixelFormat)
     }
@@ -45,7 +45,7 @@ public class MaskRenderer {
     public init(library: MTLLibrary, pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
         guard let vertexFunction = library.makeFunction(name: MaskRenderer.vertexFunctionName),
               let fragmentFunction = library.makeFunction(name: MaskRenderer.fragmentFunctionName)
-        else { throw MetalErrors.MTLLibraryError.functionCreationFailed }
+        else { throw MetalError.MTLLibraryError.functionCreationFailed }
 
         let renderPipelineDescriptor = MTLRenderPipelineDescriptor()
         renderPipelineDescriptor.vertexFunction = vertexFunction

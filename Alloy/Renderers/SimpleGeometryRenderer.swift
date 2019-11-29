@@ -17,7 +17,7 @@ public class SimpleGeometryRenderer {
                 label: String = "Simple Geometry Renderer") throws {
         guard let fragment = library.makeFunction(name: "plainColorFragment"),
               let vertex = library.makeFunction(name: "simpleVertex")
-        else { throw MetalErrors.MTLDeviceError.libraryCreationFailed }
+        else { throw MetalError.MTLDeviceError.libraryCreationFailed }
 
         let renderPipelineStateDescriptor = MTLRenderPipelineDescriptor()
         renderPipelineStateDescriptor.label = label
