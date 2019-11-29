@@ -29,7 +29,6 @@ public extension MTLSizeAndAlign {
 }
 
 public extension Sequence where Element == MTLTextureDescriptor {
-    @available(OSX 10.13, *)
     func heapSizeAndAlignCombined(on device: MTLDevice) -> MTLSizeAndAlign {
         return self.reduce(MTLSizeAndAlign(size: 0, align: 0)) {
             $0.combined(with: device.heapTextureSizeAndAlign(descriptor: $1))

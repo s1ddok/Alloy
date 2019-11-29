@@ -8,13 +8,7 @@
 import Metal
 import simd
 
-@available(iOS 11.3, tvOS 11.3, macOS 10.13, *)
 public class MaskRenderer {
-
-    public enum Errors: Error {
-        case functionCreationFailed
-        case libraryCreationFailed
-    }
 
     // MARK: - Properties
 
@@ -49,9 +43,8 @@ public class MaskRenderer {
     /// - Throws: Function creation error.
     public init(library: MTLLibrary,
                 pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
-        guard let vertexFunction = library.makeFunction(name: Self.vertexFunctionName),
-              let fragmentFunction = library.makeFunction(name: Self.fragmentFunctionName)
-        else { throw Errors.functionCreationFailed }
+        let vertexFunction = try library.createFunction(name: Self.vertexFunctionName)
+        let fragmentFunction = try library.createFunction(name: Self.fragmentFunctionName)
 
         let renderPipelineDescriptor = MTLRenderPipelineDescriptor()
         renderPipelineDescriptor.vertexFunction = vertexFunction
@@ -119,7 +112,7 @@ public class MaskRenderer {
         renderEncoder.popDebugGroup()
     }
 
-    private static let vertexFunctionName = "maskVertex"
-    private static let fragmentFunctionName = "maskFragment"
+    public static let vertexFunctionName = "maskVertex"
+    public static let fragmentFunctionName = "maskFragment"
 
 }

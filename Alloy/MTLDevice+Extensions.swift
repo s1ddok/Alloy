@@ -9,10 +9,11 @@ import Metal
 
 public extension MTLDevice {
 
-    func compileShaderLibrary(from file: URL) throws -> MTLLibrary {
+    func compileShaderLibrary(from file: URL,
+                              options: MTLCompileOptions? = nil) throws -> MTLLibrary {
         let shaderSource = try String(contentsOf: file)
         return try self.makeLibrary(source: shaderSource,
-                                    options: nil)
+                                    options: options)
     }
 
     func createMultisampleRenderTargetPair(width: Int, height: Int,
@@ -38,7 +39,7 @@ public extension MTLDevice {
 
         guard let mainTex = self.makeTexture(descriptor: mainDescriptor),
               let sampleTex = self.makeTexture(descriptor: sampleDescriptor)
-        else { throw CommonErrors.metalInitializationFailed }
+        else { throw MetalError.MTLDeviceError.textureCreationFailed }
 
         return (main: sampleTex, resolve: mainTex)
     }
@@ -52,7 +53,7 @@ public extension MTLDevice {
         descriptor.cpuCacheMode = cpuCacheMode
 
         guard let heap = self.makeHeap(descriptor: descriptor)
-        else { throw CommonErrors.metalInitializationFailed }
+        else { throw MetalError.MTLDeviceError.heapCreationFailed }
         return heap
     }
 
@@ -61,7 +62,7 @@ public extension MTLDevice {
                    options: MTLResourceOptions) throws -> MTLBuffer {
         guard let buffer = self.makeBuffer(length: MemoryLayout<T>.stride * count,
                                            options: options)
-        else { throw CommonErrors.metalInitializationFailed }
+        else { throw MetalError.MTLDeviceError.bufferCreationFailed }
         return buffer
     }
 
@@ -79,7 +80,7 @@ public extension MTLDevice {
         textureDescriptor.storageMode = storageMode ?? .private
         #endif
         guard let texture = self.makeTexture(descriptor: textureDescriptor)
-        else { throw CommonErrors.metalInitializationFailed }
+        else { throw MetalError.MTLDeviceError.textureCreationFailed }
         return texture
     }
 
@@ -89,7 +90,7 @@ public extension MTLDevice {
         descriptor.depthCompareFunction = depthCompareFunction
         descriptor.isDepthWriteEnabled = isDepthWriteEnabled
         guard let depthStencilState = self.makeDepthStencilState(descriptor: descriptor)
-        else { throw CommonErrors.metalInitializationFailed }
+        else { throw MetalError.MTLDeviceError.depthStencilStateCreationFailed }
         return depthStencilState
     }
 
@@ -103,7 +104,7 @@ public extension MTLDevice {
         textureDescriptor.pixelFormat = pixelFormat
         textureDescriptor.usage = usage
         guard let texture = self.makeTexture(descriptor: textureDescriptor)
-        else { throw CommonErrors.metalInitializationFailed }
+        else { throw MetalError.MTLDeviceError.textureCreationFailed }
         return texture
     }
 
