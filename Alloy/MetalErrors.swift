@@ -5,28 +5,22 @@
 //  Created by Andrey Volodin on 15/05/2019.
 //
 
-public enum MetalError: Error {
-    public enum MTLCommandQueueError {
+public enum MetalErrors {
+    public enum MTLCommandQueueError: Error {
         case commandBufferCreationFailed
     }
-    public enum MTLBufferError {
+    public enum MTLBufferError: Error {
         case allocationFailed
     }
-    public enum MTLLibraryError {
+    public enum MTLLibraryError: Error {
         case functionCreationFailed
     }
-    public enum MTLTextureSerializationError {
+    public enum MTLTextureSerializationError: Error {
         case unsupportedPixelFormat
         case dataAccessFailure
         case allocationFailed
     }
-    public enum MTLDeviceError {
+    public enum MTLDeviceError: Error {
         case libraryCreationFailed
     }
-
-    case commandQueue(MTLCommandQueueError)
-    case buffer(MTLBufferError)
-    case library(MTLLibraryError)
-    case textureSerialization(MTLTextureSerializationError)
-    case device(MTLDeviceError)
 }

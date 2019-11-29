@@ -20,7 +20,7 @@ final public class MaskGuidedBlurEncoder {
 
     public convenience init(context: MTLContext) throws {
         guard let library = context.shaderLibrary(for: type(of: self))
-        else { throw MetalError.device(.libraryCreationFailed) }
+        else { throw MetalErrors.MTLDeviceError.libraryCreationFailed }
         try self.init(library: library)
     }
 

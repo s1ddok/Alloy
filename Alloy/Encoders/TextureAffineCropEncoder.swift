@@ -18,7 +18,7 @@ final public class TextureAffineCropEncoder {
 
     public convenience init(context: MTLContext) throws {
         guard let library = context.shaderLibrary(for: Self.self)
-        else { throw MetalError.device(.libraryCreationFailed) }
+        else { throw MetalErrors.MTLDeviceError.libraryCreationFailed }
         try self.init(library: library)
     }
 

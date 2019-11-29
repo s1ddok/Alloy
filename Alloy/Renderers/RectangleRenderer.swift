@@ -29,7 +29,7 @@ final public class RectangleRenderer {
     /// - Throws: Library or function creation errors.
     public convenience init(context: MTLContext, pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
         guard let library = context.shaderLibrary(for: RectangleRenderer.self)
-        else { throw MetalError.device(.libraryCreationFailed) }
+        else { throw MetalErrors.MTLDeviceError.libraryCreationFailed }
 
         try self.init(library: library, pixelFormat: pixelFormat)
     }
@@ -43,7 +43,7 @@ final public class RectangleRenderer {
     public init(library: MTLLibrary, pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
         guard let vertexFunction = library.makeFunction(name: RectangleRenderer.vertexFunctionName),
               let fragmentFunction = library.makeFunction(name: RectangleRenderer.fragmentFunctionName)
-        else { throw MetalError.library(.functionCreationFailed) }
+        else { throw MetalErrors.MTLLibraryError.functionCreationFailed }
 
         let renderPipelineDescriptor = MTLRenderPipelineDescriptor()
         renderPipelineDescriptor.vertexFunction = vertexFunction

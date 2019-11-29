@@ -11,7 +11,7 @@ public extension MTLCommandQueue {
 
     func scheduleAndWait<T>(_ bufferEncodings: (MTLCommandBuffer) throws -> T) throws -> T {
         guard let commandBuffer = self.makeCommandBuffer()
-        else { throw MetalError.commandQueue(.commandBufferCreationFailed) }
+        else { throw MetalErrors.MTLCommandQueueError.commandBufferCreationFailed }
 
         let retVal = try bufferEncodings(commandBuffer)
 
@@ -23,7 +23,7 @@ public extension MTLCommandQueue {
 
     func schedule(_ bufferEncodings: (MTLCommandBuffer) throws -> Void) throws {
         guard let commandBuffer = self.makeCommandBuffer()
-        else { throw MetalError.commandQueue(.commandBufferCreationFailed) }
+        else { throw MetalErrors.MTLCommandQueueError.commandBufferCreationFailed }
 
         try bufferEncodings(commandBuffer)
 

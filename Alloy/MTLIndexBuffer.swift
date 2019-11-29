@@ -17,7 +17,7 @@ public class MTLIndexBuffer {
         guard let allocatedBuffer = device.makeBuffer(bytes: indexArray,
                                                       length: indexArray.count * MemoryLayout<UInt16>.stride,
                                                       options: options)
-        else { throw MetalError.buffer(.allocationFailed) }
+        else { throw MetalErrors.MTLBufferError.allocationFailed }
 
         self.buffer = allocatedBuffer
         self.count = indexArray.count
@@ -28,7 +28,7 @@ public class MTLIndexBuffer {
         guard let allocatedBuffer = device.makeBuffer(bytes: indexArray,
                                                       length: indexArray.count * MemoryLayout<UInt32>.stride,
                                                       options: options)
-        else { throw MetalError.buffer(.allocationFailed) }
+        else { throw MetalErrors.MTLBufferError.allocationFailed }
 
         self.buffer = allocatedBuffer
         self.count = indexArray.count
