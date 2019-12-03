@@ -752,7 +752,7 @@ kernel void textureAffineCrop(texture2d<half, access::sample> source [[ texture(
     checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
 
     constexpr sampler s(coord::normalized,
-                        address::clamp_to_edge,
+                        address::clamp_to_zero,
                         filter::linear);
 
     const float2 textureSizef = float2(textureSize);
