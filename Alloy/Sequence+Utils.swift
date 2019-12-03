@@ -1,6 +1,6 @@
 //
 //  Sequence+Utils.swift
-//  AlloyDemo
+//  Alloy
 //
 //  Created by Andrey Volodin on 29.08.2018.
 //  Copyright © 2018 Andrey Volodin. All rights reserved.
