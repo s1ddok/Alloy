@@ -20,9 +20,14 @@ public enum MetalError {
         case dataAccessFailure
         case allocationFailed
     }
+    public enum MTLTextureError: Error {
+        case imageCreationFailed
+        case imageIncompatiblePixelFormat
+    }
     public enum MTLDeviceError: Error {
         case libraryCreationFailed
         case textureCreationFailed
+        case textureViewCreationFailed
         case heapCreationFailed
         case bufferCreationFailed
         case depthStencilStateCreationFailed

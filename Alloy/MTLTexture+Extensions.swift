@@ -17,22 +17,23 @@ public extension MTLTexture {
     typealias XImage = NSImage
     #endif
     
-    var cgImage: CGImage? {
+    func cgImage() throws -> CGImage {
+        let error = MetalError.MTLTextureError.imageCreationFailed
+
         #if targetEnvironment(macCatalyst)
-        guard self.storageMode == .managed || self.storageMode == .shared else {
-            return nil
-        }
+        guard self.storageMode == .managed
+           || self.storageMode == .shared
+        else { throw error }
         #else
         #if os(macOS)
-        guard self.storageMode == .managed || self.storageMode == .shared else {
-            return nil
-        }
+        guard self.storageMode == .managed
+           || self.storageMode == .shared
+        else { throw error }
         #endif
 
         #if os(iOS) || os(tvOS)
-        guard self.storageMode == .shared else {
-            return nil
-        }
+        guard self.storageMode == .shared
+        else { throw error }
         #endif
         #endif
 
@@ -52,11 +53,20 @@ public extension MTLTexture {
                                                     ? CGImageAlphaInfo.alphaOnly.rawValue
                                                     : CGImageAlphaInfo.none.rawValue)
             guard let data = CFDataCreate(nil, rgbaBytes, length),
-                  let dataProvider = CGDataProvider(data: data)
-            else { return nil }
-            let cgImage = CGImage(width: self.width, height: self.height, bitsPerComponent: 8, bitsPerPixel: 8, bytesPerRow: rowBytes,
-                                  space: colorScape, bitmapInfo: bitmapInfo, provider: dataProvider,
-                                  decode: nil, shouldInterpolate: true, intent: .defaultIntent)
+                  let dataProvider = CGDataProvider(data: data),
+                  let cgImage = CGImage(width: self.width,
+                                        height: self.height,
+                                        bitsPerComponent: 8,
+                                        bitsPerPixel: 8,
+                                        bytesPerRow: rowBytes,
+                                        space: colorScape,
+                                        bitmapInfo: bitmapInfo,
+                                        provider: dataProvider,
+                                        decode: nil,
+                                        shouldInterpolate: true,
+                                        intent: .defaultIntent)
+            else { throw error }
+
             return cgImage
         case .bgra8Unorm:
             // read texture as byte array
@@ -79,17 +89,27 @@ public extension MTLTexture {
                                            width: vImagePixelCount(self.width),
                                            rowBytes: rowBytes)
             let map: [UInt8] = [2, 1, 0, 3]
-            vImagePermuteChannels_ARGB8888(&bgraBuffer, &rgbaBuffer, map, 0)
+            vImagePermuteChannels_ARGB8888(&bgraBuffer,
+                                           &rgbaBuffer,
+                                           map, 0)
 
             // create CGImage with RGBA Flipped Bytes
             let colorScape = CGColorSpaceCreateDeviceRGB()
             let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
             guard let data = CFDataCreate(nil, rgbaBytes, length),
-                  let dataProvider = CGDataProvider(data: data)
-            else { return nil }
-            let cgImage = CGImage(width: self.width, height: self.height, bitsPerComponent: 8, bitsPerPixel: 32, bytesPerRow: rowBytes,
-                                  space: colorScape, bitmapInfo: bitmapInfo, provider: dataProvider,
-                                  decode: nil, shouldInterpolate: true, intent: .defaultIntent)
+                  let dataProvider = CGDataProvider(data: data),
+                  let cgImage = CGImage(width: self.width,
+                                        height: self.height,
+                                        bitsPerComponent: 8,
+                                        bitsPerPixel: 32,
+                                        bytesPerRow: rowBytes,
+                                        space: colorScape,
+                                        bitmapInfo: bitmapInfo,
+                                        provider: dataProvider,
+                                        decode: nil,
+                                        shouldInterpolate: true,
+                                        intent: .defaultIntent)
+            else { throw error }
 
             return cgImage
         case .rgba8Unorm:
@@ -105,22 +125,33 @@ public extension MTLTexture {
             let colorScape = CGColorSpaceCreateDeviceRGB()
             let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
             guard let data = CFDataCreate(nil, rgbaBytes, length),
-                  let dataProvider = CGDataProvider(data: data)
-            else { return nil }
-            let cgImage = CGImage(width: self.width, height: self.height, bitsPerComponent: 8, bitsPerPixel: 32, bytesPerRow: rowBytes,
-                                  space: colorScape, bitmapInfo: bitmapInfo, provider: dataProvider,
-                                  decode: nil, shouldInterpolate: true, intent: .defaultIntent)
+                  let dataProvider = CGDataProvider(data: data),
+                  let cgImage = CGImage(width: self.width,
+                                        height: self.height,
+                                        bitsPerComponent: 8,
+                                        bitsPerPixel: 32,
+                                        bytesPerRow: rowBytes,
+                                        space: colorScape,
+                                        bitmapInfo: bitmapInfo,
+                                        provider: dataProvider,
+                                        decode: nil,
+                                        shouldInterpolate: true,
+                                        intent: .defaultIntent)
+            else { throw error }
+
             return cgImage
-        default: return nil
+        default: throw MetalError.MTLTextureError.imageIncompatiblePixelFormat
         }
     }
     
-    var image: XImage? {
-        guard let cgImage = self.cgImage else { return nil }
+    func image() throws -> XImage {
+        let cgImage = try self.cgImage()
         #if os(iOS)
         return UIImage(cgImage: cgImage)
         #elseif os(macOS)
-        return NSImage(cgImage: cgImage, size: CGSize(width: cgImage.width, height: cgImage.height))
+        return NSImage(cgImage: cgImage,
+                       size: CGSize(width: cgImage.width,
+                                    height: cgImage.height))
         #endif
     }
 }
@@ -159,7 +190,7 @@ public extension MTLTexture {
     }
     
     func matchingTexture(usage: MTLTextureUsage? = nil,
-                         storage: MTLStorageMode? = nil) -> MTLTexture? {
+                         storage: MTLStorageMode? = nil) throws -> MTLTexture {
         let matchingDescriptor = self.descriptor
         
         if let u = usage {
@@ -168,11 +199,15 @@ public extension MTLTexture {
         if let s = storage {
             matchingDescriptor.storageMode = s
         }
+
+        guard let matchingTexture = self.device.makeTexture(descriptor: matchingDescriptor)
+        else { throw MetalError.MTLDeviceError.textureCreationFailed }
         
-        return self.device.makeTexture(descriptor: matchingDescriptor)
+        return matchingTexture
     }
     
-    func view(slice: Int, levels: Range<Int>? = nil) -> MTLTexture? {
+    func view(slice: Int,
+              levels: Range<Int>? = nil) throws -> MTLTexture {
         let sliceType: MTLTextureType
         
         switch self.textureType {
@@ -180,22 +215,24 @@ public extension MTLTexture {
         case .type2DArray: sliceType = .type2D
         case .typeCubeArray: sliceType = .typeCube
         default:
-            guard slice == 0 else {
-                return nil
-            }
-            
+            guard slice == 0
+            else { throw MetalError.MTLDeviceError.textureCreationFailed }
             sliceType = self.textureType
         }
+
+        guard let textureView = self.makeTextureView(pixelFormat: self.pixelFormat,
+                                                     textureType: sliceType,
+                                                     levels: levels ?? 0..<1,
+                                                     slices: slice..<(slice + 1))
+        else { throw MetalError.MTLDeviceError.textureCreationFailed }
         
-        return self.makeTextureView(pixelFormat: self.pixelFormat,
-                                    textureType: sliceType,
-                                    levels: levels ?? 0..<1,
-                                    slices: slice..<(slice + 1))
+        return textureView
     }
 
-    func view(level: Int) -> MTLTexture? {
+    func view(level: Int) throws -> MTLTexture {
         let levels = level ..< (level + 1)
-        return self.view(slice: 0, levels: levels)
+        return try self.view(slice: 0,
+                             levels: levels)
     }
 }
 

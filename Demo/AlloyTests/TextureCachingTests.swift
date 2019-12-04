@@ -33,20 +33,12 @@ final class TextureCachingTests: XCTestCase {
 
     override func setUp() {
         do {
-            self.context = .init(device: Metal.device)
-
-            guard
-                let alloyLibrary = self.context
-                                       .shaderLibrary(for: EuclideanDistanceEncoder.self),
-                let alloyTestsLibrary = self.context
-                                            .shaderLibrary(for: SwitchDataFormatEncoder.self)
-            else { throw Errors.libraryCreationFailed }
-
-            self.euclideanDistanceFloat = try .init(library: alloyLibrary,
+            self.context = .init()
+            self.euclideanDistanceFloat = try .init(context: self.context,
                                                     scalarType: .float)
-            self.euclideanDistanceUInt = try .init(library: alloyLibrary,
+            self.euclideanDistanceUInt = try .init(context: self.context,
                                                    scalarType: .uint)
-            self.denormalize = try .init(library: alloyTestsLibrary,
+            self.denormalize = try .init(context: self.context,
                                          conversionType: .denormalize)
         } catch {
             XCTFail(error.localizedDescription)
@@ -143,10 +135,8 @@ final class TextureCachingTests: XCTestCase {
 
                     while (width + height > 32) {
 
-                        guard
-                            let originalTextureView = originalTexture.view(level: level),
-                            let decodedTextureView = decodedTexture.view(level: level)
-                        else { throw Errors.textureCreationFailed }
+                        let originalTextureView = try originalTexture.view(level: level)
+                        let decodedTextureView = try decodedTexture.view(level: level)
 
                         euclideanDistance.encode(textureOne: originalTextureView,
                                                  textureTwo: decodedTextureView,

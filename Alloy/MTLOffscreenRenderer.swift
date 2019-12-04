@@ -47,9 +47,9 @@ public class MTLOffscreenRenderer {
             renderPassDescriptor.colorAttachments[0].texture = targetTexture
             renderPassDescriptor.colorAttachments[0].storeAction = .store
         } else {
-            let resolvePair = try context.createMultisampleRenderTargetPair(width: width, height: height,
-                                                                            pixelFormat: pixelFormat,
-                                                                            sampleCount: sampleCount)
+            let resolvePair = try context.multisampleRenderTargetPair(width: width, height: height,
+                                                                      pixelFormat: pixelFormat,
+                                                                      sampleCount: sampleCount)
             renderPassDescriptor.colorAttachments[0].texture = resolvePair.main
             renderPassDescriptor.colorAttachments[0].resolveTexture = resolvePair.resolve
             

@@ -43,8 +43,8 @@ public class MaskRenderer {
     /// - Throws: Function creation error.
     public init(library: MTLLibrary,
                 pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
-        let vertexFunction = try library.createFunction(name: Self.vertexFunctionName)
-        let fragmentFunction = try library.createFunction(name: Self.fragmentFunctionName)
+        let vertexFunction = try library.function(named: Self.vertexFunctionName)
+        let fragmentFunction = try library.function(named: Self.fragmentFunctionName)
 
         let renderPipelineDescriptor = MTLRenderPipelineDescriptor()
         renderPipelineDescriptor.vertexFunction = vertexFunction

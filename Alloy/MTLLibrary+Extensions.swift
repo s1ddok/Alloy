@@ -9,7 +9,7 @@ import Metal
 
 public extension MTLLibrary {
 
-    func createFunction(name functionName: String) throws -> MTLFunction {
+    func function(named functionName: String) throws -> MTLFunction {
         guard let function = self.makeFunction(name: functionName)
         else { throw MetalError.MTLLibraryError.functionCreationFailed }
         return function
@@ -17,7 +17,7 @@ public extension MTLLibrary {
 
     func computePipelineState(function functionName: String) throws -> MTLComputePipelineState {
         return try self.device
-                       .makeComputePipelineState(function: self.createFunction(name: functionName))
+                       .makeComputePipelineState(function: self.function(named: functionName))
     }
     
     func computePipelineState(function: String,

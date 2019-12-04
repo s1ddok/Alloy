@@ -84,7 +84,7 @@ public final class MTLContext {
             return cachedLibrary
         }
         
-        let library = try self.makeDefaultLibrary(bundle: bundle)
+        let library = try self.defaultLibrary(bundle: bundle)
         
         self.libraryCache[bundle] = library
         return library

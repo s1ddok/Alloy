@@ -9,17 +9,17 @@ import Metal
 
 public extension MTLDevice {
 
-    func compileShaderLibrary(from file: URL,
-                              options: MTLCompileOptions? = nil) throws -> MTLLibrary {
+    func shaderLibrary(from file: URL,
+                       options: MTLCompileOptions? = nil) throws -> MTLLibrary {
         let shaderSource = try String(contentsOf: file)
         return try self.makeLibrary(source: shaderSource,
                                     options: options)
     }
 
-    func createMultisampleRenderTargetPair(width: Int, height: Int,
-                                           pixelFormat: MTLPixelFormat,
-                                           sampleCount: Int = 4) throws -> (main: MTLTexture,
-                                                                            resolve: MTLTexture) {
+    func multisampleRenderTargetPair(width: Int, height: Int,
+                                     pixelFormat: MTLPixelFormat,
+                                     sampleCount: Int = 4) throws -> (main: MTLTexture,
+                                                                      resolve: MTLTexture) {
         let mainDescriptor = MTLTextureDescriptor()
         mainDescriptor.width = width
         mainDescriptor.height = height

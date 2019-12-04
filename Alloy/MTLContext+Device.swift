@@ -16,22 +16,22 @@ public extension MTLContext {
                    .maxTextureSize(desiredSize: desiredSize)
     }
 
-    func compileShaderLibrary(from file: URL,
-                              options: MTLCompileOptions? = nil) throws -> MTLLibrary {
+    func shaderLibrary(from file: URL,
+                       options: MTLCompileOptions? = nil) throws -> MTLLibrary {
         return try self.device
-                       .compileShaderLibrary(from: file,
+                       .shaderLibrary(from: file,
                                              options: options)
     }
 
-    func createMultisampleRenderTargetPair(width: Int, height: Int,
-                                           pixelFormat: MTLPixelFormat,
-                                           sampleCount: Int = 4) throws -> (main: MTLTexture,
-                                                                            resolve: MTLTexture) {
+    func multisampleRenderTargetPair(width: Int, height: Int,
+                                     pixelFormat: MTLPixelFormat,
+                                     sampleCount: Int = 4) throws -> (main: MTLTexture,
+                                                                      resolve: MTLTexture) {
         return try self.device
-                       .createMultisampleRenderTargetPair(width: width,
-                                                          height: height,
-                                                          pixelFormat: pixelFormat,
-                                                          sampleCount: sampleCount)
+                       .multisampleRenderTargetPair(width: width,
+                                                    height: height,
+                                                    pixelFormat: pixelFormat,
+                                                    sampleCount: sampleCount)
     }
 
     func texture(width: Int,
@@ -156,16 +156,6 @@ public extension MTLContext {
                    .currentAllocatedSize
     }
 
-    func makeCommandQueue() -> MTLCommandQueue? {
-        return self.device
-                   .makeCommandQueue()
-    }
-
-    func makeCommandQueue(maxCommandBufferCount: Int) -> MTLCommandQueue? {
-        return self.device
-                   .makeCommandQueue(maxCommandBufferCount: maxCommandBufferCount)
-    }
-
     func heapTextureSizeAndAlign(descriptor desc: MTLTextureDescriptor) -> MTLSizeAndAlign {
         return self.device
                    .heapTextureSizeAndAlign(descriptor: desc)
@@ -178,19 +168,19 @@ public extension MTLContext {
                                            options: options)
     }
 
-    func makeHeap(descriptor: MTLHeapDescriptor) -> MTLHeap? {
+    func heap(descriptor: MTLHeapDescriptor) -> MTLHeap? {
         return self.device
                    .makeHeap(descriptor: descriptor)
     }
 
-    func makeBuffer(length: Int,
+    func buffer(length: Int,
                     options: MTLResourceOptions = []) -> MTLBuffer? {
         return self.device
                    .makeBuffer(length: length,
                                options: options)
     }
 
-    func makeBuffer(bytes pointer: UnsafeRawPointer,
+    func buffer(bytes pointer: UnsafeRawPointer,
                     length: Int,
                     options: MTLResourceOptions = []) -> MTLBuffer? {
         return self.device
@@ -199,10 +189,10 @@ public extension MTLContext {
                                options: options)
     }
 
-    func makeBuffer(bytesNoCopy pointer: UnsafeMutableRawPointer,
-                    length: Int,
-                    options: MTLResourceOptions = [],
-                    deallocator: ((UnsafeMutableRawPointer, Int) -> Void)? = nil) -> MTLBuffer? {
+    func buffer(bytesNoCopy pointer: UnsafeMutableRawPointer,
+                length: Int,
+                options: MTLResourceOptions = [],
+                deallocator: ((UnsafeMutableRawPointer, Int) -> Void)? = nil) -> MTLBuffer? {
         return self.device
                    .makeBuffer(bytesNoCopy: pointer,
                                length: length,
@@ -211,17 +201,18 @@ public extension MTLContext {
     }
 
     func makeDepthStencilState(descriptor: MTLDepthStencilDescriptor) -> MTLDepthStencilState? {
-        return self.device.makeDepthStencilState(descriptor: descriptor)
+        return self.device
+                   .makeDepthStencilState(descriptor: descriptor)
     }
 
-    func makeTexture(descriptor: MTLTextureDescriptor) -> MTLTexture? {
+    func texture(descriptor: MTLTextureDescriptor) -> MTLTexture? {
         return self.device
                    .makeTexture(descriptor: descriptor)
     }
 
-    func makeTexture(descriptor: MTLTextureDescriptor,
-                     iosurface: IOSurfaceRef,
-                     plane: Int) -> MTLTexture? {
+    func texture(descriptor: MTLTextureDescriptor,
+                 iosurface: IOSurfaceRef,
+                 plane: Int) -> MTLTexture? {
         return self.device
                    .makeTexture(descriptor: descriptor,
                                 iosurface: iosurface,
@@ -232,56 +223,56 @@ public extension MTLContext {
     // Probably it's a bug, but simulator's version of `MTLDevice`
     // doesn't know about `makeSharedTexture`.
     @available(iOS 13.0, macOS 10.14, *)
-    func makeSharedTexture(descriptor: MTLTextureDescriptor) -> MTLTexture? {
+    func sharedTexture(descriptor: MTLTextureDescriptor) -> MTLTexture? {
         return self.device
                    .makeSharedTexture(descriptor: descriptor)
     }
 
     @available(iOS 13.0, macOS 10.14, *)
-    func makeSharedTexture(handle sharedHandle: MTLSharedTextureHandle) -> MTLTexture? {
+    func sharedTexture(handle sharedHandle: MTLSharedTextureHandle) -> MTLTexture? {
         return self.device
                    .makeSharedTexture(handle: sharedHandle)
     }
     #endif
 
-    func makeSamplerState(descriptor: MTLSamplerDescriptor) -> MTLSamplerState? {
+    func samplerState(descriptor: MTLSamplerDescriptor) -> MTLSamplerState? {
         return self.device
                    .makeSamplerState(descriptor: descriptor)
     }
 
-    func makeDefaultLibrary() -> MTLLibrary? {
+    func defaultLibrary() -> MTLLibrary? {
         return self.device
                    .makeDefaultLibrary()
     }
 
-    func makeDefaultLibrary(bundle: Bundle) throws -> MTLLibrary {
+    func defaultLibrary(bundle: Bundle) throws -> MTLLibrary {
         return try self.device
                        .makeDefaultLibrary(bundle: bundle)
     }
 
-    func makeLibrary(filepath: String) throws -> MTLLibrary {
+    func library(filepath: String) throws -> MTLLibrary {
         return try self.device
                        .makeLibrary(filepath: filepath)
     }
 
-    func makeLibrary(URL url: URL) throws -> MTLLibrary {
+    func library(URL url: URL) throws -> MTLLibrary {
         return try self.device
                        .makeLibrary(URL: url)
     }
 
-    func makeLibrary(data: __DispatchData) throws -> MTLLibrary {
+    func library(data: __DispatchData) throws -> MTLLibrary {
         return try self.device
                        .makeLibrary(data: data)
     }
 
-    func makeLibrary(source: String,
+    func library(source: String,
                      options: MTLCompileOptions?) throws -> MTLLibrary {
         return try self.device
                        .makeLibrary(source: source,
                                     options: options)
     }
 
-    func makeLibrary(source: String,
+    func library(source: String,
                      options: MTLCompileOptions?,
                      completionHandler: @escaping MTLNewLibraryCompletionHandler) {
         return self.device
@@ -290,12 +281,12 @@ public extension MTLContext {
                                 completionHandler: completionHandler)
     }
 
-    func makeRenderPipelineState(descriptor: MTLRenderPipelineDescriptor) throws -> MTLRenderPipelineState {
+    func renderPipelineState(descriptor: MTLRenderPipelineDescriptor) throws -> MTLRenderPipelineState {
         return try self.device
                        .makeRenderPipelineState(descriptor: descriptor)
     }
 
-    func makeRenderPipelineState(descriptor: MTLRenderPipelineDescriptor,
+    func renderPipelineState(descriptor: MTLRenderPipelineDescriptor,
                                  options: MTLPipelineOption,
                                  reflection: AutoreleasingUnsafeMutablePointer<MTLAutoreleasedRenderPipelineReflection?>?) throws -> MTLRenderPipelineState {
         return try self.device
@@ -304,14 +295,14 @@ public extension MTLContext {
                                                 reflection: reflection)
     }
 
-    func makeRenderPipelineState(descriptor: MTLRenderPipelineDescriptor,
+    func renderPipelineState(descriptor: MTLRenderPipelineDescriptor,
                                  completionHandler: @escaping MTLNewRenderPipelineStateCompletionHandler) {
         return self.device
                    .makeRenderPipelineState(descriptor: descriptor,
                                             completionHandler: completionHandler)
     }
 
-    func makeRenderPipelineState(descriptor: MTLRenderPipelineDescriptor,
+    func renderPipelineState(descriptor: MTLRenderPipelineDescriptor,
                                  options: MTLPipelineOption,
                                  completionHandler: @escaping MTLNewRenderPipelineStateWithReflectionCompletionHandler) {
         return self.device
@@ -320,12 +311,12 @@ public extension MTLContext {
                                             completionHandler: completionHandler)
     }
 
-    func makeComputePipelineState(function computeFunction: MTLFunction) throws -> MTLComputePipelineState {
+    func computePipelineState(function computeFunction: MTLFunction) throws -> MTLComputePipelineState {
         return try self.device
                        .makeComputePipelineState(function: computeFunction)
     }
 
-    func makeComputePipelineState(function computeFunction: MTLFunction,
+    func computePipelineState(function computeFunction: MTLFunction,
                                   options: MTLPipelineOption,
                                   reflection: AutoreleasingUnsafeMutablePointer<MTLAutoreleasedComputePipelineReflection?>?) throws -> MTLComputePipelineState {
         return try self.device
@@ -334,14 +325,14 @@ public extension MTLContext {
                                                  reflection: reflection)
     }
 
-    func makeComputePipelineState(function computeFunction: MTLFunction,
+    func computePipelineState(function computeFunction: MTLFunction,
                                   completionHandler: @escaping MTLNewComputePipelineStateCompletionHandler) {
         return self.device
                    .makeComputePipelineState(function: computeFunction,
                                              completionHandler: completionHandler)
     }
 
-    func makeComputePipelineState(function computeFunction: MTLFunction,
+    func computePipelineState(function computeFunction: MTLFunction,
                                   options: MTLPipelineOption,
                                   completionHandler: @escaping MTLNewComputePipelineStateWithReflectionCompletionHandler) {
         return self.device
@@ -350,7 +341,7 @@ public extension MTLContext {
                                              completionHandler: completionHandler)
     }
 
-    func makeComputePipelineState(descriptor: MTLComputePipelineDescriptor,
+    func computePipelineState(descriptor: MTLComputePipelineDescriptor,
                                   options: MTLPipelineOption,
                                   reflection: AutoreleasingUnsafeMutablePointer<MTLAutoreleasedComputePipelineReflection?>?) throws -> MTLComputePipelineState {
         return try self.device
@@ -359,7 +350,7 @@ public extension MTLContext {
                                                  reflection: reflection)
     }
 
-    func makeComputePipelineState(descriptor: MTLComputePipelineDescriptor,
+    func computePipelineState(descriptor: MTLComputePipelineDescriptor,
                                   options: MTLPipelineOption,
                                   completionHandler: @escaping MTLNewComputePipelineStateWithReflectionCompletionHandler) {
         self.device
@@ -368,7 +359,7 @@ public extension MTLContext {
                                       completionHandler: completionHandler)
     }
 
-    func makeFence() -> MTLFence? {
+    func fence() -> MTLFence? {
         return self.device
                    .makeFence()
     }
@@ -403,7 +394,7 @@ public extension MTLContext {
     #if os(iOS) && !targetEnvironment(macCatalyst)
     @available(macOS, unavailable)
     @available(macCatalyst, unavailable)
-    func makeRenderPipelineState(tileDescriptor descriptor: MTLTileRenderPipelineDescriptor,
+    func renderPipelineState(tileDescriptor descriptor: MTLTileRenderPipelineDescriptor,
                                  options: MTLPipelineOption,
                                  reflection: AutoreleasingUnsafeMutablePointer<MTLAutoreleasedRenderPipelineReflection?>?) throws -> MTLRenderPipelineState {
         return try self.device
@@ -414,7 +405,7 @@ public extension MTLContext {
 
     @available(macOS, unavailable)
     @available(macCatalyst, unavailable)
-    func makeRenderPipelineState(tileDescriptor descriptor: MTLTileRenderPipelineDescriptor,
+    func renderPipelineState(tileDescriptor descriptor: MTLTileRenderPipelineDescriptor,
                                  options: MTLPipelineOption,
                                  completionHandler: @escaping MTLNewRenderPipelineStateWithReflectionCompletionHandler) {
         self.device
@@ -424,14 +415,14 @@ public extension MTLContext {
     }
     #endif
 
-    func __getDefaultSamplePositions(_ positions: UnsafeMutablePointer<MTLSamplePosition>,
+    func defaultSamplePositions(_ positions: UnsafeMutablePointer<MTLSamplePosition>,
                                      count: Int) {
         self.device
             .__getDefaultSamplePositions(positions,
                                          count: count)
     }
 
-    func makeArgumentEncoder(arguments: [MTLArgumentDescriptor]) -> MTLArgumentEncoder? {
+    func argumentEncoder(arguments: [MTLArgumentDescriptor]) -> MTLArgumentEncoder? {
         return self.device
                    .makeArgumentEncoder(arguments: arguments)
     }
@@ -448,14 +439,14 @@ public extension MTLContext {
     @available(iOS 13.0, *)
     @available(macOS, unavailable)
     @available(macCatalyst, unavailable)
-    func makeRasterizationRateMap(descriptor: MTLRasterizationRateMapDescriptor) -> MTLRasterizationRateMap? {
+    func rasterizationRateMap(descriptor: MTLRasterizationRateMapDescriptor) -> MTLRasterizationRateMap? {
         return self.device
                    .makeRasterizationRateMap(descriptor: descriptor)
     }
     #endif
 
     @available(iOS 12.0, macOS 10.14, *)
-    func makeIndirectCommandBuffer(descriptor: MTLIndirectCommandBufferDescriptor,
+    func indirectCommandBuffer(descriptor: MTLIndirectCommandBufferDescriptor,
                                    maxCommandCount maxCount: Int,
                                    options: MTLResourceOptions = []) -> MTLIndirectCommandBuffer? {
         return self.device
@@ -465,19 +456,19 @@ public extension MTLContext {
     }
 
     @available(iOS 12.0, macOS 10.14, *)
-    func makeEvent() -> MTLEvent? {
+    func event() -> MTLEvent? {
         return self.device
                    .makeEvent()
     }
 
     @available(iOS 12.0, macOS 10.14, *)
-    func makeSharedEvent() -> MTLSharedEvent? {
+    func sharedEvent() -> MTLSharedEvent? {
         return self.device
                    .makeSharedEvent()
     }
 
     @available(iOS 12.0, macOS 10.14, *)
-    func makeSharedEvent(handle sharedEventHandle: MTLSharedEventHandle) -> MTLSharedEvent? {
+    func sharedEvent(handle sharedEventHandle: MTLSharedEventHandle) -> MTLSharedEvent? {
         return self.device
                    .makeSharedEvent(handle: sharedEventHandle)
     }
@@ -504,7 +495,7 @@ public extension MTLContext {
     }
     #endif
 
-    func getDefaultSamplePositions(sampleCount: Int) -> [MTLSamplePosition] {
+    func defaultSamplePositions(sampleCount: Int) -> [MTLSamplePosition] {
         return self.device
                    .getDefaultSamplePositions(sampleCount: sampleCount)
     }

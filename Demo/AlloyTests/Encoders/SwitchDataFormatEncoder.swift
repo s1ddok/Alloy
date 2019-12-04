@@ -29,9 +29,9 @@ final public class SwitchDataFormatEncoder {
 
     // MARK: - Life Cycle
 
-    public convenience init(metalContext: MTLContext,
+    public convenience init(context: MTLContext,
                             conversionType: ConversionType) throws {
-        try self.init(library: metalContext.shaderLibrary(for: Self.self),
+        try self.init(library: try context.shaderLibrary(for: Self.self),
                       conversionType: conversionType)
     }
 
