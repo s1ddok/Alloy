@@ -56,7 +56,6 @@ public extension MTLComputeCommandEncoder {
         self.dispatchThreadgroups(count, threadsPerThreadgroup: tgSize)
     }
 
-    @available(iOS 11, tvOS 11, OSX 10.13, *)
     func dispatch1d(state: MTLComputePipelineState,
                     exactly size: Int,
                     threadgroupWidth: Int? = nil) {
@@ -69,7 +68,6 @@ public extension MTLComputeCommandEncoder {
                              threadsPerThreadgroup: tgSize)
     }
     
-    @available(iOS 11, tvOS 11, OSX 10.13, *)
     func dispatch2d(state: MTLComputePipelineState,
                     exactly size: MTLSize,
                     threadgroupSize: MTLSize? = nil) {

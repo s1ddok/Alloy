@@ -8,13 +8,7 @@
 import Metal
 import simd
 
-@available(iOS 11.3, tvOS 11.3, macOS 10.13, *)
 final public class PointsRenderer {
-
-    public enum Errors: Error {
-        case functionCreationFailed
-        case libraryCreationFailed
-    }
 
     // MARK: - Properties
 
@@ -58,9 +52,8 @@ final public class PointsRenderer {
     ///   - pixelFormat: Color attachment's pixel format.
     /// - Throws: Library or function creation errors.
     public convenience init(context: MTLContext, pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
-        guard
-            let library = context.shaderLibrary(for: PointsRenderer.self)
-        else { throw Errors.libraryCreationFailed }
+        guard let library = context.shaderLibrary(for: PointsRenderer.self)
+        else { throw MetalError.MTLDeviceError.libraryCreationFailed }
 
         try self.init(library: library, pixelFormat: pixelFormat)
     }
@@ -72,10 +65,9 @@ final public class PointsRenderer {
     ///   - pixelFormat: Color attachment's pixel format.
     /// - Throws: Function creation error.
     public init(library: MTLLibrary, pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
-        guard
-            let vertexFunction = library.makeFunction(name: PointsRenderer.vertexFunctionName),
-            let fragmentFunction = library.makeFunction(name: PointsRenderer.fragmentFunctionName)
-        else { throw Errors.functionCreationFailed }
+        guard let vertexFunction = library.makeFunction(name: PointsRenderer.vertexFunctionName),
+              let fragmentFunction = library.makeFunction(name: PointsRenderer.fragmentFunctionName)
+        else { throw MetalError.MTLLibraryError.functionCreationFailed }
 
         let renderPipelineDescriptor = MTLRenderPipelineDescriptor()
         renderPipelineDescriptor.vertexFunction = vertexFunction

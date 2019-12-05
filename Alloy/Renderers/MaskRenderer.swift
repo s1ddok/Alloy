@@ -8,13 +8,7 @@
 import Metal
 import simd
 
-@available(iOS 11.3, tvOS 11.3, macOS 10.13, *)
 public class MaskRenderer {
-
-    public enum Errors: Error {
-        case functionCreationFailed
-        case libraryCreationFailed
-    }
 
     // MARK: - Properties
 
@@ -36,9 +30,8 @@ public class MaskRenderer {
     ///   - pixelFormat: Color attachment's pixel format.
     /// - Throws: Library or function creation errors.
     public convenience init(context: MTLContext, pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
-        guard
-            let library = context.shaderLibrary(for: MaskRenderer.self)
-        else { throw Errors.libraryCreationFailed }
+        guard let library = context.shaderLibrary(for: MaskRenderer.self)
+        else { throw MetalError.MTLDeviceError.libraryCreationFailed }
 
         try self.init(library: library, pixelFormat: pixelFormat)
     }
@@ -50,10 +43,9 @@ public class MaskRenderer {
     ///   - pixelFormat: Color attachment's pixel format.
     /// - Throws: Function creation error.
     public init(library: MTLLibrary, pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
-        guard
-            let vertexFunction = library.makeFunction(name: MaskRenderer.vertexFunctionName),
-            let fragmentFunction = library.makeFunction(name: MaskRenderer.fragmentFunctionName)
-        else { throw Errors.functionCreationFailed }
+        guard let vertexFunction = library.makeFunction(name: MaskRenderer.vertexFunctionName),
+              let fragmentFunction = library.makeFunction(name: MaskRenderer.fragmentFunctionName)
+        else { throw MetalError.MTLLibraryError.functionCreationFailed }
 
         let renderPipelineDescriptor = MTLRenderPipelineDescriptor()
         renderPipelineDescriptor.vertexFunction = vertexFunction
@@ -68,14 +60,14 @@ public class MaskRenderer {
     // MARK: - Helpers
 
     private func constructRectangle() -> Rectangle {
-        let topLeftPosition = float2(Float(self.normalizedRect.minX),
-                                     Float(self.normalizedRect.maxY))
-        let bottomLeftPosition = float2(Float(self.normalizedRect.minX),
-                                        Float(self.normalizedRect.minY))
-        let topRightPosition = float2(Float(self.normalizedRect.maxX),
-                                      Float(self.normalizedRect.maxY))
-        let bottomRightPosition = float2(Float(self.normalizedRect.maxX),
-                                         Float(self.normalizedRect.minY))
+        let topLeftPosition = SIMD2<Float>(Float(self.normalizedRect.minX),
+                                           Float(self.normalizedRect.maxY))
+        let bottomLeftPosition = SIMD2<Float>(Float(self.normalizedRect.minX),
+                                              Float(self.normalizedRect.minY))
+        let topRightPosition = SIMD2<Float>(Float(self.normalizedRect.maxX),
+                                            Float(self.normalizedRect.maxY))
+        let bottomRightPosition = SIMD2<Float>(Float(self.normalizedRect.maxX),
+                                               Float(self.normalizedRect.minY))
         return Rectangle(topLeft: topLeftPosition,
                          bottomLeft: bottomLeftPosition,
                          topRight: topRightPosition,

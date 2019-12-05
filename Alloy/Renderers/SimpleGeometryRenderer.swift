@@ -15,10 +15,9 @@ public class SimpleGeometryRenderer {
                 pixelFormat: MTLPixelFormat,
                 blending: BlendingMode = .alpha,
                 label: String = "Simple Geometry Renderer") throws {
-        guard
-            let fragment = library.makeFunction(name: "plainColorFragment"),
-            let vertex = library.makeFunction(name: "simpleVertex")
-        else { throw CommonErrors.metalInitializationFailed }
+        guard let fragment = library.makeFunction(name: "plainColorFragment"),
+              let vertex = library.makeFunction(name: "simpleVertex")
+        else { throw MetalError.MTLDeviceError.libraryCreationFailed }
 
         let renderPipelineStateDescriptor = MTLRenderPipelineDescriptor()
         renderPipelineStateDescriptor.label = label
@@ -37,8 +36,8 @@ public class SimpleGeometryRenderer {
                        type: MTLPrimitiveType = .triangle,
                        fillMode: MTLTriangleFillMode = .fill,
                        indexBuffer: MTLIndexBuffer,
-                       matrix: float4x4 = float4x4(diagonal: float4(1)),
-                       color: float4 = float4(1, 0, 0, 1),
+                       matrix: float4x4 = float4x4(diagonal: .init(repeating: 1)),
+                       color: SIMD4<Float> = .init(1, 0, 0, 1),
                        using encoder: MTLRenderCommandEncoder) {
         encoder.setVertexBuffer(geometry, offset: 0, index: 0)
         encoder.set(vertexValue: matrix, at: 1)
