@@ -15,17 +15,18 @@ final public class LinesRenderer {
     public var lines: [Line] {
         set {
             var lines = newValue
+            let length = MemoryLayout<Line>.stride * lines.count
             self.linesCount = lines.count
-            self.linesBuffer = self.renderPipelineState.device
-                .makeBuffer(bytes: &lines,
-                            length: MemoryLayout<Line>.stride * lines.count,
-                            options: .storageModeShared)
+            self.linesBuffer = self.renderPipelineState
+                                   .device
+                                   .makeBuffer(bytes: &lines,
+                                               length: length,
+                                               options: .storageModeShared)
         }
         get {
             if let linesBuffer = self.linesBuffer,
-               let lines = linesBuffer
-                           .array(of: Line.self,
-                                  count: self.linesCount) {
+               let lines = linesBuffer.array(of: Line.self,
+                                             count: self.linesCount) {
                 return lines
             } else {
                 return []

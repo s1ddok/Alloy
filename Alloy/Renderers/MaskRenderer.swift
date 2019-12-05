@@ -53,7 +53,7 @@ public class MaskRenderer {
         renderPipelineDescriptor.colorAttachments[0].setup(blending: .alpha)
 
         self.renderPipelineState = try library.device
-            .makeRenderPipelineState(descriptor: renderPipelineDescriptor)
+                                              .makeRenderPipelineState(descriptor: renderPipelineDescriptor)
     }
 
     // MARK: - Helpers
@@ -114,5 +114,4 @@ public class MaskRenderer {
 
     public static let vertexFunctionName = "maskVertex"
     public static let fragmentFunctionName = "maskFragment"
-
 }

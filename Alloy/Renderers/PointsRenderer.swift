@@ -15,17 +15,18 @@ final public class PointsRenderer {
     public var pointsPositions: [simd_float2] {
         set {
             var pointsPositions = newValue
+            let length = MemoryLayout<simd_float2>.stride * pointsPositions.count
             self.pointCount = pointsPositions.count
-            self.pointsPositionsBuffer = self.renderPipelineState.device
-                .makeBuffer(bytes: &pointsPositions,
-                            length: MemoryLayout<simd_float2>.stride * pointsPositions.count,
-                            options: .storageModeShared)
+            self.pointsPositionsBuffer = self.renderPipelineState
+                                             .device
+                                             .makeBuffer(bytes: &pointsPositions,
+                                                         length: length,
+                                                         options: .storageModeShared)
         }
         get {
             if let pointsPositionsBuffer = self.pointsPositionsBuffer,
-               let pointsPositions = pointsPositionsBuffer
-                   .array(of: simd_float2.self,
-                          count: self.pointCount) {
+               let pointsPositions = pointsPositionsBuffer.array(of: simd_float2.self,
+                                                                 count: self.pointCount) {
                 return pointsPositions
             } else {
                 return []
@@ -94,7 +95,8 @@ final public class PointsRenderer {
     ///
     /// - Parameter renderEncoder: Container to put the rendering work into.
     public func render(using renderEncoder: MTLRenderCommandEncoder) {
-        guard self.pointCount != 0 else { return }
+        guard self.pointCount != 0
+        else { return }
 
         // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool.
         renderEncoder.pushDebugGroup("Draw Points Geometry")
