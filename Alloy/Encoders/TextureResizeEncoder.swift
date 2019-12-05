@@ -2,7 +2,7 @@
 //  TextureResizeEncoder.swift
 //  Alloy
 //
-//  Created by Eugene Bokhan on 14.11.2019.
+//  Created by Eugene Bokhan on 30.09.2019.
 //
 
 import Metal
@@ -12,7 +12,7 @@ final public class TextureResizeEncoder {
     // MARK: - Properties
 
     public let pipelineState: MTLComputePipelineState
-    public let samplerDescriptor: MTLSamplerDescriptor
+    private let samplerState: MTLSamplerState
     private let deviceSupportsNonuniformThreadgroups: Bool
 
     // MARK: - Life Cycle
@@ -32,8 +32,8 @@ final public class TextureResizeEncoder {
     public convenience init(context: MTLContext,
                             samplerDescriptor: MTLSamplerDescriptor,
                             scalarType: MTLPixelFormat.ScalarType = .half) throws {
-        guard let library = context.shaderLibrary(for: type(of: self))
-        else { throw CommonErrors.metalInitializationFailed }
+        guard let library = context.shaderLibrary(for: Self.self)
+        else { throw MetalError.MTLDeviceError.libraryCreationFailed }
         try self.init(library: library,
                       samplerDescriptor: samplerDescriptor,
                       scalarType: scalarType)
@@ -54,7 +54,8 @@ final public class TextureResizeEncoder {
     public init(library: MTLLibrary,
                 samplerDescriptor: MTLSamplerDescriptor,
                 scalarType: MTLPixelFormat.ScalarType = .half) throws {
-        self.deviceSupportsNonuniformThreadgroups = library.device.supports(feature: .nonUniformThreadgroups)
+        self.deviceSupportsNonuniformThreadgroups = library.device
+                                                           .supports(feature: .nonUniformThreadgroups)
 
         let constantValues = MTLFunctionConstantValues()
         constantValues.set(self.deviceSupportsNonuniformThreadgroups,
@@ -63,7 +64,10 @@ final public class TextureResizeEncoder {
         let functionName = type(of: self).functionName + "_" + scalarType.rawValue
         self.pipelineState = try library.computePipelineState(function: functionName,
                                                               constants: constantValues)
-        self.samplerDescriptor = samplerDescriptor
+        guard let samplerState = library.device
+                                        .makeSamplerState(descriptor: samplerDescriptor)
+        else { throw MetalError.MTLDeviceError.samplerStateCreationFailed }
+        self.samplerState = samplerState
     }
 
     // MARK: - Encode
@@ -82,10 +86,10 @@ final public class TextureResizeEncoder {
     public func encode(sourceTexture: MTLTexture,
                        destinationTexture: MTLTexture,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [sourceTexture, destinationTexture])
+        encoder.set(textures: [sourceTexture,
+                               destinationTexture])
 
-        let sampler = encoder.device.makeSamplerState(descriptor: self.samplerDescriptor)
-        encoder.setSamplerState(sampler,
+        encoder.setSamplerState(self.samplerState,
                                 index: 0)
 
         if self.deviceSupportsNonuniformThreadgroups {

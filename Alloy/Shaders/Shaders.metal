@@ -57,7 +57,7 @@ generateKernels(textureCopy)
 template <typename T>
 void textureResize(texture2d<T, access::sample> sourceTexture,
                    texture2d<T, access::write> destinationTexture,
-                   sampler sampler,
+                   sampler s,
                    const ushort2 position,
                    const ushort2 totalThreads) {
     const ushort2 textureSize = ushort2(destinationTexture.get_width(),
@@ -67,8 +67,8 @@ void textureResize(texture2d<T, access::sample> sourceTexture,
     const float2 normalizedCoord = float2((float(position.x) + 0.5) / textureSize.x,
                                           (float(position.y) + 0.5) / textureSize.y);
 
-    const auto sampledlValue = sourceTexture.sample(sampler, normalizedCoord);
-    destinationTexture.write(sampledlValue, position);
+    auto sampledValue = sourceTexture.sample(s, normalizedCoord);
+    destinationTexture.write(sampledValue, position);
 }
 
 #define outerArguments(T)                                        \
