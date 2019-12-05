@@ -2,7 +2,7 @@
 //  TextureMultiplyAddEncoder.swift
 //  Alloy
 //
-//  Created by Eugene Bokhan on 14.11.2019.
+//  Created by Eugene Bokhan on 27.09.2019.
 //
 
 import Metal
@@ -13,15 +13,14 @@ final public class TextureMultiplyAddEncoder {
 
     public let pipelineState: MTLComputePipelineState
     private let deviceSupportsNonuniformThreadgroups: Bool
-    public let multiplier: Float
 
     // MARK: - Life Cycle
 
     public convenience init(context: MTLContext,
                             multiplier: Float,
                             scalarType: MTLPixelFormat.ScalarType = .half) throws {
-        guard let library = context.shaderLibrary(for: type(of: self))
-        else { throw CommonErrors.metalInitializationFailed }
+        guard let library = context.shaderLibrary(for: Self.self)
+        else { throw MetalError.MTLDeviceError.libraryCreationFailed }
         try self.init(library: library,
                       multiplier: multiplier,
                       scalarType: scalarType)
@@ -30,14 +29,16 @@ final public class TextureMultiplyAddEncoder {
     public init(library: MTLLibrary,
                 multiplier: Float,
                 scalarType: MTLPixelFormat.ScalarType = .half) throws {
-        self.deviceSupportsNonuniformThreadgroups = library.device.supports(feature: .nonUniformThreadgroups)
+        self.deviceSupportsNonuniformThreadgroups = library.device
+                                                           .supports(feature: .nonUniformThreadgroups)
         let constantValues = MTLFunctionConstantValues()
         constantValues.set(self.deviceSupportsNonuniformThreadgroups,
                            at: 0)
-        let functionName = type(of: self).functionName + "_" + scalarType.rawValue
+        constantValues.set(multiplier,
+                           at: 1)
+        let functionName = Self.functionName + "_" + scalarType.rawValue
         self.pipelineState = try library.computePipelineState(function: functionName,
                                                               constants: constantValues)
-        self.multiplier = multiplier
     }
 
     // MARK: - Encode
@@ -62,7 +63,6 @@ final public class TextureMultiplyAddEncoder {
         encoder.set(textures: [sourceTextureOne,
                                sourceTextureTwo,
                                destinationTexture])
-        encoder.set(self.multiplier, at: 0)
 
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: pipelineState,

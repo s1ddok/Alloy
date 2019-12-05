@@ -14,6 +14,7 @@
 using namespace metal;
 
 constant bool deviceSupportsNonuniformThreadgroups [[function_constant(0)]];
+constant float multiplierFC [[function_constant(1)]];
 
 struct BlockSize {
     ushort width;
@@ -523,7 +524,6 @@ template <typename T>
 void textureMultiplyAdd(texture2d<T, access::read> sourceTextureOne,
                         texture2d<T, access::read> sourceTextureTwo,
                         texture2d<T, access::write> destinationTexture,
-                        constant float& multiplier,
                         const ushort2 position) {
     const ushort2 textureSize = ushort2(destinationTexture.get_width(),
                                         destinationTexture.get_height());
@@ -532,7 +532,7 @@ void textureMultiplyAdd(texture2d<T, access::read> sourceTextureOne,
     const auto sourceTextureOneValue = sourceTextureOne.read(position);
     const auto sourceTextureTwoValue = sourceTextureTwo.read(position);
     const auto destinationTextureValue = vec<T, 4>(fma(float4(sourceTextureTwoValue),
-                                                       multiplier,
+                                                       multiplierFC,
                                                        float4(sourceTextureOneValue)));
     destinationTexture.write(destinationTextureValue,
                              position);
@@ -542,14 +542,12 @@ void textureMultiplyAdd(texture2d<T, access::read> sourceTextureOne,
 (texture2d<T, access::read> sourceTextureOne [[ texture(0) ]],   \
 texture2d<T, access::read> sourceTextureTwo [[ texture(1) ]],    \
 texture2d<T, access::write> destinationTexture [[ texture(2) ]], \
-constant float& multiplier [[ buffer(0) ]],                      \
 const ushort2 position [[ thread_position_in_grid ]])            \
 
 #define innerArguments \
 (sourceTextureOne,     \
 sourceTextureTwo,      \
 destinationTexture,    \
-multiplier,            \
 position)              \
 
 generateKernels(textureMultiplyAdd)
