@@ -18,7 +18,7 @@ final public class TextureCopyEncoder {
 
     public convenience init(context: MTLContext,
                             scalarType: MTLPixelFormat.ScalarType = .half) throws {
-        guard let library = context.shaderLibrary(for: type(of: self))
+        guard let library = context.shaderLibrary(for: Self.self)
         else { throw MetalError.MTLDeviceError.libraryCreationFailed }
         try self.init(library: library,
                       scalarType: scalarType)
@@ -26,7 +26,8 @@ final public class TextureCopyEncoder {
 
     public init(library: MTLLibrary,
                 scalarType: MTLPixelFormat.ScalarType = .half) throws {
-        self.deviceSupportsNonuniformThreadgroups = library.device.supports(feature: .nonUniformThreadgroups)
+        self.deviceSupportsNonuniformThreadgroups = library.device
+                                                           .supports(feature: .nonUniformThreadgroups)
         let constantValues = MTLFunctionConstantValues()
         constantValues.set(self.deviceSupportsNonuniformThreadgroups,
                            at: 0)
@@ -85,16 +86,21 @@ final public class TextureCopyEncoder {
 
         encoder.set(textures: [sourceTexture,
                                destinationTexture])
+        encoder.set(readOffset,
+                    at: 0)
+        encoder.set(writeOffset,
+                    at: 1)
 
-        encoder.set(readOffset, at: 0)
-        encoder.set(writeOffset, at: 1)
+        let gridSize = MTLSize(width: destinationTexture.width - destinationTextureOrigin.x,
+                               height: destinationTexture.height - destinationTextureOrigin.y,
+                               depth: destinationTexture.size.depth)
 
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: self.pipelineState,
-                               exactly: sourceTexureRegion.size)
+                               exactly: gridSize)
         } else {
             encoder.dispatch2d(state: self.pipelineState,
-                               covering: sourceTexureRegion.size)
+                               covering: gridSize)
         }
     }
 
