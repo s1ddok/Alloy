@@ -6,6 +6,9 @@
 //
 
 public enum MetalError {
+    public enum MTLContextError: Error {
+        case textureCacheCreationFailed
+    }
     public enum MTLCommandQueueError: Error {
         case commandBufferCreationFailed
     }

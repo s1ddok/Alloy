@@ -28,12 +28,12 @@ public extension MTLContext {
         set { self.commandQueue.label = newValue }
     }
 
-    func makeCommandBuffer() -> MTLCommandBuffer? {
+    func commandBuffer() -> MTLCommandBuffer? {
         return self.commandQueue
                    .makeCommandBuffer()
     }
 
-    func makeCommandBufferWithUnretainedReferences() -> MTLCommandBuffer? {
+    func commandBufferWithUnretainedReferences() -> MTLCommandBuffer? {
         return self.commandQueue
                    .makeCommandBufferWithUnretainedReferences()
     }

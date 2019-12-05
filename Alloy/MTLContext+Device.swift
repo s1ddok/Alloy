@@ -174,15 +174,15 @@ public extension MTLContext {
     }
 
     func buffer(length: Int,
-                    options: MTLResourceOptions = []) -> MTLBuffer? {
+                options: MTLResourceOptions = []) -> MTLBuffer? {
         return self.device
                    .makeBuffer(length: length,
                                options: options)
     }
 
     func buffer(bytes pointer: UnsafeRawPointer,
-                    length: Int,
-                    options: MTLResourceOptions = []) -> MTLBuffer? {
+                length: Int,
+                options: MTLResourceOptions = []) -> MTLBuffer? {
         return self.device
                    .makeBuffer(bytes: pointer,
                                length: length,
@@ -266,15 +266,15 @@ public extension MTLContext {
     }
 
     func library(source: String,
-                     options: MTLCompileOptions?) throws -> MTLLibrary {
+                 options: MTLCompileOptions?) throws -> MTLLibrary {
         return try self.device
                        .makeLibrary(source: source,
                                     options: options)
     }
 
     func library(source: String,
-                     options: MTLCompileOptions?,
-                     completionHandler: @escaping MTLNewLibraryCompletionHandler) {
+                 options: MTLCompileOptions?,
+                 completionHandler: @escaping MTLNewLibraryCompletionHandler) {
         return self.device
                    .makeLibrary(source: source,
                                 options: options,
@@ -287,8 +287,8 @@ public extension MTLContext {
     }
 
     func renderPipelineState(descriptor: MTLRenderPipelineDescriptor,
-                                 options: MTLPipelineOption,
-                                 reflection: AutoreleasingUnsafeMutablePointer<MTLAutoreleasedRenderPipelineReflection?>?) throws -> MTLRenderPipelineState {
+                             options: MTLPipelineOption,
+                             reflection: AutoreleasingUnsafeMutablePointer<MTLAutoreleasedRenderPipelineReflection?>?) throws -> MTLRenderPipelineState {
         return try self.device
                        .makeRenderPipelineState(descriptor: descriptor,
                                                 options: options,
@@ -296,15 +296,15 @@ public extension MTLContext {
     }
 
     func renderPipelineState(descriptor: MTLRenderPipelineDescriptor,
-                                 completionHandler: @escaping MTLNewRenderPipelineStateCompletionHandler) {
+                             completionHandler: @escaping MTLNewRenderPipelineStateCompletionHandler) {
         return self.device
                    .makeRenderPipelineState(descriptor: descriptor,
                                             completionHandler: completionHandler)
     }
 
     func renderPipelineState(descriptor: MTLRenderPipelineDescriptor,
-                                 options: MTLPipelineOption,
-                                 completionHandler: @escaping MTLNewRenderPipelineStateWithReflectionCompletionHandler) {
+                             options: MTLPipelineOption,
+                             completionHandler: @escaping MTLNewRenderPipelineStateWithReflectionCompletionHandler) {
         return self.device
                    .makeRenderPipelineState(descriptor: descriptor,
                                             options: options,
@@ -317,8 +317,8 @@ public extension MTLContext {
     }
 
     func computePipelineState(function computeFunction: MTLFunction,
-                                  options: MTLPipelineOption,
-                                  reflection: AutoreleasingUnsafeMutablePointer<MTLAutoreleasedComputePipelineReflection?>?) throws -> MTLComputePipelineState {
+                              options: MTLPipelineOption,
+                              reflection: AutoreleasingUnsafeMutablePointer<MTLAutoreleasedComputePipelineReflection?>?) throws -> MTLComputePipelineState {
         return try self.device
                        .makeComputePipelineState(function: computeFunction,
                                                  options: options,
@@ -326,15 +326,15 @@ public extension MTLContext {
     }
 
     func computePipelineState(function computeFunction: MTLFunction,
-                                  completionHandler: @escaping MTLNewComputePipelineStateCompletionHandler) {
+                              completionHandler: @escaping MTLNewComputePipelineStateCompletionHandler) {
         return self.device
                    .makeComputePipelineState(function: computeFunction,
                                              completionHandler: completionHandler)
     }
 
     func computePipelineState(function computeFunction: MTLFunction,
-                                  options: MTLPipelineOption,
-                                  completionHandler: @escaping MTLNewComputePipelineStateWithReflectionCompletionHandler) {
+                              options: MTLPipelineOption,
+                              completionHandler: @escaping MTLNewComputePipelineStateWithReflectionCompletionHandler) {
         return self.device
                    .makeComputePipelineState(function: computeFunction,
                                              options: options,
@@ -342,8 +342,8 @@ public extension MTLContext {
     }
 
     func computePipelineState(descriptor: MTLComputePipelineDescriptor,
-                                  options: MTLPipelineOption,
-                                  reflection: AutoreleasingUnsafeMutablePointer<MTLAutoreleasedComputePipelineReflection?>?) throws -> MTLComputePipelineState {
+                              options: MTLPipelineOption,
+                              reflection: AutoreleasingUnsafeMutablePointer<MTLAutoreleasedComputePipelineReflection?>?) throws -> MTLComputePipelineState {
         return try self.device
                        .makeComputePipelineState(descriptor: descriptor,
                                                  options: options,
@@ -351,8 +351,8 @@ public extension MTLContext {
     }
 
     func computePipelineState(descriptor: MTLComputePipelineDescriptor,
-                                  options: MTLPipelineOption,
-                                  completionHandler: @escaping MTLNewComputePipelineStateWithReflectionCompletionHandler) {
+                              options: MTLPipelineOption,
+                              completionHandler: @escaping MTLNewComputePipelineStateWithReflectionCompletionHandler) {
         self.device
             .makeComputePipelineState(descriptor: descriptor,
                                       options: options,
@@ -395,8 +395,8 @@ public extension MTLContext {
     @available(macOS, unavailable)
     @available(macCatalyst, unavailable)
     func renderPipelineState(tileDescriptor descriptor: MTLTileRenderPipelineDescriptor,
-                                 options: MTLPipelineOption,
-                                 reflection: AutoreleasingUnsafeMutablePointer<MTLAutoreleasedRenderPipelineReflection?>?) throws -> MTLRenderPipelineState {
+                             options: MTLPipelineOption,
+                             reflection: AutoreleasingUnsafeMutablePointer<MTLAutoreleasedRenderPipelineReflection?>?) throws -> MTLRenderPipelineState {
         return try self.device
                        .makeRenderPipelineState(tileDescriptor: descriptor,
                                                 options: options,
@@ -406,8 +406,8 @@ public extension MTLContext {
     @available(macOS, unavailable)
     @available(macCatalyst, unavailable)
     func renderPipelineState(tileDescriptor descriptor: MTLTileRenderPipelineDescriptor,
-                                 options: MTLPipelineOption,
-                                 completionHandler: @escaping MTLNewRenderPipelineStateWithReflectionCompletionHandler) {
+                             options: MTLPipelineOption,
+                             completionHandler: @escaping MTLNewRenderPipelineStateWithReflectionCompletionHandler) {
         self.device
             .makeRenderPipelineState(tileDescriptor: descriptor,
                                      options: options,
@@ -416,7 +416,7 @@ public extension MTLContext {
     #endif
 
     func defaultSamplePositions(_ positions: UnsafeMutablePointer<MTLSamplePosition>,
-                                     count: Int) {
+                                count: Int) {
         self.device
             .__getDefaultSamplePositions(positions,
                                          count: count)
@@ -447,8 +447,8 @@ public extension MTLContext {
 
     @available(iOS 12.0, macOS 10.14, *)
     func indirectCommandBuffer(descriptor: MTLIndirectCommandBufferDescriptor,
-                                   maxCommandCount maxCount: Int,
-                                   options: MTLResourceOptions = []) -> MTLIndirectCommandBuffer? {
+                               maxCommandCount maxCount: Int,
+                               options: MTLResourceOptions = []) -> MTLIndirectCommandBuffer? {
         return self.device
                    .makeIndirectCommandBuffer(descriptor: descriptor,
                                               maxCommandCount: maxCount,

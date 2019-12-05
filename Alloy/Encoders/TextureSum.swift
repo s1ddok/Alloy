@@ -17,7 +17,7 @@ public class TextureSum {
 
     public init(library: MTLLibrary) throws {
         self.deviceSupportsNonuniformThreadgroups = library.device
-                                                          .supports(feature: .nonUniformThreadgroups)
+                                                           .supports(feature: .nonUniformThreadgroups)
 
         let constantValues = MTLFunctionConstantValues()
         var dispatchFlag = self.deviceSupportsNonuniformThreadgroups

@@ -20,22 +20,8 @@ public extension MTLTexture {
     func cgImage() throws -> CGImage {
         let error = MetalError.MTLTextureError.imageCreationFailed
 
-        #if targetEnvironment(macCatalyst)
-        guard self.storageMode == .managed
-           || self.storageMode == .shared
+        guard self.isAccessibleOnCPU
         else { throw error }
-        #else
-        #if os(macOS)
-        guard self.storageMode == .managed
-           || self.storageMode == .shared
-        else { throw error }
-        #endif
-
-        #if os(iOS) || os(tvOS)
-        guard self.storageMode == .shared
-        else { throw error }
-        #endif
-        #endif
 
         switch self.pixelFormat {
         case .a8Unorm, .r8Unorm, .r8Uint:
@@ -52,7 +38,9 @@ public extension MTLTexture {
             let bitmapInfo = CGBitmapInfo(rawValue: self.pixelFormat == .a8Unorm
                                                     ? CGImageAlphaInfo.alphaOnly.rawValue
                                                     : CGImageAlphaInfo.none.rawValue)
-            guard let data = CFDataCreate(nil, rgbaBytes, length),
+            guard let data = CFDataCreate(nil,
+                                          rgbaBytes,
+                                          length),
                   let dataProvider = CGDataProvider(data: data),
                   let cgImage = CGImage(width: self.width,
                                         height: self.height,
@@ -96,7 +84,9 @@ public extension MTLTexture {
             // create CGImage with RGBA Flipped Bytes
             let colorScape = CGColorSpaceCreateDeviceRGB()
             let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
-            guard let data = CFDataCreate(nil, rgbaBytes, length),
+            guard let data = CFDataCreate(nil,
+                                          rgbaBytes,
+                                          length),
                   let dataProvider = CGDataProvider(data: data),
                   let cgImage = CGImage(width: self.width,
                                         height: self.height,
@@ -116,7 +106,8 @@ public extension MTLTexture {
             let rowBytes = self.width * 4
             let length = rowBytes * self.height
 
-            let rgbaBytes = [UInt8](repeating: 0, count: length)
+            let rgbaBytes = [UInt8](repeating: 0,
+                                    count: length)
             self.getBytes(UnsafeMutableRawPointer(mutating: rgbaBytes),
                           bytesPerRow: rowBytes,
                           from: self.region,
@@ -124,7 +115,9 @@ public extension MTLTexture {
 
             let colorScape = CGColorSpaceCreateDeviceRGB()
             let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
-            guard let data = CFDataCreate(nil, rgbaBytes, length),
+            guard let data = CFDataCreate(nil,
+                                          rgbaBytes,
+                                          length),
                   let dataProvider = CGDataProvider(data: data),
                   let cgImage = CGImage(width: self.width,
                                         height: self.height,
@@ -247,9 +240,13 @@ public extension MTLTexture {
     ///   - height: Height of the texture.
     ///   - featureChannels: The number of color components per pixel: must be 1, 2, or 4.
     /// - Returns: Array of floats containing each pixel of the texture.
-    func toFloatArray(width: Int, height: Int, featureChannels: Int) -> [Float]? {
-        return self.toArray(width: width, height: height,
-                            featureChannels: featureChannels, initial: Float(0))
+    func toFloatArray(width: Int,
+                      height: Int,
+                      featureChannels: Int) -> [Float]? {
+        return self.toArray(width: width,
+                            height: height,
+                            featureChannels: featureChannels,
+                            initial: .zero)
     }
 
     /// Creates a new array of `Float16`s and copies the texture's pixels into it.
@@ -259,9 +256,13 @@ public extension MTLTexture {
     ///   - height: Height of the texture.
     ///   - featureChannels: The number of color components per pixel: must be 1, 2, or 4.
     /// - Returns: Array of floats containing each pixel of the texture.
-    func toFloat16Array(width: Int, height: Int, featureChannels: Int) -> [Float16]? {
-        return self.toArray(width: width, height: height,
-                            featureChannels: featureChannels, initial: Float16(0))
+    func toFloat16Array(width: Int,
+                        height: Int,
+                        featureChannels: Int) -> [Float16]? {
+        return self.toArray(width: width,
+                            height: height,
+                            featureChannels: featureChannels,
+                            initial: .zero)
     }
 
     /// Creates a new array of `UInt8`s and copies the texture's pixels into it.
@@ -271,9 +272,13 @@ public extension MTLTexture {
     ///   - height: Height of the texture.
     ///   - featureChannels: The number of color components per pixel: must be 1, 2, or 4.
     /// - Returns: Array of floats containing each pixel of the texture.
-    func toUInt8Array(width: Int, height: Int, featureChannels: Int) -> [UInt8]? {
-        return self.toArray(width: width, height: height,
-                            featureChannels: featureChannels, initial: UInt8(0))
+    func toUInt8Array(width: Int,
+                      height: Int,
+                      featureChannels: Int) -> [UInt8]? {
+        return self.toArray(width: width,
+                            height: height,
+                            featureChannels: featureChannels,
+                            initial: .zero)
     }
 
     /// Convenience function that copies the texture's pixel data to a Swift array.
@@ -281,29 +286,31 @@ public extension MTLTexture {
     /// - Parameters:
     ///   - width: Width of the texture.
     ///   - height: Height of the texture.
-    ///   - featureChannels: The number of color components per pixel: must be 1, 2, or 4.
+    ///   - featureChannels: The nuxOmber of color components per pixel: must be 1, 2, or 4.
     ///   - initial: This parameter is necessary because we need to give the array
     ///     an initial value. Unfortunately, we can't do `[T](repeating: T(0), ...)`
     ///     since `T` could be anything and may not have an init that takes a literal
     ///     value.
     /// - Returns: Swift array containing texture's pixel data.
 
-    private func toArray<T>(width: Int, height: Int, featureChannels: Int, initial: T) -> [T]? {
-        #if targetEnvironment(macCatalyst)
-        guard self.storageMode == .shared || self.storageMode == .managed else { return nil }
-        #else
-        #if os(iOS) || os(tvOS)
-        guard self.storageMode == .shared else { return nil }
-        #elseif os(macOS)
-        guard self.storageMode == .shared || self.storageMode == .managed else { return nil }
-        #endif
-        #endif
-        guard featureChannels != 3 && featureChannels <= 4 else { return nil }
+    private func toArray<T>(width: Int,
+                            height: Int,
+                            featureChannels: Int,
+                            initial: T) -> [T]? {
+        guard self.isAccessibleOnCPU
+           && featureChannels != 3
+           && featureChannels <= 4
+        else { return nil }
 
-        var bytes = [T](repeating: initial, count: width * height * featureChannels)
-        let region = MTLRegionMake2D(0, 0, width, height)
-        self.getBytes(&bytes, bytesPerRow: width * featureChannels * MemoryLayout<T>.stride,
-                      from: region, mipmapLevel: 0)
+        var bytes = [T](repeating: initial,
+                        count: width * height * featureChannels)
+        self.getBytes(&bytes,
+                      bytesPerRow: width * featureChannels * MemoryLayout<T>.stride,
+                      from: .init(origin: .zero,
+                                  size: .init(width: width,
+                                              height: height,
+                                              depth: 1)),
+                      mipmapLevel: 0)
         return bytes
     }
 }

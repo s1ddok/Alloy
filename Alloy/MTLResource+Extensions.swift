@@ -10,11 +10,23 @@ import Metal
 public extension MTLResource {
 
     var isAccessibleOnCPU: Bool {
-        #if os(iOS) || os(tvOS)
+        #if os(iOS)
+        #if targetEnvironment(simulator)
         return self.storageMode == .shared
-        #elseif os(macOS)
+        #elseif targetEnvironment(macCatalyst)
         return self.storageMode == .managed || self.storageMode == .shared
-        #endif
+        #else
+        return self.storageMode == .shared
+        #endif // targetEnvironment
+        #endif // os(iOS)
+
+        #if os(tvOS)
+        return self.storageMode == .shared
+        #endif // os(tvOS)
+
+        #if os(macOS)
+        return self.storageMode == .managed || self.storageMode == .shared
+        #endif // os(macOS)
     }
 
 }
