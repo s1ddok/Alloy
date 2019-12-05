@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                  = 'Alloy'
-  s.version               = '0.10.13'
+  s.version               = '0.11.2'
   s.license               = { :type => 'MIT', :file => 'LICENSE' }
   s.summary               = 'Nano helpers for Metal framework'
   s.homepage              = 'https://github.com/s1ddok/Alloy'
@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   s.source                = { :git => 'https://github.com/s1ddok/Alloy.git', :tag => s.version.to_s }
   s.ios.deployment_target = '11.0'
   s.osx.deployment_target = '10.13'
-  s.swift_version         = '4.2'
+  s.swift_version         = '5.1'
   s.default_subspec       = 'Core'
 
   s.subspec 'Core' do |core|
@@ -18,14 +18,14 @@ Pod::Spec.new do |s|
   end
 
   s.subspec 'Shaders' do |shaders|
-    shaders.source_files    = 'Alloy/Shaders/*.{metal,h}', 'Alloy/Encoders/*.{swift}', 'Alloy/Renderers/*.{swift}'
-    shaders.frameworks      = 'Metal', 'CoreVideo'
+    shaders.source_files  = 'Alloy/Shaders/*.{metal,h}', 'Alloy/Encoders/*.{swift}', 'Alloy/Renderers/*.{swift}'
+    shaders.frameworks    = 'Metal', 'CoreVideo'
     shaders.dependency 'Alloy/Core'
   end
 
   s.subspec 'ML' do |ml|
-    ml.source_files         = 'Alloy/ML/*.{swift}'
-    ml.frameworks           = 'Metal', 'MetalPerformanceShaders'
+    ml.source_files       = 'Alloy/ML/*.{swift}'
+    ml.frameworks         = 'Metal', 'MetalPerformanceShaders'
     ml.dependency 'Alloy/Core'
   end
 end

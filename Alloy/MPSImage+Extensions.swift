@@ -9,7 +9,6 @@
 import MetalPerformanceShaders
 
 /* Utility functions for converting of MPSImages to floating point arrays. */
-@available(iOS 10.0, tvOS 10.0, macOS 10.13, *)
 public extension MPSImage {
 
     /// Utility function for converting of MPSImages to floating point arrays.

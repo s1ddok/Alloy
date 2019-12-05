@@ -1,6 +1,6 @@
 //
 //  MTLTexture+Extensions.swift
-//  AIBeauty
+//  Alloy
 //
 //  Created by Andrey Volodin on 24.09.2018.
 //
