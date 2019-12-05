@@ -8,9 +8,6 @@
 import Metal
 
 public class MTLIndexBuffer {
-    public enum Errors: Error {
-        case allocationFailed
-    }
 
     public let buffer: MTLBuffer
     public let count: Int
@@ -20,7 +17,7 @@ public class MTLIndexBuffer {
         guard let allocatedBuffer = device.makeBuffer(bytes: indexArray,
                                                       length: indexArray.count * MemoryLayout<UInt16>.stride,
                                                       options: options)
-        else { throw Errors.allocationFailed }
+        else { throw MetalError.MTLBufferError.allocationFailed }
 
         self.buffer = allocatedBuffer
         self.count = indexArray.count
@@ -31,7 +28,7 @@ public class MTLIndexBuffer {
         guard let allocatedBuffer = device.makeBuffer(bytes: indexArray,
                                                       length: indexArray.count * MemoryLayout<UInt32>.stride,
                                                       options: options)
-        else { throw Errors.allocationFailed }
+        else { throw MetalError.MTLBufferError.allocationFailed }
 
         self.buffer = allocatedBuffer
         self.count = indexArray.count

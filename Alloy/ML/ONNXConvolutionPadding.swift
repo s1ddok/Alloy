@@ -14,7 +14,6 @@ public typealias Pads = (top: Int, left: Int, bottom: Int, right: Int)
 public typealias Padding = (height: Int, width: Int)
 public typealias Scales = (height: Int, width: Int)
 
-@available(macOS 10.13, iOS 11.0, tvOS 11.0, *)
 @objc(ONNXConvolutionPadding) public class ONNXConvolutionPadding: NSObject, MPSNNPadding {
     public let kernel: Kernel
     public let dilations: Dilations
