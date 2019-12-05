@@ -1,6 +1,6 @@
 //
 //  CVPixelFormat+MTLTexture.swift
-//  GeometryStabilizer
+//  Alloy
 //
 //  Created by Andrey Volodin on 20.10.17.
 //  Copyright © 2017 Andrey Volodin. All rights reserved.

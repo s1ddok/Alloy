@@ -7,7 +7,6 @@
 
 import MetalPerformanceShaders
 
-@available(iOS 11.0, macOS 10.13, *)
 public class GlobalPoolPadding: NSObject, MPSNNPadding {
 
     public override init() {}
