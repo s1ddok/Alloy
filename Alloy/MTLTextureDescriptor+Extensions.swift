@@ -23,7 +23,7 @@ extension MTLTextureDescriptor {
         copy.storageMode = self.storageMode
         copy.usage = self.usage
 
-        if #available(iOS 13.0, *) {
+        if #available(iOS 13.0, macOS 10.15, *) {
             copy.hazardTrackingMode = self.hazardTrackingMode
             copy.allowGPUOptimizedContents = self.allowGPUOptimizedContents
             copy.swizzle = self.swizzle
