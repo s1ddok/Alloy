@@ -35,14 +35,6 @@ final class TextureCopyTests: XCTestCase {
         }
     }
 
-    // MARK: - Errors
-
-    enum Errors: Error {
-        case cgImageCreationFailed
-        case textureCreationFailed
-        case bufferCreationFailed
-    }
-
     // MARK: - Properties
 
     public var context = MTLContext()
@@ -87,7 +79,7 @@ final class TextureCopyTests: XCTestCase {
                                     desiredResultImage: UIImage(data: desiredResultImageData)!.cgImage!)
             }
         } catch {
-            fatalError(error.localizedDescription)
+            XCTFail(error.localizedDescription)
         }
     }
 
@@ -99,10 +91,9 @@ final class TextureCopyTests: XCTestCase {
             guard let resultBuffer = self.context
                                          .buffer(for: Float.self,
                                                  options: .storageModeShared)
-            else { throw Errors.bufferCreationFailed }
+            else { throw MetalError.MTLBufferError.allocationFailed }
 
             // Dispatch.
-
             try self.testCases.forEach { testCase in
                 try self.context.scheduleAndWait { commandBuffer in
                     self.textureCopyEncoder
@@ -123,7 +114,7 @@ final class TextureCopyTests: XCTestCase {
                 XCTAssert(result < 0.05)
             }
         } catch {
-            fatalError(error.localizedDescription)
+            XCTFail(error.localizedDescription)
         }
     }
 
