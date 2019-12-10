@@ -11,6 +11,10 @@
 		1804316F231FE33A006F2ED3 /* EuclideanDistanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1804316D231FE33A006F2ED3 /* EuclideanDistanceTests.swift */; };
 		18043171231FE45D006F2ED3 /* TextureCachingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18043170231FE45D006F2ED3 /* TextureCachingTests.swift */; };
 		18043172231FE45D006F2ED3 /* TextureCachingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18043170231FE45D006F2ED3 /* TextureCachingTests.swift */; };
+		1847DEBD239FD60C00600DD5 /* texture_copy_test_cases in Resources */ = {isa = PBXBuildFile; fileRef = 1847DEBC239FD60C00600DD5 /* texture_copy_test_cases */; };
+		1847DEBE239FD60C00600DD5 /* texture_copy_test_cases in Resources */ = {isa = PBXBuildFile; fileRef = 1847DEBC239FD60C00600DD5 /* texture_copy_test_cases */; };
+		1847DEC0239FDF0800600DD5 /* TextureCopyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1847DE6B239FA80400600DD5 /* TextureCopyTests.swift */; };
+		1847DEC2239FE02800600DD5 /* TextureCopyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1847DE6B239FA80400600DD5 /* TextureCopyTests.swift */; };
 		18B1A084231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B1A083231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift */; };
 		18B1A085231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B1A083231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift */; };
 		18B1A087231E7867000A9BAB /* SwitchDataFormatEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B1A086231E7867000A9BAB /* SwitchDataFormatEncoder.swift */; };
@@ -57,6 +61,8 @@
 		0BF7AAD9917E49917E0506BE /* Pods-AlloyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AlloyTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AlloyTests/Pods-AlloyTests.debug.xcconfig"; sourceTree = "<group>"; };
 		1804316D231FE33A006F2ED3 /* EuclideanDistanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EuclideanDistanceTests.swift; sourceTree = "<group>"; };
 		18043170231FE45D006F2ED3 /* TextureCachingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextureCachingTests.swift; sourceTree = "<group>"; };
+		1847DE6B239FA80400600DD5 /* TextureCopyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextureCopyTests.swift; sourceTree = "<group>"; };
+		1847DEBC239FD60C00600DD5 /* texture_copy_test_cases */ = {isa = PBXFileReference; lastKnownFileType = folder; path = texture_copy_test_cases; sourceTree = "<group>"; };
 		18B1A083231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MTLPixelFormat+Extensions.swift"; sourceTree = "<group>"; };
 		18B1A086231E7867000A9BAB /* SwitchDataFormatEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchDataFormatEncoder.swift; sourceTree = "<group>"; };
 		1E76F10B8D3E3E672C003BC2 /* Pods-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Demo/Pods-Demo.debug.xcconfig"; sourceTree = "<group>"; };
@@ -130,6 +136,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1847DEC1239FE02000600DD5 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				1847DEBC239FD60C00600DD5 /* texture_copy_test_cases */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		18B1A08D231E7A26000A9BAB /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -218,6 +232,8 @@
 				93B3E23F21F505E1008835A0 /* AlloyTests.swift */,
 				1804316D231FE33A006F2ED3 /* EuclideanDistanceTests.swift */,
 				18043170231FE45D006F2ED3 /* TextureCachingTests.swift */,
+				1847DE6B239FA80400600DD5 /* TextureCopyTests.swift */,
+				1847DEC1239FE02000600DD5 /* Resources */,
 				18B1A08F231E7A3A000A9BAB /* Encoders */,
 				18B1A08D231E7A26000A9BAB /* Extensions */,
 				18B1A090231E7A43000A9BAB /* Shaders */,
@@ -404,6 +420,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1847DEBD239FD60C00600DD5 /* texture_copy_test_cases in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -421,6 +438,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1847DEBE239FD60C00600DD5 /* texture_copy_test_cases in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -605,6 +623,7 @@
 				1804316E231FE33A006F2ED3 /* EuclideanDistanceTests.swift in Sources */,
 				93B3E24021F505E1008835A0 /* AlloyTests.swift in Sources */,
 				18043171231FE45D006F2ED3 /* TextureCachingTests.swift in Sources */,
+				1847DEC2239FE02800600DD5 /* TextureCopyTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -627,6 +646,7 @@
 				1804316F231FE33A006F2ED3 /* EuclideanDistanceTests.swift in Sources */,
 				93B3E29021F51997008835A0 /* AlloyTests.swift in Sources */,
 				18043172231FE45D006F2ED3 /* TextureCachingTests.swift in Sources */,
+				1847DEC0239FDF0800600DD5 /* TextureCopyTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
