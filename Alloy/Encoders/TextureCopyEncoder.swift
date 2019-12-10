@@ -145,6 +145,9 @@ final public class TextureCopyEncoder {
             encoder.dispatch2d(state: self.pipelineState,
                                exactly: gridSize)
         } else {
+            encoder.set(SIMD2<UInt16>(x: .init(gridSize.width),
+                                      y: .init(gridSize.height)),
+                        at: 2)
             encoder.dispatch2d(state: self.pipelineState,
                                covering: gridSize)
         }
