@@ -79,10 +79,60 @@ final public class TextureCopyEncoder {
                      to destinationTextureOrigin: MTLOrigin,
                      of destinationTexture: MTLTexture,
                      using encoder: MTLComputeCommandEncoder) {
-        let readOffset = SIMD2<UInt16>(x: UInt16(sourceTexureRegion.origin.x),
-                                       y: UInt16(sourceTexureRegion.origin.y))
-        let writeOffset = SIMD2<UInt16>(x: UInt16(destinationTextureOrigin.x),
-                                        y: UInt16(destinationTextureOrigin.y))
+        // 1. Calculate read origin correction.
+        let readOriginCorrection = MTLOrigin(x: abs(min(0, sourceTexureRegion.origin.x)),
+                                             y: abs(min(0, sourceTexureRegion.origin.y)),
+                                             z: 0)
+
+        // 2. Clamp read region to read texture.
+        guard var readRegion = sourceTexureRegion.clamped(to: sourceTexture.region)
+        else {
+            #if DEBUG
+            print("Read region is less or outside of source texture.")
+            #endif
+            return
+        }
+
+        // 3. Write origin correction.
+        var writeOrigin = MTLOrigin(x: destinationTextureOrigin.x + readOriginCorrection.x,
+                                    y: destinationTextureOrigin.y + readOriginCorrection.y,
+                                    z: 0)
+
+        // 4. Calculate destination origin correction.
+        let writeOriginCorrection = MTLOrigin(x: abs(min(0, writeOrigin.x)),
+                                              y: abs(min(0, writeOrigin.y)),
+                                              z: 0)
+
+        // 5. Clamp origin destination.
+        readRegion.origin.x += writeOriginCorrection.x
+        readRegion.origin.y += writeOriginCorrection.x
+        readRegion.size.width -= writeOriginCorrection.x
+        readRegion.size.height -= writeOriginCorrection.y
+
+        // 6. Clamp destination origin by destination texture.
+        writeOrigin.x = max(0, writeOrigin.x)
+        writeOrigin.y = max(0, writeOrigin.y)
+
+        // 7. Calculate grid size.
+        let gridSize = MTLSize(width: min(readRegion.size.width,
+                                          destinationTexture.width - writeOrigin.x),
+                               height: min(readRegion.size.height,
+                                           destinationTexture.height - writeOrigin.y),
+                               depth: 1)
+
+        guard gridSize.width > 0
+           && gridSize.height > 0
+        else {
+            #if DEBUG
+            print("Grid size is less or equal to zero.")
+            #endif
+            return
+        }
+
+        let readOffset = SIMD2<Int16>(x: .init(readRegion.origin.x),
+                                      y: .init(readRegion.origin.y))
+        let writeOffset = SIMD2<Int16>(x: .init(writeOrigin.x),
+                                       y: .init(writeOrigin.y))
 
         encoder.set(textures: [sourceTexture,
                                destinationTexture])
@@ -90,10 +140,6 @@ final public class TextureCopyEncoder {
                     at: 0)
         encoder.set(writeOffset,
                     at: 1)
-
-        let gridSize = MTLSize(width: destinationTexture.width - destinationTextureOrigin.x,
-                               height: destinationTexture.height - destinationTextureOrigin.y,
-                               depth: destinationTexture.size.depth)
 
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: self.pipelineState,
