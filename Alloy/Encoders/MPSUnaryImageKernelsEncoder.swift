@@ -34,27 +34,44 @@ final public class MPSUnaryImageKernelsEncoder {
         textureDescriptor.storageMode = .private
         // We need only 2 temporary images in the worst case.
         let temporaryImagesCount = min(self.kernelQueue.count - 1, 2)
-        let temporaryImages = [Int](0 ..< temporaryImagesCount).map { _ in
+        var temporaryImages = [Int](0 ..< temporaryImagesCount).map { _ in
             MPSTemporaryImage(commandBuffer: commandBuffer,
                               textureDescriptor: textureDescriptor)
         }
         defer { temporaryImages.forEach { $0.readCount = 0 } }
 
-        for i in 0 ..< self.kernelQueue.count {
-            let isFirstOperation = i == 0
-            let isLastOperation = i == self.kernelQueue.count - 1
-
-            let headTexture = isFirstOperation
-                            ? sourceTexture
-                            : temporaryImages[i % 2 == 0 ? 1 : 0].texture
-            let tailTesture = isLastOperation
-                            ? destinationTexture
-                            : temporaryImages[i % 2 == 0 ? 0 : 1].texture
-
-            let kernel = self.kernelQueue[i]
-            kernel.encode(commandBuffer: commandBuffer,
-                          sourceTexture: headTexture,
-                          destinationTexture: tailTesture)
+        if self.kernelQueue.count == 1 {
+            self.kernelQueue[0]
+                .encode(commandBuffer: commandBuffer,
+                        sourceTexture: sourceTexture,
+                        destinationTexture: destinationTexture)
+        } else {
+            self.kernelQueue[0]
+                .encode(commandBuffer: commandBuffer,
+                        sourceTexture: sourceTexture,
+                        destinationTexture: temporaryImages[0].texture)
+            
+            for i in 1 ..< self.kernelQueue.count - 2 {
+                self.kernelQueue[i]
+                    .encode(commandBuffer: commandBuffer,
+                            sourceTexture: temporaryImages[0].texture,
+                            destinationTexture: temporaryImages[1].texture)
+                
+                self.swapElements(at: (0, 1),
+                                  in: &temporaryImages)
+            }
+            
+            self.kernelQueue[self.kernelQueue.count - 1]
+                .encode(commandBuffer: commandBuffer,
+                        sourceTexture: temporaryImages[0].texture,
+                        destinationTexture: destinationTexture)
         }
+    }
+
+    func swapElements<T>(at indices: (Int, Int),
+                         in array: inout [T]) {
+        let temp = array[indices.1]
+        array[indices.1] = array[indices.0]
+        array[indices.0] = temp
     }
 }
