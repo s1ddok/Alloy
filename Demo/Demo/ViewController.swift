@@ -9,6 +9,7 @@
 import Cocoa
 import Alloy
 import AVFoundation
+import SwiftMath
 
 class ViewController: NSViewController {
     
@@ -16,7 +17,7 @@ class ViewController: NSViewController {
     @IBOutlet weak var slider: NSSlider!
     
     let context = MTLContext(device: Metal.lowPowerDevice!)
-    var brightnessEncoder: BrightnessEncoder!
+    var affineCropEncoder: TextureAffineCropEncoder!
 
     let image = NSImage(named: "flower")!
     
@@ -25,7 +26,7 @@ class ViewController: NSViewController {
         
         self.imageView.image = self.image
         
-        self.brightnessEncoder = BrightnessEncoder(context: self.context)
+        self.affineCropEncoder = try! TextureAffineCropEncoder(context: self.context)
     }
     
     @IBAction func sliderDragged(_ sender: NSSlider) {
@@ -40,19 +41,34 @@ class ViewController: NSViewController {
         else { return }
         
 
+        let cropTextureDescriptor = texture.descriptor
+        cropTextureDescriptor.usage.insert(.shaderWrite)
+        cropTextureDescriptor.width = 200
+        cropTextureDescriptor.height = 100
+
+        let transform = Matrix3x3f.translate(tx: 0.5, ty: 0.5)
+                        * Matrix3x3f.rotate(angle: Angle(radians: sender.floatValue))
+                        * Matrix3x3f.scale(sx: 1.9, sy: 0.2)
+                        * Matrix3x3f.translate(tx: -0.5, ty: -0.5)
+
+        let cropTexture = context.device.makeTexture(descriptor: cropTextureDescriptor)!
+
         try? self.context.scheduleAndWait { buffer in
-            self.brightnessEncoder.intensity = sender.floatValue
-            self.brightnessEncoder.encode(input: texture,
-                                          in: buffer)
+            buffer.compute { encoder in
+                self.affineCropEncoder.encode(sourceTexture: texture,
+                                              destinationTexture: cropTexture,
+                                              affineTransform: simd_float3x3(transform),
+                                              using: encoder)
+            }
             
             // For Mac applications (doesn't actually do anything, serves as an example)
             if case .managed = texture.storageMode {
                 buffer.blit { encoder in
-                    encoder.synchronize(resource: texture)
+                    encoder.synchronize(resource: cropTexture)
                 }
             }
         }
         
-        self.imageView.image = texture.image
+        self.imageView.image = cropTexture.image
     }
 }

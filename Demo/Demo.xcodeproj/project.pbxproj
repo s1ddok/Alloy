@@ -17,12 +17,10 @@
 		18B1A088231E7867000A9BAB /* SwitchDataFormatEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B1A086231E7867000A9BAB /* SwitchDataFormatEncoder.swift */; };
 		4FBA92F23EE96BEC3B50A6F4 /* Pods_AlloyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2C9B19EDEBD9C61E5137353 /* Pods_AlloyTests.framework */; };
 		63F9C6B2B8704ABC4263F909 /* Pods_DemoAppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A47635EFD74A558403F5CB4 /* Pods_DemoAppTests.framework */; };
-		930654D121D55DF700ACD3D7 /* BrightnessEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930654D021D55DF700ACD3D7 /* BrightnessEncoder.swift */; };
 		9348719F21B3D39A00733E6A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9348719E21B3D39A00733E6A /* AppDelegate.swift */; };
 		934871A121B3D39A00733E6A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934871A021B3D39A00733E6A /* ViewController.swift */; };
 		934871A321B3D39B00733E6A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 934871A221B3D39B00733E6A /* Assets.xcassets */; };
 		934871A621B3D39B00733E6A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 934871A421B3D39B00733E6A /* Main.storyboard */; };
-		93AFAC0E21B434C000C23181 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 93AFAC0D21B434C000C23181 /* Shaders.metal */; };
 		93AFAC3021BAFBFB00C23181 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93AFAC2F21BAFBFB00C23181 /* Metal.framework */; };
 		93B3E24021F505E1008835A0 /* AlloyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93B3E23F21F505E1008835A0 /* AlloyTests.swift */; };
 		93B3E24821F50722008835A0 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 93B3E24721F50722008835A0 /* Shaders.metal */; };
@@ -70,7 +68,6 @@
 		5F11945128CA3F5B062C9782 /* Pods-DemoAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DemoAppTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-DemoAppTests/Pods-DemoAppTests.release.xcconfig"; sourceTree = "<group>"; };
 		7A47635EFD74A558403F5CB4 /* Pods_DemoAppTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DemoAppTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9072BB7C76F22B60656C7DC4 /* Pods_DemoApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DemoApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		930654D021D55DF700ACD3D7 /* BrightnessEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrightnessEncoder.swift; sourceTree = "<group>"; };
 		9348719B21B3D39A00733E6A /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9348719E21B3D39A00733E6A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		934871A021B3D39A00733E6A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -78,7 +75,6 @@
 		934871A521B3D39B00733E6A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		934871A721B3D39B00733E6A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		934871A821B3D39B00733E6A /* Demo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Demo.entitlements; sourceTree = "<group>"; };
-		93AFAC0D21B434C000C23181 /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
 		93AFAC2F21BAFBFB00C23181 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
 		93B3E23D21F505E1008835A0 /* AlloyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AlloyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		93B3E23F21F505E1008835A0 /* AlloyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlloyTests.swift; sourceTree = "<group>"; };
@@ -212,8 +208,6 @@
 				934871A421B3D39B00733E6A /* Main.storyboard */,
 				934871A721B3D39B00733E6A /* Info.plist */,
 				934871A821B3D39B00733E6A /* Demo.entitlements */,
-				93AFAC0D21B434C000C23181 /* Shaders.metal */,
-				930654D021D55DF700ACD3D7 /* BrightnessEncoder.swift */,
 			);
 			path = Demo;
 			sourceTree = "<group>";
@@ -596,10 +590,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				93AFAC0E21B434C000C23181 /* Shaders.metal in Sources */,
 				934871A121B3D39A00733E6A /* ViewController.swift in Sources */,
 				9348719F21B3D39A00733E6A /* AppDelegate.swift in Sources */,
-				930654D121D55DF700ACD3D7 /* BrightnessEncoder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

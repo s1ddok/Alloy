@@ -8,7 +8,6 @@
 
 import Metal
 
-@available(OSX 10.13, *)
 @dynamicMemberLookup
 public final class ComputeCommand {
     public typealias ThreadsInfo = (groupSize: MTLSize, groupCount: MTLSize)
@@ -111,24 +110,24 @@ public final class ComputeCommand {
     
     public func encode(commandBuffer: MTLCommandBuffer, threadsInfo: @autoclosure () -> ThreadsInfo) {
         commandBuffer.compute { encoder in
-            self.encode(using: encoder, threadsInfo: threadsInfo)
+            self.encode(using: encoder, threadsInfo: threadsInfo())
         }
     }
     
     public func encode(commandBuffer: MTLCommandBuffer, gridInfo: @autoclosure () -> GridInfo) {
         commandBuffer.compute { encoder in
-            self.encode(using: encoder, gridInfo: gridInfo)
+            self.encode(using: encoder, gridInfo: gridInfo())
         }
     }
     
     public func encode(using encoder: MTLComputeCommandEncoder, threadsInfo: @autoclosure () -> ThreadsInfo) {
         self.setup(using: encoder)
-        self.dispatch(using: encoder, threadsInfo: threadsInfo)
+        self.dispatch(using: encoder, threadsInfo: threadsInfo())
     }
     
     public func encode(using encoder: MTLComputeCommandEncoder, gridInfo: @autoclosure () -> GridInfo) {
         self.setup(using: encoder)
-        self.dispatch(using: encoder, gridInfo: gridInfo)
+        self.dispatch(using: encoder, gridInfo: gridInfo())
     }
     
     fileprivate func setup(using encoder: MTLComputeCommandEncoder) {

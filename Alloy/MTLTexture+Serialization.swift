@@ -7,13 +7,6 @@
 
 import Metal
 
-public enum MTLTextureSerializationErrors: Error {
-    case unsupportedPixelFormat
-    case dataAccessFailure
-
-    case allocationFailed
-}
-
 public class MTLTextureCodableBox: Codable {
     private let descriptor: MTLTextureDescriptorCodableBox
     private var data: Data
@@ -29,7 +22,7 @@ public class MTLTextureCodableBox: Codable {
             let pointer = p.baseAddress!
 
             guard let pixelFormatSize = texture.pixelFormat.size
-            else { throw MTLTextureSerializationErrors.unsupportedPixelFormat }
+            else { throw MetalError.MTLTextureSerializationError.unsupportedPixelFormat }
 
             var offset = 0
 
@@ -39,7 +32,7 @@ public class MTLTextureCodableBox: Codable {
                                                                     textureType: texture.textureType,
                                                                     levels: mipMaplevel..<mipMaplevel+1,
                                                                     slices: slice..<slice+1)
-                    else { throw MTLTextureSerializationErrors.dataAccessFailure }
+                    else { throw MetalError.MTLTextureSerializationError.dataAccessFailure }
 
                     var bytesPerRow = pixelFormatSize * textureView.width
                     let bytesPerImage = bytesPerRow * textureView.height
@@ -64,15 +57,14 @@ public class MTLTextureCodableBox: Codable {
     }
 
     public func texture(device: MTLDevice) throws -> MTLTexture {
-        guard
-            let texture = device.makeTexture(descriptor: self.descriptor.descriptor)
-        else { throw MTLTextureSerializationErrors.allocationFailed }
+        guard let texture = device.makeTexture(descriptor: self.descriptor.descriptor)
+        else { throw MetalError.MTLTextureSerializationError.allocationFailed }
 
         try self.data.withUnsafeMutableBytes { p in
             let pointer = p.baseAddress!
 
             guard let pixelFormatSize = texture.pixelFormat.size
-            else { throw MTLTextureSerializationErrors.unsupportedPixelFormat }
+            else { throw MetalError.MTLTextureSerializationError.unsupportedPixelFormat }
 
             var offset = 0
 
@@ -82,7 +74,7 @@ public class MTLTextureCodableBox: Codable {
                                                                     textureType: texture.textureType,
                                                                     levels: mipMaplevel..<mipMaplevel+1,
                                                                     slices: slice..<slice+1)
-                    else { throw MTLTextureSerializationErrors.dataAccessFailure }
+                    else { throw MetalError.MTLTextureSerializationError.dataAccessFailure }
 
                     var bytesPerRow = pixelFormatSize * textureView.width
                     let bytesPerImage = bytesPerRow * textureView.height
