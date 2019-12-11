@@ -17,18 +17,15 @@ final public class TextureMultiplyAddEncoder {
     // MARK: - Life Cycle
 
     public convenience init(context: MTLContext,
-                            multiplier: Float,
-                            scalarType: MTLPixelFormat.ScalarType = .half) throws {
+                            multiplier: Float) throws {
         guard let library = context.shaderLibrary(for: Self.self)
         else { throw MetalError.MTLDeviceError.libraryCreationFailed }
         try self.init(library: library,
-                      multiplier: multiplier,
-                      scalarType: scalarType)
+                      multiplier: multiplier)
     }
 
     public init(library: MTLLibrary,
-                multiplier: Float,
-                scalarType: MTLPixelFormat.ScalarType = .half) throws {
+                multiplier: Float) throws {
         self.deviceSupportsNonuniformThreadgroups = library.device
                                                            .supports(feature: .nonUniformThreadgroups)
         let constantValues = MTLFunctionConstantValues()
@@ -36,8 +33,7 @@ final public class TextureMultiplyAddEncoder {
                            at: 0)
         constantValues.set(multiplier,
                            at: 1)
-        let functionName = Self.functionName + "_" + scalarType.rawValue
-        self.pipelineState = try library.computePipelineState(function: functionName,
+        self.pipelineState = try library.computePipelineState(function: Self.functionName,
                                                               constants: constantValues)
     }
 

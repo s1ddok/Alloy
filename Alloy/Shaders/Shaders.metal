@@ -520,40 +520,22 @@ generateKernels(addConstant)
 
 // MARK: - Texture Multiply Add
 
-template <typename T>
-void textureMultiplyAdd(texture2d<T, access::read> sourceTextureOne,
-                        texture2d<T, access::read> sourceTextureTwo,
-                        texture2d<T, access::write> destinationTexture,
-                        const ushort2 position) {
+kernel void textureMultiplyAdd(texture2d<half, access::read> sourceTextureOne [[ texture(0) ]],
+                               texture2d<half, access::read> sourceTextureTwo [[ texture(1) ]],
+                               texture2d<half, access::write> destinationTexture [[ texture(2) ]],
+                               const ushort2 position [[ thread_position_in_grid ]]) {
     const ushort2 textureSize = ushort2(destinationTexture.get_width(),
                                         destinationTexture.get_height());
     checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
 
     const auto sourceTextureOneValue = sourceTextureOne.read(position);
     const auto sourceTextureTwoValue = sourceTextureTwo.read(position);
-    const auto destinationTextureValue = vec<T, 4>(fma(float4(sourceTextureTwoValue),
-                                                       multiplierFC,
-                                                       float4(sourceTextureOneValue)));
+    const auto destinationTextureValue = fma(sourceTextureTwoValue,
+                                             multiplierFC,
+                                             sourceTextureOneValue);
     destinationTexture.write(destinationTextureValue,
                              position);
 }
-
-#define outerArguments(T)                                        \
-(texture2d<T, access::read> sourceTextureOne [[ texture(0) ]],   \
-texture2d<T, access::read> sourceTextureTwo [[ texture(1) ]],    \
-texture2d<T, access::write> destinationTexture [[ texture(2) ]], \
-const ushort2 position [[ thread_position_in_grid ]])            \
-
-#define innerArguments \
-(sourceTextureOne,     \
-sourceTextureTwo,      \
-destinationTexture,    \
-position)              \
-
-generateKernels(textureMultiplyAdd)
-
-#undef outerArguments
-#undef innerArguments
 
 // MARK: - ML
 
