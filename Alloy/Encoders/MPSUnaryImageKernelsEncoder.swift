@@ -7,7 +7,6 @@
 
 import MetalPerformanceShaders
 
-@available(iOS 11.3, *)
 final public class MPSUnaryImageKernelsEncoder {
 
     // MARK: - Properties
@@ -50,28 +49,20 @@ final public class MPSUnaryImageKernelsEncoder {
                 .encode(commandBuffer: commandBuffer,
                         sourceTexture: sourceTexture,
                         destinationTexture: temporaryImages[0].texture)
-            
+
             for i in 1 ..< self.kernelQueue.count - 2 {
                 self.kernelQueue[i]
                     .encode(commandBuffer: commandBuffer,
                             sourceTexture: temporaryImages[0].texture,
                             destinationTexture: temporaryImages[1].texture)
-                
-                self.swapElements(at: (0, 1),
-                                  in: &temporaryImages)
+
+                temporaryImages.swapAt(0, 1)
             }
-            
+
             self.kernelQueue[self.kernelQueue.count - 1]
                 .encode(commandBuffer: commandBuffer,
                         sourceTexture: temporaryImages[0].texture,
                         destinationTexture: destinationTexture)
         }
-    }
-
-    func swapElements<T>(at indices: (Int, Int),
-                         in array: inout [T]) {
-        let temp = array[indices.1]
-        array[indices.1] = array[indices.0]
-        array[indices.0] = temp
     }
 }
