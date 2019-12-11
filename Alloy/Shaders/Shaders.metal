@@ -13,7 +13,8 @@
 
 using namespace metal;
 
-constant bool deviceSupportsNonuniformThreadgroups [[function_constant(0)]];
+constant bool deviceSupportsNonuniformThreadgroups [[ function_constant(0) ]];
+constant bool deviceDoesntSupportNonuniformThreadgroups = !deviceSupportsNonuniformThreadgroups;
 
 struct BlockSize {
     ushort width;
@@ -40,14 +41,14 @@ void textureCopy(texture2d<T, access::read> sourceTexture,
     destinationTexture.write(resultValue, writePosition);
 }
 
-#define outerArguments(T)                                                                 \
-(texture2d<T, access::read> sourceTexture [[ texture(0) ]],                               \
-texture2d<T, access::write> destinationTexture [[ texture(1) ]],                          \
-constant short2& readOffset [[ buffer(0) ]],                                              \
-constant short2& writeOffset [[ buffer(1) ]],                                             \
-constant ushort2& gridSize [[ buffer(2),                                                  \
-                              function_constant(deviceSupportsNonuniformThreadgroups) ]], \
-const ushort2 position [[ thread_position_in_grid ]])                                     \
+#define outerArguments(T)                                                                      \
+(texture2d<T, access::read> sourceTexture [[ texture(0) ]],                                    \
+texture2d<T, access::write> destinationTexture [[ texture(1) ]],                               \
+constant short2& readOffset [[ buffer(0) ]],                                                   \
+constant short2& writeOffset [[ buffer(1) ]],                                                  \
+constant ushort2& gridSize [[ buffer(2),                                                       \
+                              function_constant(deviceDoesntSupportNonuniformThreadgroups) ]], \
+const ushort2 position [[ thread_position_in_grid ]])                                          \
 
 #define innerArguments \
 (sourceTexture,        \
