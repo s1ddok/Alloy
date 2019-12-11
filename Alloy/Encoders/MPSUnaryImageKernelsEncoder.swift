@@ -30,14 +30,20 @@ final public class MPSUnaryImageKernelsEncoder {
         let textureDescriptor = sourceTexture.descriptor
         textureDescriptor.usage = [.shaderRead, .shaderWrite]
         textureDescriptor.storageMode = .private
-        let temporaryImages = [Int](0 ..< self.kernelQueue.count - 1).map { _ in
+        // We need only 2 temporary images in the worst case.
+        let temporaryImagesCount = max(self.kernelQueue.count - 1, 2)
+        let temporaryImages = [Int](0 ..< temporaryImagesCount).map { _ in
             MPSTemporaryImage(commandBuffer: commandBuffer,
                               textureDescriptor: textureDescriptor)
         }
         defer { temporaryImages.forEach { $0.readCount = 0 } }
-        var textures = temporaryImages.map { $0.texture }
-        textures.insert(sourceTexture, at: 0)
-        textures.append(destinationTexture)
+
+        let texturesCount = self.kernelQueue.count + 1
+        var textures = [Int](0 ..< texturesCount).map {
+            temporaryImages[$0 % 2 == 0 ? 1 : 0].texture
+        }
+        textures[0] = sourceTexture
+        textures[textures.count - 1] = destinationTexture
 
         for i in 0 ..< self.kernelQueue.count {
             let kernel = self.kernelQueue[i]
