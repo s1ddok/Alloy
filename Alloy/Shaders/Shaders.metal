@@ -520,9 +520,9 @@ generateKernels(addConstant)
 
 // MARK: - Texture Multiply Add
 
-kernel void textureMultiplyAdd(texture2d<half, access::read> sourceTextureOne [[ texture(0) ]],
-                               texture2d<half, access::read> sourceTextureTwo [[ texture(1) ]],
-                               texture2d<half, access::write> destinationTexture [[ texture(2) ]],
+kernel void textureMultiplyAdd(texture2d<float, access::read> sourceTextureOne [[ texture(0) ]],
+                               texture2d<float, access::read> sourceTextureTwo [[ texture(1) ]],
+                               texture2d<float, access::write> destinationTexture [[ texture(2) ]],
                                const ushort2 position [[ thread_position_in_grid ]]) {
     const ushort2 textureSize = ushort2(destinationTexture.get_width(),
                                         destinationTexture.get_height());
