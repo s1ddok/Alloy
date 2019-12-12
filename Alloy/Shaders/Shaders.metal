@@ -14,6 +14,7 @@
 using namespace metal;
 
 constant bool deviceSupportsNonuniformThreadgroups [[function_constant(0)]];
+constant float multiplierFC [[function_constant(1)]];
 
 struct BlockSize {
     ushort width;
@@ -73,25 +74,6 @@ void textureMask(texture2d<T, access::read> sourceTexture,
     const auto resultValue = vec<T, 4>(float4(originalPixel) * maskValue.r);
 
     destinationTexture.write(resultValue, position);
-}
-
-kernel void textureSum(texture2d<half, access::read> inputTexture1 [[ texture(0) ]],
-                       texture2d<half, access::read> inputTexture2 [[ texture(1) ]],
-                       texture2d<half, access::write> outputTexture [[ texture(2) ]],
-                       const ushort2 thread_position_in_grid [[thread_position_in_grid]]) {
-    const ushort inputWidth = inputTexture1.get_width();
-    const ushort inputHeight = inputTexture1.get_height();
-
-    if (!deviceSupportsNonuniformThreadgroups) {
-        if (thread_position_in_grid.x >= inputWidth || thread_position_in_grid.y >= inputHeight) {
-            return;
-        }
-    }
-
-    const half4 inputPixel1 = inputTexture1.read(thread_position_in_grid);
-    const half4 inputPixel2 = inputTexture2.read(thread_position_in_grid);
-
-    outputTexture.write(inputPixel1 + inputPixel2, thread_position_in_grid);
 }
 
 #define outerArguments(T)                                        \
@@ -535,6 +517,25 @@ generateKernels(addConstant)
 
 #undef outerArguments
 #undef innerArguments
+
+// MARK: - Texture Multiply Add
+
+kernel void textureMultiplyAdd(texture2d<float, access::read> sourceTextureOne [[ texture(0) ]],
+                               texture2d<float, access::read> sourceTextureTwo [[ texture(1) ]],
+                               texture2d<float, access::write> destinationTexture [[ texture(2) ]],
+                               const ushort2 position [[ thread_position_in_grid ]]) {
+    const ushort2 textureSize = ushort2(destinationTexture.get_width(),
+                                        destinationTexture.get_height());
+    checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
+
+    const auto sourceTextureOneValue = sourceTextureOne.read(position);
+    const auto sourceTextureTwoValue = sourceTextureTwo.read(position);
+    const auto destinationTextureValue = fma(sourceTextureTwoValue,
+                                             multiplierFC,
+                                             sourceTextureOneValue);
+    destinationTexture.write(destinationTextureValue,
+                             position);
+}
 
 // MARK: - ML
 
