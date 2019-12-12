@@ -50,7 +50,7 @@ final public class MPSUnaryImageKernelsEncoder {
                         sourceTexture: sourceTexture,
                         destinationTexture: temporaryImages[0].texture)
 
-            for i in 1 ..< self.kernelQueue.count - 2 {
+            for i in 1 ... self.kernelQueue.count - 2 {
                 self.kernelQueue[i]
                     .encode(commandBuffer: commandBuffer,
                             sourceTexture: temporaryImages[0].texture,
