@@ -31,8 +31,8 @@ final public class SwitchDataFormatEncoder {
 
     public convenience init(metalContext: MTLContext,
                             conversionType: ConversionType) throws {
-        guard let alloyLibrary = metalContext.shaderLibrary(for: type(of: self))
-        else { throw CommonErrors.metalInitializationFailed }
+        guard let alloyLibrary = metalContext.shaderLibrary(for: Self.self)
+        else { throw MetalError.MTLDeviceError.libraryCreationFailed }
         try self.init(library: alloyLibrary,
                       conversionType: conversionType)
     }
