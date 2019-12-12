@@ -54,12 +54,11 @@ generateKernels(textureCopy)
 
 // MARK: - Resize Texture
 
-template <typename T>
-void textureResize(texture2d<T, access::sample> sourceTexture,
-                   texture2d<T, access::write> destinationTexture,
-                   sampler s,
-                   const ushort2 position,
-                   const ushort2 totalThreads) {
+kernel void textureResize(texture2d<float, access::sample> sourceTexture [[ texture(0) ]],
+                          texture2d<float, access::write> destinationTexture [[ texture(1) ]],
+                          sampler s [[ sampler(0) ]],
+                          const ushort2 position [[ thread_position_in_grid ]]) {
+
     const ushort2 textureSize = ushort2(destinationTexture.get_width(),
                                         destinationTexture.get_height());
     checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
@@ -70,25 +69,6 @@ void textureResize(texture2d<T, access::sample> sourceTexture,
     auto sampledValue = sourceTexture.sample(s, normalizedCoord);
     destinationTexture.write(sampledValue, position);
 }
-
-#define outerArguments(T)                                        \
-(texture2d<T, access::sample> sourceTexture [[ texture(0) ]],    \
-texture2d<T, access::write> destinationTexture [[ texture(1) ]], \
-sampler s [[ sampler(0) ]],                                      \
-const ushort2 position [[ thread_position_in_grid ]],            \
-const ushort2 totalThreads [[ threads_per_grid ]])               \
-
-#define innerArguments \
-(sourceTexture,        \
-destinationTexture,    \
-s,                     \
-position,              \
-totalThreads)          \
-
-generateKernels(textureResize)
-
-#undef outerArguments
-#undef innerArguments
 
 // MARK: - Texture Mask
 

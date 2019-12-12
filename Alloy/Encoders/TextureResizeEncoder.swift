@@ -18,42 +18,35 @@ final public class TextureResizeEncoder {
     // MARK: - Life Cycle
 
     public convenience init(context: MTLContext,
-                            minMagFilter: MTLSamplerMinMagFilter,
-                            scalarType: MTLPixelFormat.ScalarType = .half) throws {
+                            minMagFilter: MTLSamplerMinMagFilter) throws {
         let samplerDescriptor = MTLSamplerDescriptor()
         samplerDescriptor.minFilter = minMagFilter
         samplerDescriptor.magFilter = minMagFilter
         samplerDescriptor.normalizedCoordinates = true
         try self.init(context: context,
-                      samplerDescriptor: samplerDescriptor,
-                      scalarType: scalarType)
+                      samplerDescriptor: samplerDescriptor)
     }
 
     public convenience init(context: MTLContext,
-                            samplerDescriptor: MTLSamplerDescriptor,
-                            scalarType: MTLPixelFormat.ScalarType = .half) throws {
+                            samplerDescriptor: MTLSamplerDescriptor) throws {
         guard let library = context.shaderLibrary(for: Self.self)
         else { throw MetalError.MTLDeviceError.libraryCreationFailed }
         try self.init(library: library,
-                      samplerDescriptor: samplerDescriptor,
-                      scalarType: scalarType)
+                      samplerDescriptor: samplerDescriptor)
     }
 
     public convenience init(library: MTLLibrary,
-                            minMagFilter: MTLSamplerMinMagFilter,
-                            scalarType: MTLPixelFormat.ScalarType = .half) throws {
+                            minMagFilter: MTLSamplerMinMagFilter) throws {
         let samplerDescriptor = MTLSamplerDescriptor()
         samplerDescriptor.minFilter = minMagFilter
         samplerDescriptor.magFilter = minMagFilter
         samplerDescriptor.normalizedCoordinates = true
         try self.init(library: library,
-                      samplerDescriptor: samplerDescriptor,
-                      scalarType: scalarType)
+                      samplerDescriptor: samplerDescriptor)
     }
 
     public init(library: MTLLibrary,
-                samplerDescriptor: MTLSamplerDescriptor,
-                scalarType: MTLPixelFormat.ScalarType = .half) throws {
+                samplerDescriptor: MTLSamplerDescriptor) throws {
         self.deviceSupportsNonuniformThreadgroups = library.device
                                                            .supports(feature: .nonUniformThreadgroups)
 
@@ -61,8 +54,7 @@ final public class TextureResizeEncoder {
         constantValues.set(self.deviceSupportsNonuniformThreadgroups,
                            at: 0)
 
-        let functionName = type(of: self).functionName + "_" + scalarType.rawValue
-        self.pipelineState = try library.computePipelineState(function: functionName,
+        self.pipelineState = try library.computePipelineState(function: Self.functionName,
                                                               constants: constantValues)
         guard let samplerState = library.device
                                         .makeSamplerState(descriptor: samplerDescriptor)
