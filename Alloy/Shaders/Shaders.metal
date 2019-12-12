@@ -53,6 +53,24 @@ generateKernels(textureCopy)
 #undef outerArguments
 #undef innerArguments
 
+// MARK: - Resize Texture
+
+kernel void textureResize(texture2d<float, access::sample> sourceTexture [[ texture(0) ]],
+                          texture2d<float, access::write> destinationTexture [[ texture(1) ]],
+                          sampler s [[ sampler(0) ]],
+                          const ushort2 position [[ thread_position_in_grid ]]) {
+
+    const ushort2 textureSize = ushort2(destinationTexture.get_width(),
+                                        destinationTexture.get_height());
+    checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
+
+    const float2 normalizedCoord = float2((float(position.x) + 0.5) / textureSize.x,
+                                          (float(position.y) + 0.5) / textureSize.y);
+
+    auto sampledValue = sourceTexture.sample(s, normalizedCoord);
+    destinationTexture.write(sampledValue, position);
+}
+
 // MARK: - Texture Mask
 
 template <typename T>
