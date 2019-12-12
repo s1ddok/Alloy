@@ -22,5 +22,6 @@ public enum MetalError {
     }
     public enum MTLDeviceError: Error {
         case libraryCreationFailed
+        case samplerStateCreationFailed
     }
 }
