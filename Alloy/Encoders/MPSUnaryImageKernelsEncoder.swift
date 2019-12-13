@@ -25,7 +25,7 @@ final public class MPSUnaryImageKernelsEncoder {
                        destinationTexture: MTLTexture,
                        commandBuffer: MTLCommandBuffer) {
         guard self.kernelQueue
-                  .count == 0
+                  .count != 0
         else { return }
 
         let textureDescriptor = sourceTexture.descriptor
