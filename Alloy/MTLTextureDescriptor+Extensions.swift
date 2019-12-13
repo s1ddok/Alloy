@@ -7,7 +7,7 @@
 
 import Metal
 
-extension MTLTextureDescriptor {
+public extension MTLTextureDescriptor {
 
     func makeCopy() -> MTLTextureDescriptor {
         let copy = MTLTextureDescriptor()
