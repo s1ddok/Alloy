@@ -549,12 +549,11 @@ generateKernels(addConstant)
 
 // MARK: - Texture Mix
 
-template <typename T>
-void textureMix(texture2d<T, access::read> sourceTextureOne [[ texture(0) ]],
-                texture2d<T, access::read> sourceTextureTwo [[ texture(1) ]],
-                texture2d<float, access::read> maskTexture [[ texture(2) ]],
-                texture2d<T, access::write> destinationTexture [[ texture(3) ]],
-                const ushort2 position [[ thread_position_in_grid ]]) {
+kernel void textureMix(texture2d<float, access::read> sourceTextureOne [[ texture(0) ]],
+                       texture2d<float, access::read> sourceTextureTwo [[ texture(1) ]],
+                       texture2d<float, access::read> maskTexture [[ texture(2) ]],
+                       texture2d<float, access::write> destinationTexture [[ texture(3) ]],
+                       const ushort2 position [[ thread_position_in_grid ]]) {
     const ushort2 textureSize = ushort2(destinationTexture.get_width(),
                                         destinationTexture.get_height());
     checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
@@ -562,30 +561,11 @@ void textureMix(texture2d<T, access::read> sourceTextureOne [[ texture(0) ]],
     const auto sourceTextureOneValue = sourceTextureOne.read(position);
     const auto sourceTextureTwoValue = sourceTextureTwo.read(position);
     const auto maskTextureValue = maskTexture.read(position).r;
-    const auto resultValue = vec<T, 4>(mix(float4(sourceTextureOneValue),
-                                           float4(sourceTextureTwoValue),
-                                           maskTextureValue));
+    const auto resultValue = mix(sourceTextureOneValue,
+                                 sourceTextureTwoValue,
+                                 maskTextureValue);
     destinationTexture.write(resultValue, position);
 }
-
-#define outerArguments(T)                                        \
-(texture2d<T, access::read> sourceTextureOne [[ texture(0) ]],   \
-texture2d<T, access::read> sourceTextureTwo [[ texture(1) ]],    \
-texture2d<float, access::read> maskTexture [[ texture(2) ]],         \
-texture2d<T, access::write> destinationTexture [[ texture(3) ]], \
-const ushort2 position [[ thread_position_in_grid ]])            \
-
-#define innerArguments \
-(sourceTextureOne,     \
-sourceTextureTwo,      \
-maskTexture,           \
-destinationTexture,    \
-position)              \
-
-generateKernels(textureMix)
-
-#undef outerArguments
-#undef innerArguments
 
 // MARK: - Texture Multiply Add
 
