@@ -13,7 +13,9 @@
 
 using namespace metal;
 
-constant bool deviceSupportsNonuniformThreadgroups [[function_constant(0)]];
+constant bool deviceSupportsNonuniformThreadgroups [[ function_constant(0) ]];
+constant bool deviceDoesntSupportNonuniformThreadgroups = !deviceSupportsNonuniformThreadgroups;
+constant float multiplierFC [[function_constant(1)]];
 
 struct BlockSize {
     ushort width;
@@ -27,30 +29,58 @@ struct BlockSize {
 template <typename T>
 void textureCopy(texture2d<T, access::read> sourceTexture,
                  texture2d<T, access::write> destinationTexture,
+                 constant short2& readOffset,
+                 constant short2& writeOffset,
+                 constant ushort2& gridSize,
                  const ushort2 position) {
-    const ushort2 textureSize = ushort2(destinationTexture.get_width(),
-                                        destinationTexture.get_height());
-    checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
+    const ushort2 readPosition = ushort2(short2(position) + readOffset);
+    const ushort2 writePosition = ushort2(short2(position) + writeOffset);
+    checkPosition(position, gridSize, deviceSupportsNonuniformThreadgroups);
 
-    const auto resultValue = sourceTexture.read(position);
+    const auto resultValue = sourceTexture.read(readPosition);
 
-    destinationTexture.write(resultValue, position);
+    destinationTexture.write(resultValue, writePosition);
 }
 
-#define outerArguments(T)                                        \
-(texture2d<T, access::read> sourceTexture [[ texture(0) ]],      \
-texture2d<T, access::write> destinationTexture [[ texture(1) ]], \
-const ushort2 position [[thread_position_in_grid]])              \
+#define outerArguments(T)                                                                      \
+(texture2d<T, access::read> sourceTexture [[ texture(0) ]],                                    \
+texture2d<T, access::write> destinationTexture [[ texture(1) ]],                               \
+constant short2& readOffset [[ buffer(0) ]],                                                   \
+constant short2& writeOffset [[ buffer(1) ]],                                                  \
+constant ushort2& gridSize [[ buffer(2),                                                       \
+                              function_constant(deviceDoesntSupportNonuniformThreadgroups) ]], \
+const ushort2 position [[ thread_position_in_grid ]])                                          \
 
 #define innerArguments \
 (sourceTexture,        \
 destinationTexture,    \
+readOffset,            \
+writeOffset,           \
+gridSize,              \
 position)              \
 
 generateKernels(textureCopy)
 
 #undef outerArguments
 #undef innerArguments
+
+// MARK: - Resize Texture
+
+kernel void textureResize(texture2d<float, access::sample> sourceTexture [[ texture(0) ]],
+                          texture2d<float, access::write> destinationTexture [[ texture(1) ]],
+                          sampler s [[ sampler(0) ]],
+                          const ushort2 position [[ thread_position_in_grid ]]) {
+
+    const ushort2 textureSize = ushort2(destinationTexture.get_width(),
+                                        destinationTexture.get_height());
+    checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
+
+    const float2 normalizedCoord = float2((float(position.x) + 0.5) / textureSize.x,
+                                          (float(position.y) + 0.5) / textureSize.y);
+
+    auto sampledValue = sourceTexture.sample(s, normalizedCoord);
+    destinationTexture.write(sampledValue, position);
+}
 
 // MARK: - Texture Mask
 
@@ -73,25 +103,6 @@ void textureMask(texture2d<T, access::read> sourceTexture,
     const auto resultValue = vec<T, 4>(float4(originalPixel) * maskValue.r);
 
     destinationTexture.write(resultValue, position);
-}
-
-kernel void textureSum(texture2d<half, access::read> inputTexture1 [[ texture(0) ]],
-                       texture2d<half, access::read> inputTexture2 [[ texture(1) ]],
-                       texture2d<half, access::write> outputTexture [[ texture(2) ]],
-                       const ushort2 thread_position_in_grid [[thread_position_in_grid]]) {
-    const ushort inputWidth = inputTexture1.get_width();
-    const ushort inputHeight = inputTexture1.get_height();
-
-    if (!deviceSupportsNonuniformThreadgroups) {
-        if (thread_position_in_grid.x >= inputWidth || thread_position_in_grid.y >= inputHeight) {
-            return;
-        }
-    }
-
-    const half4 inputPixel1 = inputTexture1.read(thread_position_in_grid);
-    const half4 inputPixel2 = inputTexture2.read(thread_position_in_grid);
-
-    outputTexture.write(inputPixel1 + inputPixel2, thread_position_in_grid);
 }
 
 #define outerArguments(T)                                        \
@@ -535,6 +546,45 @@ generateKernels(addConstant)
 
 #undef outerArguments
 #undef innerArguments
+
+// MARK: - Texture Mix
+
+kernel void textureMix(texture2d<float, access::read> sourceTextureOne [[ texture(0) ]],
+                       texture2d<float, access::read> sourceTextureTwo [[ texture(1) ]],
+                       texture2d<float, access::read> maskTexture [[ texture(2) ]],
+                       texture2d<float, access::write> destinationTexture [[ texture(3) ]],
+                       const ushort2 position [[ thread_position_in_grid ]]) {
+    const ushort2 textureSize = ushort2(destinationTexture.get_width(),
+                                        destinationTexture.get_height());
+    checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
+
+    const auto sourceTextureOneValue = sourceTextureOne.read(position);
+    const auto sourceTextureTwoValue = sourceTextureTwo.read(position);
+    const auto maskTextureValue = maskTexture.read(position).r;
+    const auto resultValue = mix(sourceTextureOneValue,
+                                 sourceTextureTwoValue,
+                                 maskTextureValue);
+    destinationTexture.write(resultValue, position);
+}
+
+// MARK: - Texture Multiply Add
+
+kernel void textureMultiplyAdd(texture2d<float, access::read> sourceTextureOne [[ texture(0) ]],
+                               texture2d<float, access::read> sourceTextureTwo [[ texture(1) ]],
+                               texture2d<float, access::write> destinationTexture [[ texture(2) ]],
+                               const ushort2 position [[ thread_position_in_grid ]]) {
+    const ushort2 textureSize = ushort2(destinationTexture.get_width(),
+                                        destinationTexture.get_height());
+    checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
+
+    const auto sourceTextureOneValue = sourceTextureOne.read(position);
+    const auto sourceTextureTwoValue = sourceTextureTwo.read(position);
+    const auto destinationTextureValue = fma(sourceTextureTwoValue,
+                                             multiplierFC,
+                                             sourceTextureOneValue);
+    destinationTexture.write(destinationTextureValue,
+                             position);
+}
 
 // MARK: - ML
 

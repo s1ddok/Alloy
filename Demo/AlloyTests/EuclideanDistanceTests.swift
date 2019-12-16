@@ -14,10 +14,8 @@ final class EuclideanDistanceTests: XCTestCase {
 
     // MARK: - Errors
 
-    enum Errors: Error {
+    enum Error: Swift.Error {
         case cgImageCreationFailed
-        case textureCreationFailed
-        case bufferCreationFailed
     }
 
     // MARK: - Properties
@@ -48,9 +46,9 @@ final class EuclideanDistanceTests: XCTestCase {
                                        .buffer(for: Float.self,
                                                options: .storageModeShared)
 
-            let image = #imageLiteral(resourceName: "255")
-            guard let cgImage = image.cgImage
-            else { throw Errors.cgImageCreationFailed }
+            guard let cgImage = UIImage(named: "255")?.cgImage
+            else { throw Error.cgImageCreationFailed }
+            
             let originalTexture = try self.context
                                           .texture(from: cgImage,
                                                    usage: [.shaderRead, .shaderWrite])
@@ -60,7 +58,8 @@ final class EuclideanDistanceTests: XCTestCase {
             let originalTextureArea = Float(originalTexture.width * originalTexture.height)
             let euclideanDistance = originalTextureArea * sqrt(4 * (pow(constant, 2)))
 
-            try self.context.scheduleAndWait { commandBuffer in
+            try self.context
+                    .scheduleAndWait { commandBuffer in
                 self.textureAddConstantFloat
                     .encode(sourceTexture: originalTexture,
                             destinationTexture: modifiedTexture,

@@ -1,13 +1,13 @@
 //
-//  TextureMixEncoder.swift
+//  TextureMultiplyAddEncoder.swift
 //  Alloy
 //
-//  Created by Eugene Bokhan on 26.09.2019.
+//  Created by Eugene Bokhan on 27.09.2019.
 //
 
 import Metal
 
-final public class TextureMixEncoder {
+final public class TextureMultiplyAddEncoder {
 
     // MARK: - Properties
 
@@ -16,16 +16,21 @@ final public class TextureMixEncoder {
 
     // MARK: - Life Cycle
 
-    public convenience init(context: MTLContext) throws {
-        try self.init(library: context.shaderLibrary(for: Self.self))
+    public convenience init(context: MTLContext,
+                            multiplier: Float) throws {
+        try self.init(library: context.shaderLibrary(for: Self.self),
+                      multiplier: multiplier)
     }
 
-    public init(library: MTLLibrary) throws {
+    public init(library: MTLLibrary,
+                multiplier: Float) throws {
         self.deviceSupportsNonuniformThreadgroups = library.device
                                                            .supports(feature: .nonUniformThreadgroups)
         let constantValues = MTLFunctionConstantValues()
         constantValues.set(self.deviceSupportsNonuniformThreadgroups,
                            at: 0)
+        constantValues.set(multiplier,
+                           at: 1)
         self.pipelineState = try library.computePipelineState(function: Self.functionName,
                                                               constants: constantValues)
     }
@@ -34,14 +39,12 @@ final public class TextureMixEncoder {
 
     public func encode(sourceTextureOne: MTLTexture,
                        sourceTextureTwo: MTLTexture,
-                       maskTexture: MTLTexture,
                        destinationTexture: MTLTexture,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
-            encoder.label = "Texture Mix"
+            encoder.label = "Texture Multiply Add"
             self.encode(sourceTextureOne: sourceTextureOne,
                         sourceTextureTwo: sourceTextureTwo,
-                        maskTexture: maskTexture,
                         destinationTexture: destinationTexture,
                         using: encoder)
         }
@@ -49,22 +52,20 @@ final public class TextureMixEncoder {
 
     public func encode(sourceTextureOne: MTLTexture,
                        sourceTextureTwo: MTLTexture,
-                       maskTexture: MTLTexture,
                        destinationTexture: MTLTexture,
                        using encoder: MTLComputeCommandEncoder) {
         encoder.set(textures: [sourceTextureOne,
                                sourceTextureTwo,
-                               maskTexture,
                                destinationTexture])
+
         if self.deviceSupportsNonuniformThreadgroups {
-            encoder.dispatch2d(state: self.pipelineState,
+            encoder.dispatch2d(state: pipelineState,
                                exactly: destinationTexture.size)
         } else {
-            encoder.dispatch2d(state: self.pipelineState,
+            encoder.dispatch2d(state: pipelineState,
                                covering: destinationTexture.size)
         }
     }
 
-    public static let functionName = "textureMix"
+    public static let functionName = "textureMultiplyAdd"
 }
-

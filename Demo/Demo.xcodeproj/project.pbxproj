@@ -11,8 +11,12 @@
 		1804316F231FE33A006F2ED3 /* EuclideanDistanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1804316D231FE33A006F2ED3 /* EuclideanDistanceTests.swift */; };
 		18043171231FE45D006F2ED3 /* TextureCachingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18043170231FE45D006F2ED3 /* TextureCachingTests.swift */; };
 		18043172231FE45D006F2ED3 /* TextureCachingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18043170231FE45D006F2ED3 /* TextureCachingTests.swift */; };
-		183980B02397FAD60098BBB0 /* NSImage+Extenions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 183980AF2397FAD60098BBB0 /* NSImage+Extenions.swift */; };
-		183980B12397FAD60098BBB0 /* NSImage+Extenions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 183980AF2397FAD60098BBB0 /* NSImage+Extenions.swift */; };
+		1825FE4523A799E200F9512B /* NSImage+Extenions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1825FE4423A799E200F9512B /* NSImage+Extenions.swift */; };
+		1825FE4623A799E200F9512B /* NSImage+Extenions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1825FE4423A799E200F9512B /* NSImage+Extenions.swift */; };
+		1847DEBD239FD60C00600DD5 /* texture_copy_test_cases in Resources */ = {isa = PBXBuildFile; fileRef = 1847DEBC239FD60C00600DD5 /* texture_copy_test_cases */; };
+		1847DEBE239FD60C00600DD5 /* texture_copy_test_cases in Resources */ = {isa = PBXBuildFile; fileRef = 1847DEBC239FD60C00600DD5 /* texture_copy_test_cases */; };
+		1847DEC0239FDF0800600DD5 /* TextureCopyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1847DE6B239FA80400600DD5 /* TextureCopyTests.swift */; };
+		1847DEC2239FE02800600DD5 /* TextureCopyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1847DE6B239FA80400600DD5 /* TextureCopyTests.swift */; };
 		18B1A084231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B1A083231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift */; };
 		18B1A085231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B1A083231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift */; };
 		18B1A087231E7867000A9BAB /* SwitchDataFormatEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B1A086231E7867000A9BAB /* SwitchDataFormatEncoder.swift */; };
@@ -59,8 +63,9 @@
 		0BF7AAD9917E49917E0506BE /* Pods-AlloyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AlloyTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AlloyTests/Pods-AlloyTests.debug.xcconfig"; sourceTree = "<group>"; };
 		1804316D231FE33A006F2ED3 /* EuclideanDistanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EuclideanDistanceTests.swift; sourceTree = "<group>"; };
 		18043170231FE45D006F2ED3 /* TextureCachingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextureCachingTests.swift; sourceTree = "<group>"; };
-		183980AF2397FAD60098BBB0 /* NSImage+Extenions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSImage+Extenions.swift"; sourceTree = "<group>"; };
-		183DD6162399405A00A2EC33 /* DemoApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DemoApp.entitlements; sourceTree = "<group>"; };
+		1825FE4423A799E200F9512B /* NSImage+Extenions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSImage+Extenions.swift"; sourceTree = "<group>"; };
+		1847DE6B239FA80400600DD5 /* TextureCopyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextureCopyTests.swift; sourceTree = "<group>"; };
+		1847DEBC239FD60C00600DD5 /* texture_copy_test_cases */ = {isa = PBXFileReference; lastKnownFileType = folder; path = texture_copy_test_cases; sourceTree = "<group>"; };
 		18B1A083231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MTLPixelFormat+Extensions.swift"; sourceTree = "<group>"; };
 		18B1A086231E7867000A9BAB /* SwitchDataFormatEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchDataFormatEncoder.swift; sourceTree = "<group>"; };
 		1E76F10B8D3E3E672C003BC2 /* Pods-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Demo/Pods-Demo.debug.xcconfig"; sourceTree = "<group>"; };
@@ -134,18 +139,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		183980B22397FAE70098BBB0 /* Cocoa */ = {
+		1825FE4323A799E200F9512B /* Cocoa */ = {
 			isa = PBXGroup;
 			children = (
-				183980AF2397FAD60098BBB0 /* NSImage+Extenions.swift */,
+				1825FE4423A799E200F9512B /* NSImage+Extenions.swift */,
 			);
 			path = Cocoa;
+			sourceTree = "<group>";
+		};
+		1847DEC1239FE02000600DD5 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				1847DEBC239FD60C00600DD5 /* texture_copy_test_cases */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		18B1A08D231E7A26000A9BAB /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				183980B22397FAE70098BBB0 /* Cocoa */,
+				1825FE4323A799E200F9512B /* Cocoa */,
 				18B1A08E231E7A32000A9BAB /* Metal */,
 			);
 			path = Extensions;
@@ -231,6 +244,8 @@
 				93B3E23F21F505E1008835A0 /* AlloyTests.swift */,
 				1804316D231FE33A006F2ED3 /* EuclideanDistanceTests.swift */,
 				18043170231FE45D006F2ED3 /* TextureCachingTests.swift */,
+				1847DE6B239FA80400600DD5 /* TextureCopyTests.swift */,
+				1847DEC1239FE02000600DD5 /* Resources */,
 				18B1A08F231E7A3A000A9BAB /* Encoders */,
 				18B1A08D231E7A26000A9BAB /* Extensions */,
 				18B1A090231E7A43000A9BAB /* Shaders */,
@@ -417,6 +432,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1847DEBD239FD60C00600DD5 /* texture_copy_test_cases in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -434,6 +450,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1847DEBE239FD60C00600DD5 /* texture_copy_test_cases in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -618,7 +635,8 @@
 				1804316E231FE33A006F2ED3 /* EuclideanDistanceTests.swift in Sources */,
 				93B3E24021F505E1008835A0 /* AlloyTests.swift in Sources */,
 				18043171231FE45D006F2ED3 /* TextureCachingTests.swift in Sources */,
-				183980B02397FAD60098BBB0 /* NSImage+Extenions.swift in Sources */,
+				1825FE4523A799E200F9512B /* NSImage+Extenions.swift in Sources */,
+				1847DEC2239FE02800600DD5 /* TextureCopyTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -641,7 +659,8 @@
 				1804316F231FE33A006F2ED3 /* EuclideanDistanceTests.swift in Sources */,
 				93B3E29021F51997008835A0 /* AlloyTests.swift in Sources */,
 				18043172231FE45D006F2ED3 /* TextureCachingTests.swift in Sources */,
-				183980B12397FAD60098BBB0 /* NSImage+Extenions.swift in Sources */,
+				1825FE4623A799E200F9512B /* NSImage+Extenions.swift in Sources */,
+				1847DEC0239FDF0800600DD5 /* TextureCopyTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -811,7 +830,7 @@
 				CODE_SIGN_ENTITLEMENTS = Demo/Demo.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = PR6HV9J6AD;
+				DEVELOPMENT_TEAM = U59P58LC6V;
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -831,7 +850,7 @@
 				CODE_SIGN_ENTITLEMENTS = Demo/Demo.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = PR6HV9J6AD;
+				DEVELOPMENT_TEAM = U59P58LC6V;
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -850,7 +869,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = PR6HV9J6AD;
+				DEVELOPMENT_TEAM = U59P58LC6V;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/Alloy-macOS/Alloy.framework/Headers\"",
@@ -876,7 +895,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = PR6HV9J6AD;
+				DEVELOPMENT_TEAM = U59P58LC6V;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/Alloy-macOS/Alloy.framework/Headers\"",
@@ -902,7 +921,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = PR6HV9J6AD;
+				DEVELOPMENT_TEAM = U59P58LC6V;
 				INFOPLIST_FILE = DemoApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -924,7 +943,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = PR6HV9J6AD;
+				DEVELOPMENT_TEAM = U59P58LC6V;
 				INFOPLIST_FILE = DemoApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -948,7 +967,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = PR6HV9J6AD;
+				DEVELOPMENT_TEAM = U59P58LC6V;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/Alloy-iOS/Alloy.framework/Headers\"",
@@ -978,7 +997,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = PR6HV9J6AD;
+				DEVELOPMENT_TEAM = U59P58LC6V;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/Alloy-iOS/Alloy.framework/Headers\"",

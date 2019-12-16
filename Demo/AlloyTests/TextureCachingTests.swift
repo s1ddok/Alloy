@@ -14,11 +14,8 @@ final class TextureCachingTests: XCTestCase {
 
     // MARK: - Errors
 
-    enum Errors: Error {
+    enum Error: Swift.Error {
         case cgImageCreationFailed
-        case textureCreationFailed
-        case libraryCreationFailed
-        case bufferCreationFailed
         case unsutablePixelFormat
     }
 
@@ -77,19 +74,15 @@ final class TextureCachingTests: XCTestCase {
             euclideanDistance = self.euclideanDistanceFloat
         case .unsignedInteger:
             euclideanDistance = self.euclideanDistanceUInt
-        default: throw Errors.unsutablePixelFormat
+        default: throw Error.unsutablePixelFormat
         }
 
         let jsonEncoder = JSONEncoder()
         let jsonDecoder = JSONDecoder()
 
-        var zeroValue = Float()
-        guard let resultBuffer = self.context
-                                     .device
-                                     .makeBuffer(bytes: &zeroValue,
-                                                 length: MemoryLayout<Float>.stride,
-                                                 options: .storageModeShared)
-        else { throw Errors.bufferCreationFailed }
+        let resultBuffer = try self.context
+                                   .buffer(for: Float.self,
+                                           options: .storageModeShared)
 
         let image_255x121 = #imageLiteral(resourceName: "255")
         let image_512x512 = #imageLiteral(resourceName: "512")
@@ -103,10 +96,11 @@ final class TextureCachingTests: XCTestCase {
 
         // Create textures.
         try autoreleasepool {
-            try self.context.scheduleAndWait { commadBuffer in
+            try self.context
+                    .scheduleAndWait { commadBuffer in
                 for image in images {
                     guard let cgImage = image.cgImage
-                    else { throw Errors.cgImageCreationFailed }
+                    else { throw Error.cgImageCreationFailed }
                     let texture = try self.createTexture(from: cgImage,
                                                          pixelFormat: pixelFormat,
                                                          generateMipmaps: true,
@@ -125,7 +119,8 @@ final class TextureCachingTests: XCTestCase {
                                                                   from: encodedData)
             let decodedTexture = try decodedTextureCodableBox.texture(device: self.context.device)
 
-            try self.context.scheduleAndWait { commadBuffer in
+            try self.context
+                    .scheduleAndWait { commadBuffer in
 
                 if originalTexture.mipmapLevelCount > 1 {
 
@@ -171,14 +166,16 @@ final class TextureCachingTests: XCTestCase {
 
         switch pixelFormat.dataFormat {
         case .normalized:
-            resultTexture = try self.context.texture(from: cgImage,
-                                                     usage: [.shaderRead, .shaderWrite],
-                                                     generateMipmaps: generateMipmaps)
+            resultTexture = try self.context
+                                    .texture(from: cgImage,
+                                             usage: [.shaderRead, .shaderWrite],
+                                             generateMipmaps: generateMipmaps)
         case .unsignedInteger:
             generateMipmaps = false
 
-            let normalizedTexture = try self.context.texture(from: cgImage,
-                                                             usage: [.shaderRead, .shaderWrite])
+            let normalizedTexture = try self.context
+                                            .texture(from: cgImage,
+                                                     usage: [.shaderRead, .shaderWrite])
 
             let unnormalizedTextureDescriptor = MTLTextureDescriptor()
             unnormalizedTextureDescriptor.width = cgImage.width
@@ -188,16 +185,16 @@ final class TextureCachingTests: XCTestCase {
             unnormalizedTextureDescriptor.storageMode = .shared
 
             guard let unnormalizedTexture = self.context
-                                                .device
-                                                .makeTexture(descriptor: unnormalizedTextureDescriptor)
-            else { throw Errors.textureCreationFailed }
+                                                .texture(descriptor: unnormalizedTextureDescriptor)
+            else { throw MetalError.MTLDeviceError.textureCreationFailed }
 
-            self.denormalize.encode(normalizedTexture: normalizedTexture,
-                                    unnormalizedTexture: unnormalizedTexture,
-                                    in: commandBuffer)
+            self.denormalize
+                .encode(normalizedTexture: normalizedTexture,
+                        unnormalizedTexture: unnormalizedTexture,
+                        in: commandBuffer)
 
             resultTexture = unnormalizedTexture
-        default: throw Errors.unsutablePixelFormat
+        default: throw Error.unsutablePixelFormat
         }
 
         if generateMipmaps {
