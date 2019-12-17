@@ -37,4 +37,7 @@ public enum MetalError {
         case imageCreationFailed
         case imageIncompatiblePixelFormat
     }
+    public enum MTLBufferError: Error {
+        case incompatibleData
+    }
 }

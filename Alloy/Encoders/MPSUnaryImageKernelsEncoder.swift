@@ -23,7 +23,7 @@ final public class MPSUnaryImageKernelsEncoder {
 
     public func encode(sourceTexture: MTLTexture,
                        destinationTexture: MTLTexture,
-                       commandBuffer: MTLCommandBuffer) {
+                       in commandBuffer: MTLCommandBuffer) {
         guard self.kernelQueue
                   .count != 0
         else { return }

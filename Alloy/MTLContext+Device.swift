@@ -72,6 +72,20 @@ public extension MTLContext {
                                options: options)
     }
 
+    public func buffer<T>(with value: T,
+                          options: MTLResourceOptions) throws -> MTLBuffer {
+        return try self.device
+                       .buffer(with: value,
+                               options: options)
+    }
+
+    public func buffer<T>(with values: [T],
+                          options: MTLResourceOptions) throws -> MTLBuffer {
+        return try self.device
+                       .buffer(with: values,
+                               options: options)
+    }
+
     func heap(size: Int,
               storageMode: MTLStorageMode,
               cpuCacheMode: MTLCPUCacheMode = .defaultCache) throws -> MTLHeap {
