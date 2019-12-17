@@ -56,12 +56,11 @@ public extension MTLBuffer {
     func fill<T>(with values: [T]) throws {
         var values = values
         let dataLength = MemoryLayout<T>.stride * values.count
-        guard self.length >= dataLength,
-              let pointer = self.pointer(of: T.self)
+        guard self.length >= dataLength
         else { throw MetalError.MTLBufferError.incompatibleData }
 
         memcpy(&values,
-               pointer,
+               self.contents(),
                dataLength)
     }
 }
