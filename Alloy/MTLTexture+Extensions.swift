@@ -126,6 +126,49 @@ public extension MTLTexture {
 }
 
 public extension MTLTexture {
+
+    func pixelBuffer() throws -> CVPixelBuffer {
+        let error = MetalError.MTLTextureSerializationError
+                              .pixelBufferCreationFailed
+
+        // Create CV pixel buffer.
+        var pB: CVPixelBuffer? = nil
+        var status = try CVPixelBufferCreate(nil,
+                                             self.width,
+                                             self.height,
+                                             self.pixelFormat
+                                                 .compatibleCVPixelFormat(),
+                                             nil,
+                                             &pB)
+        guard status == kCVReturnSuccess,
+              let pixelBuffer = pB
+        else { throw error }
+
+        // Get base adress.
+        status = CVPixelBufferLockBaseAddress(pixelBuffer, [])
+        guard status == kCVReturnSuccess,
+              let pixelBufferBaseAdress = CVPixelBufferGetBaseAddress(pixelBuffer)
+        else { throw error }
+
+        let bytesPerRow = CVPixelBufferGetBytesPerRow(pixelBuffer)
+
+        // Copy data from texture.
+        self.getBytes(pixelBufferBaseAdress,
+                      bytesPerRow: bytesPerRow,
+                      from: self.region,
+                      mipmapLevel: 0)
+
+        // Get base adress.
+        status = CVPixelBufferUnlockBaseAddress(pixelBuffer, [])
+        guard status == kCVReturnSuccess
+        else { throw error }
+
+        return pixelBuffer
+    }
+
+}
+
+public extension MTLTexture {
     var region: MTLRegion {
         return MTLRegion(origin: .zero,
                          size: self.size)

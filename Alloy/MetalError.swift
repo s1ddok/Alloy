@@ -26,5 +26,6 @@ public enum MetalError {
         case unsupportedPixelFormat
         case dataAccessFailure
         case allocationFailed
+        case pixelBufferCreationFailed
     }
 }
