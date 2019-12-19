@@ -9,7 +9,7 @@ import Metal
 
 public extension MTLPixelFormat {
 
-    func compatibleCVPixelFormat() throws -> OSType {
+    var compatibleCVPixelFormat: OSType? {
         switch self {
         case .r8Unorm: return kCVPixelFormatType_OneComponent8
         case .r16Float: return kCVPixelFormatType_OneComponent16Half
@@ -25,7 +25,7 @@ public extension MTLPixelFormat {
         case .rgba32Float: return kCVPixelFormatType_128RGBAFloat
 
         case .depth32Float: return kCVPixelFormatType_DepthFloat32
-        default: throw MetalError.MTLTextureSerializationError.unsupportedPixelFormat
+        default: return nil
         }
     }
 
