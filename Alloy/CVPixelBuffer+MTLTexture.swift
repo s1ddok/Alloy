@@ -40,3 +40,42 @@ public extension MTLContext {
         return videoTextureCache
     }
 }
+
+public extension MTLTexture {
+
+    var pixelBuffer: CVPixelBuffer? {
+        guard let cvPixelFormat = self.pixelFormat
+                                      .compatibleCVPixelFormat
+        else { return nil }
+
+        var pb: CVPixelBuffer? = nil
+        var status = try CVPixelBufferCreate(nil,
+                                             self.width,
+                                             self.height,
+                                             cvPixelFormat,
+                                             nil,
+                                             &pb)
+        guard status == kCVReturnSuccess,
+              let pixelBuffer = pb
+        else { return nil }
+
+        status = CVPixelBufferLockBaseAddress(pixelBuffer, [])
+        guard status == kCVReturnSuccess,
+              let pixelBufferBaseAdress = CVPixelBufferGetBaseAddress(pixelBuffer)
+        else { return nil }
+
+        let bytesPerRow = CVPixelBufferGetBytesPerRow(pixelBuffer)
+
+        self.getBytes(pixelBufferBaseAdress,
+                      bytesPerRow: bytesPerRow,
+                      from: self.region,
+                      mipmapLevel: 0)
+
+        status = CVPixelBufferUnlockBaseAddress(pixelBuffer, [])
+        guard status == kCVReturnSuccess
+        else { return nil }
+
+        return pixelBuffer
+    }
+
+}
