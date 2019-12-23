@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                  = 'Alloy'
-  s.version               = '0.11.6'
+  s.version               = '0.11.7'
   s.license               = { :type => 'MIT', :file => 'LICENSE' }
   s.summary               = 'Nano helpers for Metal framework'
   s.homepage              = 'https://github.com/s1ddok/Alloy'
