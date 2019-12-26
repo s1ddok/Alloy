@@ -32,7 +32,6 @@ public final class MTLContext {
 
     public let device: MTLDevice
     public let commandQueue: MTLCommandQueue
-    public let standardLibrary: MTLLibrary?
     
     private var libraryCache: [Bundle: MTLLibrary] = [:]
     private lazy var textureLoader = MTKTextureLoader(device: self.device)
@@ -43,12 +42,9 @@ public final class MTLContext {
         self.init(device: Metal.device)
     }
     
-    public init(device: MTLDevice,
-                commandQueue: MTLCommandQueue,
-                library: MTLLibrary? = nil) {
-        self.device = device
+    public init(commandQueue: MTLCommandQueue) {
+        self.device = commandQueue.device
         self.commandQueue = commandQueue
-        self.standardLibrary = library
     }
     
     public convenience init(device: MTLDevice,
@@ -70,24 +66,16 @@ public final class MTLContext {
                                                                     ofType: "metallib")!)
         }
 
-        self.init(device: device,
-                  commandQueue: commandQueue,
-                  library: library)
+        self.init(commandQueue: commandQueue)
+        self.libraryCache[bundle] = library
     }
 
-    public func library(for class: AnyClass) throws -> MTLLibrary {
-        return try self.library(for: Bundle(for: `class`))
+    public func library(for class: AnyClass) -> MTLLibrary? {
+        return self.library(for: Bundle(for: `class`))
     }
     
-    public func library(for bundle: Bundle) throws -> MTLLibrary {
-        if let cachedLibrary = self.libraryCache[bundle] {
-            return cachedLibrary
-        }
-        
-        let library = try self.defaultLibrary(bundle: bundle)
-        
-        self.libraryCache[bundle] = library
-        return library
+    public func library(for bundle: Bundle) -> MTLLibrary? {
+        return self.libraryCache[bundle]
     }
     
     public func purgeLibraryCache() {
