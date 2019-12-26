@@ -31,7 +31,9 @@ final public class SwitchDataFormatEncoder {
 
     public convenience init(context: MTLContext,
                             conversionType: ConversionType) throws {
-        try self.init(library: try context.shaderLibrary(for: Self.self),
+        guard let library = context.library(for: Self.self)
+        else { throw MetalError.MTLDeviceError.libraryCreationFailed }
+        try self.init(library: library,
                       conversionType: conversionType)
     }
 

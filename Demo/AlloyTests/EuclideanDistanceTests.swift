@@ -28,7 +28,7 @@ final class EuclideanDistanceTests: XCTestCase {
 
     override func setUp() {
         do {
-            self.context = .init()
+            self.context = try .init()
             self.euclideanDistanceFloat = try .init(context: self.context,
                                                     scalarType: .float)
             self.textureAddConstantFloat = try .init(context: self.context,

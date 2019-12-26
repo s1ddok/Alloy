@@ -30,7 +30,7 @@ final class TextureCachingTests: XCTestCase {
 
     override func setUp() {
         do {
-            self.context = .init()
+            self.context = try .init()
             self.euclideanDistanceFloat = try .init(context: self.context,
                                                     scalarType: .float)
             self.euclideanDistanceUInt = try .init(context: self.context,
@@ -130,8 +130,9 @@ final class TextureCachingTests: XCTestCase {
 
                     while (width + height > 32) {
 
-                        let originalTextureView = try originalTexture.view(level: level)
-                        let decodedTextureView = try decodedTexture.view(level: level)
+                        guard let originalTextureView = originalTexture.view(level: level),
+                              let decodedTextureView = decodedTexture.view(level: level)
+                        else { fatalError("Couldn't create texture view at level \(level)") }
 
                         euclideanDistance.encode(textureOne: originalTextureView,
                                                  textureTwo: decodedTextureView,
@@ -184,9 +185,8 @@ final class TextureCachingTests: XCTestCase {
             unnormalizedTextureDescriptor.usage = [.shaderRead, .shaderWrite]
             unnormalizedTextureDescriptor.storageMode = .shared
 
-            guard let unnormalizedTexture = self.context
-                                                .texture(descriptor: unnormalizedTextureDescriptor)
-            else { throw MetalError.MTLDeviceError.textureCreationFailed }
+            let unnormalizedTexture = try self.context
+                                              .texture(descriptor: unnormalizedTextureDescriptor)
 
             self.denormalize
                 .encode(normalizedTexture: normalizedTexture,

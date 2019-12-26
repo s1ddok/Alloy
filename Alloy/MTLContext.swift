@@ -39,7 +39,7 @@ public final class MTLContext {
 
         if name == nil {
             if #available(OSX 10.12, *) {
-                library = try? device.makeDefaultLibrary(bundle: bundle)
+                library = try device.makeDefaultLibrary(bundle: bundle)
             } else {
                 library = device.makeDefaultLibrary()
             }

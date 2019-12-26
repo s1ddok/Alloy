@@ -29,10 +29,11 @@ class AlloyTests: XCTestCase {
 
     override func setUp() {
         do {
-            self.context = MTLContext()
+            self.context = try MTLContext()
 
-            let library = try self.context
-                                  .shaderLibrary(for: Self.self)
+            guard let library = self.context
+                                    .library(for: Self.self)
+            else { throw MetalError.MTLDeviceError.libraryCreationFailed }
 
             self.evenInitState = try library.computePipelineState(function: "initialize_even")
 
@@ -161,23 +162,27 @@ class IdealSizeTests: XCTestCase {
     var gpuIterations = 256
 
     override func setUp() {
-        self.context = MTLContext(device: Metal.device)
+        do {
+            self.context = try MTLContext()
 
-        let library = try! self.context.shaderLibrary(for: IdealSizeTests.self)
+            guard let library = self.context
+                                    .library(for: Self.self)
+            else { throw MetalError.MTLDeviceError.libraryCreationFailed }
 
-        self.evenState = try! library.computePipelineState(function: "fill_with_threadgroup_size_even")
+            self.evenState = try library.computePipelineState(function: "fill_with_threadgroup_size_even")
 
-        let computeStateDescriptor = MTLComputePipelineDescriptor()
-        computeStateDescriptor.computeFunction = library.makeFunction(name: "fill_with_threadgroup_size_even")!
-        computeStateDescriptor.threadGroupSizeIsMultipleOfThreadExecutionWidth = true
+            let computeStateDescriptor = MTLComputePipelineDescriptor()
+            computeStateDescriptor.computeFunction = library.makeFunction(name: "fill_with_threadgroup_size_even")!
+            computeStateDescriptor.threadGroupSizeIsMultipleOfThreadExecutionWidth = true
 
-        self.evenOptimizedState = try! self.context
-            .device
-            .makeComputePipelineState(descriptor: computeStateDescriptor,
-                                      options: [],
-                                      reflection: nil)
+            self.evenOptimizedState = try! self.context
+                .device
+                .makeComputePipelineState(descriptor: computeStateDescriptor,
+                                          options: [],
+                                          reflection: nil)
 
-        self.exactState = try! library.computePipelineState(function: "fill_with_threadgroup_size_exact")
+            self.exactState = try library.computePipelineState(function: "fill_with_threadgroup_size_exact")
+        } catch { fatalError(error.localizedDescription) }
     }
 
     func testSpeedOnIdealSize() {

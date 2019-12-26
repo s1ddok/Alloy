@@ -43,7 +43,7 @@ final class TextureCopyTests: XCTestCase {
 
     // MARK: - Properties
 
-    public var context = MTLContext()
+    public var context: MTLContext!
     public var euclideanDistanceFloat: EuclideanDistanceEncoder!
     public var textureCopyEncoder: TextureCopyEncoder!
     public var testCases: [TestCase]!
@@ -52,6 +52,7 @@ final class TextureCopyTests: XCTestCase {
 
     override func setUp() {
         do {
+            self.context = try .init()
             self.euclideanDistanceFloat = try .init(context: self.context,
                                                     scalarType: .float)
             self.textureCopyEncoder = try .init(context: self.context,
