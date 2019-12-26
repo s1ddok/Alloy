@@ -66,8 +66,8 @@ public extension MTLDevice {
         return buffer
     }
 
-    public func buffer<T>(with value: T,
-                          options: MTLResourceOptions) throws -> MTLBuffer {
+    func buffer<T>(with value: T,
+                   options: MTLResourceOptions) throws -> MTLBuffer {
         var value = value
         guard let buffer = self.makeBuffer(bytes: &value,
                                            length: MemoryLayout<T>.stride,
@@ -76,8 +76,8 @@ public extension MTLDevice {
         return buffer
     }
 
-    public func buffer<T>(with values: [T],
-                          options: MTLResourceOptions) throws -> MTLBuffer {
+    func buffer<T>(with values: [T],
+                   options: MTLResourceOptions) throws -> MTLBuffer {
         guard let buffer = self.makeBuffer(bytes: values,
                                            length: MemoryLayout<T>.stride * values.count,
                                            options: options)
