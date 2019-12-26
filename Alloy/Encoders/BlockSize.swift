@@ -16,4 +16,10 @@ public struct BlockSize {
         self.width = width
         self.height = height
     }
+
+    public init(width: Int,
+                height: Int) {
+        self.width = .init(width)
+        self.height = .init(height)
+    }
 }

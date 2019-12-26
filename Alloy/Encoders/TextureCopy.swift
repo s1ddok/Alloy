@@ -1,5 +1,5 @@
 //
-//  TextureCopyEncoder.swift
+//  TextureCopy.swift
 //  Alloy
 //
 //  Created by Andrey Volodin on 31/01/2019.
@@ -7,7 +7,7 @@
 
 import Metal
 
-final public class TextureCopyEncoder {
+final public class TextureCopy {
 
     // MARK: - Propertires
 

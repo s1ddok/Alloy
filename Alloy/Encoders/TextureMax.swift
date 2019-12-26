@@ -1,13 +1,13 @@
 //
-//  TextureMinEncoder.swift
+//  TextureMax.swift
 //  Alloy
 //
-//  Created by Eugene Bokhan on 14/02/2019.
+//  Created by Eugene Bokhan on 13/02/2019.
 //
 
 import Metal
 
-final public class TextureMinEncoder {
+final public class TextureMax {
 
     // MARK: - Propertires
 
@@ -35,7 +35,7 @@ final public class TextureMinEncoder {
                        resultBuffer: MTLBuffer,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
-            encoder.label = "Texture Min"
+            encoder.label = "Texture Max"
             self.encode(sourceTexture: sourceTexture,
                         resultBuffer: resultBuffer,
                         using: encoder)
@@ -46,8 +46,12 @@ final public class TextureMinEncoder {
                        resultBuffer: MTLBuffer,
                        using encoder: MTLComputeCommandEncoder) {
         let threadgroupSize = MTLSize(width: 8, height: 8, depth: 1).clamped(to: sourceTexture.size)
-        let blockSize = BlockSize(width: UInt16((sourceTexture.width + threadgroupSize.width - 1) / threadgroupSize.width),
-                                  height: UInt16((sourceTexture.height + threadgroupSize.height - 1) / threadgroupSize.height))
+        let blockSizeWidth = (sourceTexture.width + threadgroupSize.width - 1)
+                           / threadgroupSize.width
+        let blockSizeHeight = (sourceTexture.height + threadgroupSize.height - 1)
+                            / threadgroupSize.height
+        let blockSize = BlockSize(width: blockSizeWidth,
+                                  height: blockSizeHeight)
 
         encoder.set(textures: [sourceTexture])
         encoder.set(blockSize, at: 0)
@@ -55,12 +59,17 @@ final public class TextureMinEncoder {
                           offset: 0,
                           index: 1)
 
-        encoder.setThreadgroupMemoryLength(threadgroupSize.width * threadgroupSize.height * 4 * MemoryLayout<Float16>.stride,
+        let threadgroupMemoryLength = threadgroupSize.width
+                                    * threadgroupSize.height
+                                    * 4
+                                    * MemoryLayout<Float16>.stride
+
+        encoder.setThreadgroupMemoryLength(threadgroupMemoryLength,
                                            index: 0)
         encoder.dispatch2d(state: self.pipelineState,
                            covering: .one,
                            threadgroupSize: threadgroupSize)
     }
 
-    public static let functionName = "textureMin"
+    public static let functionName = "textureMax"
 }

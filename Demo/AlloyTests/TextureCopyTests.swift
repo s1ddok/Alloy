@@ -44,8 +44,8 @@ final class TextureCopyTests: XCTestCase {
     // MARK: - Properties
 
     public var context: MTLContext!
-    public var euclideanDistanceFloat: EuclideanDistanceEncoder!
-    public var textureCopyEncoder: TextureCopyEncoder!
+    public var euclideanDistanceFloat: EuclideanDistance!
+    public var textureCopy: TextureCopy!
     public var testCases: [TestCase]!
 
     // MARK: - Setup
@@ -55,7 +55,7 @@ final class TextureCopyTests: XCTestCase {
             self.context = try .init()
             self.euclideanDistanceFloat = try .init(context: self.context,
                                                     scalarType: .float)
-            self.textureCopyEncoder = try .init(context: self.context,
+            self.textureCopy = try .init(context: self.context,
                                                 scalarType: .float)
 
             let bundle = Bundle(for: Self.self)
@@ -111,7 +111,7 @@ final class TextureCopyTests: XCTestCase {
             // Dispatch.
             try self.testCases.forEach { testCase in
                 try self.context.scheduleAndWait { commandBuffer in
-                    self.textureCopyEncoder
+                    self.textureCopy
                         .copy(region: testCase.sourceRegion,
                               from: testCase.sourceTexture,
                               to: testCase.destinationOrigin,

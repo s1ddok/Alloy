@@ -1,72 +1,74 @@
 //
-//  TextureMixEncoder.swift
+//  TextureAddConstant.swift
 //  Alloy
 //
-//  Created by Eugene Bokhan on 26.09.2019.
+//  Created by Eugene Bokhan on 03/09/2019.
 //
 
 import Metal
 
-final public class TextureMixEncoder {
+final public class TextureAddConstant {
 
     // MARK: - Properties
 
     public let pipelineState: MTLComputePipelineState
     private let deviceSupportsNonuniformThreadgroups: Bool
 
-    // MARK: - Life Cycle
+    // MARK: - Init
 
-    public convenience init(context: MTLContext) throws {
+    public convenience init(context: MTLContext,
+                            scalarType: MTLPixelFormat.ScalarType = .half) throws {
         guard let library = context.library(for: Self.self)
         else { throw MetalError.MTLDeviceError.libraryCreationFailed }
-        try self.init(library: library)
+        try self.init(library: library,
+                      scalarType: scalarType)
     }
 
-    public init(library: MTLLibrary) throws {
+    public init(library: MTLLibrary,
+                scalarType: MTLPixelFormat.ScalarType = .half) throws {
         self.deviceSupportsNonuniformThreadgroups = library.device
                                                            .supports(feature: .nonUniformThreadgroups)
+
         let constantValues = MTLFunctionConstantValues()
         constantValues.set(self.deviceSupportsNonuniformThreadgroups,
                            at: 0)
-        self.pipelineState = try library.computePipelineState(function: Self.functionName,
+        let functionName = Self.functionName + "_" + scalarType.rawValue
+        self.pipelineState = try library.computePipelineState(function: functionName,
                                                               constants: constantValues)
     }
 
     // MARK: - Encode
 
-    public func encode(sourceTextureOne: MTLTexture,
-                       sourceTextureTwo: MTLTexture,
-                       maskTexture: MTLTexture,
+    public func encode(sourceTexture: MTLTexture,
                        destinationTexture: MTLTexture,
+                       constant: SIMD4<Float>,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
-            encoder.label = "Texture Mix"
-            self.encode(sourceTextureOne: sourceTextureOne,
-                        sourceTextureTwo: sourceTextureTwo,
-                        maskTexture: maskTexture,
+            encoder.label = "Texture Add Constant"
+            self.encode(sourceTexture: sourceTexture,
                         destinationTexture: destinationTexture,
+                        constant: constant,
                         using: encoder)
         }
     }
 
-    public func encode(sourceTextureOne: MTLTexture,
-                       sourceTextureTwo: MTLTexture,
-                       maskTexture: MTLTexture,
+    public func encode(sourceTexture: MTLTexture,
                        destinationTexture: MTLTexture,
+                       constant: SIMD4<Float>,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [sourceTextureOne,
-                               sourceTextureTwo,
-                               maskTexture,
+        encoder.set(textures: [sourceTexture,
                                destinationTexture])
+        encoder.set(constant, at: 0)
+
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: self.pipelineState,
-                               exactly: destinationTexture.size)
+                               exactly: sourceTexture.size)
         } else {
             encoder.dispatch2d(state: self.pipelineState,
-                               covering: destinationTexture.size)
+                               covering: sourceTexture.size)
         }
     }
 
-    public static let functionName = "textureMix"
+    public static let functionName = "addConstant"
 }
 

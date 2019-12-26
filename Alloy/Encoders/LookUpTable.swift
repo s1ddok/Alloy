@@ -1,37 +1,34 @@
 //
-//  TextureMask.swift
+//  LookUpTable.swift
 //  Alloy
 //
-//  Created by Andrey Volodin on 26/04/2019.
+//  Created by Andrey Volodin on 29.10.2019.
 //
 
 import Metal
 
-final public class TextureMaskEncoder {
+final public class LookUpTable {
 
-    // MARK: - Propertires
+    // MARK: - Properties
 
     public let pipelineState: MTLComputePipelineState
     private let deviceSupportsNonuniformThreadgroups: Bool
 
     // MARK: - Life Cycle
 
-    public convenience init(context: MTLContext,
-                            scalarType: MTLPixelFormat.ScalarType = .half) throws {
+    public convenience init(context: MTLContext) throws {
         guard let library = context.library(for: Self.self)
         else { throw MetalError.MTLDeviceError.libraryCreationFailed }
-        try self.init(library: library,
-                      scalarType: scalarType)
+        try self.init(library: library)
     }
 
-    public init(library: MTLLibrary,
-                scalarType: MTLPixelFormat.ScalarType = .half) throws {
+    public init(library: MTLLibrary) throws {
         self.deviceSupportsNonuniformThreadgroups = library.device
                                                            .supports(feature: .nonUniformThreadgroups)
         let constantValues = MTLFunctionConstantValues()
         constantValues.set(self.deviceSupportsNonuniformThreadgroups,
                            at: 0)
-        let functionName = Self.functionName + "_" + scalarType.rawValue
+        let functionName = Self.functionName
         self.pipelineState = try library.computePipelineState(function: functionName,
                                                               constants: constantValues)
     }
@@ -39,34 +36,38 @@ final public class TextureMaskEncoder {
     // MARK: - Encode
 
     public func encode(sourceTexture: MTLTexture,
-                       maskTexture: MTLTexture,
-                       destinationTexture: MTLTexture,
+                       outputTexture: MTLTexture,
+                       lut: MTLTexture,
+                       intensity: Float,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
-            encoder.label = "Texture Mask"
+            encoder.label = "Look Up Table"
             self.encode(sourceTexture: sourceTexture,
-                        maskTexture: maskTexture,
-                        destinationTexture: destinationTexture,
+                        outputTexture: outputTexture,
+                        lut: lut,
+                        intensity: intensity,
                         using: encoder)
         }
     }
 
     public func encode(sourceTexture: MTLTexture,
-                       maskTexture: MTLTexture,
-                       destinationTexture: MTLTexture,
+                       outputTexture: MTLTexture,
+                       lut: MTLTexture,
+                       intensity: Float,
                        using encoder: MTLComputeCommandEncoder) {
         encoder.set(textures: [sourceTexture,
-                               maskTexture,
-                               destinationTexture])
+                               outputTexture,
+                               lut])
+        encoder.set(intensity, at: 0)
 
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: pipelineState,
-                               exactly: destinationTexture.size)
+                               exactly: outputTexture.size)
         } else {
             encoder.dispatch2d(state: pipelineState,
-                               covering: destinationTexture.size)
+                               covering: outputTexture.size)
         }
     }
 
-    public static let functionName = "textureMask"
+    public static let functionName = "lookUpTable"
 }

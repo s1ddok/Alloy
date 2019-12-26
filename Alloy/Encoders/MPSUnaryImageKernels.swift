@@ -1,5 +1,5 @@
 //
-//  MPSUnaryImageKernelsEncoder.swift
+//  MPSUnaryImageKernels.swift
 //  Alloy
 //
 //  Created by Eugene Bokhan on 27.09.2019.
@@ -7,7 +7,7 @@
 
 import MetalPerformanceShaders
 
-final public class MPSUnaryImageKernelsEncoder {
+final public class MPSUnaryImageKernels {
 
     // MARK: - Properties
 

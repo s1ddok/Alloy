@@ -21,8 +21,8 @@ final class EuclideanDistanceTests: XCTestCase {
     // MARK: - Properties
 
     public var context: MTLContext!
-    public var euclideanDistanceFloat: EuclideanDistanceEncoder!
-    public var textureAddConstantFloat: TextureAddConstantEncoder!
+    public var euclideanDistanceFloat: EuclideanDistance!
+    public var textureAddConstantFloat: TextureAddConstant!
 
     // MARK: - Setup
 

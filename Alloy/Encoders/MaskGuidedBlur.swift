@@ -1,5 +1,5 @@
 //
-//  MaskGuidedBlurEncoder.swift
+//  MaskGuidedBlur.swift
 //  Alloy
 //
 //  Created by Eugene Bokhan on 29/08/2019.
@@ -8,7 +8,7 @@
 import Metal
 import MetalPerformanceShaders
 
-final public class MaskGuidedBlurEncoder {
+final public class MaskGuidedBlur {
 
     // MARK: - Propertires
 
@@ -49,6 +49,7 @@ final public class MaskGuidedBlurEncoder {
         temporaryTextureDescriptor.pixelFormat = .rgba8Unorm
 
         commandBuffer.compute { encoder in
+            encoder.label = "Mask Guided Blur"
             let temporaryImage = MPSTemporaryImage(commandBuffer: commandBuffer,
                                                    textureDescriptor: temporaryTextureDescriptor)
             defer { temporaryImage.readCount = 0 }

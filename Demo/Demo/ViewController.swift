@@ -17,7 +17,7 @@ class ViewController: NSViewController {
     @IBOutlet weak var slider: NSSlider!
     
     let context = try! MTLContext(device: Metal.lowPowerDevice!)
-    var affineCropEncoder: TextureAffineCropEncoder!
+    var affineCropEncoder: TextureAffineCrop!
 
     let image = NSImage(named: "flower")!
     
@@ -26,7 +26,7 @@ class ViewController: NSViewController {
         
         self.imageView.image = self.image
         
-        self.affineCropEncoder = try! TextureAffineCropEncoder(context: self.context)
+        self.affineCropEncoder = try! TextureAffineCrop(context: self.context)
     }
     
     @IBAction func sliderDragged(_ sender: NSSlider) {

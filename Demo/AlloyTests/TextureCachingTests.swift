@@ -22,8 +22,8 @@ final class TextureCachingTests: XCTestCase {
     // MARK: - Properties
 
     private var context: MTLContext!
-    private var euclideanDistanceFloat: EuclideanDistanceEncoder!
-    private var euclideanDistanceUInt: EuclideanDistanceEncoder!
+    private var euclideanDistanceFloat: EuclideanDistance!
+    private var euclideanDistanceUInt: EuclideanDistance!
     private var denormalize: SwitchDataFormatEncoder!
 
     // MARK: - Setup
@@ -67,7 +67,7 @@ final class TextureCachingTests: XCTestCase {
     }
 
     private func test(pixelFormat: MTLPixelFormat) throws -> [Float] {
-        let euclideanDistance: EuclideanDistanceEncoder
+        let euclideanDistance: EuclideanDistance
 
         switch pixelFormat.dataFormat {
         case .normalized:
