@@ -69,6 +69,6 @@ class ViewController: NSViewController {
             }
         }
         
-        self.imageView.image = cropTexture.image
+        self.imageView.image = try! cropTexture.image()
     }
 }
