@@ -586,6 +586,29 @@ kernel void textureMultiplyAdd(texture2d<float, access::read> sourceTextureOne [
                              position);
 }
 
+// MARK: - Texture Difference Hightlight
+
+kernel void textureDifferenceHighlight(texture2d<float, access::read> sourceTextureOne [[texture(0)]],
+                                       texture2d<float, access::read> sourceTextureTwo [[texture(1)]],
+                                       texture2d<float, access::write> destinationTexture [[texture(2)]],
+                                       constant float4& color [[ buffer(0) ]],
+                                       constant float& threshold [[ buffer(1) ]],
+                                       ushort2 position [[ thread_position_in_grid ]]) {
+    const ushort2 textureSize = ushort2(destinationTexture.get_width(),
+                                        destinationTexture.get_height());
+    checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
+
+    const float4 originalColor = sourceTextureOne.read(position);
+    const float4 targetColor = sourceTextureTwo.read(position);
+    const float4 difference = abs(targetColor - originalColor);
+    const float totalDifference = dot(difference, 1.f);
+
+    destinationTexture.write(mix(targetColor,
+                                 color,
+                                 step(threshold, totalDifference)),
+                             position);
+}
+
 // MARK: - ML
 
 kernel void normalize(texture2d<half, access::read> inputTexture [[ texture(0) ]],
