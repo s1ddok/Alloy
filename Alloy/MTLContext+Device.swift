@@ -219,18 +219,22 @@ public extension MTLContext {
                    .makeDepthStencilState(descriptor: descriptor)
     }
 
-    func texture(descriptor: MTLTextureDescriptor) -> MTLTexture? {
-        return self.device
-                   .makeTexture(descriptor: descriptor)
+    func texture(descriptor: MTLTextureDescriptor) throws -> MTLTexture {
+        guard let texture = self.device
+                                .makeTexture(descriptor: descriptor)
+        else { throw MetalError.MTLDeviceError.textureCreationFailed }
+        return texture
     }
 
     func texture(descriptor: MTLTextureDescriptor,
                  iosurface: IOSurfaceRef,
-                 plane: Int) -> MTLTexture? {
-        return self.device
-                   .makeTexture(descriptor: descriptor,
-                                iosurface: iosurface,
-                                plane: plane)
+                 plane: Int) throws -> MTLTexture {
+        guard let texture = self.device
+                                .makeTexture(descriptor: descriptor,
+                                             iosurface: iosurface,
+                                             plane: plane)
+        else { throw MetalError.MTLDeviceError.textureCreationFailed }
+        return texture
     }
 
     #if !targetEnvironment(simulator)
