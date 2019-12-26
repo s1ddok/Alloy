@@ -152,28 +152,16 @@ public extension MTLDevice {
     }
 
     private func supportsOnly8K() -> Bool {
-        #if os(iOS)
         #if targetEnvironment(macCatalyst)
         return !self.supportsFamily(.apple3)
+        #elseif os(macOS)
+        return false
         #else
         if #available(iOS 13.0, *) {
             return !self.supportsFamily(.apple3)
         } else {
             return !self.supportsFeatureSet(.iOS_GPUFamily3_v3)
         }
-        #endif // argetEnvironment(macCatalyst)
-        #endif // os(iOS)
-
-        #if os(tvOS)
-        if #available(tvOS 13.0, *) {
-            return !self.supportsFamily(.apple3)
-        } else {
-            return !self.supportsFeatureSet(.iOS_GPUFamily3_v3)
-        }
-        #endif // os(tvOS)
-
-        #if os(macOS)
-        return false
-        #endif // os(macOS)
+        #endif
     }
 }
