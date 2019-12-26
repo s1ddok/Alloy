@@ -373,9 +373,11 @@ public extension MTLContext {
                                       completionHandler: completionHandler)
     }
 
-    func fence() -> MTLFence? {
-        return self.device
-                   .makeFence()
+    func fence() throws -> MTLFence {
+        guard let fence = self.device
+                              .makeFence()
+        else { throw MetalError.MTLDeviceError.fenceCreationFailed }
+        return fence
     }
 
     func supportsFeatureSet(_ featureSet: MTLFeatureSet) -> Bool {
@@ -436,9 +438,11 @@ public extension MTLContext {
                                          count: count)
     }
 
-    func argumentEncoder(arguments: [MTLArgumentDescriptor]) -> MTLArgumentEncoder? {
-        return self.device
-                   .makeArgumentEncoder(arguments: arguments)
+    func argumentEncoder(arguments: [MTLArgumentDescriptor]) throws -> MTLArgumentEncoder {
+        guard let encoder = self.device
+                                .makeArgumentEncoder(arguments: arguments)
+        else { throw MetalError.MTLDeviceError.argumentEncoderCreationFailed }
+        return encoder
     }
 
     #if os(iOS) && !targetEnvironment(macCatalyst)
@@ -453,38 +457,48 @@ public extension MTLContext {
     @available(iOS 13.0, *)
     @available(macOS, unavailable)
     @available(macCatalyst, unavailable)
-    func rasterizationRateMap(descriptor: MTLRasterizationRateMapDescriptor) -> MTLRasterizationRateMap? {
-        return self.device
-                   .makeRasterizationRateMap(descriptor: descriptor)
+    func rasterizationRateMap(descriptor: MTLRasterizationRateMapDescriptor) throws -> MTLRasterizationRateMap {
+        guard let map = self.device
+                            .makeRasterizationRateMap(descriptor: descriptor)
+        else { throw MetalError.MTLDeviceError.rasterizationRateMapCreationFailed }
+        return map
     }
     #endif
 
     @available(iOS 12.0, macOS 10.14, *)
     func indirectCommandBuffer(descriptor: MTLIndirectCommandBufferDescriptor,
                                maxCommandCount maxCount: Int,
-                               options: MTLResourceOptions = []) -> MTLIndirectCommandBuffer? {
-        return self.device
-                   .makeIndirectCommandBuffer(descriptor: descriptor,
-                                              maxCommandCount: maxCount,
-                                              options: options)
+                               options: MTLResourceOptions = []) throws -> MTLIndirectCommandBuffer {
+        guard let indirectCommandBuffer = self.device
+                                              .makeIndirectCommandBuffer(descriptor: descriptor,
+                                                                         maxCommandCount: maxCount,
+                                                                         options: options)
+        else { throw MetalError.MTLDeviceError.indirectCommandBufferCreationFailed }
+        return indirectCommandBuffer
     }
 
     @available(iOS 12.0, macOS 10.14, *)
-    func event() -> MTLEvent? {
-        return self.device
-                   .makeEvent()
+    func event() throws -> MTLEvent {
+        guard let event = self.device
+                              .makeEvent()
+        else { throw MetalError.MTLDeviceError.eventCreationFailed }
+        return event
     }
 
     @available(iOS 12.0, macOS 10.14, *)
-    func sharedEvent() -> MTLSharedEvent? {
-        return self.device
-                   .makeSharedEvent()
+    func sharedEvent() throws -> MTLSharedEvent {
+        guard let event = self.device
+                              .makeSharedEvent()
+        else { throw MetalError.MTLDeviceError.eventCreationFailed }
+        return event
     }
 
     @available(iOS 12.0, macOS 10.14, *)
-    func sharedEvent(handle sharedEventHandle: MTLSharedEventHandle) -> MTLSharedEvent? {
-        return self.device
-                   .makeSharedEvent(handle: sharedEventHandle)
+    func sharedEvent(handle sharedEventHandle: MTLSharedEventHandle) throws -> MTLSharedEvent {
+        guard let event = self.device
+                              .makeSharedEvent(handle: sharedEventHandle)
+        else { throw MetalError.MTLDeviceError.eventCreationFailed }
+        return event
     }
 
     #if os(iOS) && !targetEnvironment(macCatalyst)
