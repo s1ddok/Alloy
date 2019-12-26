@@ -16,11 +16,11 @@ public extension MTLContext {
                    .maxTextureSize(desiredSize: desiredSize)
     }
 
-    func shaderLibrary(from file: URL,
-                       options: MTLCompileOptions? = nil) throws -> MTLLibrary {
+    func library(from file: URL,
+                 options: MTLCompileOptions? = nil) throws -> MTLLibrary {
         return try self.device
-                       .shaderLibrary(from: file,
-                                             options: options)
+                       .library(from: file,
+                                options: options)
     }
 
     func multisampleRenderTargetPair(width: Int, height: Int,

@@ -9,8 +9,8 @@ import Metal
 
 public extension MTLDevice {
 
-    func shaderLibrary(from file: URL,
-                       options: MTLCompileOptions? = nil) throws -> MTLLibrary {
+    func library(from file: URL,
+                 options: MTLCompileOptions? = nil) throws -> MTLLibrary {
         let shaderSource = try String(contentsOf: file)
         return try self.makeLibrary(source: shaderSource,
                                     options: options)
