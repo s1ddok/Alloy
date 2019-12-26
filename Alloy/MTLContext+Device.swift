@@ -257,9 +257,11 @@ public extension MTLContext {
     }
     #endif
 
-    func samplerState(descriptor: MTLSamplerDescriptor) -> MTLSamplerState? {
-        return self.device
-                   .makeSamplerState(descriptor: descriptor)
+    func samplerState(descriptor: MTLSamplerDescriptor) throws -> MTLSamplerState {
+        guard let samplerState = self.device
+                                     .makeSamplerState(descriptor: descriptor)
+        else { throw MetalError.MTLDeviceError.samplerStateCreationFailed }
+        return samplerState
     }
 
     func defaultLibrary() -> MTLLibrary? {
