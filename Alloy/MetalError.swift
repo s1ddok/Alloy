@@ -10,17 +10,22 @@ public enum MetalError {
         case textureCacheCreationFailed
     }
     public enum MTLDeviceError: Error {
+        case argumentEncoderCreationFailed
+        case bufferCreationFailed
+        case depthStencilStateCreationFailed
+        case eventCreationFailed
+        case fenceCreationFailed
+        case heapCreationFailed
+        case indirectCommandBufferCreationFailed
         case libraryCreationFailed
+        case rasterizationRateMapCreationFailed
+        case samplerStateCreationFailed
         case textureCreationFailed
         case textureViewCreationFailed
-        case heapCreationFailed
-        case bufferCreationFailed
-        case samplerStateCreationFailed
-        case depthStencilStateCreationFailed
     }
     public enum MTLHeapError: Error {
-        case textureCreationFailed
         case bufferCreationFailed
+        case textureCreationFailed
     }
     public enum MTLCommandQueueError: Error {
         case commandBufferCreationFailed
@@ -29,9 +34,9 @@ public enum MetalError {
         case functionCreationFailed
     }
     public enum MTLTextureSerializationError: Error {
-        case unsupportedPixelFormat
-        case dataAccessFailure
         case allocationFailed
+        case dataAccessFailure
+        case unsupportedPixelFormat
     }
     public enum MTLTextureError: Error {
         case imageCreationFailed
