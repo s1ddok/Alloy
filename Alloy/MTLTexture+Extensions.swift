@@ -18,10 +18,8 @@ public extension MTLTexture {
     #endif
     
     func cgImage() throws -> CGImage {
-        let error = MetalError.MTLTextureError.imageCreationFailed
-
         guard self.isAccessibleOnCPU
-        else { throw error }
+        else { throw MetalError.MTLTextureError.imageCreationFailed }
 
         switch self.pixelFormat {
         case .a8Unorm, .r8Unorm, .r8Uint:
@@ -53,7 +51,7 @@ public extension MTLTexture {
                                         decode: nil,
                                         shouldInterpolate: true,
                                         intent: .defaultIntent)
-            else { throw error }
+            else { throw MetalError.MTLTextureError.imageCreationFailed }
 
             return cgImage
         case .bgra8Unorm:
@@ -99,7 +97,7 @@ public extension MTLTexture {
                                         decode: nil,
                                         shouldInterpolate: true,
                                         intent: .defaultIntent)
-            else { throw error }
+            else { throw MetalError.MTLTextureError.imageCreationFailed }
 
             return cgImage
         case .rgba8Unorm:
@@ -130,7 +128,7 @@ public extension MTLTexture {
                                         decode: nil,
                                         shouldInterpolate: true,
                                         intent: .defaultIntent)
-            else { throw error }
+            else { throw MetalError.MTLTextureError.imageCreationFailed }
 
             return cgImage
         default: throw MetalError.MTLTextureError.imageIncompatiblePixelFormat
@@ -200,7 +198,7 @@ public extension MTLTexture {
     }
     
     func view(slice: Int,
-              levels: Range<Int>? = nil) throws -> MTLTexture {
+              levels: Range<Int>? = nil) -> MTLTexture? {
         let sliceType: MTLTextureType
         
         switch self.textureType {
@@ -209,23 +207,20 @@ public extension MTLTexture {
         case .typeCubeArray: sliceType = .typeCube
         default:
             guard slice == 0
-            else { throw MetalError.MTLDeviceError.textureCreationFailed }
+            else { return nil }
             sliceType = self.textureType
         }
 
-        guard let textureView = self.makeTextureView(pixelFormat: self.pixelFormat,
-                                                     textureType: sliceType,
-                                                     levels: levels ?? 0..<1,
-                                                     slices: slice..<(slice + 1))
-        else { throw MetalError.MTLDeviceError.textureCreationFailed }
-        
-        return textureView
+        return self.makeTextureView(pixelFormat: self.pixelFormat,
+                                    textureType: sliceType,
+                                    levels: levels ?? 0..<1,
+                                    slices: slice..<(slice + 1))
     }
 
-    func view(level: Int) throws -> MTLTexture {
+    func view(level: Int) -> MTLTexture? {
         let levels = level ..< (level + 1)
-        return try self.view(slice: 0,
-                             levels: levels)
+        return self.view(slice: 0,
+                         levels: levels)
     }
 }
 
@@ -242,11 +237,11 @@ public extension MTLTexture {
     /// - Returns: Array of floats containing each pixel of the texture.
     func toFloatArray(width: Int,
                       height: Int,
-                      featureChannels: Int) -> [Float]? {
-        return self.toArray(width: width,
-                            height: height,
-                            featureChannels: featureChannels,
-                            initial: .zero)
+                      featureChannels: Int) throws -> [Float] {
+        return try self.toArray(width: width,
+                                height: height,
+                                featureChannels: featureChannels,
+                                initial: .zero)
     }
 
     /// Creates a new array of `Float16`s and copies the texture's pixels into it.
@@ -258,11 +253,11 @@ public extension MTLTexture {
     /// - Returns: Array of floats containing each pixel of the texture.
     func toFloat16Array(width: Int,
                         height: Int,
-                        featureChannels: Int) -> [Float16]? {
-        return self.toArray(width: width,
-                            height: height,
-                            featureChannels: featureChannels,
-                            initial: .zero)
+                        featureChannels: Int) throws -> [Float16] {
+        return try self.toArray(width: width,
+                                height: height,
+                                featureChannels: featureChannels,
+                                initial: .zero)
     }
 
     /// Creates a new array of `UInt8`s and copies the texture's pixels into it.
@@ -274,11 +269,11 @@ public extension MTLTexture {
     /// - Returns: Array of floats containing each pixel of the texture.
     func toUInt8Array(width: Int,
                       height: Int,
-                      featureChannels: Int) -> [UInt8]? {
-        return self.toArray(width: width,
-                            height: height,
-                            featureChannels: featureChannels,
-                            initial: .zero)
+                      featureChannels: Int) throws -> [UInt8] {
+        return try self.toArray(width: width,
+                                height: height,
+                                featureChannels: featureChannels,
+                                initial: .zero)
     }
 
     /// Convenience function that copies the texture's pixel data to a Swift array.
@@ -296,16 +291,22 @@ public extension MTLTexture {
     private func toArray<T>(width: Int,
                             height: Int,
                             featureChannels: Int,
-                            initial: T) -> [T]? {
+                            initial: T) throws -> [T] {
         guard self.isAccessibleOnCPU
            && featureChannels != 3
            && featureChannels <= 4
-        else { return nil }
+        else { throw MetalError.MTLTextureError.imageIncompatiblePixelFormat }
 
+        let count = width
+                  * height
+                  * featureChannels
         var bytes = [T](repeating: initial,
-                        count: width * height * featureChannels)
+                        count: count)
+        let bytesPerRow = width
+                        * featureChannels
+                        * MemoryLayout<T>.stride
         self.getBytes(&bytes,
-                      bytesPerRow: width * featureChannels * MemoryLayout<T>.stride,
+                      bytesPerRow: bytesPerRow,
                       from: .init(origin: .zero,
                                   size: .init(width: width,
                                               height: height,
