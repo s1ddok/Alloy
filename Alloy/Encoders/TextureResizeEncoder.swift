@@ -29,7 +29,9 @@ final public class TextureResizeEncoder {
 
     public convenience init(context: MTLContext,
                             samplerDescriptor: MTLSamplerDescriptor) throws {
-        try self.init(library: context.library(for: Self.self),
+        guard let library = context.library(for: Self.self)
+        else { throw MetalError.MTLDeviceError.libraryCreationFailed }
+        try self.init(library: library,
                       samplerDescriptor: samplerDescriptor)
     }
 
