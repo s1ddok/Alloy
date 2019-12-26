@@ -75,11 +75,11 @@ public final class MTLContext {
                   library: library)
     }
 
-    public func shaderLibrary(for class: AnyClass) throws -> MTLLibrary {
-        return try self.shaderLibrary(for: Bundle(for: `class`))
+    public func library(for class: AnyClass) throws -> MTLLibrary {
+        return try self.library(for: Bundle(for: `class`))
     }
     
-    public func shaderLibrary(for bundle: Bundle) throws -> MTLLibrary {
+    public func library(for bundle: Bundle) throws -> MTLLibrary {
         if let cachedLibrary = self.libraryCache[bundle] {
             return cachedLibrary
         }

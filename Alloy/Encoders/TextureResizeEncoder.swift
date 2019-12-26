@@ -29,7 +29,7 @@ final public class TextureResizeEncoder {
 
     public convenience init(context: MTLContext,
                             samplerDescriptor: MTLSamplerDescriptor) throws {
-        try self.init(library: context.shaderLibrary(for: Self.self),
+        try self.init(library: context.library(for: Self.self),
                       samplerDescriptor: samplerDescriptor)
     }
 

@@ -31,7 +31,7 @@ public class MaskRenderer {
     /// - Throws: Library or function creation errors.
     public convenience init(context: MTLContext,
                             pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
-        try self.init(library: context.shaderLibrary(for: Self.self),
+        try self.init(library: context.library(for: Self.self),
                       pixelFormat: pixelFormat)
     }
 

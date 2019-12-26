@@ -19,7 +19,7 @@ final public class SimpleGeometryRenderer {
                             pixelFormat: MTLPixelFormat,
                             blending: BlendingMode = .alpha,
                             label: String = "Simple Geometry Renderer") throws {
-        try self.init(library: context.shaderLibrary(for: Self.self),
+        try self.init(library: context.library(for: Self.self),
                       pixelFormat: pixelFormat,
                       blending: blending,
                       label: label)

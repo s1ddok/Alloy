@@ -17,7 +17,7 @@ final public class TextureAffineCropEncoder {
     // MARK: - Life Cycle
 
     public convenience init(context: MTLContext) throws {
-        try self.init(library: context.shaderLibrary(for: Self.self))
+        try self.init(library: context.library(for: Self.self))
     }
 
     public init(library: MTLLibrary) throws {

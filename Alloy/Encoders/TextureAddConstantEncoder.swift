@@ -18,7 +18,7 @@ final public class TextureAddConstantEncoder {
 
     public convenience init(context: MTLContext,
                             scalarType: MTLPixelFormat.ScalarType = .half) throws {
-        try self.init(library: context.shaderLibrary(for: Self.self),
+        try self.init(library: context.library(for: Self.self),
                       scalarType: scalarType)
     }
 
