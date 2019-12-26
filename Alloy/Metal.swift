@@ -38,8 +38,8 @@ public final class MTLContext {
 
     // MARK: - Init
     
-    public convenience init() {
-        self.init(device: Metal.device)
+    public convenience init() throws {
+        try self.init(device: Metal.device)
     }
     
     public init(commandQueue: MTLCommandQueue) {
@@ -49,7 +49,7 @@ public final class MTLContext {
     
     public convenience init(device: MTLDevice,
                             bundle: Bundle = .main,
-                            name: String? = nil) {
+                            name: String? = nil) throws {
         guard let commandQueue = device.makeCommandQueue()
         else { fatalError("Could not create a command queue to form a Metal context") }
         
@@ -62,7 +62,7 @@ public final class MTLContext {
                 library = device.makeDefaultLibrary()
             }
         } else {
-            library = try? device.makeLibrary(filepath: bundle.path(forResource: name!,
+            library = try device.makeLibrary(filepath: bundle.path(forResource: name!,
                                                                     ofType: "metallib")!)
         }
 
