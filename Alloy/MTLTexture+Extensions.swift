@@ -286,7 +286,7 @@ public extension MTLTexture {
     /// - Parameters:
     ///   - width: Width of the texture.
     ///   - height: Height of the texture.
-    ///   - featureChannels: The nuxOmber of color components per pixel: must be 1, 2, or 4.
+    ///   - featureChannels: The number of color components per pixel: must be 1, 2, or 4.
     ///   - initial: This parameter is necessary because we need to give the array
     ///     an initial value. Unfortunately, we can't do `[T](repeating: T(0), ...)`
     ///     since `T` could be anything and may not have an init that takes a literal
