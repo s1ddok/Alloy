@@ -47,20 +47,31 @@ public extension MTLBuffer {
         return valueArray
     }
 
-    func fill<T>(with value: T) throws {
-        guard let pointer = self.pointer(of: T.self)
+    /// Put a value in `MTLBuffer` at desired offset.
+    /// - Parameters:
+    ///   - value: value to put in the buffer.
+    ///   - offset: offset in bytes.
+    func put<T>(value: T,
+                at offset: Int = 0) throws {
+        guard self.length - offset >= MemoryLayout<T>.stride
         else { throw MetalError.MTLBufferError.incompatibleData }
-        pointer.pointee = value
+        (self.contents() + offset).assumingMemoryBound(to: T.self)
+                                  .pointee = value
     }
 
-    func fill<T>(with values: [T]) throws {
+    /// Put values in `MTLBuffer` at desired offset.
+    /// - Parameters:
+    ///   - values: values to put in the buffer.
+    ///   - offset: offset in bytes.
+    func put<T>(values: [T],
+                at offset: Int = 0) throws {
         var values = values
         let dataLength = MemoryLayout<T>.stride * values.count
-        guard self.length >= dataLength
+        guard self.length - offset >= dataLength
         else { throw MetalError.MTLBufferError.incompatibleData }
 
         memcpy(&values,
-               self.contents(),
+               self.contents() + offset,
                dataLength)
     }
 }
