@@ -10,9 +10,10 @@ import Metal
 import CoreVideo.CVPixelBuffer
 
 public extension CVPixelBuffer {
-    func texture(using cache: CVMetalTextureCache,
-                 pixelFormat: MTLPixelFormat,
-                 planeIndex: Int = 0) -> MTLTexture? {
+
+    func metalTexture(using cache: CVMetalTextureCache,
+                      pixelFormat: MTLPixelFormat,
+                      planeIndex: Int = 0) -> MTLTexture? {
         let width = CVPixelBufferGetWidthOfPlane(self, planeIndex)
         let height = CVPixelBufferGetHeightOfPlane(self, planeIndex)
         
