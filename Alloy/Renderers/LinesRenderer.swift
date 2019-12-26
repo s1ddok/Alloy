@@ -65,8 +65,9 @@ final public class LinesRenderer {
     /// - Throws: Function creation error.
     public init(library: MTLLibrary,
                 pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
-        let vertexFunction = try library.function(named: Self.vertexFunctionName)
-        let fragmentFunction = try library.function(named: Self.fragmentFunctionName)
+        guard let vertexFunction = library.makeFunction(name: Self.vertexFunctionName),
+              let fragmentFunction = library.makeFunction(name: Self.fragmentFunctionName)
+        else { throw MetalError.MTLLibraryError.functionCreationFailed }
 
         let renderPipelineDescriptor = MTLRenderPipelineDescriptor()
         renderPipelineDescriptor.vertexFunction = vertexFunction

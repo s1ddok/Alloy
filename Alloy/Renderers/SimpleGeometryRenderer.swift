@@ -31,8 +31,9 @@ final public class SimpleGeometryRenderer {
                 pixelFormat: MTLPixelFormat,
                 blending: BlendingMode = .alpha,
                 label: String = "Simple Geometry Renderer") throws {
-        let vertexFunction = try library.function(named: Self.vertexFunctionName)
-        let fragmentFunction = try library.function(named: Self.fragmentFunctionName)
+        guard let vertexFunction = library.makeFunction(name: Self.vertexFunctionName),
+              let fragmentFunction = library.makeFunction(name: Self.fragmentFunctionName)
+        else { throw MetalError.MTLLibraryError.functionCreationFailed }
 
         let renderPipelineStateDescriptor = MTLRenderPipelineDescriptor()
         renderPipelineStateDescriptor.label = label
