@@ -16,7 +16,7 @@ class ViewController: NSViewController {
     @IBOutlet weak var imageView: NSImageView!
     @IBOutlet weak var slider: NSSlider!
     
-    let context = MTLContext(device: Metal.lowPowerDevice!)
+    let context = try! MTLContext(device: Metal.lowPowerDevice!)
     var affineCropEncoder: TextureAffineCropEncoder!
 
     let image = NSImage(named: "flower")!

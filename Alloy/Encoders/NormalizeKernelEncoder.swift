@@ -37,8 +37,8 @@ final public class NormalizeKernelEncoder {
 
     public func encode(sourceTexture: MTLTexture,
                        destinationTexture: MTLTexture,
-                       mean: vector_float3,
-                       std: vector_float3,
+                       mean: SIMD3<Float>,
+                       std: SIMD3<Float>,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
             encoder.label = "Normalize Kernel"
@@ -52,8 +52,8 @@ final public class NormalizeKernelEncoder {
 
     public func encode(sourceTexture: MTLTexture,
                        destinationTexture: MTLTexture,
-                       mean: vector_float3,
-                       std: vector_float3,
+                       mean: SIMD3<Float>,
+                       std: SIMD3<Float>,
                        using encoder: MTLComputeCommandEncoder) {
         encoder.set(textures: [sourceTexture, destinationTexture])
         encoder.set(mean, at: 0)

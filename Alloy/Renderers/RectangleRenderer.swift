@@ -12,7 +12,7 @@ final public class RectangleRenderer {
     // MARK: - Properties
 
     /// Rectangle fill color. Red in default.
-    public var color: vector_float4 = .init(1, 0, 0, 1)
+    public var color: SIMD4<Float> = .init(1, 0, 0, 1)
     /// Rectrangle described in a normalized coodrinate system.
     public var normalizedRect: CGRect = .zero
 

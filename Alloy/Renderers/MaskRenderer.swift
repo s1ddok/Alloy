@@ -13,7 +13,7 @@ public class MaskRenderer {
     // MARK: - Properties
 
     /// Mask color. Red in default.
-    public var color: vector_float4 = .init(1, 0, 0, 0.3)
+    public var color: SIMD4<Float> = .init(1, 0, 0, 0.3)
     /// Texture containig mask information.
     public var maskTexture: MTLTexture? = nil
     /// Rectrangle described in a normalized coodrinate system.

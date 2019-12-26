@@ -14,14 +14,12 @@ final public class LinesRenderer {
     /// Lines described in a normalized coodrinate system.
     public var lines: [Line] {
         set {
-            var lines = newValue
-            let length = MemoryLayout<Line>.stride * lines.count
-            self.linesCount = lines.count
-            self.linesBuffer = self.renderPipelineState
-                                   .device
-                                   .makeBuffer(bytes: &lines,
-                                               length: length,
-                                               options: .storageModeShared)
+            self.linesCount = newValue.count
+            self.linesBuffer = try? self.renderPipelineState
+                                        .device
+                                        .buffer(with: newValue,
+                                                options: .storageModeShared)
+
         }
         get {
             if let linesBuffer = self.linesBuffer,
@@ -34,7 +32,7 @@ final public class LinesRenderer {
         }
     }
     /// Lines color. Red in default.
-    public var color: vector_float4 = .init(1, 0, 0, 0)
+    public var color: SIMD4<Float> = .init(1, 0, 0, 0)
 
     private var linesBuffer: MTLBuffer?
     private var linesCount: Int = 0

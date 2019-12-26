@@ -12,20 +12,17 @@ final public class PointsRenderer {
     // MARK: - Properties
 
     /// Point positions described in a normalized coodrinate system.
-    public var pointsPositions: [simd_float2] {
+    public var pointsPositions: [SIMD2<Float>] {
         set {
-            var pointsPositions = newValue
-            let length = MemoryLayout<simd_float2>.stride * pointsPositions.count
-            self.pointCount = pointsPositions.count
-            self.pointsPositionsBuffer = self.renderPipelineState
-                                             .device
-                                             .makeBuffer(bytes: &pointsPositions,
-                                                         length: length,
-                                                         options: .storageModeShared)
+            self.pointCount = newValue.count
+            self.pointsPositionsBuffer = try? self.renderPipelineState
+                                                  .device
+                                                  .buffer(with: newValue,
+                                                          options: .storageModeShared)
         }
         get {
             if let pointsPositionsBuffer = self.pointsPositionsBuffer,
-               let pointsPositions = pointsPositionsBuffer.array(of: simd_float2.self,
+               let pointsPositions = pointsPositionsBuffer.array(of: SIMD2<Float>.self,
                                                                  count: self.pointCount) {
                 return pointsPositions
             } else {
@@ -34,7 +31,7 @@ final public class PointsRenderer {
         }
     }
     /// Point color. Red is default.
-    public var color: vector_float4 = .init(1, 0, 0, 1)
+    public var color: SIMD4<Float> = .init(1, 0, 0, 1)
     /// Point size in pixels. 40 is default.
     public var pointSize: Float = 40
 

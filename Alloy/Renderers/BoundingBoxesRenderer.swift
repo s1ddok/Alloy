@@ -14,7 +14,7 @@ final public class BoundingBoxesRenderer {
     /// Rectrangles in a normalized coodrinate system describing bounding boxes.
     public var normalizedRects: [CGRect] = []
     /// Prefered border color of the bounding boxes. Red is default.
-    public var color: vector_float4 = .init(1, 0, 0, 1) {
+    public var color: SIMD4<Float> = .init(1, 0, 0, 1) {
         didSet {
             self.linesRenderer.color = self.color
         }
@@ -63,7 +63,7 @@ final public class BoundingBoxesRenderer {
         let horizontalWidth = Float(self.lineWidth) / textureHeight
         let verticalWidth = Float(self.lineWidth) / textureWidth
 
-        let startPoints: [vector_float2] = [.init(Float(bboxRect.minX),
+        let startPoints: [SIMD2<Float>] = [.init(Float(bboxRect.minX),
                                                   Float(bboxRect.minY) - horizontalWidth / 2),
                                             .init(Float(bboxRect.minX) + verticalWidth / 2,
                                                   Float(bboxRect.maxY)),
@@ -71,7 +71,7 @@ final public class BoundingBoxesRenderer {
                                                   Float(bboxRect.maxY) + horizontalWidth / 2),
                                             .init(Float(bboxRect.maxX) - verticalWidth / 2,
                                                   Float(bboxRect.minY))]
-        let endPoints: [vector_float2] = [.init(Float(bboxRect.minX),
+        let endPoints: [SIMD2<Float>] = [.init(Float(bboxRect.minX),
                                                 Float(bboxRect.maxY) + horizontalWidth / 2),
                                           .init(Float(bboxRect.maxX) - verticalWidth / 2,
                                                 Float(bboxRect.maxY)),
