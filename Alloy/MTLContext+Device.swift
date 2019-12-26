@@ -264,16 +264,6 @@ public extension MTLContext {
         return samplerState
     }
 
-    func defaultLibrary() -> MTLLibrary? {
-        return self.device
-                   .makeDefaultLibrary()
-    }
-
-    func defaultLibrary(bundle: Bundle) throws -> MTLLibrary {
-        return try self.device
-                       .makeDefaultLibrary(bundle: bundle)
-    }
-
     func library(filepath: String) throws -> MTLLibrary {
         return try self.device
                        .makeLibrary(filepath: filepath)
