@@ -41,17 +41,17 @@ public extension CVPixelBuffer {
 public extension MTLContext {
 
     func textureCache(textureAge: Float = 1.0) throws -> CVMetalTextureCache {
-        let optionsKey = kCVMetalTextureCacheMaximumTextureAgeKey as NSString
-        let optionsValue = NSNumber(value: textureAge)
-        let options = [optionsKey: optionsValue] as NSDictionary
+        let textureAgeKey = kCVMetalTextureCacheMaximumTextureAgeKey as NSString
+        let textureAgeValue = NSNumber(value: textureAge)
+        let options = [textureAgeKey: textureAgeValue] as NSDictionary
         
         var videoTextureCache: CVMetalTextureCache! = nil
-        let textureCacheError = CVMetalTextureCacheCreate(kCFAllocatorDefault,
-                                                          options,
-                                                          self.device,
-                                                          nil,
-                                                          &videoTextureCache);
-        if textureCacheError != kCVReturnSuccess {
+        let status = CVMetalTextureCacheCreate(kCFAllocatorDefault,
+                                               options,
+                                               self.device,
+                                               nil,
+                                               &videoTextureCache)
+        if status != kCVReturnSuccess {
             throw MetalError.MTLContextError.textureCacheCreationFailed
         }
         
