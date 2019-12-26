@@ -241,15 +241,19 @@ public extension MTLContext {
     // Probably it's a bug, but simulator's version of `MTLDevice`
     // doesn't know about `makeSharedTexture`.
     @available(iOS 13.0, macOS 10.14, *)
-    func sharedTexture(descriptor: MTLTextureDescriptor) -> MTLTexture? {
-        return self.device
-                   .makeSharedTexture(descriptor: descriptor)
+    func sharedTexture(descriptor: MTLTextureDescriptor) throws -> MTLTexture {
+        guard let texture = self.device
+                                .makeSharedTexture(descriptor: descriptor)
+        else { throw MetalError.MTLDeviceError.textureCreationFailed }
+        return texture
     }
 
     @available(iOS 13.0, macOS 10.14, *)
-    func sharedTexture(handle sharedHandle: MTLSharedTextureHandle) -> MTLTexture? {
-        return self.device
-                   .makeSharedTexture(handle: sharedHandle)
+    func sharedTexture(handle sharedHandle: MTLSharedTextureHandle) throws -> MTLTexture {
+        guard let texture = self.device
+                                .makeSharedTexture(handle: sharedHandle)
+        else { throw MetalError.MTLDeviceError.textureCreationFailed }
+        return texture
     }
     #endif
 
