@@ -51,7 +51,7 @@ public extension MTLBuffer {
     /// - Parameters:
     ///   - value: value to put in the buffer.
     ///   - offset: offset in bytes.
-    func put<T>(value: T,
+    func put<T>(_ value: T,
                 at offset: Int = 0) throws {
         guard self.length - offset >= MemoryLayout<T>.stride
         else { throw MetalError.MTLBufferError.incompatibleData }
@@ -63,7 +63,7 @@ public extension MTLBuffer {
     /// - Parameters:
     ///   - values: values to put in the buffer.
     ///   - offset: offset in bytes.
-    func put<T>(values: [T],
+    func put<T>(_ values: [T],
                 at offset: Int = 0) throws {
         var values = values
         let dataLength = MemoryLayout<T>.stride * values.count
