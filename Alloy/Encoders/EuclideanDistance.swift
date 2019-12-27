@@ -1,5 +1,5 @@
 //
-//  EuclideanDistanceEncoder.swift
+//  EuclideanDistance.swift
 //  Alloy
 //
 //  Created by Eugene Bokhan on 30/08/2019.
@@ -7,7 +7,7 @@
 
 import Metal
 
-final public class EuclideanDistanceEncoder {
+final public class EuclideanDistance {
 
     // MARK: - Properties
 
@@ -17,15 +17,15 @@ final public class EuclideanDistanceEncoder {
 
     convenience public init(context: MTLContext,
                             scalarType: MTLPixelFormat.ScalarType = .half) throws {
-        guard let alloyLibrary = context.shaderLibrary(for: type(of: self))
+        guard let library = context.library(for: Self.self)
         else { throw MetalError.MTLDeviceError.libraryCreationFailed }
-        try self.init(library: alloyLibrary,
+        try self.init(library: library,
                       scalarType: scalarType)
     }
 
     public init(library: MTLLibrary,
                 scalarType: MTLPixelFormat.ScalarType = .half) throws {
-        let functionName = type(of: self).functionName + "_" + scalarType.rawValue
+        let functionName = Self.functionName + "_" + scalarType.rawValue
         self.pipelineState = try library.computePipelineState(function: functionName)
     }
 
@@ -49,19 +49,29 @@ final public class EuclideanDistanceEncoder {
                        resultBuffer: MTLBuffer,
                        using encoder: MTLComputeCommandEncoder) {
         let threadgroupSize = MTLSize(width: 8, height: 8, depth: 1).clamped(to: textureOne.size)
-        let blockSize = BlockSize(width: .init((textureOne.width + threadgroupSize.width - 1) / threadgroupSize.width),
-                                  height: .init((textureOne.height + threadgroupSize.height - 1) / threadgroupSize.height))
+        let blockSizeWidth = (textureOne.width + threadgroupSize.width - 1)
+                           / threadgroupSize.width
+        let blockSizeHeight = (textureOne.height + threadgroupSize.height - 1)
+                            / threadgroupSize.height
+        let blockSize = BlockSize(width: blockSizeWidth,
+                                  height: blockSizeHeight)
 
-        encoder.set(textures: [textureOne, textureTwo])
+        encoder.set(textures: [textureOne,
+                               textureTwo])
         encoder.set(blockSize, at: 0)
         encoder.setBuffer(resultBuffer,
                           offset: 0,
                           index: 1)
 
-        encoder.setThreadgroupMemoryLength(threadgroupSize.width * threadgroupSize.height * 4 * MemoryLayout<Float16>.stride,
+        let threadgroupMemoryLength = threadgroupSize.width
+                                    * threadgroupSize.height
+                                    * 4
+                                    * MemoryLayout<Float16>.stride
+
+        encoder.setThreadgroupMemoryLength(threadgroupMemoryLength,
                                            index: 0)
         encoder.dispatch2d(state: self.pipelineState,
-                           covering: .init(width: 1, height: 1, depth: 1),
+                           covering: .one,
                            threadgroupSize: threadgroupSize)
     }
 

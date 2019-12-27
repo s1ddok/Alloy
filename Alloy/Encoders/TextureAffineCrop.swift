@@ -1,15 +1,15 @@
 //
-//  TextureMixEncoder.swift
-//  Alloy
+//  TextureAffineCrop.swift
+//  Pods
 //
-//  Created by Eugene Bokhan on 26.09.2019.
+//  Created by Andrey Volodin on 18.11.2019.
 //
 
 import Metal
 
-final public class TextureMixEncoder {
+final public class TextureAffineCrop {
 
-    // MARK: - Properties
+    // MARK: - Propertires
 
     public let pipelineState: MTLComputePipelineState
     private let deviceSupportsNonuniformThreadgroups: Bool
@@ -17,47 +17,45 @@ final public class TextureMixEncoder {
     // MARK: - Life Cycle
 
     public convenience init(context: MTLContext) throws {
-        guard let library = context.shaderLibrary(for: Self.self)
+        guard let library = context.library(for: Self.self)
         else { throw MetalError.MTLDeviceError.libraryCreationFailed }
         try self.init(library: library)
     }
 
     public init(library: MTLLibrary) throws {
+        let functionName = Self.functionName
         self.deviceSupportsNonuniformThreadgroups = library.device
                                                            .supports(feature: .nonUniformThreadgroups)
         let constantValues = MTLFunctionConstantValues()
         constantValues.set(self.deviceSupportsNonuniformThreadgroups,
                            at: 0)
-        self.pipelineState = try library.computePipelineState(function: Self.functionName,
-                                                              constants: constantValues)
+        self.pipelineState = try library.computePipelineState(function: functionName,
+                                                              constants:  constantValues)
     }
 
     // MARK: - Encode
 
-    public func encode(sourceTextureOne: MTLTexture,
-                       sourceTextureTwo: MTLTexture,
-                       maskTexture: MTLTexture,
+    public func encode(sourceTexture: MTLTexture,
                        destinationTexture: MTLTexture,
+                       affineTransform: simd_float3x3,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
-            encoder.label = "Texture Mix"
-            self.encode(sourceTextureOne: sourceTextureOne,
-                        sourceTextureTwo: sourceTextureTwo,
-                        maskTexture: maskTexture,
+            encoder.label = "Texture Affine Crop"
+            self.encode(sourceTexture: sourceTexture,
                         destinationTexture: destinationTexture,
+                        affineTransform: affineTransform,
                         using: encoder)
         }
     }
 
-    public func encode(sourceTextureOne: MTLTexture,
-                       sourceTextureTwo: MTLTexture,
-                       maskTexture: MTLTexture,
+    public func encode(sourceTexture: MTLTexture,
                        destinationTexture: MTLTexture,
+                       affineTransform: simd_float3x3,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [sourceTextureOne,
-                               sourceTextureTwo,
-                               maskTexture,
+        encoder.set(textures: [sourceTexture,
                                destinationTexture])
+        encoder.set(affineTransform, at: 0)
+
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: self.pipelineState,
                                exactly: destinationTexture.size)
@@ -67,6 +65,5 @@ final public class TextureMixEncoder {
         }
     }
 
-    public static let functionName = "textureMix"
+    public static let functionName = "textureAffineCrop"
 }
-

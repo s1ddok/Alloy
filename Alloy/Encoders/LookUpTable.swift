@@ -1,5 +1,5 @@
 //
-//  LookUpTableEncoder.swift
+//  LookUpTable.swift
 //  Alloy
 //
 //  Created by Andrey Volodin on 29.10.2019.
@@ -7,7 +7,7 @@
 
 import Metal
 
-final public class LookUpTableEncoder {
+final public class LookUpTable {
 
     // MARK: - Properties
 
@@ -17,17 +17,18 @@ final public class LookUpTableEncoder {
     // MARK: - Life Cycle
 
     public convenience init(context: MTLContext) throws {
-        guard let library = context.shaderLibrary(for: type(of: self))
+        guard let library = context.library(for: Self.self)
         else { throw MetalError.MTLDeviceError.libraryCreationFailed }
         try self.init(library: library)
     }
 
     public init(library: MTLLibrary) throws {
-        self.deviceSupportsNonuniformThreadgroups = library.device.supports(feature: .nonUniformThreadgroups)
+        self.deviceSupportsNonuniformThreadgroups = library.device
+                                                           .supports(feature: .nonUniformThreadgroups)
         let constantValues = MTLFunctionConstantValues()
         constantValues.set(self.deviceSupportsNonuniformThreadgroups,
                            at: 0)
-        let functionName = type(of: self).functionName
+        let functionName = Self.functionName
         self.pipelineState = try library.computePipelineState(function: functionName,
                                                               constants: constantValues)
     }
@@ -40,7 +41,7 @@ final public class LookUpTableEncoder {
                        intensity: Float,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
-            encoder.label = "Look Up Table Encoder"
+            encoder.label = "Look Up Table"
             self.encode(sourceTexture: sourceTexture,
                         outputTexture: outputTexture,
                         lut: lut,
@@ -54,7 +55,9 @@ final public class LookUpTableEncoder {
                        lut: MTLTexture,
                        intensity: Float,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [sourceTexture, outputTexture, lut])
+        encoder.set(textures: [sourceTexture,
+                               outputTexture,
+                               lut])
         encoder.set(intensity, at: 0)
 
         if self.deviceSupportsNonuniformThreadgroups {

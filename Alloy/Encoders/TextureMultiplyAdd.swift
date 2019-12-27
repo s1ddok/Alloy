@@ -1,13 +1,13 @@
 //
-//  TextureDifferenceHighlight.swift
+//  TextureMultiplyAdd.swift
 //  Alloy
 //
-//  Created by Eugene Bokhan on 23.12.2019.
+//  Created by Eugene Bokhan on 27.09.2019.
 //
 
 import Metal
 
-final public class TextureDifferenceHighlight {
+final public class TextureMultiplyAdd {
 
     // MARK: - Properties
 
@@ -16,18 +16,23 @@ final public class TextureDifferenceHighlight {
 
     // MARK: - Life Cycle
 
-    public convenience init(context: MTLContext) throws {
+    public convenience init(context: MTLContext,
+                            multiplier: Float) throws {
         guard let library = context.library(for: Self.self)
         else { throw MetalError.MTLDeviceError.libraryCreationFailed }
-        try self.init(library: library)
+        try self.init(library: library,
+                      multiplier: multiplier)
     }
 
-    public init(library: MTLLibrary) throws {
+    public init(library: MTLLibrary,
+                multiplier: Float) throws {
         self.deviceSupportsNonuniformThreadgroups = library.device
                                                            .supports(feature: .nonUniformThreadgroups)
         let constantValues = MTLFunctionConstantValues()
         constantValues.set(self.deviceSupportsNonuniformThreadgroups,
                            at: 0)
+        constantValues.set(multiplier,
+                           at: 1)
         self.pipelineState = try library.computePipelineState(function: Self.functionName,
                                                               constants: constantValues)
     }
@@ -37,16 +42,12 @@ final public class TextureDifferenceHighlight {
     public func encode(sourceTextureOne: MTLTexture,
                        sourceTextureTwo: MTLTexture,
                        destinationTexture: MTLTexture,
-                       color: SIMD4<Float>,
-                       threshold: Float,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
-            encoder.label = "Texture Difference Highlight"
+            encoder.label = "Texture Multiply Add"
             self.encode(sourceTextureOne: sourceTextureOne,
                         sourceTextureTwo: sourceTextureTwo,
                         destinationTexture: destinationTexture,
-                        color: color,
-                        threshold: threshold,
                         using: encoder)
         }
     }
@@ -54,24 +55,19 @@ final public class TextureDifferenceHighlight {
     public func encode(sourceTextureOne: MTLTexture,
                        sourceTextureTwo: MTLTexture,
                        destinationTexture: MTLTexture,
-                       color: SIMD4<Float>,
-                       threshold: Float,
                        using encoder: MTLComputeCommandEncoder) {
         encoder.set(textures: [sourceTextureOne,
                                sourceTextureTwo,
                                destinationTexture])
-        encoder.set(color, at: 0)
-        encoder.set(threshold, at: 1)
 
         if self.deviceSupportsNonuniformThreadgroups {
-            encoder.dispatch2d(state: self.pipelineState,
+            encoder.dispatch2d(state: pipelineState,
                                exactly: destinationTexture.size)
         } else {
-            encoder.dispatch2d(state: self.pipelineState,
+            encoder.dispatch2d(state: pipelineState,
                                covering: destinationTexture.size)
         }
     }
 
-    public static let functionName = "textureDifferenceHighlight"
+    public static let functionName = "textureMultiplyAdd"
 }
-

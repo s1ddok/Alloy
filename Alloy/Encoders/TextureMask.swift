@@ -1,15 +1,15 @@
 //
-//  TextureMultiplyAddEncoder.swift
+//  TextureMask.swift
 //  Alloy
 //
-//  Created by Eugene Bokhan on 27.09.2019.
+//  Created by Andrey Volodin on 26/04/2019.
 //
 
 import Metal
 
-final public class TextureMultiplyAddEncoder {
+final public class TextureMask {
 
-    // MARK: - Properties
+    // MARK: - Propertires
 
     public let pipelineState: MTLComputePipelineState
     private let deviceSupportsNonuniformThreadgroups: Bool
@@ -17,47 +17,46 @@ final public class TextureMultiplyAddEncoder {
     // MARK: - Life Cycle
 
     public convenience init(context: MTLContext,
-                            multiplier: Float) throws {
-        guard let library = context.shaderLibrary(for: Self.self)
+                            scalarType: MTLPixelFormat.ScalarType = .half) throws {
+        guard let library = context.library(for: Self.self)
         else { throw MetalError.MTLDeviceError.libraryCreationFailed }
         try self.init(library: library,
-                      multiplier: multiplier)
+                      scalarType: scalarType)
     }
 
     public init(library: MTLLibrary,
-                multiplier: Float) throws {
+                scalarType: MTLPixelFormat.ScalarType = .half) throws {
         self.deviceSupportsNonuniformThreadgroups = library.device
                                                            .supports(feature: .nonUniformThreadgroups)
         let constantValues = MTLFunctionConstantValues()
         constantValues.set(self.deviceSupportsNonuniformThreadgroups,
                            at: 0)
-        constantValues.set(multiplier,
-                           at: 1)
-        self.pipelineState = try library.computePipelineState(function: Self.functionName,
+        let functionName = Self.functionName + "_" + scalarType.rawValue
+        self.pipelineState = try library.computePipelineState(function: functionName,
                                                               constants: constantValues)
     }
 
     // MARK: - Encode
 
-    public func encode(sourceTextureOne: MTLTexture,
-                       sourceTextureTwo: MTLTexture,
+    public func encode(sourceTexture: MTLTexture,
+                       maskTexture: MTLTexture,
                        destinationTexture: MTLTexture,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
-            encoder.label = "Texture Multiply Add"
-            self.encode(sourceTextureOne: sourceTextureOne,
-                        sourceTextureTwo: sourceTextureTwo,
+            encoder.label = "Texture Mask"
+            self.encode(sourceTexture: sourceTexture,
+                        maskTexture: maskTexture,
                         destinationTexture: destinationTexture,
                         using: encoder)
         }
     }
 
-    public func encode(sourceTextureOne: MTLTexture,
-                       sourceTextureTwo: MTLTexture,
+    public func encode(sourceTexture: MTLTexture,
+                       maskTexture: MTLTexture,
                        destinationTexture: MTLTexture,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [sourceTextureOne,
-                               sourceTextureTwo,
+        encoder.set(textures: [sourceTexture,
+                               maskTexture,
                                destinationTexture])
 
         if self.deviceSupportsNonuniformThreadgroups {
@@ -69,5 +68,5 @@ final public class TextureMultiplyAddEncoder {
         }
     }
 
-    public static let functionName = "textureMultiplyAdd"
+    public static let functionName = "textureMask"
 }

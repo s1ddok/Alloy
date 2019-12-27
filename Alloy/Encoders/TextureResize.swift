@@ -1,5 +1,5 @@
 //
-//  TextureResizeEncoder.swift
+//  TextureResize.swift
 //  Alloy
 //
 //  Created by Eugene Bokhan on 30.09.2019.
@@ -7,7 +7,7 @@
 
 import Metal
 
-final public class TextureResizeEncoder {
+final public class TextureResize {
 
     // MARK: - Properties
 
@@ -29,7 +29,7 @@ final public class TextureResizeEncoder {
 
     public convenience init(context: MTLContext,
                             samplerDescriptor: MTLSamplerDescriptor) throws {
-        guard let library = context.shaderLibrary(for: Self.self)
+        guard let library = context.library(for: Self.self)
         else { throw MetalError.MTLDeviceError.libraryCreationFailed }
         try self.init(library: library,
                       samplerDescriptor: samplerDescriptor)
@@ -68,7 +68,7 @@ final public class TextureResizeEncoder {
                        destinationTexture: MTLTexture,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
-            encoder.label = "Texture Resize Encoder"
+            encoder.label = "Texture Resize"
             self.encode(sourceTexture: sourceTexture,
                         destinationTexture: destinationTexture,
                         using: encoder)

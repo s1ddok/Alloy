@@ -1,15 +1,16 @@
 //
-//  TextureDifferenceHighlight.swift
+//  NormalizeKernel.swift
 //  Alloy
 //
-//  Created by Eugene Bokhan on 23.12.2019.
+//  Created by Eugene Bokhan on 08/05/2019.
 //
 
 import Metal
+import simd
 
-final public class TextureDifferenceHighlight {
+final public class NormalizeKernel {
 
-    // MARK: - Properties
+    // MARK: - Propertires
 
     public let pipelineState: MTLComputePipelineState
     private let deviceSupportsNonuniformThreadgroups: Bool
@@ -34,34 +35,30 @@ final public class TextureDifferenceHighlight {
 
     // MARK: - Encode
 
-    public func encode(sourceTextureOne: MTLTexture,
-                       sourceTextureTwo: MTLTexture,
+    public func encode(sourceTexture: MTLTexture,
                        destinationTexture: MTLTexture,
-                       color: SIMD4<Float>,
-                       threshold: Float,
+                       mean: SIMD3<Float>,
+                       std: SIMD3<Float>,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
-            encoder.label = "Texture Difference Highlight"
-            self.encode(sourceTextureOne: sourceTextureOne,
-                        sourceTextureTwo: sourceTextureTwo,
+            encoder.label = "Normalize Kernel"
+            self.encode(sourceTexture: sourceTexture,
                         destinationTexture: destinationTexture,
-                        color: color,
-                        threshold: threshold,
+                        mean: mean,
+                        std: std,
                         using: encoder)
         }
     }
 
-    public func encode(sourceTextureOne: MTLTexture,
-                       sourceTextureTwo: MTLTexture,
+    public func encode(sourceTexture: MTLTexture,
                        destinationTexture: MTLTexture,
-                       color: SIMD4<Float>,
-                       threshold: Float,
+                       mean: SIMD3<Float>,
+                       std: SIMD3<Float>,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [sourceTextureOne,
-                               sourceTextureTwo,
+        encoder.set(textures: [sourceTexture,
                                destinationTexture])
-        encoder.set(color, at: 0)
-        encoder.set(threshold, at: 1)
+        encoder.set(mean, at: 0)
+        encoder.set(std, at: 1)
 
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: self.pipelineState,
@@ -72,6 +69,5 @@ final public class TextureDifferenceHighlight {
         }
     }
 
-    public static let functionName = "textureDifferenceHighlight"
+    public static let functionName = "normalize"
 }
-

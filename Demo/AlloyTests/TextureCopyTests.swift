@@ -11,6 +11,12 @@ import Alloy
 
 final class TextureCopyTests: XCTestCase {
 
+    // MARK: - Errors
+
+    enum Error: Swift.Error {
+        case cgImageCreationFailed
+    }
+
     struct TestCase {
         let sourceRegion: MTLRegion
         let destinationOrigin: MTLOrigin
@@ -37,18 +43,19 @@ final class TextureCopyTests: XCTestCase {
 
     // MARK: - Properties
 
-    public var context = MTLContext()
-    public var euclideanDistanceFloat: EuclideanDistanceEncoder!
-    public var textureCopyEncoder: TextureCopyEncoder!
+    public var context: MTLContext!
+    public var euclideanDistanceFloat: EuclideanDistance!
+    public var textureCopy: TextureCopy!
     public var testCases: [TestCase]!
 
     // MARK: - Setup
 
     override func setUp() {
         do {
+            self.context = try .init()
             self.euclideanDistanceFloat = try .init(context: self.context,
                                                     scalarType: .float)
-            self.textureCopyEncoder = try .init(context: self.context,
+            self.textureCopy = try .init(context: self.context,
                                                 scalarType: .float)
 
             let bundle = Bundle(for: Self.self)
@@ -56,12 +63,16 @@ final class TextureCopyTests: XCTestCase {
             let testCasesFolderURL = bundle.url(forResource: Self.testCasesFolderName,
                                                 withExtension: nil)!
 
-            self.testCases = try [0, 1, 2, 3].map { i -> TextureCopyTests.TestCase in
-                let sourceRegionFileURL = testCasesFolderURL.appendingPathComponent("/\(i)/\(Self.sourceRegionFileName)")
-                let destinationOriginFileURL = testCasesFolderURL.appendingPathComponent("/\(i)/\(Self.destinationOriginFileName)")
-                let sourceImageFileURL = testCasesFolderURL.appendingPathComponent("/\(i)/\(Self.sourceImageFileName)")
-                let destinationImageFileURL = testCasesFolderURL.appendingPathComponent("/\(i)/\(Self.destinationImageFileName)")
-                let desiredResultImageFileURL = testCasesFolderURL.appendingPathComponent("/\(i)/\(Self.desiredResultImageFileName)")
+            self.testCases = try FileManager.default
+                                            .contentsOfDirectory(at: testCasesFolderURL,
+                                                                 includingPropertiesForKeys: nil,
+                                                                 options: [])
+                                            .map { testCaseFolderURL -> TextureCopyTests.TestCase in
+                let sourceRegionFileURL = testCaseFolderURL.appendingPathComponent("\(Self.sourceRegionFileName)")
+                let destinationOriginFileURL = testCaseFolderURL.appendingPathComponent("\(Self.destinationOriginFileName)")
+                let sourceImageFileURL = testCaseFolderURL.appendingPathComponent("\(Self.sourceImageFileName)")
+                let destinationImageFileURL = testCaseFolderURL.appendingPathComponent("\(Self.destinationImageFileName)")
+                let desiredResultImageFileURL = testCaseFolderURL.appendingPathComponent("\(Self.desiredResultImageFileName)")
 
                 let sourceRegionData = try Data(contentsOf: sourceRegionFileURL)
                 let destinationOriginData = try Data(contentsOf: destinationOriginFileURL)
@@ -69,14 +80,19 @@ final class TextureCopyTests: XCTestCase {
                 let destinationImageData = try Data(contentsOf: destinationImageFileURL)
                 let desiredResultImageData = try Data(contentsOf: desiredResultImageFileURL)
 
+                guard let sourceCGImage = UIImage(data: sourceImageData)?.cgImage,
+                      let destinationCGImage = UIImage(data: destinationImageData)?.cgImage,
+                      let desiredResultCGImage = UIImage(data: desiredResultImageData)?.cgImage
+                else { throw Error.cgImageCreationFailed }
+
                 return try TestCase(context: self.context,
                                     sourceRegion: jsonDecoder.decode(MTLRegion.self,
                                                                      from: sourceRegionData),
                                     destinationOrigin: jsonDecoder.decode(MTLOrigin.self,
                                                                           from: destinationOriginData),
-                                    sourceImage: UIImage(data: sourceImageData)!.cgImage!,
-                                    destinationImage: UIImage(data: destinationImageData)!.cgImage!,
-                                    desiredResultImage: UIImage(data: desiredResultImageData)!.cgImage!)
+                                    sourceImage: sourceCGImage,
+                                    destinationImage: destinationCGImage,
+                                    desiredResultImage: desiredResultCGImage)
             }
         } catch {
             XCTFail(error.localizedDescription)
@@ -88,15 +104,14 @@ final class TextureCopyTests: XCTestCase {
     func testTextureCopy() {
         do {
             // Setup results buffer.
-            guard let resultBuffer = self.context
-                                         .buffer(for: Float.self,
-                                                 options: .storageModeShared)
-            else { throw MetalError.MTLBufferError.allocationFailed }
+            let resultBuffer = try self.context
+                                       .buffer(for: Float.self,
+                                               options: .storageModeShared)
 
             // Dispatch.
             try self.testCases.forEach { testCase in
                 try self.context.scheduleAndWait { commandBuffer in
-                    self.textureCopyEncoder
+                    self.textureCopy
                         .copy(region: testCase.sourceRegion,
                               from: testCase.sourceTexture,
                               to: testCase.destinationOrigin,
@@ -125,4 +140,3 @@ final class TextureCopyTests: XCTestCase {
     static let destinationImageFileName = "destinationImage.png"
     static let desiredResultImageFileName = "desiredResultImage.png"
 }
-

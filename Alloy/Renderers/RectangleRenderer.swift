@@ -6,14 +6,13 @@
 //
 
 import Metal
-import simd
 
 final public class RectangleRenderer {
 
     // MARK: - Properties
 
     /// Rectangle fill color. Red in default.
-    public var color: vector_float4 = .init(1, 0, 0, 1)
+    public var color: SIMD4<Float> = .init(1, 0, 0, 1)
     /// Rectrangle described in a normalized coodrinate system.
     public var normalizedRect: CGRect = .zero
 
@@ -27,11 +26,12 @@ final public class RectangleRenderer {
     ///   - context: Alloy's Metal context.
     ///   - pixelFormat: Color attachment's pixel format.
     /// - Throws: Library or function creation errors.
-    public convenience init(context: MTLContext, pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
-        guard let library = context.shaderLibrary(for: RectangleRenderer.self)
+    public convenience init(context: MTLContext,
+                            pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
+        guard let library = context.library(for: Self.self)
         else { throw MetalError.MTLDeviceError.libraryCreationFailed }
-
-        try self.init(library: library, pixelFormat: pixelFormat)
+        try self.init(library: library,
+                      pixelFormat: pixelFormat)
     }
 
     /// Creates a new instance of RectangleRenderer.
@@ -40,9 +40,10 @@ final public class RectangleRenderer {
     ///   - library: Alloy's shader library.
     ///   - pixelFormat: Color attachment's pixel format.
     /// - Throws: Function creation error.
-    public init(library: MTLLibrary, pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
-        guard let vertexFunction = library.makeFunction(name: RectangleRenderer.vertexFunctionName),
-              let fragmentFunction = library.makeFunction(name: RectangleRenderer.fragmentFunctionName)
+    public init(library: MTLLibrary,
+                pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
+        guard let vertexFunction = library.makeFunction(name: Self.vertexFunctionName),
+              let fragmentFunction = library.makeFunction(name: Self.fragmentFunctionName)
         else { throw MetalError.MTLLibraryError.functionCreationFailed }
 
         let renderPipelineDescriptor = MTLRenderPipelineDescriptor()
@@ -51,7 +52,7 @@ final public class RectangleRenderer {
         renderPipelineDescriptor.colorAttachments[0].pixelFormat = pixelFormat
 
         self.renderPipelineState = try library.device
-            .makeRenderPipelineState(descriptor: renderPipelineDescriptor)
+                                              .makeRenderPipelineState(descriptor: renderPipelineDescriptor)
     }
 
     // MARK: - Helpers
@@ -80,7 +81,6 @@ final public class RectangleRenderer {
     ///   - commandBuffer: Command buffer to put the rendering work items into.
     public func render(renderPassDescriptor: MTLRenderPassDescriptor,
                        commandBuffer: MTLCommandBuffer) throws {
-        // Render.
         commandBuffer.render(descriptor: renderPassDescriptor,
                              self.render(using:))
     }
@@ -89,7 +89,8 @@ final public class RectangleRenderer {
     ///
     /// - Parameter renderEncoder: Container to put the rendering work into.
     public func render(using renderEncoder: MTLRenderCommandEncoder) {
-        guard self.normalizedRect != .zero else { return }
+        guard self.normalizedRect != .zero
+        else { return }
 
         // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool.
         renderEncoder.pushDebugGroup("Draw Rectangle Geometry")
@@ -108,7 +109,6 @@ final public class RectangleRenderer {
         renderEncoder.popDebugGroup()
     }
 
-    private static let vertexFunctionName = "rectVertex"
-    private static let fragmentFunctionName = "primitivesFragment"
-
+    public static let vertexFunctionName = "rectVertex"
+    public static let fragmentFunctionName = "primitivesFragment"
 }

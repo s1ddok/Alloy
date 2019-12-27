@@ -9,16 +9,17 @@ import Metal
 
 public extension MTLDevice {
 
-    func compileShaderLibrary(from file: URL,
-                              options: MTLCompileOptions? = nil) throws -> MTLLibrary {
+    func library(from file: URL,
+                 options: MTLCompileOptions? = nil) throws -> MTLLibrary {
         let shaderSource = try String(contentsOf: file)
         return try self.makeLibrary(source: shaderSource,
                                     options: options)
     }
 
-    func createMultisampleRenderTargetPair(width: Int, height: Int,
-                                           pixelFormat: MTLPixelFormat,
-                                           sampleCount: Int = 4) -> (main: MTLTexture, resolve: MTLTexture)? {
+    func multisampleRenderTargetPair(width: Int, height: Int,
+                                     pixelFormat: MTLPixelFormat,
+                                     sampleCount: Int = 4) throws -> (main: MTLTexture,
+                                                                      resolve: MTLTexture) {
         let mainDescriptor = MTLTextureDescriptor()
         mainDescriptor.width = width
         mainDescriptor.height = height
@@ -38,32 +39,55 @@ public extension MTLDevice {
 
         guard let mainTex = self.makeTexture(descriptor: mainDescriptor),
               let sampleTex = self.makeTexture(descriptor: sampleDescriptor)
-        else { return nil}
+        else { throw MetalError.MTLDeviceError.textureCreationFailed }
 
         return (main: sampleTex, resolve: mainTex)
     }
 
     func heap(size: Int,
               storageMode: MTLStorageMode,
-              cpuCacheMode: MTLCPUCacheMode = .defaultCache) -> MTLHeap! {
+              cpuCacheMode: MTLCPUCacheMode = .defaultCache) throws -> MTLHeap {
         let descriptor = MTLHeapDescriptor()
         descriptor.size = size
         descriptor.storageMode = storageMode
         descriptor.cpuCacheMode = cpuCacheMode
 
-        return self.makeHeap(descriptor: descriptor)
+        guard let heap = self.makeHeap(descriptor: descriptor)
+        else { throw MetalError.MTLDeviceError.heapCreationFailed }
+        return heap
     }
 
     func buffer<T>(for type: T.Type,
                    count: Int = 1,
-                   options: MTLResourceOptions) -> MTLBuffer! {
-        return self.makeBuffer(length: MemoryLayout<T>.stride * count,
-                               options: options)
+                   options: MTLResourceOptions) throws -> MTLBuffer {
+        guard let buffer = self.makeBuffer(length: MemoryLayout<T>.stride * count,
+                                           options: options)
+        else { throw MetalError.MTLDeviceError.bufferCreationFailed }
+        return buffer
+    }
+
+    func buffer<T>(with value: T,
+                   options: MTLResourceOptions) throws -> MTLBuffer {
+        var value = value
+        guard let buffer = self.makeBuffer(bytes: &value,
+                                           length: MemoryLayout<T>.stride,
+                                           options: options)
+        else { throw MetalError.MTLDeviceError.bufferCreationFailed }
+        return buffer
+    }
+
+    func buffer<T>(with values: [T],
+                   options: MTLResourceOptions) throws -> MTLBuffer {
+        guard let buffer = self.makeBuffer(bytes: values,
+                                           length: MemoryLayout<T>.stride * values.count,
+                                           options: options)
+        else { throw MetalError.MTLDeviceError.bufferCreationFailed }
+        return buffer
     }
 
     func depthBuffer(width: Int, height: Int,
                      usage: MTLTextureUsage = [],
-                     storageMode: MTLStorageMode? = nil) -> MTLTexture! {
+                     storageMode: MTLStorageMode? = nil) throws -> MTLTexture {
         let textureDescriptor = MTLTextureDescriptor()
         textureDescriptor.width = width
         textureDescriptor.height = height
@@ -74,27 +98,33 @@ public extension MTLDevice {
         #else
         textureDescriptor.storageMode = storageMode ?? .private
         #endif
-        return self.makeTexture(descriptor: textureDescriptor)
+        guard let texture = self.makeTexture(descriptor: textureDescriptor)
+        else { throw MetalError.MTLDeviceError.textureCreationFailed }
+        return texture
     }
 
     func depthState(depthCompareFunction: MTLCompareFunction,
-                    isDepthWriteEnabled: Bool = true) -> MTLDepthStencilState! {
+                    isDepthWriteEnabled: Bool = true) throws -> MTLDepthStencilState {
         let descriptor = MTLDepthStencilDescriptor()
         descriptor.depthCompareFunction = depthCompareFunction
         descriptor.isDepthWriteEnabled = isDepthWriteEnabled
-        return self.makeDepthStencilState(descriptor: descriptor)
+        guard let depthStencilState = self.makeDepthStencilState(descriptor: descriptor)
+        else { throw MetalError.MTLDeviceError.depthStencilStateCreationFailed }
+        return depthStencilState
     }
 
     func texture(width: Int,
                  height: Int,
                  pixelFormat: MTLPixelFormat,
-                 usage: MTLTextureUsage = [.shaderRead]) -> MTLTexture? {
+                 usage: MTLTextureUsage = [.shaderRead]) throws -> MTLTexture {
         let textureDescriptor = MTLTextureDescriptor()
         textureDescriptor.width = width
         textureDescriptor.height = height
         textureDescriptor.pixelFormat = pixelFormat
         textureDescriptor.usage = usage
-        return self.makeTexture(descriptor: textureDescriptor)
+        guard let texture = self.makeTexture(descriptor: textureDescriptor)
+        else { throw MetalError.MTLDeviceError.textureCreationFailed }
+        return texture
     }
 
     func maxTextureSize(desiredSize: MTLSize) -> MTLSize {

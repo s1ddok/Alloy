@@ -10,6 +10,7 @@ import XCTest
 import Alloy
 import MetalKit
 
+@available(iOS 11, macOS 10.15, *)
 class AlloyTests: XCTestCase {
 
     var context: MTLContext! = nil
@@ -27,39 +28,42 @@ class AlloyTests: XCTestCase {
     var gpuIterations = 4
 
     override func setUp() {
-        self.context = MTLContext(device: Metal.device)
+        do {
+            self.context = try MTLContext()
 
-        guard let library = self.context.shaderLibrary(for: AlloyTests.self) ?? self.context.standardLibrary else {
-            fatalError("Could not load shader library")
+            guard let library = self.context
+                                    .library(for: Self.self)
+            else { throw MetalError.MTLDeviceError.libraryCreationFailed }
+
+            self.evenInitState = try library.computePipelineState(function: "initialize_even")
+
+            let computeStateDescriptor = MTLComputePipelineDescriptor()
+            computeStateDescriptor.computeFunction = library.makeFunction(name: "initialize_even")!
+            computeStateDescriptor.threadGroupSizeIsMultipleOfThreadExecutionWidth = true
+
+            self.evenOptimizedInitState = try self.context
+                                                  .computePipelineState(descriptor: computeStateDescriptor,
+                                                                        options: [],
+                                                                        reflection: nil)
+
+            self.exactInitState = try library.computePipelineState(function: "initialize_exact")
+
+            self.evenProcessState = try library.computePipelineState(function: "process_even")
+
+            let processComputeStateDescriptor = MTLComputePipelineDescriptor()
+            processComputeStateDescriptor.computeFunction = library.makeFunction(name: "process_even")!
+            processComputeStateDescriptor.threadGroupSizeIsMultipleOfThreadExecutionWidth = true
+
+            self.evenOptimizedProcessState = try self.context
+                                                     .computePipelineState(descriptor: processComputeStateDescriptor,
+                                                                           options: [],
+                                                                           reflection: nil)
+
+            self.exactProcessState = try library.computePipelineState(function: "process_exact")
         }
-
-        self.evenInitState = try! library.computePipelineState(function: "initialize_even")
-
-        let computeStateDescriptor = MTLComputePipelineDescriptor()
-        computeStateDescriptor.computeFunction = library.makeFunction(name: "initialize_even")!
-        computeStateDescriptor.threadGroupSizeIsMultipleOfThreadExecutionWidth = true
-
-        self.evenOptimizedInitState = try! self.context
-                                               .device
-                                               .makeComputePipelineState(descriptor: computeStateDescriptor,
-                                                                         options: [],
-                                                                         reflection: nil)
-
-        self.exactInitState = try! library.computePipelineState(function: "initialize_exact")
-
-        self.evenProcessState = try! library.computePipelineState(function: "process_even")
-
-        let processComputeStateDescriptor = MTLComputePipelineDescriptor()
-        processComputeStateDescriptor.computeFunction = library.makeFunction(name: "process_even")!
-        processComputeStateDescriptor.threadGroupSizeIsMultipleOfThreadExecutionWidth = true
-
-        self.evenOptimizedProcessState = try! self.context
-            .device
-            .makeComputePipelineState(descriptor: processComputeStateDescriptor,
-                                      options: [],
-                                      reflection: nil)
-
-        self.exactProcessState = try! library.computePipelineState(function: "process_exact")
+        catch {
+            XCTFail(error.localizedDescription)
+        }
     }
 
     override func tearDown() {
@@ -111,13 +115,15 @@ class AlloyTests: XCTestCase {
 
             for wd in 0..<maximumThreadgroupSize.width {
                 for ht in 0..<maximumThreadgroupSize.height {
-                    var texture = self.context.texture(width:  self.textureBaseWidth + wd,
-                                                       height: self.textureBaseHeight + ht,
-                                                       pixelFormat: .rgba8Unorm)!
+                    var texture = try self.context
+                                          .texture(width:  self.textureBaseWidth + wd,
+                                                   height: self.textureBaseHeight + ht,
+                                                   pixelFormat: .rgba8Unorm)
 
-                    var outputTexture = self.context.texture(width:  self.textureBaseWidth + wd,
-                                                             height: self.textureBaseHeight + ht,
-                                                             pixelFormat: .rgba8Unorm)!
+                    var outputTexture = try self.context
+                                                .texture(width:  self.textureBaseWidth + wd,
+                                                         height: self.textureBaseHeight + ht,
+                                                         pixelFormat: .rgba8Unorm)
 
                     try self.context.scheduleAndWait { buffer in
                         buffer.compute { encoder in
@@ -129,10 +135,8 @@ class AlloyTests: XCTestCase {
                         }
 
                         buffer.addCompletedHandler { buffer in
-                            if #available(iOS 10.3, tvOS 10.3, *) {
-                                iterations += 1
-                                totalGPUTime += buffer.gpuExecutionTime
-                            }
+                            iterations += 1
+                            totalGPUTime += buffer.gpuExecutionTime
                         }
                     }
                 }
@@ -146,6 +150,7 @@ class AlloyTests: XCTestCase {
     }
 }
 
+@available(iOS 11, macOS 10.15, *)
 class IdealSizeTests: XCTestCase {
     var context: MTLContext!
 
@@ -157,25 +162,27 @@ class IdealSizeTests: XCTestCase {
     var gpuIterations = 256
 
     override func setUp() {
-        self.context = MTLContext(device: Metal.device)
+        do {
+            self.context = try MTLContext()
 
-        guard let library = self.context.shaderLibrary(for: IdealSizeTests.self) ?? self.context.standardLibrary else {
-            fatalError("Could not load shader library")
-        }
+            guard let library = self.context
+                                    .library(for: Self.self)
+            else { throw MetalError.MTLDeviceError.libraryCreationFailed }
 
-        self.evenState = try! library.computePipelineState(function: "fill_with_threadgroup_size_even")
+            self.evenState = try library.computePipelineState(function: "fill_with_threadgroup_size_even")
 
-        let computeStateDescriptor = MTLComputePipelineDescriptor()
-        computeStateDescriptor.computeFunction = library.makeFunction(name: "fill_with_threadgroup_size_even")!
-        computeStateDescriptor.threadGroupSizeIsMultipleOfThreadExecutionWidth = true
+            let computeStateDescriptor = MTLComputePipelineDescriptor()
+            computeStateDescriptor.computeFunction = library.makeFunction(name: "fill_with_threadgroup_size_even")!
+            computeStateDescriptor.threadGroupSizeIsMultipleOfThreadExecutionWidth = true
 
-        self.evenOptimizedState = try! self.context
-            .device
-            .makeComputePipelineState(descriptor: computeStateDescriptor,
-                                      options: [],
-                                      reflection: nil)
+            self.evenOptimizedState = try! self.context
+                .device
+                .makeComputePipelineState(descriptor: computeStateDescriptor,
+                                          options: [],
+                                          reflection: nil)
 
-        self.exactState = try! library.computePipelineState(function: "fill_with_threadgroup_size_exact")
+            self.exactState = try library.computePipelineState(function: "fill_with_threadgroup_size_exact")
+        } catch { fatalError(error.localizedDescription) }
     }
 
     func testSpeedOnIdealSize() {
@@ -184,10 +191,11 @@ class IdealSizeTests: XCTestCase {
 
             for _ in 1...self.gpuIterations {
                 let size = self.evenState.max2dThreadgroupSize
-                let texture = self.context.texture(width: size.width * self.textureBaseMultiplier,
-                                                   height: size.height * self.textureBaseMultiplier,
-                                                   pixelFormat: .rg16Uint,
-                                                   usage: .shaderWrite)!
+                let texture = try self.context
+                                      .texture(width: size.width * self.textureBaseMultiplier,
+                                               height: size.height * self.textureBaseMultiplier,
+                                               pixelFormat: .rg16Uint,
+                                               usage: .shaderWrite)
 
                 var results = [(String, CFTimeInterval)]()
 

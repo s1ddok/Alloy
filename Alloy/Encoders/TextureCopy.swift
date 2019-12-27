@@ -1,5 +1,5 @@
 //
-//  TextureCopyEncoder.swift
+//  TextureCopy.swift
 //  Alloy
 //
 //  Created by Andrey Volodin on 31/01/2019.
@@ -7,7 +7,7 @@
 
 import Metal
 
-final public class TextureCopyEncoder {
+final public class TextureCopy {
 
     // MARK: - Propertires
 
@@ -18,7 +18,7 @@ final public class TextureCopyEncoder {
 
     public convenience init(context: MTLContext,
                             scalarType: MTLPixelFormat.ScalarType = .half) throws {
-        guard let library = context.shaderLibrary(for: Self.self)
+        guard let library = context.library(for: Self.self)
         else { throw MetalError.MTLDeviceError.libraryCreationFailed }
         try self.init(library: library,
                       scalarType: scalarType)
@@ -31,7 +31,7 @@ final public class TextureCopyEncoder {
         let constantValues = MTLFunctionConstantValues()
         constantValues.set(self.deviceSupportsNonuniformThreadgroups,
                            at: 0)
-        let functionName = type(of: self).functionName + "_" + scalarType.rawValue
+        let functionName = Self.functionName + "_" + scalarType.rawValue
         self.pipelineState = try library.computePipelineState(function: functionName,
                                                               constants: constantValues)
     }
