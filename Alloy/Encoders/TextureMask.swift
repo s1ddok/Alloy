@@ -1,13 +1,13 @@
 //
-//  TextureCopyEncoder.swift
+//  TextureMask.swift
 //  Alloy
 //
-//  Created by Andrey Volodin on 31/01/2019.
+//  Created by Andrey Volodin on 26/04/2019.
 //
 
 import Metal
 
-final public class TextureCopyEncoder {
+final public class TextureMask {
 
     // MARK: - Propertires
 
@@ -18,7 +18,7 @@ final public class TextureCopyEncoder {
 
     public convenience init(context: MTLContext,
                             scalarType: MTLPixelFormat.ScalarType = .half) throws {
-        guard let library = context.shaderLibrary(for: type(of: self))
+        guard let library = context.library(for: Self.self)
         else { throw MetalError.MTLDeviceError.libraryCreationFailed }
         try self.init(library: library,
                       scalarType: scalarType)
@@ -26,11 +26,12 @@ final public class TextureCopyEncoder {
 
     public init(library: MTLLibrary,
                 scalarType: MTLPixelFormat.ScalarType = .half) throws {
-        self.deviceSupportsNonuniformThreadgroups = library.device.supports(feature: .nonUniformThreadgroups)
+        self.deviceSupportsNonuniformThreadgroups = library.device
+                                                           .supports(feature: .nonUniformThreadgroups)
         let constantValues = MTLFunctionConstantValues()
         constantValues.set(self.deviceSupportsNonuniformThreadgroups,
                            at: 0)
-        let functionName = type(of: self).functionName + "_" + scalarType.rawValue
+        let functionName = Self.functionName + "_" + scalarType.rawValue
         self.pipelineState = try library.computePipelineState(function: functionName,
                                                               constants: constantValues)
     }
@@ -38,20 +39,24 @@ final public class TextureCopyEncoder {
     // MARK: - Encode
 
     public func encode(sourceTexture: MTLTexture,
+                       maskTexture: MTLTexture,
                        destinationTexture: MTLTexture,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
-            encoder.label = "Texture Copy"
+            encoder.label = "Texture Mask"
             self.encode(sourceTexture: sourceTexture,
+                        maskTexture: maskTexture,
                         destinationTexture: destinationTexture,
                         using: encoder)
         }
     }
 
     public func encode(sourceTexture: MTLTexture,
+                       maskTexture: MTLTexture,
                        destinationTexture: MTLTexture,
                        using encoder: MTLComputeCommandEncoder) {
         encoder.set(textures: [sourceTexture,
+                               maskTexture,
                                destinationTexture])
 
         if self.deviceSupportsNonuniformThreadgroups {
@@ -63,6 +68,5 @@ final public class TextureCopyEncoder {
         }
     }
 
-    public static let functionName = "textureCopy"
+    public static let functionName = "textureMask"
 }
-

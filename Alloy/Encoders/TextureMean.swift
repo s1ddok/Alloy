@@ -1,13 +1,13 @@
 //
-//  TextureMaxEncoder.swift
+//  TextureMean.swift
 //  Alloy
 //
-//  Created by Eugene Bokhan on 13/02/2019.
+//  Created by Eugene Bokhan on 14/02/2019.
 //
 
 import Metal
 
-final public class TextureMaxEncoder {
+final public class TextureMean {
 
     // MARK: - Propertires
 
@@ -17,24 +17,25 @@ final public class TextureMaxEncoder {
 
     public convenience init(context: MTLContext,
                             scalarType: MTLPixelFormat.ScalarType = .half) throws {
-        guard let library = context.shaderLibrary(for: type(of: self))
+        guard let library = context.library(for: Self.self)
         else { throw MetalError.MTLDeviceError.libraryCreationFailed }
-        try self.init(library: library)
+        try self.init(library: library,
+                      scalarType: scalarType)
     }
 
     public init(library: MTLLibrary,
                 scalarType: MTLPixelFormat.ScalarType = .half) throws {
-        let functionName = type(of: self).functionName + "_" + scalarType.rawValue
+        let functionName = Self.functionName + "_" + scalarType.rawValue
         self.pipelineState = try library.computePipelineState(function: functionName)
     }
-
+    
     // MARK: - Encode
 
     public func encode(sourceTexture: MTLTexture,
                        resultBuffer: MTLBuffer,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
-            encoder.label = "Texture Max"
+            encoder.label = "Texture Mean"
             self.encode(sourceTexture: sourceTexture,
                         resultBuffer: resultBuffer,
                         using: encoder)
@@ -45,8 +46,12 @@ final public class TextureMaxEncoder {
                        resultBuffer: MTLBuffer,
                        using encoder: MTLComputeCommandEncoder) {
         let threadgroupSize = MTLSize(width: 8, height: 8, depth: 1).clamped(to: sourceTexture.size)
-        let blockSize = BlockSize(width: UInt16((sourceTexture.width + threadgroupSize.width - 1) / threadgroupSize.width),
-                                  height: UInt16((sourceTexture.height + threadgroupSize.height - 1) / threadgroupSize.height))
+        let blockSizeWidth = (sourceTexture.width + threadgroupSize.width - 1)
+                           / threadgroupSize.width
+        let blockSizeHeight = (sourceTexture.height + threadgroupSize.height - 1)
+                            / threadgroupSize.height
+        let blockSize = BlockSize(width: blockSizeWidth,
+                                  height: blockSizeHeight)
 
         encoder.set(textures: [sourceTexture])
         encoder.set(blockSize, at: 0)
@@ -54,12 +59,17 @@ final public class TextureMaxEncoder {
                           offset: 0,
                           index: 1)
 
-        encoder.setThreadgroupMemoryLength(threadgroupSize.width * threadgroupSize.height * 4 * MemoryLayout<Float16>.stride,
+        let threadgroupMemoryLength = threadgroupSize.width
+                                    * threadgroupSize.height
+                                    * 4
+                                    * MemoryLayout<Float16>.stride
+
+        encoder.setThreadgroupMemoryLength(threadgroupMemoryLength,
                                            index: 0)
         encoder.dispatch2d(state: self.pipelineState,
                            covering: .one,
                            threadgroupSize: threadgroupSize)
     }
 
-    public static let functionName = "textureMax"
+    public static let functionName = "textureMean"
 }

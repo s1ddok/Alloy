@@ -1,14 +1,13 @@
 //
-//  NormalizeKernelEncoder.swift
-//  Alloy-iOS
+//  TextureAffineCrop.swift
+//  Pods
 //
-//  Created by Eugene Bokhan on 08/05/2019.
+//  Created by Andrey Volodin on 18.11.2019.
 //
 
 import Metal
-import simd
 
-final public class NormalizeKernelEncoder {
+final public class TextureAffineCrop {
 
     // MARK: - Propertires
 
@@ -18,45 +17,44 @@ final public class NormalizeKernelEncoder {
     // MARK: - Life Cycle
 
     public convenience init(context: MTLContext) throws {
-        guard let library = context.shaderLibrary(for: type(of: self))
+        guard let library = context.library(for: Self.self)
         else { throw MetalError.MTLDeviceError.libraryCreationFailed }
         try self.init(library: library)
     }
 
     public init(library: MTLLibrary) throws {
-        self.deviceSupportsNonuniformThreadgroups = library.device.supports(feature: .nonUniformThreadgroups)
+        let functionName = Self.functionName
+        self.deviceSupportsNonuniformThreadgroups = library.device
+                                                           .supports(feature: .nonUniformThreadgroups)
         let constantValues = MTLFunctionConstantValues()
         constantValues.set(self.deviceSupportsNonuniformThreadgroups,
                            at: 0)
-        self.pipelineState = try library.computePipelineState(function: type(of: self).functionName,
-                                                              constants: constantValues)
+        self.pipelineState = try library.computePipelineState(function: functionName,
+                                                              constants:  constantValues)
     }
 
     // MARK: - Encode
 
     public func encode(sourceTexture: MTLTexture,
                        destinationTexture: MTLTexture,
-                       mean: vector_float3,
-                       std: vector_float3,
+                       affineTransform: simd_float3x3,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
-            encoder.label = "Normalize Kernel"
+            encoder.label = "Texture Affine Crop"
             self.encode(sourceTexture: sourceTexture,
                         destinationTexture: destinationTexture,
-                        mean: mean,
-                        std: std,
+                        affineTransform: affineTransform,
                         using: encoder)
         }
     }
 
     public func encode(sourceTexture: MTLTexture,
                        destinationTexture: MTLTexture,
-                       mean: vector_float3,
-                       std: vector_float3,
+                       affineTransform: simd_float3x3,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [sourceTexture, destinationTexture])
-        encoder.set(mean, at: 0)
-        encoder.set(std, at: 1)
+        encoder.set(textures: [sourceTexture,
+                               destinationTexture])
+        encoder.set(affineTransform, at: 0)
 
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: self.pipelineState,
@@ -67,5 +65,5 @@ final public class NormalizeKernelEncoder {
         }
     }
 
-    public static let functionName = "normalize"
+    public static let functionName = "textureAffineCrop"
 }

@@ -6,27 +6,24 @@
 //
 
 import Metal
-import simd
 
 final public class PointsRenderer {
 
     // MARK: - Properties
 
     /// Point positions described in a normalized coodrinate system.
-    public var pointsPositions: [simd_float2] {
+    public var pointsPositions: [SIMD2<Float>] {
         set {
-            var pointsPositions = newValue
-            self.pointCount = pointsPositions.count
-            self.pointsPositionsBuffer = self.renderPipelineState.device
-                .makeBuffer(bytes: &pointsPositions,
-                            length: MemoryLayout<simd_float2>.stride * pointsPositions.count,
-                            options: .storageModeShared)
+            self.pointCount = newValue.count
+            self.pointsPositionsBuffer = try? self.renderPipelineState
+                                                  .device
+                                                  .buffer(with: newValue,
+                                                          options: .storageModeShared)
         }
         get {
             if let pointsPositionsBuffer = self.pointsPositionsBuffer,
-               let pointsPositions = pointsPositionsBuffer
-                   .array(of: simd_float2.self,
-                          count: self.pointCount) {
+               let pointsPositions = pointsPositionsBuffer.array(of: SIMD2<Float>.self,
+                                                                 count: self.pointCount) {
                 return pointsPositions
             } else {
                 return []
@@ -34,7 +31,7 @@ final public class PointsRenderer {
         }
     }
     /// Point color. Red is default.
-    public var color: vector_float4 = .init(1, 0, 0, 1)
+    public var color: SIMD4<Float> = .init(1, 0, 0, 1)
     /// Point size in pixels. 40 is default.
     public var pointSize: Float = 40
 
@@ -51,11 +48,12 @@ final public class PointsRenderer {
     ///   - context: Alloy's Metal context.
     ///   - pixelFormat: Color attachment's pixel format.
     /// - Throws: Library or function creation errors.
-    public convenience init(context: MTLContext, pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
-        guard let library = context.shaderLibrary(for: PointsRenderer.self)
+    public convenience init(context: MTLContext,
+                            pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
+        guard let library = context.library(for: Self.self)
         else { throw MetalError.MTLDeviceError.libraryCreationFailed }
-
-        try self.init(library: library, pixelFormat: pixelFormat)
+        try self.init(library: library,
+                      pixelFormat: pixelFormat)
     }
 
     /// Creates a new instance of PointsRenderer.
@@ -64,9 +62,10 @@ final public class PointsRenderer {
     ///   - library: Alloy's shader library.
     ///   - pixelFormat: Color attachment's pixel format.
     /// - Throws: Function creation error.
-    public init(library: MTLLibrary, pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
-        guard let vertexFunction = library.makeFunction(name: PointsRenderer.vertexFunctionName),
-              let fragmentFunction = library.makeFunction(name: PointsRenderer.fragmentFunctionName)
+    public init(library: MTLLibrary,
+                pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
+        guard let vertexFunction = library.makeFunction(name: Self.vertexFunctionName),
+              let fragmentFunction = library.makeFunction(name: Self.fragmentFunctionName)
         else { throw MetalError.MTLLibraryError.functionCreationFailed }
 
         let renderPipelineDescriptor = MTLRenderPipelineDescriptor()
@@ -76,7 +75,7 @@ final public class PointsRenderer {
         renderPipelineDescriptor.colorAttachments[0].setup(blending: .alpha)
 
         self.renderPipelineState = try library.device
-            .makeRenderPipelineState(descriptor: renderPipelineDescriptor)
+                                              .makeRenderPipelineState(descriptor: renderPipelineDescriptor)
     }
 
     // MARK: - Rendering
@@ -88,7 +87,6 @@ final public class PointsRenderer {
     ///   - commandBuffer: Command buffer to put the rendering work items into.
     public func render(renderPassDescriptor: MTLRenderPassDescriptor,
                        commandBuffer: MTLCommandBuffer) throws {
-        // Render.
         commandBuffer.render(descriptor: renderPassDescriptor,
                              self.render(using:))
     }
@@ -97,7 +95,8 @@ final public class PointsRenderer {
     ///
     /// - Parameter renderEncoder: Container to put the rendering work into.
     public func render(using renderEncoder: MTLRenderCommandEncoder) {
-        guard self.pointCount != 0 else { return }
+        guard self.pointCount != 0
+        else { return }
 
         // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool.
         renderEncoder.pushDebugGroup("Draw Points Geometry")
@@ -121,5 +120,4 @@ final public class PointsRenderer {
 
     private static let vertexFunctionName = "pointVertex"
     private static let fragmentFunctionName = "pointFragment"
-
 }

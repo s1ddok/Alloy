@@ -29,17 +29,18 @@ final public class SwitchDataFormatEncoder {
 
     // MARK: - Life Cycle
 
-    public convenience init(metalContext: MTLContext,
+    public convenience init(context: MTLContext,
                             conversionType: ConversionType) throws {
-        guard let alloyLibrary = metalContext.shaderLibrary(for: type(of: self))
-        else { throw CommonErrors.metalInitializationFailed }
-        try self.init(library: alloyLibrary,
+        guard let library = context.library(for: Self.self)
+        else { throw MetalError.MTLDeviceError.libraryCreationFailed }
+        try self.init(library: library,
                       conversionType: conversionType)
     }
 
     public init(library: MTLLibrary,
                 conversionType: ConversionType) throws {
-        self.deviceSupportsNonuniformThreadgroups = library.device.supports(feature: .nonUniformThreadgroups)
+        self.deviceSupportsNonuniformThreadgroups = library.device
+                                                           .supports(feature: .nonUniformThreadgroups)
 
         var convertFloatToUInt = conversionType == .denormalize
         var dispatchFlag = self.deviceSupportsNonuniformThreadgroups
@@ -51,7 +52,7 @@ final public class SwitchDataFormatEncoder {
                                         type: .bool,
                                         index: 1)
 
-        self.pipelineState = try library.computePipelineState(function: type(of: self).functionName,
+        self.pipelineState = try library.computePipelineState(function: Self.functionName,
                                                               constants: constantValues)
     }
 
