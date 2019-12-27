@@ -1,5 +1,5 @@
 //
-//  MaskGuidedBlurEncoder.swift
+//  MaskGuidedBlur.swift
 //  Alloy
 //
 //  Created by Eugene Bokhan on 29/08/2019.
@@ -8,7 +8,7 @@
 import Metal
 import MetalPerformanceShaders
 
-final public class MaskGuidedBlurEncoder {
+final public class MaskGuidedBlur {
 
     // MARK: - Propertires
 
@@ -19,19 +19,20 @@ final public class MaskGuidedBlurEncoder {
     // MARK: - Life Cycle
 
     public convenience init(context: MTLContext) throws {
-        guard let library = context.shaderLibrary(for: type(of: self))
+        guard let library = context.library(for: Self.self)
         else { throw MetalError.MTLDeviceError.libraryCreationFailed }
         try self.init(library: library)
     }
 
     public init(library: MTLLibrary) throws {
-        self.deviceSupportsNonuniformThreadgroups = library.device.supports(feature: .nonUniformThreadgroups)
+        self.deviceSupportsNonuniformThreadgroups = library.device
+                                                           .supports(feature: .nonUniformThreadgroups)
         let constantValues = MTLFunctionConstantValues()
         constantValues.set(self.deviceSupportsNonuniformThreadgroups,
                            at: 0)
-        self.blurRowPassState = try library.computePipelineState(function: type(of: self).blurRowPassFunctionName,
+        self.blurRowPassState = try library.computePipelineState(function: Self.blurRowPassFunctionName,
                                                                  constants: constantValues)
-        self.blurColumnPassState = try library.computePipelineState(function: type(of: self).blurColumnPassFunctionName,
+        self.blurColumnPassState = try library.computePipelineState(function: Self.blurColumnPassFunctionName,
                                                                     constants: constantValues)
     }
 
@@ -48,6 +49,7 @@ final public class MaskGuidedBlurEncoder {
         temporaryTextureDescriptor.pixelFormat = .rgba8Unorm
 
         commandBuffer.compute { encoder in
+            encoder.label = "Mask Guided Blur"
             let temporaryImage = MPSTemporaryImage(commandBuffer: commandBuffer,
                                                    textureDescriptor: temporaryTextureDescriptor)
             defer { temporaryImage.readCount = 0 }

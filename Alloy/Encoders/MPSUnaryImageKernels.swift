@@ -1,5 +1,5 @@
 //
-//  MPSUnaryImageKernelsEncoder.swift
+//  MPSUnaryImageKernels.swift
 //  Alloy
 //
 //  Created by Eugene Bokhan on 27.09.2019.
@@ -7,7 +7,7 @@
 
 import MetalPerformanceShaders
 
-final public class MPSUnaryImageKernelsEncoder {
+final public class MPSUnaryImageKernels {
 
     // MARK: - Properties
 
@@ -23,7 +23,7 @@ final public class MPSUnaryImageKernelsEncoder {
 
     public func encode(sourceTexture: MTLTexture,
                        destinationTexture: MTLTexture,
-                       commandBuffer: MTLCommandBuffer) {
+                       in commandBuffer: MTLCommandBuffer) {
         guard self.kernelQueue
                   .count != 0
         else { return }
