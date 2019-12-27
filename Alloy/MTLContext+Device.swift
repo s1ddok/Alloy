@@ -214,7 +214,7 @@ public extension MTLContext {
                                deallocator: deallocator)
     }
 
-    func makeDepthStencilState(descriptor: MTLDepthStencilDescriptor) -> MTLDepthStencilState? {
+    func depthStencilState(descriptor: MTLDepthStencilDescriptor) -> MTLDepthStencilState? {
         return self.device
                    .makeDepthStencilState(descriptor: descriptor)
     }
