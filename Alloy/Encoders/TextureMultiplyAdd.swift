@@ -18,9 +18,7 @@ final public class TextureMultiplyAdd {
 
     public convenience init(context: MTLContext,
                             multiplier: Float) throws {
-        guard let library = context.library(for: Self.self)
-        else { throw MetalError.MTLDeviceError.libraryCreationFailed }
-        try self.init(library: library,
+        try self.init(library: context.library(for: Self.self),
                       multiplier: multiplier)
     }
 

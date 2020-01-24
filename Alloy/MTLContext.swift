@@ -52,21 +52,17 @@ public final class MTLContext {
         self.libraryCache[bundle] = library
     }
 
-    public func library(for class: AnyClass) -> MTLLibrary? {
-        return self.library(for: Bundle(for: `class`))
+    public func library(for class: AnyClass) throws -> MTLLibrary {
+        return try self.library(for: Bundle(for: `class`))
     }
 
-    public func library(for bundle: Bundle) -> MTLLibrary? {
-        if let cachedLibrary = self.libraryCache[bundle] {
-            return cachedLibrary
+    public func library(for bundle: Bundle) throws -> MTLLibrary {
+        if self.libraryCache[bundle] == nil {
+            self.libraryCache[bundle] = try self.device
+                                                .makeDefaultLibrary(bundle: bundle)
         }
 
-        guard let library = try? self.device
-                                     .makeDefaultLibrary(bundle: bundle)
-        else { return nil }
-
-        self.libraryCache[bundle] = library
-        return library
+        return self.libraryCache[bundle]!
     }
 
     public func purgeLibraryCache() {

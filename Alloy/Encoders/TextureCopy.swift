@@ -18,9 +18,7 @@ final public class TextureCopy {
 
     public convenience init(context: MTLContext,
                             scalarType: MTLPixelFormat.ScalarType = .half) throws {
-        guard let library = context.library(for: Self.self)
-        else { throw MetalError.MTLDeviceError.libraryCreationFailed }
-        try self.init(library: library,
+        try self.init(library: context.library(for: Self.self),
                       scalarType: scalarType)
     }
 

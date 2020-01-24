@@ -19,9 +19,7 @@ final public class MaskGuidedBlur {
     // MARK: - Life Cycle
 
     public convenience init(context: MTLContext) throws {
-        guard let library = context.library(for: Self.self)
-        else { throw MetalError.MTLDeviceError.libraryCreationFailed }
-        try self.init(library: library)
+        try self.init(library: context.library(for: Self.self))
     }
 
     public init(library: MTLLibrary) throws {
