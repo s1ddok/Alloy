@@ -49,9 +49,7 @@ final public class LinesRenderer {
     /// - Throws: Library or function creation errors.
     public convenience init(context: MTLContext,
                             pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
-        guard let library = context.library(for: Self.self)
-        else { throw MetalError.MTLDeviceError.libraryCreationFailed }
-        try self.init(library: library,
+        try self.init(library: context.library(for: Self.self),
                       pixelFormat: pixelFormat)
     }
 

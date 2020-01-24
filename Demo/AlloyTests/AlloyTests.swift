@@ -31,9 +31,8 @@ class AlloyTests: XCTestCase {
         do {
             self.context = try MTLContext()
 
-            guard let library = self.context
-                                    .library(for: Self.self)
-            else { throw MetalError.MTLDeviceError.libraryCreationFailed }
+            let library = try self.context
+                                  .library(for: Self.self)
 
             self.evenInitState = try library.computePipelineState(function: "initialize_even")
 
@@ -165,9 +164,8 @@ class IdealSizeTests: XCTestCase {
         do {
             self.context = try MTLContext()
 
-            guard let library = self.context
-                                    .library(for: Self.self)
-            else { throw MetalError.MTLDeviceError.libraryCreationFailed }
+            let library = try self.context
+                                  .library(for: Self.self)
 
             self.evenState = try library.computePipelineState(function: "fill_with_threadgroup_size_even")
 
