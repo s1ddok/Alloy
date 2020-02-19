@@ -70,16 +70,28 @@ public final class MTLContext {
     }
 
     public func texture(from image: CGImage,
-                        srgb: Bool = false,
+                        srgb: Bool? = nil,
                         usage: MTLTextureUsage = [.shaderRead],
                         generateMipmaps: Bool = false) throws -> MTLTexture {
-        let options: [MTKTextureLoader.Option: Any] = [
-            // Note: the SRGB option should be set to false, otherwise the image
-            // appears way too dark, since it wasn't actually saved as SRGB.
-            .SRGB : srgb, // image.colorSpace == CGColorSpace(name: CGColorSpace.sRGB)
+        var options: [MTKTextureLoader.Option: Any] = [
             .textureUsage: NSNumber(value: usage.rawValue),
-            .generateMipmaps: generateMipmaps
+            // You have to wrap everything inside NSNumber or it will be ignored
+            .generateMipmaps: NSNumber(value: generateMipmaps)
         ]
+        
+        // This may look a bit messy but actually handles all cases:
+        // 1. We let user ignore or pass .SRGB option
+        // 2. If user ignored it we try to infer it from the image itself
+        // 3. If image doesn't contain colorspace info and flag wasn't provided by user
+        //    we simply don't pass anything and let MetalKit decide for us
+        var isSRGB = srgb
+        if isSRGB == nil, let colorSpace = image.colorSpace {
+            isSRGB = colorSpace.name == CGColorSpace.sRGB
+        }
+        
+        if let _isSRGB = isSRGB {
+            options[.SRGB] = NSNumber(value: _isSRGB)
+        }
 
         return try self.textureLoader
                        .newTexture(cgImage: image,
