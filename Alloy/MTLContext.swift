@@ -68,7 +68,17 @@ public final class MTLContext {
     public func purgeLibraryCache() {
         self.libraryCache = [:]
     }
-
+    
+    /// Creates a texture out of CGImage
+    ///
+    /// - Parameters:
+    ///   - image: Image to create a texture from
+    ///   - srgb:
+    ///   Optional boolean flag that indicated whether or not CGImage is in sRGB color space
+    ///   If user omits the flag, function will check image's color space and only assign true if it equals CGColorSpace.sRGB,
+    ///   in all other cases MetalKit with decide on it on it's own
+    ///   - usage: Usage parameter of texture
+    ///   - generateMipmaps: Boolean flag that indicated whether or not to generate mipmaps
     public func texture(from image: CGImage,
                         srgb: Bool? = nil,
                         usage: MTLTextureUsage = [.shaderRead],
@@ -85,8 +95,12 @@ public final class MTLContext {
         // 3. If image doesn't contain colorspace info and flag wasn't provided by user
         //    we simply don't pass anything and let MetalKit decide for us
         var isSRGB = srgb
-        if isSRGB == nil, let colorSpace = image.colorSpace {
-            isSRGB = colorSpace.name == CGColorSpace.sRGB
+        if
+            isSRGB == nil,
+            let colorSpace = image.colorSpace,
+            colorSpace.name == CGColorSpace.sRGB
+        {
+            isSRGB = true
         }
         
         if let _isSRGB = isSRGB {
