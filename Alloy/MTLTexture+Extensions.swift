@@ -17,7 +17,7 @@ public extension MTLTexture {
     typealias XImage = NSImage
     #endif
     
-    func cgImage() throws -> CGImage {
+    func cgImage(colorSpace: CGColorSpace? = nil) throws -> CGImage {
         guard self.isAccessibleOnCPU
         else { throw MetalError.MTLTextureError.imageCreationFailed }
 
@@ -32,7 +32,7 @@ public extension MTLTexture {
                                                   from: self.region,
                                                   mipmapLevel: 0)
 
-            let colorScape = CGColorSpaceCreateDeviceGray()
+            let colorScape = colorSpace ?? CGColorSpaceCreateDeviceGray()
             let bitmapInfo = CGBitmapInfo(rawValue: self.pixelFormat == .a8Unorm
                                                     ? CGImageAlphaInfo.alphaOnly.rawValue
                                                     : CGImageAlphaInfo.none.rawValue)
@@ -54,7 +54,7 @@ public extension MTLTexture {
             else { throw MetalError.MTLTextureError.imageCreationFailed }
 
             return cgImage
-        case .bgra8Unorm:
+        case .bgra8Unorm, .bgra8Unorm_srgb:
             // read texture as byte array
             let rowBytes = self.width * 4
             let length = rowBytes * self.height
@@ -80,7 +80,7 @@ public extension MTLTexture {
                                            map, 0)
 
             // create CGImage with RGBA Flipped Bytes
-            let colorScape = CGColorSpaceCreateDeviceRGB()
+            let colorScape = colorSpace ?? CGColorSpaceCreateDeviceRGB()
             let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
             guard let data = CFDataCreate(nil,
                                           rgbaBytes,
@@ -100,7 +100,7 @@ public extension MTLTexture {
             else { throw MetalError.MTLTextureError.imageCreationFailed }
 
             return cgImage
-        case .rgba8Unorm:
+        case .rgba8Unorm, .rgba8Unorm_srgb:
             let rowBytes = self.width * 4
             let length = rowBytes * self.height
 
@@ -111,7 +111,7 @@ public extension MTLTexture {
                           from: self.region,
                           mipmapLevel: 0)
 
-            let colorScape = CGColorSpaceCreateDeviceRGB()
+            let colorScape = colorSpace ?? CGColorSpaceCreateDeviceRGB()
             let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
             guard let data = CFDataCreate(nil,
                                           rgbaBytes,
@@ -135,8 +135,8 @@ public extension MTLTexture {
         }
     }
     
-    func image() throws -> XImage {
-        let cgImage = try self.cgImage()
+    func image(colorSpace: CGColorSpace? = nil) throws -> XImage {
+        let cgImage = try self.cgImage(colorSpace: colorSpace)
         #if os(iOS)
         return UIImage(cgImage: cgImage)
         #elseif os(macOS)
