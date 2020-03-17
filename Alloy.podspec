@@ -13,12 +13,14 @@ Pod::Spec.new do |s|
   s.default_subspec       = 'Core'
 
   s.subspec 'Core' do |core|
-    core.source_files     = 'Alloy/*.{swift}'
+    core.source_files     = 'Alloy/Core/**/*.{swift}'
+    core.exclude_files    = 'Alloy/Core/MTLText/*.{swift}'
     core.frameworks       = 'Metal', 'CoreVideo'
   end
 
   s.subspec 'Shaders' do |shaders|
-    shaders.source_files  = 'Alloy/Shaders/*.{metal,h}', 'Alloy/Encoders/*.{swift}', 'Alloy/Renderers/*.{swift}'
+    shaders.source_files  = 'Alloy/Shaders/*.{metal,h}', 'Alloy/Encoders/*.{swift}', 'Alloy/Renderers/*.{swift}', 'Alloy/Core/MTLText/*.{swift}'
+    shaders.resources     = ['Alloy/Core/Resources/*']
     shaders.frameworks    = 'Metal', 'CoreVideo'
     shaders.dependency 'Alloy/Core'
   end
