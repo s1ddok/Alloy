@@ -15,11 +15,12 @@ final public class LinesRenderer {
     public var lines: [Line] {
         set {
             self.linesCount = newValue.count
+            if self.linesCount != 0 {
             self.linesBuffer = try? self.renderPipelineState
                                         .device
                                         .buffer(with: newValue,
                                                 options: .storageModeShared)
-
+            }
         }
         get {
             if let linesBuffer = self.linesBuffer,

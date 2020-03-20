@@ -250,10 +250,10 @@ final public class MTLFontAtlasProvider {
     }
 
     private func createAtlas(descriptor: MTLFontAtlasDescriptor) throws -> MTLFontAtlas {
-        guard let font = UIFont(name: descriptor.fontName,
-                                rect: .init(origin: .zero,
-                                            size: .init(width: self.sourceFontAtlasSize,
-                                                        height: self.sourceFontAtlasSize)))
+        guard let font = UIFont.atlasFont(name: descriptor.fontName,
+                                          atlasRect: .init(origin: .zero,
+                                                           size: .init(width: self.sourceFontAtlasSize,
+                                                                       height: self.sourceFontAtlasSize)))
         else { throw Error.fontCreationFailed }
 
         let fontAtlasData = self.createFontAtlasData(font: font,

@@ -4,7 +4,7 @@ import Foundation
 import Metal
 import CoreGraphics
 
-final class MTLTextMesh {
+final class TextMesh {
 
     enum Error: Swift.Error {
         case initializationFailed
@@ -14,14 +14,23 @@ final class MTLTextMesh {
     private(set) var indexBuffer: MTLBuffer!
 
     init(string: String,
-         rect: CGRect,
+         rect: SIMD4<Float>,
          fontAtlas: MTLFontAtlas,
-         fontSize: CGFloat,
          device: MTLDevice) throws {
         guard rect != .zero && !fontAtlas.glyphDescriptors.isEmpty
         else { throw Error.initializationFailed }
+        let rect = CGRect(x: CGFloat(rect.x),
+                          y: CGFloat(rect.y),
+                          width: CGFloat(rect.z),
+                          height: CGFloat(rect.w))
 
-        let font = fontAtlas.font.withSize(fontSize)
+        let fontSize = UIFont.calculateFontSizeToFit(rect: rect,
+                                                     fontName: fontAtlas.font.fontName,
+                                                     characterCount: string.count)
+
+        guard let font = UIFont(name: fontAtlas.font.fontName,
+                                size: fontSize)
+        else { throw Error.initializationFailed }
         let attributedString = NSAttributedString(string: string,
                                                   attributes: [NSAttributedString.Key.font : font])
         let stringRange = CFRangeMake(0, attributedString.length)
@@ -90,6 +99,9 @@ final class MTLTextMesh {
             indices[i] = .init(glyphIndex) * 4
             i += 1
         }
+
+        guard !vertices.isEmpty && !indices.isEmpty
+        else { throw Error.initializationFailed }
 
         self.vertexBuffer = try device.buffer(with: vertices,
                                               options: .storageModeShared)

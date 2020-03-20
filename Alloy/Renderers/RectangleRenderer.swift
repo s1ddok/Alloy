@@ -7,15 +7,42 @@
 
 import Metal
 
-final public class RectangleRenderer {
+final public class RectangleRender {
+
+    final public class RectangleDescriptor {
+        public let color: SIMD4<Float>
+        public let normalizedRect: SIMD4<Float>
+
+        public init(color: SIMD4<Float>,
+                    normalizedRect: SIMD4<Float>) {
+            self.color = color
+            self.normalizedRect = normalizedRect
+        }
+
+        public convenience init(color: CGColor,
+                                normalizedRect: CGRect) {
+            let normalizedRect = SIMD4<Float>(.init(normalizedRect.origin.x),
+                                              .init(normalizedRect.origin.y),
+                                              .init(normalizedRect.size.width),
+                                              .init(normalizedRect.size.height))
+            let ciColor = CIColor(cgColor: color)
+            let color = SIMD4<Float>(.init(ciColor.red),
+                                     .init(ciColor.green),
+                                     .init(ciColor.blue),
+                                     .init(ciColor.alpha))
+            self.init(color: color,
+                      normalizedRect: normalizedRect)
+        }
+    }
 
     // MARK: - Properties
 
-    /// Rectangle fill color. Red in default.
-    public var color: SIMD4<Float> = .init(1, 0, 0, 1)
-    /// Rectrangle described in a normalized coodrinate system.
-    public var normalizedRect: CGRect = .zero
-
+    public var descriptors: [RectangleDescriptor] = [] {
+        didSet {
+            self.updateRectangles()
+        }
+    }
+    private var rectangles: [Rectangle] = []
     private let renderPipelineState: MTLRenderPipelineState
 
     // MARK: - Life Cycle
@@ -55,19 +82,23 @@ final public class RectangleRenderer {
 
     // MARK: - Helpers
 
-    private func constructRectangle() -> Rectangle {
-        let topLeftPosition = SIMD2<Float>(Float(self.normalizedRect.minX),
-                                           Float(self.normalizedRect.maxY))
-        let bottomLeftPosition = SIMD2<Float>(Float(self.normalizedRect.minX),
-                                              Float(self.normalizedRect.minY))
-        let topRightPosition = SIMD2<Float>(Float(self.normalizedRect.maxX),
-                                            Float(self.normalizedRect.maxY))
-        let bottomRightPosition = SIMD2<Float>(Float(self.normalizedRect.maxX),
-                                               Float(self.normalizedRect.minY))
-        return Rectangle(topLeft: topLeftPosition,
-                         bottomLeft: bottomLeftPosition,
-                         topRight: topRightPosition,
-                         bottomRight: bottomRightPosition)
+    private func updateRectangles() {
+        self.rectangles = []
+        self.descriptors.forEach { descriptor in
+            let originX = descriptor.normalizedRect.x
+            let originY = descriptor.normalizedRect.y
+            let width = descriptor.normalizedRect.z
+            let height = descriptor.normalizedRect.w
+            let topLeftPosition = SIMD2<Float>(originX, originY)
+            let bottomLeftPosition = SIMD2<Float>(originX, originY + height)
+            let topRightPosition = SIMD2<Float>(originX + width, originY)
+            let bottomRightPosition = SIMD2<Float>(originX + width, originY + height)
+            let rect = Rectangle(topLeft: topLeftPosition,
+                                 bottomLeft: bottomLeftPosition,
+                                 topRight: topRightPosition,
+                                 bottomRight: bottomRightPosition)
+            self.rectangles.append(rect)
+        }
     }
 
     // MARK: - Rendering
@@ -87,24 +118,28 @@ final public class RectangleRenderer {
     ///
     /// - Parameter renderEncoder: Container to put the rendering work into.
     public func render(using renderEncoder: MTLRenderCommandEncoder) {
-        guard self.normalizedRect != .zero
+        guard !self.rectangles.isEmpty
         else { return }
 
-        // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool.
+        #if DEBUG
         renderEncoder.pushDebugGroup("Draw Rectangle Geometry")
-        // Set render command encoder state.
-        renderEncoder.setRenderPipelineState(self.renderPipelineState)
-        // Set any buffers fed into our render pipeline.
-        let rectangle = self.constructRectangle()
-        renderEncoder.set(vertexValue: rectangle,
-                          at: 0)
-        renderEncoder.set(fragmentValue: self.color,
-                          at: 0)
-        // Draw.
-        renderEncoder.drawPrimitives(type: .triangleStrip,
-                                     vertexStart: 0,
-                                     vertexCount: 4)
+        #endif
+        for index in 0 ..< self.rectangles.count {
+            let rectangle = self.rectangles[index]
+            let color = self.descriptors[index].color
+
+            renderEncoder.setRenderPipelineState(self.renderPipelineState)
+            renderEncoder.set(vertexValue: rectangle,
+                              at: 0)
+            renderEncoder.set(fragmentValue: color,
+                              at: 0)
+            renderEncoder.drawPrimitives(type: .triangleStrip,
+                                         vertexStart: 0,
+                                         vertexCount: 4)
+        }
+        #if DEBUG
         renderEncoder.popDebugGroup()
+        #endif
     }
 
     public static let vertexFunctionName = "rectVertex"

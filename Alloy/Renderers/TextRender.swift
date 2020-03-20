@@ -4,19 +4,33 @@ import Metal
 
 final public class TextRender {
 
-    public class TextMeshDescriptor: Equatable {
+    public class TextMeshDescriptor: Equatable, Hashable {
         let text: String
-        let normalizedRect: CGRect
-        let fontSize: CGFloat
-        let color: CGColor
+        let normalizedRect: SIMD4<Float>
+        let color: SIMD4<Float>
+
+        public convenience init(text: String,
+                                normalizedRect: CGRect,
+                                color: CGColor) {
+            let normalizedRect = SIMD4<Float>(.init(normalizedRect.origin.x),
+                                              .init(normalizedRect.origin.y),
+                                              .init(normalizedRect.size.width),
+                                              .init(normalizedRect.size.height))
+            let ciColor = CIColor(cgColor: color)
+            let textColor = SIMD4<Float>(.init(ciColor.red),
+                                         .init(ciColor.green),
+                                         .init(ciColor.blue),
+                                         .init(ciColor.alpha))
+            self.init(text: text,
+                      normalizedRect: normalizedRect,
+                      color: textColor)
+        }
 
         public init(text: String,
-                    normalizedRect: CGRect,
-                    fontSize: CGFloat,
-                    color: CGColor) {
+                    normalizedRect: SIMD4<Float>,
+                    color: SIMD4<Float>) {
             self.text = text
             self.normalizedRect = normalizedRect
-            self.fontSize = fontSize
             self.color = color
         }
 
@@ -24,7 +38,12 @@ final public class TextRender {
                                rhs: TextRender.TextMeshDescriptor) -> Bool {
             return lhs.text == rhs.text
                 && lhs.normalizedRect == rhs.normalizedRect
-                && lhs.fontSize == rhs.fontSize
+        }
+
+        public func hash(into hasher: inout Hasher) {
+            hasher.combine(self.text)
+            hasher.combine(self.normalizedRect)
+            hasher.combine(self.color)
         }
     }
 
@@ -50,32 +69,24 @@ final public class TextRender {
         }
     }
 
-    public var textMeshDescriptor: TextMeshDescriptor? = nil {
-        didSet {
-            if let descriptor = self.textMeshDescriptor,
-                descriptor != oldValue {
-                self.setNeedsUpdateTextMesh()
-            }
-        }
+    public var descriptors: [TextMeshDescriptor] = [] {
+        didSet { self.updateTextMeshes() }
     }
 
-    private var textMesh: MTLTextMesh? = nil
+    private var textMeshes: [TextMesh] = []
     private var projectionMatrix = matrix_identity_float4x4
     private var needsUpdateTextMesh: Bool = true
 
     // MARK: - Life Cycle
 
     public convenience init(context: MTLContext,
-                            fontAtlas: MTLFontAtlas,
-                            scalarType: MTLPixelFormat.ScalarType = .half) throws {
+                            fontAtlas: MTLFontAtlas) throws {
         try self.init(library: context.library(for: Self.self),
-                      fontAtlas: fontAtlas,
-                      scalarType: scalarType)
+                      fontAtlas: fontAtlas)
     }
 
     public init(library: MTLLibrary,
-                fontAtlas: MTLFontAtlas,
-                scalarType: MTLPixelFormat.ScalarType = .half) throws {
+                fontAtlas: MTLFontAtlas) throws {
         self.fontAtlas = fontAtlas
         let samplerDescriptor = MTLSamplerDescriptor()
         samplerDescriptor.minFilter = .nearest
@@ -123,6 +134,24 @@ final public class TextRender {
         return .init(P, Q, R, S)
     }
 
+    private func updateTextMeshes() {
+        self.textMeshes.removeAll()
+        self.descriptors.forEach { descriptor in
+            let normalizedRect = descriptor.normalizedRect
+            let targetWidth = Float(self.renderTargetSize.width)
+            let targetHeight = Float(self.renderTargetSize.height)
+            let rect = SIMD4<Float>(normalizedRect.x * targetWidth,
+                                    normalizedRect.y * targetHeight,
+                                    normalizedRect.z * targetWidth,
+                                    normalizedRect.w * targetHeight)
+            try? self.textMeshes
+                     .append(.init(string: descriptor.text,
+                                   rect: rect,
+                                   fontAtlas: self.fontAtlas,
+                                   device: self.pipelineState.device))
+        }
+    }
+
     // MARK: - Draw
 
     public func render(renderPassDescriptor: MTLRenderPassDescriptor,
@@ -133,25 +162,7 @@ final public class TextRender {
     }
 
     public func render(using renderEncoder: MTLRenderCommandEncoder) {
-        guard let textMeshDescriptor = self.textMeshDescriptor
-        else { return }
-
-        if self.needsUpdateTextMesh {
-            let normalizedRect = textMeshDescriptor.normalizedRect
-            let renderLayerWidth = CGFloat(self.renderTargetSize.width)
-            let renderLayerHeight = CGFloat(self.renderTargetSize.height)
-            let rect = CGRect(x: normalizedRect.origin.x * renderLayerWidth,
-                              y: normalizedRect.origin.y * renderLayerHeight,
-                              width: normalizedRect.size.width * renderLayerWidth,
-                              height: normalizedRect.size.height * renderLayerHeight)
-            self.textMesh = try? .init(string: textMeshDescriptor.text,
-                                       rect: rect,
-                                       fontAtlas: self.fontAtlas,
-                                       fontSize: textMeshDescriptor.fontSize,
-                                       device: self.pipelineState.device)
-        }
-
-        guard let textMesh = self.textMesh
+        guard !self.textMeshes.isEmpty
         else { return }
 
         renderEncoder.pushDebugGroup("Draw Text Geometry")
@@ -160,31 +171,31 @@ final public class TextRender {
         renderEncoder.setFrontFacing(.counterClockwise)
         renderEncoder.setCullMode(.none)
         renderEncoder.setRenderPipelineState(self.pipelineState)
-        renderEncoder.setVertexBuffer(textMesh.vertexBuffer,
-                                      offset: 0,
-                                      index: 0)
-        renderEncoder.setVertexBytes(&self.projectionMatrix,
-                                     length: MemoryLayout<matrix_float4x4>.stride,
-                                     index: 1)
+        self.textMeshes.enumerated().forEach { index, textMesh in
+            renderEncoder.setVertexBuffer(textMesh.vertexBuffer,
+                                          offset: 0,
+                                          index: 0)
+            renderEncoder.setVertexBytes(&self.projectionMatrix,
+                                         length: MemoryLayout<matrix_float4x4>.stride,
+                                         index: 1)
 
-        renderEncoder.setFragmentTexture(self.fontAtlas
-                                             .fontAtlasTexture,
-                                         index: 0)
+            renderEncoder.setFragmentTexture(self.fontAtlas
+                                                 .fontAtlasTexture,
+                                             index: 0)
 
-        let colorComponents: [CGFloat] = textMeshDescriptor.color.components ?? .init(repeating: 1, count: 4)
-        let colorFloats = colorComponents.map { Float($0) }
-        var textColor = SIMD4<Float>(colorFloats[0], colorFloats[1], colorFloats[2], colorFloats[3])
-        renderEncoder.setFragmentBytes(&textColor,
-                                       length: MemoryLayout<SIMD4<Float>>.stride,
-                                       index: 0)
-        renderEncoder.setFragmentSamplerState(self.sampler,
-                                              index: 0)
+            var color = self.descriptors[index].color
+            renderEncoder.setFragmentBytes(&color,
+                                           length: MemoryLayout<SIMD4<Float>>.stride,
+                                           index: 0)
+            renderEncoder.setFragmentSamplerState(self.sampler,
+                                                  index: 0)
 
-        renderEncoder.drawIndexedPrimitives(type: .triangle,
-                                            indexCount: textMesh.indexBuffer.length / MemoryLayout<UInt16>.stride,
-                                            indexType: .uint16,
-                                            indexBuffer: textMesh.indexBuffer,
-                                            indexBufferOffset: 0)
+            renderEncoder.drawIndexedPrimitives(type: .triangle,
+                                                indexCount: textMesh.indexBuffer.length / MemoryLayout<UInt16>.stride,
+                                                indexType: .uint16,
+                                                indexBuffer: textMesh.indexBuffer,
+                                                indexBufferOffset: 0)
+        }
     }
 
     private static func vertexDescriptor() -> MTLVertexDescriptor {

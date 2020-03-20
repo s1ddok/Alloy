@@ -1,33 +1,79 @@
-//
-//  BoundingBoxesRenderer.swift
-//  Alloy
-//
-//  Created by Eugene Bokhan on 22/04/2019.
-//
-
 import Metal
 
 final public class BoundingBoxesRenderer {
 
-    // MARK: - Properties
+    final public class BoundingBoxDescriptor {
+        public let color: SIMD4<Float>
+        public let normalizedLineWidth: Float
+        public let normalizedRect: SIMD4<Float>
+        public let labelDescriptor: LabelsRender.LabelDescriptor?
 
-    /// Rectrangles in a normalized coodrinate system describing bounding boxes.
-    public var normalizedRects: [CGRect] = []
-    /// Prefered border color of the bounding boxes. Red is default.
-    public var color: SIMD4<Float> = .init(1, 0, 0, 1) {
-        didSet {
-            self.linesRenderer.color = self.color
+        public init(color: SIMD4<Float>,
+                    normalizedLineWidth: Float,
+                    normalizedRect: SIMD4<Float>,
+                    labelDescriptor: LabelsRender.LabelDescriptor?) {
+            self.color = color
+            self.normalizedLineWidth = normalizedLineWidth
+            self.normalizedRect = normalizedRect
+            self.labelDescriptor = labelDescriptor
+        }
+
+        public convenience init(color: CGColor,
+                                normalizedLineWidth: Float,
+                                normalizedRect: CGRect,
+                                labelDescriptor: LabelsRender.LabelDescriptor?) {
+            let normalizedRect = SIMD4<Float>(.init(normalizedRect.origin.x),
+                                              .init(normalizedRect.origin.y),
+                                              .init(normalizedRect.size.width),
+                                              .init(normalizedRect.size.height))
+            let ciColor = CIColor(cgColor: color)
+            let color = SIMD4<Float>(.init(ciColor.red),
+                                     .init(ciColor.green),
+                                     .init(ciColor.blue),
+                                     .init(ciColor.alpha))
+            self.init(color: color,
+                      normalizedLineWidth: normalizedLineWidth,
+                      normalizedRect: normalizedRect,
+                      labelDescriptor: labelDescriptor)
+        }
+
+        public convenience init(color: CGColor,
+                                normalizedLineWidth: Float,
+                                normalizedRect: CGRect,
+                                labelText: String?) {
+            var labelDescriptor: LabelsRender.LabelDescriptor? = nil
+            if let labelText = labelText {
+                labelDescriptor = .init(
+                    text: labelText,
+                    textColor: UIColor.white.cgColor,
+                    labelColor: color,
+                    normalizedRect: .init(origin: .init(x: normalizedRect.origin.x,
+                                                        y: normalizedRect.origin.y - 0.04),
+                                          size: .init(width: normalizedRect.size.width / 2.3,
+                                                      height: 0.04))
+                )
+            }
+            self.init(color: color,
+                      normalizedLineWidth: normalizedLineWidth,
+                      normalizedRect: normalizedRect,
+                      labelDescriptor: labelDescriptor)
         }
     }
-    /// Prefered line width of the bounding boxes in pixels. 20 is default.
-    public var lineWidth: Int = 20
-    /// Render taregt texture size.
-    ///
-    /// Used for separate width calculation of vertivcal and horizontal component lines
-    /// in order them to look visually equal.
-    public var renderTargetSize: MTLSize = .zero
+
+    // MARK: - Properties
+
+    public var descriptors: [BoundingBoxDescriptor] = [] {
+        didSet {
+            self.labelsRender.descriptors = self.descriptors.compactMap { $0.labelDescriptor }
+            self.updateLines()
+        }
+    }
+    public var renderTargetSize: MTLSize = .zero {
+        didSet { self.labelsRender.renderTargetSize = self.renderTargetSize }
+    }
 
     private let linesRenderer: LinesRenderer
+    private let labelsRender: LabelsRender
 
     // MARK: - Life Cicle
 
@@ -37,10 +83,12 @@ final public class BoundingBoxesRenderer {
     ///   - context: Alloy's Metal context.
     ///   - pixelFormat: Color attachment's pixel format.
     /// - Throws: Library or function creation errors.
-    public init(context: MTLContext,
-                pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
-        self.linesRenderer = try .init(context: context,
-                                       pixelFormat: pixelFormat)
+    public convenience init(context: MTLContext,
+                            fontAtlas: MTLFontAtlas,
+                            pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
+        try self.init(library: context.library(for: Self.self),
+                      fontAtlas: fontAtlas,
+                      pixelFormat: pixelFormat)
     }
 
     /// Creates a new instance of BoundingBoxesRenderer.
@@ -50,54 +98,61 @@ final public class BoundingBoxesRenderer {
     ///   - pixelFormat: Color attachment's pixel format.
     /// - Throws: Function creation error.
     public init(library: MTLLibrary,
+                fontAtlas: MTLFontAtlas,
                 pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
         self.linesRenderer = try .init(library: library,
                                        pixelFormat: pixelFormat)
+        self.labelsRender = try .init(library: library,
+                                      fontAtlas: fontAtlas)
     }
 
     // MARK: - Helpers
 
-    private func calculateBBoxComponentLines(bboxRect: CGRect) -> [Line] {
-        let textureWidth = Float(self.renderTargetSize.width)
-        let textureHeight = Float(self.renderTargetSize.height)
-        let horizontalWidth = Float(self.lineWidth) / textureHeight
-        let verticalWidth = Float(self.lineWidth) / textureWidth
+    private func updateLines() {
+        self.linesRenderer.lines.removeAll()
+        self.descriptors.forEach { descriptor in
+            let textureWidth = Float(self.renderTargetSize.width)
+            let textureHeight = Float(self.renderTargetSize.height)
+            let horizontalWidth = descriptor.normalizedLineWidth
+                                / textureHeight
+                                * textureWidth
+            let verticalWidth = descriptor.normalizedLineWidth
 
-        let startPoints: [SIMD2<Float>] = [.init(Float(bboxRect.minX),
-                                                  Float(bboxRect.minY) - horizontalWidth / 2),
-                                            .init(Float(bboxRect.minX) + verticalWidth / 2,
-                                                  Float(bboxRect.maxY)),
-                                            .init(Float(bboxRect.maxX),
-                                                  Float(bboxRect.maxY) + horizontalWidth / 2),
-                                            .init(Float(bboxRect.maxX) - verticalWidth / 2,
-                                                  Float(bboxRect.minY))]
-        let endPoints: [SIMD2<Float>] = [.init(Float(bboxRect.minX),
-                                                Float(bboxRect.maxY) + horizontalWidth / 2),
-                                          .init(Float(bboxRect.maxX) - verticalWidth / 2,
-                                                Float(bboxRect.maxY)),
-                                          .init(Float(bboxRect.maxX),
-                                                Float(bboxRect.minY) - horizontalWidth / 2),
-                                          .init(Float(bboxRect.minX) + verticalWidth / 2,
-                                                Float(bboxRect.minY))]
-        let widths: [Float] = [Float(verticalWidth),
-                               Float(horizontalWidth),
-                               Float(verticalWidth),
-                               Float(horizontalWidth)]
+            let bboxMinX = descriptor.normalizedRect.x
+            let bboxMinY = descriptor.normalizedRect.y
+                         + descriptor.normalizedRect.w
+            let bboxMaxX = descriptor.normalizedRect.x
+                         + descriptor.normalizedRect.z
+            let bboxMaxY = descriptor.normalizedRect.y
 
-        var boundingBoxComponentLines: [Line] = []
-        for i in 0 ..< 4 {
-            boundingBoxComponentLines.append(Line(startPoint: startPoints[i],
-                                                  endPoint: endPoints[i],
-                                                  width: widths[i]))
+            let startPoints: [SIMD2<Float>] = [.init(bboxMinX + verticalWidth / 2,
+                                                     bboxMinY),
+                                               .init(bboxMinX,
+                                                     bboxMaxY + horizontalWidth / 2),
+                                               .init(bboxMaxX - verticalWidth / 2,
+                                                     bboxMaxY),
+                                               .init(bboxMaxX,
+                                                     bboxMinY - horizontalWidth / 2)]
+            let endPoints: [SIMD2<Float>] = [.init(bboxMinX + verticalWidth / 2,
+                                                   bboxMaxY + horizontalWidth),
+                                             .init(bboxMaxX - verticalWidth,
+                                                   bboxMaxY + horizontalWidth / 2),
+                                             .init(bboxMaxX - verticalWidth / 2,
+                                                   bboxMinY - horizontalWidth),
+                                             .init(bboxMinX + verticalWidth,
+                                                   bboxMinY - horizontalWidth / 2)]
+            let widths: [Float] = [verticalWidth,
+                                   horizontalWidth,
+                                   verticalWidth,
+                                   horizontalWidth]
+
+            for i in 0 ..< 4 {
+                self.linesRenderer.lines.append(Line(startPoint: startPoints[i],
+                                                     endPoint: endPoints[i],
+                                                     width: widths[i]))
+            }
+            self.linesRenderer.color = descriptor.color
         }
-        return boundingBoxComponentLines
-    }
-
-    private func calculateBBoxesLines() -> [Line] {
-        let boundingBoxesLines = (self.normalizedRects
-                                      .map { self.calculateBBoxComponentLines(bboxRect: $0) })
-                                      .flatMap { $0 }
-        return boundingBoxesLines
     }
 
     // MARK: - Rendering
@@ -118,13 +173,16 @@ final public class BoundingBoxesRenderer {
     ///
     /// - Parameter renderEncoder: Container to put the rendering work into.
     public func render(using renderEncoder: MTLRenderCommandEncoder) {
-        // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool.
+        #if DEBUG
         renderEncoder.pushDebugGroup("Draw Bounding Box Geometry")
-        // Set the lines to render.
-        self.linesRenderer.lines = self.calculateBBoxesLines()
-        // Render.
-        self.linesRenderer.render(using: renderEncoder)
+        #endif
+        self.linesRenderer
+            .render(using: renderEncoder)
+        self.labelsRender
+            .render(using: renderEncoder)
+        #if DEBUG
         renderEncoder.popDebugGroup()
+        #endif
     }
 
 }

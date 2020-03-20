@@ -750,10 +750,10 @@ vertex VertexOut linesVertex(constant Line *lines [[ buffer(0) ]],
     };
 
     const PositionAndOffsetFactor positionsAndOffsetFactors[] = {
-        PositionAndOffsetFactor { startPoint, -1.0 },
-        PositionAndOffsetFactor { endPoint, -1.0 },
-        PositionAndOffsetFactor { startPoint, 1.0 },
-        PositionAndOffsetFactor { endPoint, 1.0 }
+        { startPoint, -1.0 },
+        { endPoint, -1.0 },
+        { startPoint, 1.0 },
+        { endPoint, 1.0 }
     };
 
     VertexOut out;
