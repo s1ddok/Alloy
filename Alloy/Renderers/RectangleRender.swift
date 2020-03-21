@@ -2,7 +2,7 @@ import Metal
 
 final public class RectangleRender {
 
-    final public class RectangleDescriptor {
+    final public class GeometryDescriptor {
         public let color: SIMD4<Float>
         public let normalizedRect: SIMD4<Float>
 
@@ -30,10 +30,8 @@ final public class RectangleRender {
 
     // MARK: - Properties
 
-    public var descriptors: [RectangleDescriptor] = [] {
-        didSet {
-            self.updateRectangles()
-        }
+    public var geometryDescriptors: [GeometryDescriptor] = [] {
+        didSet { self.updateGeometry() }
     }
     private var rectangles: [Rectangle] = []
     private let renderPipelineState: MTLRenderPipelineState
@@ -75,9 +73,11 @@ final public class RectangleRender {
 
     // MARK: - Helpers
 
-    private func updateRectangles() {
-        self.rectangles = []
-        self.descriptors.forEach { descriptor in
+    private func updateGeometry() {
+        self.rectangles
+            .removeAll()
+        self.geometryDescriptors
+            .forEach { descriptor in
             let originX = descriptor.normalizedRect.x
             let originY = descriptor.normalizedRect.y
             let width = descriptor.normalizedRect.z
@@ -117,9 +117,9 @@ final public class RectangleRender {
         #if DEBUG
         renderEncoder.pushDebugGroup("Draw Rectangle Geometry")
         #endif
-        for index in 0 ..< self.rectangles.count {
+        self.rectangles.enumerated().forEach { index, rectangle in
             let rectangle = self.rectangles[index]
-            let color = self.descriptors[index].color
+            let color = self.geometryDescriptors[index].color
 
             renderEncoder.setRenderPipelineState(self.renderPipelineState)
             renderEncoder.set(vertexValue: rectangle,

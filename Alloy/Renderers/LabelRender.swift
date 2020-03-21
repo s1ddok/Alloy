@@ -2,11 +2,12 @@ import Metal
 
 final public class LabelsRender {
 
-    final public class LabelDescriptor {
-        public let textDescriptor: TextRender.TextMeshDescriptor
-        public let rectDescriptor: RectangleRender.RectangleDescriptor
-        public init(textDescriptor: TextRender.TextMeshDescriptor,
-                    rectDescriptor: RectangleRender.RectangleDescriptor) {
+    final public class GeometryDescriptor {
+        public let textDescriptor: TextRender.GeometryDescriptor
+        public let rectDescriptor: RectangleRender.GeometryDescriptor
+        
+        public init(textDescriptor: TextRender.GeometryDescriptor,
+                    rectDescriptor: RectangleRender.GeometryDescriptor) {
             self.textDescriptor = textDescriptor
             self.rectDescriptor = rectDescriptor
         }
@@ -25,19 +26,13 @@ final public class LabelsRender {
 
     // MARK: - Properties
 
-    public var descriptors: [LabelDescriptor] = [] {
-        didSet {
-            self.rectangleRender
-                .descriptors = self.descriptors
-                                   .map { $0.rectDescriptor }
-            self.textRender
-                .descriptors = self.descriptors
-                                   .map { $0.textDescriptor }
-        }
+    public var geometryDescriptors: [GeometryDescriptor] = [] {
+        didSet { self.updateGeometry() }
     }
     public var renderTargetSize: MTLSize = .zero {
         didSet {
-            self.textRender.renderTargetSize = self.renderTargetSize
+            self.textRender
+                .renderTargetSize = self.renderTargetSize
         }
     }
 
@@ -59,8 +54,15 @@ final public class LabelsRender {
         self.rectangleRender = try .init(library: library)
     }
 
-    // MARK: - Helpers
-    
+    private func updateGeometry() {
+        self.rectangleRender
+            .geometryDescriptors = self.geometryDescriptors
+                                       .map { $0.rectDescriptor }
+        self.textRender
+            .geometryDescriptors = self.geometryDescriptors
+                                       .map { $0.textDescriptor }
+    }
+
 
     // MARK: - Rendering
 

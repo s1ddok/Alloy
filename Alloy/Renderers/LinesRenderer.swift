@@ -125,8 +125,7 @@ final public class LinesRender {
                               at: 0)
             renderEncoder.drawPrimitives(type: .triangleStrip,
                                          vertexStart: 0,
-                                         vertexCount: 4,
-                                         instanceCount: 1)
+                                         vertexCount: 4)
         }
         #if DEBUG
         renderEncoder.popDebugGroup()

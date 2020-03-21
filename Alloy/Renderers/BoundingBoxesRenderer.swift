@@ -2,16 +2,16 @@ import Metal
 
 final public class BoundingBoxesRender {
 
-    final public class BoundingBoxDescriptor {
+    final public class GeometryDescriptor {
         public let color: SIMD4<Float>
         public let normalizedLineWidth: Float
         public let normalizedRect: SIMD4<Float>
-        public let labelDescriptor: LabelsRender.LabelDescriptor?
+        public let labelDescriptor: LabelsRender.GeometryDescriptor?
 
         public init(color: SIMD4<Float>,
                     normalizedLineWidth: Float,
                     normalizedRect: SIMD4<Float>,
-                    labelDescriptor: LabelsRender.LabelDescriptor?) {
+                    labelDescriptor: LabelsRender.GeometryDescriptor?) {
             self.color = color
             self.normalizedLineWidth = normalizedLineWidth
             self.normalizedRect = normalizedRect
@@ -21,7 +21,7 @@ final public class BoundingBoxesRender {
         public convenience init(color: CGColor,
                                 normalizedLineWidth: Float,
                                 normalizedRect: CGRect,
-                                labelDescriptor: LabelsRender.LabelDescriptor?) {
+                                labelDescriptor: LabelsRender.GeometryDescriptor?) {
             let normalizedRect = SIMD4<Float>(.init(normalizedRect.origin.x),
                                               .init(normalizedRect.origin.y),
                                               .init(normalizedRect.size.width),
@@ -41,7 +41,7 @@ final public class BoundingBoxesRender {
                                 normalizedLineWidth: Float,
                                 normalizedRect: CGRect,
                                 labelText: String?) {
-            var labelDescriptor: LabelsRender.LabelDescriptor? = nil
+            var labelDescriptor: LabelsRender.GeometryDescriptor? = nil
             if let labelText = labelText {
                 labelDescriptor = .init(
                     text: labelText,
@@ -62,15 +62,25 @@ final public class BoundingBoxesRender {
 
     // MARK: - Properties
 
-    public var descriptors: [BoundingBoxDescriptor] = [] {
+    public var geometryDescriptors: [GeometryDescriptor] = [] {
         didSet {
-            self.labelsRender.descriptors = self.descriptors.compactMap { $0.labelDescriptor }
+            self.labelsRender
+                .geometryDescriptors = self.geometryDescriptors
+                                   .compactMap { $0.labelDescriptor }
             self.updateLines()
+            self.drawLables = !self.geometryDescriptors
+                                   .compactMap { $0.labelDescriptor }
+                                   .isEmpty
         }
     }
     public var renderTargetSize: MTLSize = .zero {
-        didSet { self.labelsRender.renderTargetSize = self.renderTargetSize }
+        didSet {
+            self.labelsRender
+                .renderTargetSize = self.renderTargetSize
+
+        }
     }
+    private var drawLables: Bool = false
 
     private let linesRender: LinesRender
     private let labelsRender: LabelsRender
@@ -110,7 +120,7 @@ final public class BoundingBoxesRender {
 
     private func updateLines() {
         var linesGeometryDescriptors: [LinesRender.GeometryDescriptor] = []
-        self.descriptors.forEach { descriptor in
+        self.geometryDescriptors.forEach { descriptor in
             let textureWidth = Float(self.renderTargetSize.width)
             let textureHeight = Float(self.renderTargetSize.height)
             let horizontalWidth = descriptor.normalizedLineWidth
@@ -153,7 +163,8 @@ final public class BoundingBoxesRender {
                                                       color: descriptor.color))
             }
 
-            self.linesRender.geometryDescriptors = linesGeometryDescriptors
+            self.linesRender
+                .geometryDescriptors = linesGeometryDescriptors
         }
     }
 
@@ -180,8 +191,10 @@ final public class BoundingBoxesRender {
         #endif
         self.linesRender
             .render(using: renderEncoder)
-        self.labelsRender
-            .render(using: renderEncoder)
+        if self.drawLables {
+            self.labelsRender
+                .render(using: renderEncoder)
+        }
         #if DEBUG
         renderEncoder.popDebugGroup()
         #endif

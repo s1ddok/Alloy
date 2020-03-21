@@ -4,7 +4,7 @@ import Metal
 
 final public class TextRender {
 
-    public class TextMeshDescriptor: Equatable, Hashable {
+    public class GeometryDescriptor: Equatable, Hashable {
         let text: String
         let normalizedRect: SIMD4<Float>
         let color: SIMD4<Float>
@@ -34,8 +34,8 @@ final public class TextRender {
             self.color = color
         }
 
-        public static func == (lhs: TextRender.TextMeshDescriptor,
-                               rhs: TextRender.TextMeshDescriptor) -> Bool {
+        public static func == (lhs: TextRender.GeometryDescriptor,
+                               rhs: TextRender.GeometryDescriptor) -> Bool {
             return lhs.text == rhs.text
                 && lhs.normalizedRect == rhs.normalizedRect
         }
@@ -69,8 +69,8 @@ final public class TextRender {
         }
     }
 
-    public var descriptors: [TextMeshDescriptor] = [] {
-        didSet { self.updateTextMeshes() }
+    public var geometryDescriptors: [GeometryDescriptor] = [] {
+        didSet { self.updateGeometry() }
     }
 
     private var textMeshes: [TextMesh] = []
@@ -134,9 +134,11 @@ final public class TextRender {
         return .init(P, Q, R, S)
     }
 
-    private func updateTextMeshes() {
-        self.textMeshes.removeAll()
-        self.descriptors.forEach { descriptor in
+    private func updateGeometry() {
+        self.textMeshes
+            .removeAll()
+        self.geometryDescriptors
+            .forEach { descriptor in
             let normalizedRect = descriptor.normalizedRect
             let targetWidth = Float(self.renderTargetSize.width)
             let targetHeight = Float(self.renderTargetSize.height)
@@ -183,7 +185,7 @@ final public class TextRender {
                                                  .fontAtlasTexture,
                                              index: 0)
 
-            var color = self.descriptors[index].color
+            var color = self.geometryDescriptors[index].color
             renderEncoder.setFragmentBytes(&color,
                                            length: MemoryLayout<SIMD4<Float>>.stride,
                                            index: 0)

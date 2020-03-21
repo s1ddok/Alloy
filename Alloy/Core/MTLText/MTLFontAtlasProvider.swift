@@ -276,8 +276,8 @@ final public class MTLFontAtlasProvider {
                                                 usage: [.shaderRead, .shaderWrite])
 
         let fontAtlas = MTLFontAtlas(font: font,
-                                            glyphDescriptors: fontAtlasData.descriptors,
-                                            fontAtlasTexture: fontAtlasTexture)
+                                     glyphDescriptors: fontAtlasData.descriptors,
+                                     fontAtlasTexture: fontAtlasTexture)
 
         sdfFontAtlasTexture.replace(region: sdfFontAtlasTexture.region,
                                     mipmapLevel: 0,
