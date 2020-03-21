@@ -3,8 +3,8 @@ import Metal
 final public class LabelsRender {
 
     final public class LabelDescriptor {
-        let textDescriptor: TextRender.TextMeshDescriptor
-        let rectDescriptor: RectangleRender.RectangleDescriptor
+        public let textDescriptor: TextRender.TextMeshDescriptor
+        public let rectDescriptor: RectangleRender.RectangleDescriptor
         public init(textDescriptor: TextRender.TextMeshDescriptor,
                     rectDescriptor: RectangleRender.RectangleDescriptor) {
             self.textDescriptor = textDescriptor

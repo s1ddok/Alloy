@@ -1,13 +1,6 @@
-//
-//  PointsRenderer.swift
-//  Alloy
-//
-//  Created by Eugene Bokhan on 26/04/2019.
-//
-
 import Metal
 
-final public class PointsRenderer {
+final public class PointsRender {
 
     // MARK: - Properties
 

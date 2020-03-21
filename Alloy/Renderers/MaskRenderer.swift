@@ -1,10 +1,3 @@
-//
-//  MaskRenderer.swift
-//  Alloy
-//
-//  Created by Eugene Bokhan on 28/04/2019.
-//
-
 import Metal
 import simd
 

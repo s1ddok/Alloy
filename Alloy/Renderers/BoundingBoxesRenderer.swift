@@ -1,6 +1,6 @@
 import Metal
 
-final public class BoundingBoxesRenderer {
+final public class BoundingBoxesRender {
 
     final public class BoundingBoxDescriptor {
         public let color: SIMD4<Float>
@@ -72,7 +72,7 @@ final public class BoundingBoxesRenderer {
         didSet { self.labelsRender.renderTargetSize = self.renderTargetSize }
     }
 
-    private let linesRenderer: LinesRenderer
+    private let linesRender: LinesRender
     private let labelsRender: LabelsRender
 
     // MARK: - Life Cicle
@@ -100,7 +100,7 @@ final public class BoundingBoxesRenderer {
     public init(library: MTLLibrary,
                 fontAtlas: MTLFontAtlas,
                 pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
-        self.linesRenderer = try .init(library: library,
+        self.linesRender = try .init(library: library,
                                        pixelFormat: pixelFormat)
         self.labelsRender = try .init(library: library,
                                       fontAtlas: fontAtlas)
@@ -109,7 +109,7 @@ final public class BoundingBoxesRenderer {
     // MARK: - Helpers
 
     private func updateLines() {
-        self.linesRenderer.lines.removeAll()
+        var linesGeometryDescriptors: [LinesRender.GeometryDescriptor] = []
         self.descriptors.forEach { descriptor in
             let textureWidth = Float(self.renderTargetSize.width)
             let textureHeight = Float(self.renderTargetSize.height)
@@ -147,11 +147,13 @@ final public class BoundingBoxesRenderer {
                                    horizontalWidth]
 
             for i in 0 ..< 4 {
-                self.linesRenderer.lines.append(Line(startPoint: startPoints[i],
-                                                     endPoint: endPoints[i],
-                                                     width: widths[i]))
+                linesGeometryDescriptors.append(.init(startPoint: startPoints[i],
+                                                      endPoint: endPoints[i],
+                                                      noramlizedWidth: widths[i],
+                                                      color: descriptor.color))
             }
-            self.linesRenderer.color = descriptor.color
+
+            self.linesRender.geometryDescriptors = linesGeometryDescriptors
         }
     }
 
@@ -176,7 +178,7 @@ final public class BoundingBoxesRenderer {
         #if DEBUG
         renderEncoder.pushDebugGroup("Draw Bounding Box Geometry")
         #endif
-        self.linesRenderer
+        self.linesRender
             .render(using: renderEncoder)
         self.labelsRender
             .render(using: renderEncoder)

@@ -1,10 +1,3 @@
-//
-//  SimpleGeometryRenderer.swift
-//  Alloy
-//
-//  Created by Andrey Volodin on 15/05/2019.
-//
-
 import Metal
 
 final public class SimpleGeometryRenderer {

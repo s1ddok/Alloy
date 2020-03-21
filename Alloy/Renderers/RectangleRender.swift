@@ -1,10 +1,3 @@
-//
-//  RectangleRenderer.swift
-//  Alloy
-//
-//  Created by Eugene Bokhan on 23/04/2019.
-//
-
 import Metal
 
 final public class RectangleRender {
