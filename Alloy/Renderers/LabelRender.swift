@@ -15,9 +15,24 @@ final public class LabelsRender {
         public convenience init(text: String,
                                 textColor: CGColor,
                                 labelColor: CGColor,
-                                normalizedRect: CGRect) {
+                                normalizedRect: CGRect,
+                                textOffstFactor: CGFloat = 0.1) {
+            let textOriginX = normalizedRect.origin.x
+                            + normalizedRect.size.width
+                            * textOffstFactor
+            let textOriginY = normalizedRect.origin.y
+                            + normalizedRect.size.height
+                            * textOffstFactor
+            let textWidth = normalizedRect.size.width
+                          * (1 - textOffstFactor * 2)
+            let textHeight = normalizedRect.size.height
+                           * (1 - textOffstFactor * 2)
+            let textNormalizedRect = CGRect(x: textOriginX,
+                                            y: textOriginY,
+                                            width: textWidth,
+                                            height: textHeight)
             self.init(textDescriptor: .init(text: text,
-                                            normalizedRect: normalizedRect,
+                                            normalizedRect: textNormalizedRect,
                                             color: textColor),
                       rectDescriptor: .init(color: labelColor,
                                             normalizedRect: normalizedRect))
