@@ -80,13 +80,16 @@ final public class TextRender {
     // MARK: - Life Cycle
 
     public convenience init(context: MTLContext,
-                            fontAtlas: MTLFontAtlas) throws {
+                            fontAtlas: MTLFontAtlas,
+                            pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
         try self.init(library: context.library(for: Self.self),
-                      fontAtlas: fontAtlas)
+                      fontAtlas: fontAtlas,
+                      pixelFormat: pixelFormat)
     }
 
     public init(library: MTLLibrary,
-                fontAtlas: MTLFontAtlas) throws {
+                fontAtlas: MTLFontAtlas,
+                pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
         self.fontAtlas = fontAtlas
         let samplerDescriptor = MTLSamplerDescriptor()
         samplerDescriptor.minFilter = .nearest
@@ -98,7 +101,7 @@ final public class TextRender {
         self.sampler = sampler
 
         let pipelineDescriptor = MTLRenderPipelineDescriptor()
-        pipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
+        pipelineDescriptor.colorAttachments[0].pixelFormat = pixelFormat
         pipelineDescriptor.colorAttachments[0].setup(blending: .alpha)
 
         pipelineDescriptor.depthAttachmentPixelFormat = .invalid

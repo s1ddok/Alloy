@@ -111,9 +111,10 @@ final public class BoundingBoxesRender {
                 fontAtlas: MTLFontAtlas,
                 pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
         self.linesRender = try .init(library: library,
-                                       pixelFormat: pixelFormat)
+                                     pixelFormat: pixelFormat)
         self.labelsRender = try .init(library: library,
-                                      fontAtlas: fontAtlas)
+                                      fontAtlas: fontAtlas,
+                                      pixelFormat: pixelFormat)
     }
 
     // MARK: - Helpers

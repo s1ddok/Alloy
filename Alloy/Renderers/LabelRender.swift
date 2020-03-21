@@ -57,15 +57,19 @@ final public class LabelsRender {
     // MARK: - Life Cicle
 
     public convenience init(context: MTLContext,
-                            fontAtlas: MTLFontAtlas) throws {
+                            fontAtlas: MTLFontAtlas,
+                            pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
         try self.init(library: context.library(for: Self.self),
-                      fontAtlas: fontAtlas)
+                      fontAtlas: fontAtlas,
+                      pixelFormat: pixelFormat)
     }
 
     public init(library: MTLLibrary,
-                fontAtlas: MTLFontAtlas) throws {
+                fontAtlas: MTLFontAtlas,
+                pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
         self.textRender = try .init(library: library,
-                                    fontAtlas: fontAtlas)
+                                    fontAtlas: fontAtlas,
+                                    pixelFormat: pixelFormat)
         self.rectangleRender = try .init(library: library)
     }
 
