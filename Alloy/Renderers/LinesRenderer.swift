@@ -1,42 +1,50 @@
-//
-//  LinesRenderer.swift
-//  Alloy
-//
-//  Created by Eugene Bokhan on 25/04/2019.
-//
-
 import Metal
 
-final public class LinesRenderer {
+final public class LinesRender {
+
+    final public class GeometryDescriptor {
+        public let startPoint: SIMD2<Float>
+        public let endPoint: SIMD2<Float>
+        public let noramlizedWidth: Float
+        public let color: SIMD4<Float>
+
+        public init(startPoint: SIMD2<Float>,
+                    endPoint: SIMD2<Float>,
+                    noramlizedWidth: Float,
+                    color: SIMD4<Float>) {
+            self.startPoint = startPoint
+            self.endPoint = endPoint
+            self.noramlizedWidth = noramlizedWidth
+            self.color = color
+        }
+
+        public convenience init(startPoint: CGPoint,
+                                endPoint: CGPoint,
+                                noramlizedWidth: CGFloat,
+                                color: CGColor) {
+            let startPoint = SIMD2<Float>(.init(startPoint.x),
+                                          .init(startPoint.y))
+            let endPoint = SIMD2<Float>(.init(endPoint.x),
+                                        .init(endPoint.y))
+            let noramlizedWidth = Float(noramlizedWidth)
+            let ciColor = CIColor(cgColor: color)
+            let color = SIMD4<Float>(.init(ciColor.red),
+                                     .init(ciColor.green),
+                                     .init(ciColor.blue),
+                                     .init(ciColor.alpha))
+            self.init(startPoint: startPoint,
+                      endPoint: endPoint,
+                      noramlizedWidth: noramlizedWidth,
+                      color: color)
+        }
+    }
 
     // MARK: - Properties
 
-    /// Lines described in a normalized coodrinate system.
-    public var lines: [Line] {
-        set {
-            self.linesCount = newValue.count
-            if self.linesCount != 0 {
-            self.linesBuffer = try? self.renderPipelineState
-                                        .device
-                                        .buffer(with: newValue,
-                                                options: .storageModeShared)
-            }
-        }
-        get {
-            if let linesBuffer = self.linesBuffer,
-               let lines = linesBuffer.array(of: Line.self,
-                                             count: self.linesCount) {
-                return lines
-            } else {
-                return []
-            }
-        }
+    public var geometryDescriptors: [GeometryDescriptor] = [] {
+        didSet { self.updateGeometry() }
     }
-    /// Lines color. Red in default.
-    public var color: SIMD4<Float> = .init(1, 0, 0, 0)
-
-    private var linesBuffer: MTLBuffer?
-    private var linesCount: Int = 0
+    private var lines: [Line] = []
 
     private let renderPipelineState: MTLRenderPipelineState
 
@@ -76,6 +84,14 @@ final public class LinesRenderer {
                                               .makeRenderPipelineState(descriptor: renderPipelineDescriptor)
     }
 
+    private func updateGeometry() {
+        self.lines = self.geometryDescriptors.map { descriptor in
+            .init(startPoint: descriptor.startPoint,
+                  endPoint: descriptor.endPoint,
+                  width: descriptor.noramlizedWidth)
+        }
+    }
+
     // MARK: - Rendering
 
     /// Render lines in a target texture.
@@ -93,25 +109,28 @@ final public class LinesRenderer {
     ///
     /// - Parameter renderEncoder: Container to put the rendering work into.
     public func render(using renderEncoder: MTLRenderCommandEncoder) {
-        guard self.linesCount != 0
+        guard !self.lines.isEmpty
         else { return }
 
-        // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool.
+        #if DEBUG
         renderEncoder.pushDebugGroup("Draw Line Geometry")
-        // Set render command encoder state.
-        renderEncoder.setRenderPipelineState(self.renderPipelineState)
-        // Set any buffers fed into our render pipeline.
-        renderEncoder.setVertexBuffer(self.linesBuffer,
-                                      offset: 0,
-                                      index: 0)
-        renderEncoder.set(fragmentValue: self.color,
-                          at: 0)
-        // Draw.
-        renderEncoder.drawPrimitives(type: .triangleStrip,
-                                     vertexStart: 0,
-                                     vertexCount: 4,
-                                     instanceCount: self.linesCount)
+        #endif
+        self.lines.enumerated().forEach { index, line in
+            let color = self.geometryDescriptors[index]
+                            .color
+            renderEncoder.setRenderPipelineState(self.renderPipelineState)
+            renderEncoder.set(vertexValue: line,
+                              at: 0)
+            renderEncoder.set(fragmentValue: color,
+                              at: 0)
+            renderEncoder.drawPrimitives(type: .triangleStrip,
+                                         vertexStart: 0,
+                                         vertexCount: 4,
+                                         instanceCount: 1)
+        }
+        #if DEBUG
         renderEncoder.popDebugGroup()
+        #endif
     }
 
     public static let vertexFunctionName = "linesVertex"
