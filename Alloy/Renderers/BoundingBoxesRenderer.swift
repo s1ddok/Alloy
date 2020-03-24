@@ -163,10 +163,9 @@ final public class BoundingBoxesRender {
                                                       noramlizedWidth: widths[i],
                                                       color: descriptor.color))
             }
-
-            self.linesRender
-                .geometryDescriptors = linesGeometryDescriptors
         }
+        self.linesRender
+            .geometryDescriptors = linesGeometryDescriptors
     }
 
     // MARK: - Rendering
