@@ -23,4 +23,9 @@ typedef struct Line {
     float width;
 } Line;
 
+typedef struct {
+    packed_float4 position;
+    packed_float2 texCoords;
+} TextMeshVertex;
+
 #endif /* ShaderStructures_h */
