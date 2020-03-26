@@ -164,4 +164,25 @@ public extension MTLDevice {
         }
         #endif
     }
+
+    func isPixelFormatRenderingCompatible(pixelFormat: MTLPixelFormat) -> Bool {
+        // Depth, stencil, YUV & compressed pixel formats check.
+        guard !(pixelFormat.isDepth   ||
+                pixelFormat.isStencil ||
+                pixelFormat.isYUV     ||
+                pixelFormat.isCompressed)
+        else { return false }
+
+        switch pixelFormat {
+        case .a8Unorm:
+            return false
+        case .rgb9e5Float:
+            #if os(iOS)
+            return true
+            #elseif os(macOS)
+            return false
+            #endif
+        default: return true
+        }
+    }
 }
