@@ -28,6 +28,7 @@ final public class BoundingBoxesRenderer {
     public var renderTargetSize: MTLSize = .zero
 
     private let linesRenderer: LinesRenderer
+    private let device: MTLDevice
 
     // MARK: - Life Cicle
 
@@ -37,10 +38,10 @@ final public class BoundingBoxesRenderer {
     ///   - context: Alloy's Metal context.
     ///   - pixelFormat: Color attachment's pixel format.
     /// - Throws: Library or function creation errors.
-    public init(context: MTLContext,
+    public convenience init(context: MTLContext,
                 pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
-        self.linesRenderer = try .init(context: context,
-                                       pixelFormat: pixelFormat)
+        try self.init(library: context.library(for: Self.self),
+                      pixelFormat: pixelFormat)
     }
 
     /// Creates a new instance of BoundingBoxesRenderer.
@@ -51,6 +52,7 @@ final public class BoundingBoxesRenderer {
     /// - Throws: Function creation error.
     public init(library: MTLLibrary,
                 pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
+        self.device = library.device
         self.linesRenderer = try .init(library: library,
                                        pixelFormat: pixelFormat)
     }
@@ -109,21 +111,29 @@ final public class BoundingBoxesRenderer {
     ///   - commandBuffer: Command buffer to put the rendering work items into.
     public func render(renderPassDescriptor: MTLRenderPassDescriptor,
                        commandBuffer: MTLCommandBuffer) throws {
-        self.renderTargetSize = renderPassDescriptor.colorAttachments[0].texture?.size ?? .zero
-        commandBuffer.render(descriptor: renderPassDescriptor,
-                             self.render(using:))
+        guard let renderTarget = renderPassDescriptor.colorAttachments[0].texture,
+              self.device
+                  .isPixelFormatRenderingCompatible(pixelFormat: renderTarget.pixelFormat)
+        else { return }
+        self.renderTargetSize = renderTarget.size
+        commandBuffer.render(descriptor: renderPassDescriptor, { renderEncoder in
+            self.render(pixelFormat: renderTarget.pixelFormat,
+                        renderEncoder: renderEncoder)
+        })
     }
 
     /// Render bounding boxes in a target texture.
     ///
     /// - Parameter renderEncoder: Container to put the rendering work into.
-    public func render(using renderEncoder: MTLRenderCommandEncoder) {
+    public func render(pixelFormat: MTLPixelFormat,
+                       renderEncoder: MTLRenderCommandEncoder) {
         // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool.
         renderEncoder.pushDebugGroup("Draw Bounding Box Geometry")
         // Set the lines to render.
         self.linesRenderer.lines = self.calculateBBoxesLines()
         // Render.
-        self.linesRenderer.render(using: renderEncoder)
+        self.linesRenderer.render(pixelFormat: pixelFormat,
+                                  renderEncoder: renderEncoder)
         renderEncoder.popDebugGroup()
     }
 

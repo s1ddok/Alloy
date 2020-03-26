@@ -16,6 +16,7 @@ using namespace metal;
 constant bool deviceSupportsNonuniformThreadgroups [[ function_constant(0) ]];
 constant bool deviceDoesntSupportNonuniformThreadgroups = !deviceSupportsNonuniformThreadgroups;
 constant float multiplierFC [[function_constant(1)]];
+constant bool isInversed [[ function_constant(2) ]];
 
 struct BlockSize {
     ushort width;
@@ -705,6 +706,9 @@ fragment float4 maskFragment(MaskVertexOut in [[ stage_in ]],
                         address::clamp_to_zero,
                         filter::linear);
     float4 maskValue = (float4)maskTexture.sample(s, in.uv).rrrr;
+    if (isInversed) {
+        maskValue = float4(1) - maskValue;
+    }
     float4 resultColor = maskValue * color;
 
     return resultColor;

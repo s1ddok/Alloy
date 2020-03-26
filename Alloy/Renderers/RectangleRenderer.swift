@@ -16,7 +16,10 @@ final public class RectangleRenderer {
     /// Rectrangle described in a normalized coodrinate system.
     public var normalizedRect: CGRect = .zero
 
-    private let renderPipelineState: MTLRenderPipelineState
+    private let vertexFunction: MTLFunction
+    private let fragmentFunction: MTLFunction
+    private var renderPipelineStates: [MTLPixelFormat: MTLRenderPipelineState] = [:]
+
 
     // MARK: - Life Cycle
 
@@ -43,14 +46,25 @@ final public class RectangleRenderer {
         guard let vertexFunction = library.makeFunction(name: Self.vertexFunctionName),
               let fragmentFunction = library.makeFunction(name: Self.fragmentFunctionName)
         else { throw MetalError.MTLLibraryError.functionCreationFailed }
+        self.vertexFunction = vertexFunction
+        self.fragmentFunction = fragmentFunction
+        try self.renderPipelineState(for: pixelFormat)
+    }
 
-        let renderPipelineDescriptor = MTLRenderPipelineDescriptor()
-        renderPipelineDescriptor.vertexFunction = vertexFunction
-        renderPipelineDescriptor.fragmentFunction = fragmentFunction
-        renderPipelineDescriptor.colorAttachments[0].pixelFormat = pixelFormat
+    @discardableResult
+    private func renderPipelineState(for pixelFormat: MTLPixelFormat) -> MTLRenderPipelineState? {
+        if self.renderPipelineStates[pixelFormat] == nil {
+            let renderPipelineDescriptor = MTLRenderPipelineDescriptor()
+            renderPipelineDescriptor.vertexFunction = self.vertexFunction
+            renderPipelineDescriptor.fragmentFunction = self.fragmentFunction
+            renderPipelineDescriptor.colorAttachments[0].pixelFormat = pixelFormat
+            renderPipelineDescriptor.colorAttachments[0].setup(blending: .alpha)
 
-        self.renderPipelineState = try library.device
-                                              .makeRenderPipelineState(descriptor: renderPipelineDescriptor)
+            self.renderPipelineStates[pixelFormat] = try? self.vertexFunction
+                                                              .device
+                                                              .makeRenderPipelineState(descriptor: renderPipelineDescriptor)
+        }
+        return self.renderPipelineStates[pixelFormat]
     }
 
     // MARK: - Helpers
@@ -79,21 +93,32 @@ final public class RectangleRenderer {
     ///   - commandBuffer: Command buffer to put the rendering work items into.
     public func render(renderPassDescriptor: MTLRenderPassDescriptor,
                        commandBuffer: MTLCommandBuffer) throws {
-        commandBuffer.render(descriptor: renderPassDescriptor,
-                             self.render(using:))
+        guard let pixelFormat = renderPassDescriptor.colorAttachments[0]
+                                                    .texture?
+                                                    .pixelFormat,
+              self.vertexFunction
+                  .device
+                  .isPixelFormatRenderingCompatible(pixelFormat: pixelFormat)
+        else { return }
+        commandBuffer.render(descriptor: renderPassDescriptor, { renderEncoder in
+            self.render(pixelFormat: pixelFormat,
+                        renderEncoder: renderEncoder)
+        })
     }
 
     /// Render a rectangle in a target texture.
     ///
     /// - Parameter renderEncoder: Container to put the rendering work into.
-    public func render(using renderEncoder: MTLRenderCommandEncoder) {
-        guard self.normalizedRect != .zero
+    public func render(pixelFormat: MTLPixelFormat,
+                       renderEncoder: MTLRenderCommandEncoder) {
+        guard self.normalizedRect != .zero,
+              let renderPipelineState = self.renderPipelineState(for: pixelFormat)
         else { return }
 
         // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool.
         renderEncoder.pushDebugGroup("Draw Rectangle Geometry")
         // Set render command encoder state.
-        renderEncoder.setRenderPipelineState(self.renderPipelineState)
+        renderEncoder.setRenderPipelineState(renderPipelineState)
         // Set any buffers fed into our render pipeline.
         let rectangle = self.constructRectangle()
         renderEncoder.set(vertexValue: rectangle,
