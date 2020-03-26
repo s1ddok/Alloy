@@ -303,4 +303,25 @@ public extension MTLPixelFormat {
         }
     }
 
+    var isRenderable: Bool {
+        // Depth, stencil, YUV & compressed pixel formats check.
+        guard !(self.isDepth   ||
+                self.isStencil ||
+                self.isYUV     ||
+                self.isCompressed)
+        else { return false }
+
+        switch self {
+        case .a8Unorm:
+            return false
+        case .rgb9e5Float:
+            #if os(iOS)
+            return true
+            #elseif os(macOS)
+            return false
+            #endif
+        default: return true
+        }
+    }
+
 }

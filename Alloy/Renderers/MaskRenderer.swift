@@ -62,6 +62,8 @@ public class MaskRenderer {
 
     @discardableResult
     private func renderPipelineStatePair(for pixelFormat: MTLPixelFormat) -> [Bool: MTLRenderPipelineState]? {
+        guard pixelFormat.isRenderable
+        else { return nil }
         if self.renderPipelineStates[pixelFormat] == nil {
             let pipelineDescriptor = self.renderPipelineDescriptor(pixelFormat: pixelFormat,
                                                                    isInversed: false)
@@ -123,10 +125,7 @@ public class MaskRenderer {
                        commandBuffer: MTLCommandBuffer) throws {
         guard let pixelFormat = renderPassDescriptor.colorAttachments[0]
                                                     .texture?
-                                                    .pixelFormat,
-              self.vertexFunction
-                  .device
-                  .isPixelFormatRenderingCompatible(pixelFormat: pixelFormat)
+                                                    .pixelFormat
         else { return }
         commandBuffer.render(descriptor: renderPassDescriptor, { renderEncoder in
             self.render(pixelFormat: pixelFormat,

@@ -40,6 +40,8 @@ final public class SimpleGeometryRenderer {
     @discardableResult
     private func renderPipelineState(pixelFormat: MTLPixelFormat,
                                      blending: BlendingMode = .alpha) -> MTLRenderPipelineState? {
+        guard pixelFormat.isRenderable
+        else { return nil }
         if self.renderPipelineStates[pixelFormat] == nil {
             let renderPipelineDescriptor = MTLRenderPipelineDescriptor()
             renderPipelineDescriptor.vertexFunction = self.vertexFunction
@@ -67,10 +69,7 @@ final public class SimpleGeometryRenderer {
                        pixelFormat: MTLPixelFormat,
                        blending: BlendingMode = .alpha,
                        renderEncoder: MTLRenderCommandEncoder) {
-        guard self.vertexFunction
-                  .device
-                  .isPixelFormatRenderingCompatible(pixelFormat: pixelFormat),
-              let renderPipelineState = self.renderPipelineState(pixelFormat: pixelFormat,
+        guard let renderPipelineState = self.renderPipelineState(pixelFormat: pixelFormat,
                                                                  blending: blending)
         else { return }
         renderEncoder.setVertexBuffer(geometry,

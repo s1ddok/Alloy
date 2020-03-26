@@ -28,7 +28,6 @@ final public class BoundingBoxesRenderer {
     public var renderTargetSize: MTLSize = .zero
 
     private let linesRenderer: LinesRenderer
-    private let device: MTLDevice
 
     // MARK: - Life Cicle
 
@@ -39,7 +38,7 @@ final public class BoundingBoxesRenderer {
     ///   - pixelFormat: Color attachment's pixel format.
     /// - Throws: Library or function creation errors.
     public convenience init(context: MTLContext,
-                pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
+                            pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
         try self.init(library: context.library(for: Self.self),
                       pixelFormat: pixelFormat)
     }
@@ -52,7 +51,6 @@ final public class BoundingBoxesRenderer {
     /// - Throws: Function creation error.
     public init(library: MTLLibrary,
                 pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
-        self.device = library.device
         self.linesRenderer = try .init(library: library,
                                        pixelFormat: pixelFormat)
     }
@@ -111,9 +109,7 @@ final public class BoundingBoxesRenderer {
     ///   - commandBuffer: Command buffer to put the rendering work items into.
     public func render(renderPassDescriptor: MTLRenderPassDescriptor,
                        commandBuffer: MTLCommandBuffer) throws {
-        guard let renderTarget = renderPassDescriptor.colorAttachments[0].texture,
-              self.device
-                  .isPixelFormatRenderingCompatible(pixelFormat: renderTarget.pixelFormat)
+        guard let renderTarget = renderPassDescriptor.colorAttachments[0].texture
         else { return }
         self.renderTargetSize = renderTarget.size
         commandBuffer.render(descriptor: renderPassDescriptor, { renderEncoder in

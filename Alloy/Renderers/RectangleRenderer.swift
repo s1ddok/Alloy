@@ -53,6 +53,8 @@ final public class RectangleRenderer {
 
     @discardableResult
     private func renderPipelineState(for pixelFormat: MTLPixelFormat) -> MTLRenderPipelineState? {
+        guard pixelFormat.isRenderable
+        else { return nil }
         if self.renderPipelineStates[pixelFormat] == nil {
             let renderPipelineDescriptor = MTLRenderPipelineDescriptor()
             renderPipelineDescriptor.vertexFunction = self.vertexFunction
@@ -95,10 +97,7 @@ final public class RectangleRenderer {
                        commandBuffer: MTLCommandBuffer) throws {
         guard let pixelFormat = renderPassDescriptor.colorAttachments[0]
                                                     .texture?
-                                                    .pixelFormat,
-              self.vertexFunction
-                  .device
-                  .isPixelFormatRenderingCompatible(pixelFormat: pixelFormat)
+                                                    .pixelFormat
         else { return }
         commandBuffer.render(descriptor: renderPassDescriptor, { renderEncoder in
             self.render(pixelFormat: pixelFormat,

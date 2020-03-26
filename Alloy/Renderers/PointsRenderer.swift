@@ -74,6 +74,8 @@ final public class PointsRenderer {
 
     @discardableResult
     private func renderPipelineState(for pixelFormat: MTLPixelFormat) -> MTLRenderPipelineState? {
+        guard pixelFormat.isRenderable
+        else { return nil }
         if self.renderPipelineStates[pixelFormat] == nil {
             let renderPipelineDescriptor = MTLRenderPipelineDescriptor()
             renderPipelineDescriptor.vertexFunction = self.vertexFunction
@@ -97,10 +99,7 @@ final public class PointsRenderer {
     ///   - commandBuffer: Command buffer to put the rendering work items into.
     public func render(renderPassDescriptor: MTLRenderPassDescriptor,
                        commandBuffer: MTLCommandBuffer) throws {
-        guard let renderTarget = renderPassDescriptor.colorAttachments[0].texture,
-            self.vertexFunction
-                .device
-                .isPixelFormatRenderingCompatible(pixelFormat: renderTarget.pixelFormat)
+        guard let renderTarget = renderPassDescriptor.colorAttachments[0].texture
         else { return }
         commandBuffer.render(descriptor: renderPassDescriptor, { renderEncoder in
             self.render(pixelFormat: renderTarget.pixelFormat,
