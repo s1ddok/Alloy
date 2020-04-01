@@ -16,7 +16,6 @@ using namespace metal;
 constant bool deviceSupportsNonuniformThreadgroups [[ function_constant(0) ]];
 constant bool deviceDoesntSupportNonuniformThreadgroups = !deviceSupportsNonuniformThreadgroups;
 constant float multiplierFC [[function_constant(1)]];
-constant bool isInversed [[ function_constant(2) ]];
 
 struct BlockSize {
     ushort width;
@@ -700,8 +699,9 @@ vertex MaskVertexOut maskVertex(constant Rectangle& rectangle [[ buffer(0) ]],
 }
 
 fragment float4 maskFragment(MaskVertexOut in [[ stage_in ]],
-                              texture2d<half, access::sample> maskTexture [[ texture(0) ]],
-                              constant float4& color [[ buffer(0) ]]) {
+                             texture2d<half, access::sample> maskTexture [[ texture(0) ]],
+                             constant float4& color [[ buffer(0) ]],
+                             constant bool& isInversed [[ buffer(1) ]]) {
     constexpr sampler s(coord::normalized,
                         address::clamp_to_zero,
                         filter::linear);

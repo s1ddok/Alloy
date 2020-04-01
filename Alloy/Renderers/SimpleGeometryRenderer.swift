@@ -1,18 +1,10 @@
-//
-//  SimpleGeometryRenderer.swift
-//  Alloy
-//
-//  Created by Andrey Volodin on 15/05/2019.
-//
-
 import Metal
 
 final public class SimpleGeometryRenderer {
 
     // MARK: - Properties
 
-    private let vertexFunction: MTLFunction
-    private let fragmentFunction: MTLFunction
+    private let renderPipelineDescriptor: MTLRenderPipelineDescriptor
     private var renderPipelineStates: [MTLPixelFormat: MTLRenderPipelineState] = [:]
 
     // MARK: - Init
@@ -31,8 +23,15 @@ final public class SimpleGeometryRenderer {
         guard let vertexFunction = library.makeFunction(name: Self.vertexFunctionName),
               let fragmentFunction = library.makeFunction(name: Self.fragmentFunctionName)
         else { throw MetalError.MTLLibraryError.functionCreationFailed }
-        self.vertexFunction = vertexFunction
-        self.fragmentFunction = fragmentFunction
+
+        self.renderPipelineDescriptor = MTLRenderPipelineDescriptor()
+        self.renderPipelineDescriptor.vertexFunction = vertexFunction
+        self.renderPipelineDescriptor.fragmentFunction = fragmentFunction
+        self.renderPipelineDescriptor.colorAttachments[0].pixelFormat = pixelFormat
+        self.renderPipelineDescriptor.colorAttachments[0].setup(blending: blending)
+        self.renderPipelineDescriptor.depthAttachmentPixelFormat = .invalid
+        self.renderPipelineDescriptor.stencilAttachmentPixelFormat = .invalid
+
         try self.renderPipelineState(pixelFormat: pixelFormat,
                                      blending: blending)
     }
@@ -43,17 +42,10 @@ final public class SimpleGeometryRenderer {
         guard pixelFormat.isRenderable
         else { return nil }
         if self.renderPipelineStates[pixelFormat] == nil {
-            let renderPipelineDescriptor = MTLRenderPipelineDescriptor()
-            renderPipelineDescriptor.vertexFunction = self.vertexFunction
-            renderPipelineDescriptor.fragmentFunction = self.fragmentFunction
-            renderPipelineDescriptor.colorAttachments[0].pixelFormat = pixelFormat
-            renderPipelineDescriptor.colorAttachments[0].setup(blending: blending)
-            renderPipelineDescriptor.depthAttachmentPixelFormat = .invalid
-            renderPipelineDescriptor.stencilAttachmentPixelFormat = .invalid
-
-            self.renderPipelineStates[pixelFormat] = try? self.vertexFunction
+            self.renderPipelineStates[pixelFormat] = try? self.renderPipelineDescriptor
+                                                              .vertexFunction?
                                                               .device
-                                                              .makeRenderPipelineState(descriptor: renderPipelineDescriptor)
+                                                              .makeRenderPipelineState(descriptor: self.renderPipelineDescriptor)
         }
         return self.renderPipelineStates[pixelFormat]
     }

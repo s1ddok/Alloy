@@ -1,10 +1,3 @@
-//
-//  BoundingBoxesRenderer.swift
-//  Alloy
-//
-//  Created by Eugene Bokhan on 22/04/2019.
-//
-
 import Metal
 
 final public class BoundingBoxesRenderer {
@@ -64,21 +57,21 @@ final public class BoundingBoxesRenderer {
         let verticalWidth = Float(self.lineWidth) / textureWidth
 
         let startPoints: [SIMD2<Float>] = [.init(Float(bboxRect.minX),
-                                                  Float(bboxRect.minY) - horizontalWidth / 2),
-                                            .init(Float(bboxRect.minX) + verticalWidth / 2,
-                                                  Float(bboxRect.maxY)),
-                                            .init(Float(bboxRect.maxX),
-                                                  Float(bboxRect.maxY) + horizontalWidth / 2),
-                                            .init(Float(bboxRect.maxX) - verticalWidth / 2,
-                                                  Float(bboxRect.minY))]
+                                                 Float(bboxRect.minY) - horizontalWidth / 2),
+                                           .init(Float(bboxRect.minX) + verticalWidth / 2,
+                                                 Float(bboxRect.maxY)),
+                                           .init(Float(bboxRect.maxX),
+                                                 Float(bboxRect.maxY) + horizontalWidth / 2),
+                                           .init(Float(bboxRect.maxX) - verticalWidth / 2,
+                                                 Float(bboxRect.minY))]
         let endPoints: [SIMD2<Float>] = [.init(Float(bboxRect.minX),
-                                                Float(bboxRect.maxY) + horizontalWidth / 2),
-                                          .init(Float(bboxRect.maxX) - verticalWidth / 2,
-                                                Float(bboxRect.maxY)),
-                                          .init(Float(bboxRect.maxX),
-                                                Float(bboxRect.minY) - horizontalWidth / 2),
-                                          .init(Float(bboxRect.minX) + verticalWidth / 2,
-                                                Float(bboxRect.minY))]
+                                               Float(bboxRect.maxY) + horizontalWidth / 2),
+                                         .init(Float(bboxRect.maxX) - verticalWidth / 2,
+                                               Float(bboxRect.maxY)),
+                                         .init(Float(bboxRect.maxX),
+                                               Float(bboxRect.minY) - horizontalWidth / 2),
+                                         .init(Float(bboxRect.minX) + verticalWidth / 2,
+                                               Float(bboxRect.minY))]
         let widths: [Float] = [Float(verticalWidth),
                                Float(horizontalWidth),
                                Float(verticalWidth),

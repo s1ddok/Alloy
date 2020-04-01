@@ -1,10 +1,3 @@
-//
-//  LinesRenderer.swift
-//  Alloy
-//
-//  Created by Eugene Bokhan on 25/04/2019.
-//
-
 import Metal
 
 final public class LinesRenderer {
@@ -15,7 +8,8 @@ final public class LinesRenderer {
     public var lines: [Line] {
         set {
             self.linesCount = newValue.count
-            self.linesBuffer = try? self.vertexFunction
+            self.linesBuffer = try? self.renderPipelineDescriptor
+                                        .vertexFunction?
                                         .device
                                         .buffer(with: newValue,
                                                 options: .storageModeShared)
@@ -37,8 +31,7 @@ final public class LinesRenderer {
     private var linesBuffer: MTLBuffer?
     private var linesCount: Int = 0
 
-    private let vertexFunction: MTLFunction
-    private let fragmentFunction: MTLFunction
+    private let renderPipelineDescriptor: MTLRenderPipelineDescriptor
     private var renderPipelineStates: [MTLPixelFormat: MTLRenderPipelineState] = [:]
 
     // MARK: - Life Cycle
@@ -66,8 +59,13 @@ final public class LinesRenderer {
         guard let vertexFunction = library.makeFunction(name: Self.vertexFunctionName),
               let fragmentFunction = library.makeFunction(name: Self.fragmentFunctionName)
         else { throw MetalError.MTLLibraryError.functionCreationFailed }
-        self.vertexFunction = vertexFunction
-        self.fragmentFunction = fragmentFunction
+
+        self.renderPipelineDescriptor = MTLRenderPipelineDescriptor()
+        self.renderPipelineDescriptor.vertexFunction = vertexFunction
+        self.renderPipelineDescriptor.fragmentFunction = fragmentFunction
+        self.renderPipelineDescriptor.colorAttachments[0].pixelFormat = pixelFormat
+        self.renderPipelineDescriptor.colorAttachments[0].setup(blending: .alpha)
+
         try self.renderPipelineState(for: pixelFormat)
     }
 
@@ -76,15 +74,10 @@ final public class LinesRenderer {
         guard pixelFormat.isRenderable
         else { return nil }
         if self.renderPipelineStates[pixelFormat] == nil {
-            let renderPipelineDescriptor = MTLRenderPipelineDescriptor()
-            renderPipelineDescriptor.vertexFunction = self.vertexFunction
-            renderPipelineDescriptor.fragmentFunction = self.fragmentFunction
-            renderPipelineDescriptor.colorAttachments[0].pixelFormat = pixelFormat
-            renderPipelineDescriptor.colorAttachments[0].setup(blending: .alpha)
-
-            self.renderPipelineStates[pixelFormat] = try? self.vertexFunction
+            self.renderPipelineStates[pixelFormat] = try? self.renderPipelineDescriptor
+                                                              .vertexFunction?
                                                               .device
-                                                              .makeRenderPipelineState(descriptor: renderPipelineDescriptor)
+                                                              .makeRenderPipelineState(descriptor: self.renderPipelineDescriptor)
         }
         return self.renderPipelineStates[pixelFormat]
     }

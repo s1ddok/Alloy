@@ -1,10 +1,3 @@
-//
-//  MaskRenderer.swift
-//  Alloy
-//
-//  Created by Eugene Bokhan on 28/04/2019.
-//
-
 import Metal
 import simd
 
@@ -19,10 +12,8 @@ public class MaskRenderer {
     /// Rectrangle described in a normalized coodrinate system.
     public var normalizedRect: CGRect = .zero
 
-    private let vertexFunction: MTLFunction
-    private let fragmentFunction: MTLFunction
-    private let inversedFragmentFunction: MTLFunction
-    private var renderPipelineStates: [MTLPixelFormat: [Bool: MTLRenderPipelineState]] = [:]
+    private let renderPipelineDescriptor: MTLRenderPipelineDescriptor
+    private var renderPipelineStates: [MTLPixelFormat: MTLRenderPipelineState] = [:]
 
     // MARK: - Life Cycle
 
@@ -46,54 +37,30 @@ public class MaskRenderer {
     /// - Throws: Function creation error.
     public init(library: MTLLibrary,
                 pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
-        guard let vertexFunction = library.makeFunction(name: Self.vertexFunctionName)
+        guard let vertexFunction = library.makeFunction(name: Self.vertexFunctionName),
+              let fragmentFunction = library.makeFunction(name: Self.fragmentFunctionName)
         else { throw MetalError.MTLLibraryError.functionCreationFailed }
-        self.vertexFunction = vertexFunction
-        let constantValues = MTLFunctionConstantValues()
-        constantValues.set(false, at: 2)
-        self.fragmentFunction = try library.makeFunction(name: Self.fragmentFunctionName,
-                                                         constantValues: constantValues)
-        let inversedConstantValues = MTLFunctionConstantValues()
-        inversedConstantValues.set(true, at: 2)
-        self.inversedFragmentFunction = try library.makeFunction(name: Self.fragmentFunctionName,
-                                                                 constantValues: inversedConstantValues)
-        try self.renderPipelineStatePair(for: pixelFormat)
+
+        self.renderPipelineDescriptor = MTLRenderPipelineDescriptor()
+        self.renderPipelineDescriptor.vertexFunction = vertexFunction
+        self.renderPipelineDescriptor.fragmentFunction = fragmentFunction
+        self.renderPipelineDescriptor.colorAttachments[0].pixelFormat = pixelFormat
+        self.renderPipelineDescriptor.colorAttachments[0].setup(blending: .alpha)
+
+        try self.renderPipelineState(for: pixelFormat)
     }
 
     @discardableResult
-    private func renderPipelineStatePair(for pixelFormat: MTLPixelFormat) -> [Bool: MTLRenderPipelineState]? {
+    private func renderPipelineState(for pixelFormat: MTLPixelFormat) -> MTLRenderPipelineState? {
         guard pixelFormat.isRenderable
         else { return nil }
         if self.renderPipelineStates[pixelFormat] == nil {
-            let pipelineDescriptor = self.renderPipelineDescriptor(pixelFormat: pixelFormat,
-                                                                   isInversed: false)
-            let inversedPipelineDescriptor = self.renderPipelineDescriptor(pixelFormat: pixelFormat,
-                                                                           isInversed: true)
-            guard let pipelineState = try? self.vertexFunction
-                                               .device
-                                               .makeRenderPipelineState(descriptor: pipelineDescriptor),
-                  let inversedPipelineState = try? self.vertexFunction
-                                                       .device
-                                                       .makeRenderPipelineState(descriptor: inversedPipelineDescriptor)
-            else { return nil }
-            self.renderPipelineStates[pixelFormat] = [
-                false: pipelineState,
-                true: inversedPipelineState
-            ]
+            self.renderPipelineStates[pixelFormat] = try? self.renderPipelineDescriptor
+                                                              .vertexFunction?
+                                                              .device
+                                                              .makeRenderPipelineState(descriptor: self.renderPipelineDescriptor)
         }
         return self.renderPipelineStates[pixelFormat]
-    }
-
-    private func renderPipelineDescriptor(pixelFormat: MTLPixelFormat,
-                                          isInversed: Bool) -> MTLRenderPipelineDescriptor {
-        let renderPipelineDescriptor = MTLRenderPipelineDescriptor()
-        renderPipelineDescriptor.vertexFunction = self.vertexFunction
-        renderPipelineDescriptor.fragmentFunction = isInversed
-                                                  ? self.inversedFragmentFunction
-                                                  : self.fragmentFunction
-        renderPipelineDescriptor.colorAttachments[0].pixelFormat = pixelFormat
-        renderPipelineDescriptor.colorAttachments[0].setup(blending: .alpha)
-        return renderPipelineDescriptor
     }
 
     // MARK: - Helpers
@@ -141,7 +108,7 @@ public class MaskRenderer {
                        isInversed: Bool,
                        renderEncoder: MTLRenderCommandEncoder) {
         guard self.normalizedRect != .zero,
-              let renderPipelineState = self.renderPipelineStatePair(for: pixelFormat)?[isInversed]
+              let renderPipelineState = self.renderPipelineState(for: pixelFormat)
         else { return }
 
         // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool.
@@ -156,6 +123,8 @@ public class MaskRenderer {
                                          index: 0)
         renderEncoder.set(fragmentValue: self.color,
                           at: 0)
+        renderEncoder.set(fragmentValue: isInversed,
+                          at: 1)
         // Draw.
         renderEncoder.drawPrimitives(type: .triangleStrip,
                                      vertexStart: 0,
