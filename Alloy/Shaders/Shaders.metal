@@ -707,7 +707,7 @@ fragment float4 maskFragment(MaskVertexOut in [[ stage_in ]],
                         filter::linear);
     float4 maskValue = (float4)maskTexture.sample(s, in.uv).rrrr;
     if (isInversed) {
-        maskValue = float4(1) - maskValue;
+        maskValue = 1.0f - maskValue;
     }
     float4 resultColor = maskValue * color;
 
