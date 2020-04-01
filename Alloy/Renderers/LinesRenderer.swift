@@ -102,10 +102,10 @@ final public class LinesRenderer {
                                                     .texture?
                                                     .pixelFormat
         else { return }
-        commandBuffer.render(descriptor: renderPassDescriptor, { renderEncoder in
+        commandBuffer.render(descriptor: renderPassDescriptor) { renderEncoder in
             self.render(pixelFormat: pixelFormat,
                         renderEncoder: renderEncoder)
-        })
+        }
     }
 
     /// Render lines in a target texture.

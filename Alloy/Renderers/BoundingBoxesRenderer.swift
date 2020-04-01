@@ -112,10 +112,10 @@ final public class BoundingBoxesRenderer {
         guard let renderTarget = renderPassDescriptor.colorAttachments[0].texture
         else { return }
         self.renderTargetSize = renderTarget.size
-        commandBuffer.render(descriptor: renderPassDescriptor, { renderEncoder in
+        commandBuffer.render(descriptor: renderPassDescriptor) { renderEncoder in
             self.render(pixelFormat: renderTarget.pixelFormat,
                         renderEncoder: renderEncoder)
-        })
+        }
     }
 
     /// Render bounding boxes in a target texture.

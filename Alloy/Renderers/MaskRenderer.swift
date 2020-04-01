@@ -127,11 +127,11 @@ public class MaskRenderer {
                                                     .texture?
                                                     .pixelFormat
         else { return }
-        commandBuffer.render(descriptor: renderPassDescriptor, { renderEncoder in
+        commandBuffer.render(descriptor: renderPassDescriptor) { renderEncoder in
             self.render(pixelFormat: pixelFormat,
                         isInversed: isInversed,
                         renderEncoder: renderEncoder)
-        })
+        }
     }
 
     /// Render a rectangle with mask in a target texture.
