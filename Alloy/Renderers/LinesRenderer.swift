@@ -1,10 +1,3 @@
-//
-//  LinesRenderer.swift
-//  Alloy
-//
-//  Created by Eugene Bokhan on 25/04/2019.
-//
-
 import Metal
 
 final public class LinesRenderer {
@@ -15,7 +8,8 @@ final public class LinesRenderer {
     public var lines: [Line] {
         set {
             self.linesCount = newValue.count
-            self.linesBuffer = try? self.renderPipelineState
+            self.linesBuffer = try? self.renderPipelineDescriptor
+                                        .vertexFunction?
                                         .device
                                         .buffer(with: newValue,
                                                 options: .storageModeShared)
@@ -37,7 +31,8 @@ final public class LinesRenderer {
     private var linesBuffer: MTLBuffer?
     private var linesCount: Int = 0
 
-    private let renderPipelineState: MTLRenderPipelineState
+    private let renderPipelineDescriptor: MTLRenderPipelineDescriptor
+    private var renderPipelineStates: [MTLPixelFormat: MTLRenderPipelineState] = [:]
 
     // MARK: - Life Cycle
 
@@ -65,14 +60,26 @@ final public class LinesRenderer {
               let fragmentFunction = library.makeFunction(name: Self.fragmentFunctionName)
         else { throw MetalError.MTLLibraryError.functionCreationFailed }
 
-        let renderPipelineDescriptor = MTLRenderPipelineDescriptor()
-        renderPipelineDescriptor.vertexFunction = vertexFunction
-        renderPipelineDescriptor.fragmentFunction = fragmentFunction
-        renderPipelineDescriptor.colorAttachments[0].pixelFormat = pixelFormat
-        renderPipelineDescriptor.colorAttachments[0].setup(blending: .alpha)
+        self.renderPipelineDescriptor = MTLRenderPipelineDescriptor()
+        self.renderPipelineDescriptor.vertexFunction = vertexFunction
+        self.renderPipelineDescriptor.fragmentFunction = fragmentFunction
+        self.renderPipelineDescriptor.colorAttachments[0].pixelFormat = pixelFormat
+        self.renderPipelineDescriptor.colorAttachments[0].setup(blending: .alpha)
 
-        self.renderPipelineState = try library.device
-                                              .makeRenderPipelineState(descriptor: renderPipelineDescriptor)
+        try self.renderPipelineState(for: pixelFormat)
+    }
+
+    @discardableResult
+    private func renderPipelineState(for pixelFormat: MTLPixelFormat) -> MTLRenderPipelineState? {
+        guard pixelFormat.isRenderable
+        else { return nil }
+        if self.renderPipelineStates[pixelFormat] == nil {
+            self.renderPipelineStates[pixelFormat] = try? self.renderPipelineDescriptor
+                                                              .vertexFunction?
+                                                              .device
+                                                              .makeRenderPipelineState(descriptor: self.renderPipelineDescriptor)
+        }
+        return self.renderPipelineStates[pixelFormat]
     }
 
     // MARK: - Rendering
@@ -83,22 +90,30 @@ final public class LinesRenderer {
     ///   - renderPassDescriptor: Render pass descriptor to be used.
     ///   - commandBuffer: Command buffer to put the rendering work items into.
     public func render(renderPassDescriptor: MTLRenderPassDescriptor,
-                       commandBuffer: MTLCommandBuffer) throws {
-        commandBuffer.render(descriptor: renderPassDescriptor,
-                             self.render(using:))
+                       commandBuffer: MTLCommandBuffer) {
+        guard let pixelFormat = renderPassDescriptor.colorAttachments[0]
+                                                    .texture?
+                                                    .pixelFormat
+        else { return }
+        commandBuffer.render(descriptor: renderPassDescriptor) { renderEncoder in
+            self.render(pixelFormat: pixelFormat,
+                        renderEncoder: renderEncoder)
+        }
     }
 
     /// Render lines in a target texture.
     ///
     /// - Parameter renderEncoder: Container to put the rendering work into.
-    public func render(using renderEncoder: MTLRenderCommandEncoder) {
-        guard self.linesCount != 0
+    public func render(pixelFormat: MTLPixelFormat,
+                       renderEncoder: MTLRenderCommandEncoder) {
+        guard self.linesCount != 0,
+              let renderPipelineState = self.renderPipelineState(for: pixelFormat)
         else { return }
 
         // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool.
         renderEncoder.pushDebugGroup("Draw Line Geometry")
         // Set render command encoder state.
-        renderEncoder.setRenderPipelineState(self.renderPipelineState)
+        renderEncoder.setRenderPipelineState(renderPipelineState)
         // Set any buffers fed into our render pipeline.
         renderEncoder.setVertexBuffer(self.linesBuffer,
                                       offset: 0,

@@ -699,12 +699,16 @@ vertex MaskVertexOut maskVertex(constant Rectangle& rectangle [[ buffer(0) ]],
 }
 
 fragment float4 maskFragment(MaskVertexOut in [[ stage_in ]],
-                              texture2d<half, access::sample> maskTexture [[ texture(0) ]],
-                              constant float4& color [[ buffer(0) ]]) {
+                             texture2d<half, access::sample> maskTexture [[ texture(0) ]],
+                             constant float4& color [[ buffer(0) ]],
+                             constant bool& isInversed [[ buffer(1) ]]) {
     constexpr sampler s(coord::normalized,
                         address::clamp_to_zero,
                         filter::linear);
     float4 maskValue = (float4)maskTexture.sample(s, in.uv).rrrr;
+    if (isInversed) {
+        maskValue = 1.0f - maskValue;
+    }
     float4 resultColor = maskValue * color;
 
     return resultColor;

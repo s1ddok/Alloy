@@ -1,10 +1,3 @@
-//
-//  PointsRenderer.swift
-//  Alloy
-//
-//  Created by Eugene Bokhan on 26/04/2019.
-//
-
 import Metal
 
 final public class PointsRenderer {
@@ -15,7 +8,8 @@ final public class PointsRenderer {
     public var pointsPositions: [SIMD2<Float>] {
         set {
             self.pointCount = newValue.count
-            self.pointsPositionsBuffer = try? self.renderPipelineState
+            self.pointsPositionsBuffer = try? self.renderPipelineDescriptor
+                                                  .vertexFunction?
                                                   .device
                                                   .buffer(with: newValue,
                                                           options: .storageModeShared)
@@ -38,7 +32,8 @@ final public class PointsRenderer {
     private var pointsPositionsBuffer: MTLBuffer?
     private var pointCount: Int = 0
 
-    private let renderPipelineState: MTLRenderPipelineState
+    private let renderPipelineDescriptor: MTLRenderPipelineDescriptor
+    private var renderPipelineStates: [MTLPixelFormat: MTLRenderPipelineState] = [:]
 
     // MARK: - Life Cycle
 
@@ -66,14 +61,26 @@ final public class PointsRenderer {
               let fragmentFunction = library.makeFunction(name: Self.fragmentFunctionName)
         else { throw MetalError.MTLLibraryError.functionCreationFailed }
 
-        let renderPipelineDescriptor = MTLRenderPipelineDescriptor()
-        renderPipelineDescriptor.vertexFunction = vertexFunction
-        renderPipelineDescriptor.fragmentFunction = fragmentFunction
-        renderPipelineDescriptor.colorAttachments[0].pixelFormat = pixelFormat
-        renderPipelineDescriptor.colorAttachments[0].setup(blending: .alpha)
+        self.renderPipelineDescriptor = MTLRenderPipelineDescriptor()
+        self.renderPipelineDescriptor.vertexFunction = vertexFunction
+        self.renderPipelineDescriptor.fragmentFunction = fragmentFunction
+        self.renderPipelineDescriptor.colorAttachments[0].pixelFormat = pixelFormat
+        self.renderPipelineDescriptor.colorAttachments[0].setup(blending: .alpha)
 
-        self.renderPipelineState = try library.device
-                                              .makeRenderPipelineState(descriptor: renderPipelineDescriptor)
+        try self.renderPipelineState(for: pixelFormat)
+    }
+
+    @discardableResult
+    private func renderPipelineState(for pixelFormat: MTLPixelFormat) -> MTLRenderPipelineState? {
+        guard pixelFormat.isRenderable
+        else { return nil }
+        if self.renderPipelineStates[pixelFormat] == nil {
+            self.renderPipelineStates[pixelFormat] = try? self.renderPipelineDescriptor
+                                                              .vertexFunction?
+                                                              .device
+                                                              .makeRenderPipelineState(descriptor: self.renderPipelineDescriptor)
+        }
+        return self.renderPipelineStates[pixelFormat]
     }
 
     // MARK: - Rendering
@@ -85,21 +92,26 @@ final public class PointsRenderer {
     ///   - commandBuffer: Command buffer to put the rendering work items into.
     public func render(renderPassDescriptor: MTLRenderPassDescriptor,
                        commandBuffer: MTLCommandBuffer) throws {
-        commandBuffer.render(descriptor: renderPassDescriptor,
-                             self.render(using:))
+        guard let renderTarget = renderPassDescriptor.colorAttachments[0].texture
+        else { return }
+        commandBuffer.render(descriptor: renderPassDescriptor) { renderEncoder in
+            self.render(pixelFormat: renderTarget.pixelFormat,
+                        renderEncoder: renderEncoder)
+        }
     }
 
     /// Render points in a target texture.
     ///
     /// - Parameter renderEncoder: Container to put the rendering work into.
-    public func render(using renderEncoder: MTLRenderCommandEncoder) {
-        guard self.pointCount != 0
+    public func render(pixelFormat: MTLPixelFormat,
+                       renderEncoder: MTLRenderCommandEncoder) {
+        guard self.pointCount != 0,
+              let renderPipelineState = self.renderPipelineState(for: pixelFormat)
         else { return }
-
         // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool.
         renderEncoder.pushDebugGroup("Draw Points Geometry")
         // Set render command encoder state.
-        renderEncoder.setRenderPipelineState(self.renderPipelineState)
+        renderEncoder.setRenderPipelineState(renderPipelineState)
         // Set any buffers fed into our render pipeline.
         renderEncoder.setVertexBuffer(self.pointsPositionsBuffer,
                                       offset: 0,

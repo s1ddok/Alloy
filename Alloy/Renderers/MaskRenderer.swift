@@ -1,10 +1,3 @@
-//
-//  MaskRenderer.swift
-//  Alloy
-//
-//  Created by Eugene Bokhan on 28/04/2019.
-//
-
 import Metal
 import simd
 
@@ -19,7 +12,8 @@ public class MaskRenderer {
     /// Rectrangle described in a normalized coodrinate system.
     public var normalizedRect: CGRect = .zero
 
-    private let renderPipelineState: MTLRenderPipelineState
+    private let renderPipelineDescriptor: MTLRenderPipelineDescriptor
+    private var renderPipelineStates: [MTLPixelFormat: MTLRenderPipelineState] = [:]
 
     // MARK: - Life Cycle
 
@@ -47,14 +41,26 @@ public class MaskRenderer {
               let fragmentFunction = library.makeFunction(name: Self.fragmentFunctionName)
         else { throw MetalError.MTLLibraryError.functionCreationFailed }
 
-        let renderPipelineDescriptor = MTLRenderPipelineDescriptor()
-        renderPipelineDescriptor.vertexFunction = vertexFunction
-        renderPipelineDescriptor.fragmentFunction = fragmentFunction
-        renderPipelineDescriptor.colorAttachments[0].pixelFormat = pixelFormat
-        renderPipelineDescriptor.colorAttachments[0].setup(blending: .alpha)
+        self.renderPipelineDescriptor = MTLRenderPipelineDescriptor()
+        self.renderPipelineDescriptor.vertexFunction = vertexFunction
+        self.renderPipelineDescriptor.fragmentFunction = fragmentFunction
+        self.renderPipelineDescriptor.colorAttachments[0].pixelFormat = pixelFormat
+        self.renderPipelineDescriptor.colorAttachments[0].setup(blending: .alpha)
 
-        self.renderPipelineState = try library.device
-                                              .makeRenderPipelineState(descriptor: renderPipelineDescriptor)
+        try self.renderPipelineState(for: pixelFormat)
+    }
+
+    @discardableResult
+    private func renderPipelineState(for pixelFormat: MTLPixelFormat) -> MTLRenderPipelineState? {
+        guard pixelFormat.isRenderable
+        else { return nil }
+        if self.renderPipelineStates[pixelFormat] == nil {
+            self.renderPipelineStates[pixelFormat] = try? self.renderPipelineDescriptor
+                                                              .vertexFunction?
+                                                              .device
+                                                              .makeRenderPipelineState(descriptor: self.renderPipelineDescriptor)
+        }
+        return self.renderPipelineStates[pixelFormat]
     }
 
     // MARK: - Helpers
@@ -82,22 +88,33 @@ public class MaskRenderer {
     ///   - renderPassDescriptor: Render pass descriptor to be used.
     ///   - commandBuffer: Command buffer to put the rendering work items into.
     public func render(renderPassDescriptor: MTLRenderPassDescriptor,
+                       isInversed: Bool,
                        commandBuffer: MTLCommandBuffer) throws {
-        commandBuffer.render(descriptor: renderPassDescriptor,
-                             self.render(using:))
+        guard let pixelFormat = renderPassDescriptor.colorAttachments[0]
+                                                    .texture?
+                                                    .pixelFormat
+        else { return }
+        commandBuffer.render(descriptor: renderPassDescriptor) { renderEncoder in
+            self.render(pixelFormat: pixelFormat,
+                        isInversed: isInversed,
+                        renderEncoder: renderEncoder)
+        }
     }
 
     /// Render a rectangle with mask in a target texture.
     ///
     /// - Parameter renderEncoder: Container to put the rendering work into.
-    public func render(using renderEncoder: MTLRenderCommandEncoder) {
-        guard self.normalizedRect != .zero
+    public func render(pixelFormat: MTLPixelFormat,
+                       isInversed: Bool,
+                       renderEncoder: MTLRenderCommandEncoder) {
+        guard self.normalizedRect != .zero,
+              let renderPipelineState = self.renderPipelineState(for: pixelFormat)
         else { return }
 
         // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool.
         renderEncoder.pushDebugGroup("Draw Rectangle With Mask")
         // Set render command encoder state.
-        renderEncoder.setRenderPipelineState(self.renderPipelineState)
+        renderEncoder.setRenderPipelineState(renderPipelineState)
         // Set any buffers fed into our render pipeline.
         let rectangle = self.constructRectangle()
         renderEncoder.set(vertexValue: rectangle,
@@ -106,6 +123,8 @@ public class MaskRenderer {
                                          index: 0)
         renderEncoder.set(fragmentValue: self.color,
                           at: 0)
+        renderEncoder.set(fragmentValue: isInversed,
+                          at: 1)
         // Draw.
         renderEncoder.drawPrimitives(type: .triangleStrip,
                                      vertexStart: 0,

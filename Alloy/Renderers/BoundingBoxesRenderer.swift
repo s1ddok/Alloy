@@ -1,10 +1,3 @@
-//
-//  BoundingBoxesRenderer.swift
-//  Alloy
-//
-//  Created by Eugene Bokhan on 22/04/2019.
-//
-
 import Metal
 
 final public class BoundingBoxesRenderer {
@@ -37,10 +30,10 @@ final public class BoundingBoxesRenderer {
     ///   - context: Alloy's Metal context.
     ///   - pixelFormat: Color attachment's pixel format.
     /// - Throws: Library or function creation errors.
-    public init(context: MTLContext,
-                pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
-        self.linesRenderer = try .init(context: context,
-                                       pixelFormat: pixelFormat)
+    public convenience init(context: MTLContext,
+                            pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
+        try self.init(library: context.library(for: Self.self),
+                      pixelFormat: pixelFormat)
     }
 
     /// Creates a new instance of BoundingBoxesRenderer.
@@ -64,21 +57,21 @@ final public class BoundingBoxesRenderer {
         let verticalWidth = Float(self.lineWidth) / textureWidth
 
         let startPoints: [SIMD2<Float>] = [.init(Float(bboxRect.minX),
-                                                  Float(bboxRect.minY) - horizontalWidth / 2),
-                                            .init(Float(bboxRect.minX) + verticalWidth / 2,
-                                                  Float(bboxRect.maxY)),
-                                            .init(Float(bboxRect.maxX),
-                                                  Float(bboxRect.maxY) + horizontalWidth / 2),
-                                            .init(Float(bboxRect.maxX) - verticalWidth / 2,
-                                                  Float(bboxRect.minY))]
+                                                 Float(bboxRect.minY) - horizontalWidth / 2),
+                                           .init(Float(bboxRect.minX) + verticalWidth / 2,
+                                                 Float(bboxRect.maxY)),
+                                           .init(Float(bboxRect.maxX),
+                                                 Float(bboxRect.maxY) + horizontalWidth / 2),
+                                           .init(Float(bboxRect.maxX) - verticalWidth / 2,
+                                                 Float(bboxRect.minY))]
         let endPoints: [SIMD2<Float>] = [.init(Float(bboxRect.minX),
-                                                Float(bboxRect.maxY) + horizontalWidth / 2),
-                                          .init(Float(bboxRect.maxX) - verticalWidth / 2,
-                                                Float(bboxRect.maxY)),
-                                          .init(Float(bboxRect.maxX),
-                                                Float(bboxRect.minY) - horizontalWidth / 2),
-                                          .init(Float(bboxRect.minX) + verticalWidth / 2,
-                                                Float(bboxRect.minY))]
+                                               Float(bboxRect.maxY) + horizontalWidth / 2),
+                                         .init(Float(bboxRect.maxX) - verticalWidth / 2,
+                                               Float(bboxRect.maxY)),
+                                         .init(Float(bboxRect.maxX),
+                                               Float(bboxRect.minY) - horizontalWidth / 2),
+                                         .init(Float(bboxRect.minX) + verticalWidth / 2,
+                                               Float(bboxRect.minY))]
         let widths: [Float] = [Float(verticalWidth),
                                Float(horizontalWidth),
                                Float(verticalWidth),
@@ -109,21 +102,27 @@ final public class BoundingBoxesRenderer {
     ///   - commandBuffer: Command buffer to put the rendering work items into.
     public func render(renderPassDescriptor: MTLRenderPassDescriptor,
                        commandBuffer: MTLCommandBuffer) throws {
-        self.renderTargetSize = renderPassDescriptor.colorAttachments[0].texture?.size ?? .zero
-        commandBuffer.render(descriptor: renderPassDescriptor,
-                             self.render(using:))
+        guard let renderTarget = renderPassDescriptor.colorAttachments[0].texture
+        else { return }
+        self.renderTargetSize = renderTarget.size
+        commandBuffer.render(descriptor: renderPassDescriptor) { renderEncoder in
+            self.render(pixelFormat: renderTarget.pixelFormat,
+                        renderEncoder: renderEncoder)
+        }
     }
 
     /// Render bounding boxes in a target texture.
     ///
     /// - Parameter renderEncoder: Container to put the rendering work into.
-    public func render(using renderEncoder: MTLRenderCommandEncoder) {
+    public func render(pixelFormat: MTLPixelFormat,
+                       renderEncoder: MTLRenderCommandEncoder) {
         // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool.
         renderEncoder.pushDebugGroup("Draw Bounding Box Geometry")
         // Set the lines to render.
         self.linesRenderer.lines = self.calculateBBoxesLines()
         // Render.
-        self.linesRenderer.render(using: renderEncoder)
+        self.linesRenderer.render(pixelFormat: pixelFormat,
+                                  renderEncoder: renderEncoder)
         renderEncoder.popDebugGroup()
     }
 
