@@ -27,7 +27,6 @@ final public class SimpleGeometryRenderer {
         self.renderPipelineDescriptor = MTLRenderPipelineDescriptor()
         self.renderPipelineDescriptor.vertexFunction = vertexFunction
         self.renderPipelineDescriptor.fragmentFunction = fragmentFunction
-        self.renderPipelineDescriptor.colorAttachments[0].pixelFormat = pixelFormat
         self.renderPipelineDescriptor.colorAttachments[0].setup(blending: blending)
         self.renderPipelineDescriptor.depthAttachmentPixelFormat = .invalid
         self.renderPipelineDescriptor.stencilAttachmentPixelFormat = .invalid
@@ -42,6 +41,7 @@ final public class SimpleGeometryRenderer {
         guard pixelFormat.isRenderable
         else { return nil }
         if self.renderPipelineStates[pixelFormat] == nil {
+            self.renderPipelineDescriptor.colorAttachments[0].pixelFormat = pixelFormat
             self.renderPipelineStates[pixelFormat] = try? self.renderPipelineDescriptor
                                                               .vertexFunction?
                                                               .device
