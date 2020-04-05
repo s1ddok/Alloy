@@ -64,7 +64,6 @@ final public class PointsRenderer {
         self.renderPipelineDescriptor = MTLRenderPipelineDescriptor()
         self.renderPipelineDescriptor.vertexFunction = vertexFunction
         self.renderPipelineDescriptor.fragmentFunction = fragmentFunction
-        self.renderPipelineDescriptor.colorAttachments[0].pixelFormat = pixelFormat
         self.renderPipelineDescriptor.colorAttachments[0].setup(blending: .alpha)
 
         try self.renderPipelineState(for: pixelFormat)
@@ -75,6 +74,7 @@ final public class PointsRenderer {
         guard pixelFormat.isRenderable
         else { return nil }
         if self.renderPipelineStates[pixelFormat] == nil {
+            self.renderPipelineDescriptor.colorAttachments[0].pixelFormat = pixelFormat
             self.renderPipelineStates[pixelFormat] = try? self.renderPipelineDescriptor
                                                               .vertexFunction?
                                                               .device

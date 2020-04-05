@@ -44,7 +44,6 @@ public class MaskRenderer {
         self.renderPipelineDescriptor = MTLRenderPipelineDescriptor()
         self.renderPipelineDescriptor.vertexFunction = vertexFunction
         self.renderPipelineDescriptor.fragmentFunction = fragmentFunction
-        self.renderPipelineDescriptor.colorAttachments[0].pixelFormat = pixelFormat
         self.renderPipelineDescriptor.colorAttachments[0].setup(blending: .alpha)
 
         try self.renderPipelineState(for: pixelFormat)
@@ -55,6 +54,7 @@ public class MaskRenderer {
         guard pixelFormat.isRenderable
         else { return nil }
         if self.renderPipelineStates[pixelFormat] == nil {
+            self.renderPipelineDescriptor.colorAttachments[0].pixelFormat = pixelFormat
             self.renderPipelineStates[pixelFormat] = try? self.renderPipelineDescriptor
                                                               .vertexFunction?
                                                               .device
