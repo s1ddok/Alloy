@@ -43,6 +43,21 @@ public extension MTLPixelFormat {
         }
     }
 
+    var bitsPerComponent: Int? {
+        if self.isOrdinary8Bit {
+            return 8
+        } else if self.isOrdinary16Bit || self.isPacked16Bit {
+            return 16
+        } else if self.isOrdinary32Bit || self.isPacked32Bit  {
+
+        } else if self.isNormal64Bit  {
+            return 64
+        } else if self.isNormal128Bit {
+            return 128
+        }
+        return nil
+    }
+
     var isOrdinary8Bit: Bool {
         #if os(iOS) && !targetEnvironment(macCatalyst)
         switch self {
