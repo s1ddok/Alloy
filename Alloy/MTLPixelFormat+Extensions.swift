@@ -43,7 +43,7 @@ public extension MTLPixelFormat {
         }
     }
 
-    var bitsPerComponent: Int? {
+    var bitsPerPixel: Int? {
         if self.isOrdinary8Bit {
             return 8
         } else if self.isOrdinary16Bit || self.isPacked16Bit {
@@ -56,6 +56,14 @@ public extension MTLPixelFormat {
             return 128
         }
         return nil
+    }
+
+
+    var bitsPerComponent: Int? {
+        guard let bitsPerPixel = self.bitsPerPixel,
+              let size = self.size
+        else { return nil }
+        return bitsPerPixel / size
     }
 
     var isOrdinary8Bit: Bool {
