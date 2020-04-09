@@ -18,7 +18,7 @@ public extension MTLPixelFormat {
         }
     }
 
-    func compatibleCGBitmapInfo(alpha: CGAlphaInfo? = .noneSkip) -> UInt32? {
+    func compatibleCGBitmapInfo(alpha: CGAlphaInfo? = .premultiplied) -> UInt32? {
         // AlphaFirst – the alpha channel is next to the red channel, argb and bgra are both alpha first formats.
         // AlphaLast – the alpha channel is next to the blue channel, rgba and abgr are both alpha last formats.
         // LittleEndian – blue comes before red, bgra and abgr are little endian formats.

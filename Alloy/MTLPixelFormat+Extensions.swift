@@ -61,9 +61,9 @@ public extension MTLPixelFormat {
 
     var bitsPerComponent: Int? {
         guard let bitsPerPixel = self.bitsPerPixel,
-              let size = self.size
+              let componentCount = self.componentCount
         else { return nil }
-        return bitsPerPixel / size
+        return bitsPerPixel / componentCount
     }
 
     var componentCount: Int? {

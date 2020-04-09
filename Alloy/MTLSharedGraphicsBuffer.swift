@@ -26,12 +26,14 @@ final public class MTLSharedGraphicsBuffer {
                             cgImage: CGImage,
                             pixelFormat: MTLPixelFormat,
                             colorSpace: CGColorSpace,
+                            bitmapInfo: UInt32,
                             usage: MTLTextureUsage = [.shaderRead, .shaderWrite, .renderTarget]) throws {
         try self.init(context: context,
                       width: cgImage.width,
                       height: cgImage.height,
                       pixelFormat: pixelFormat,
                       colorSpace: colorSpace,
+                      bitmapInfo: bitmapInfo,
                       usage: usage)
         self.cgContext.draw(cgImage,
                             in: self.rect)
@@ -42,11 +44,11 @@ final public class MTLSharedGraphicsBuffer {
                 height: Int,
                 pixelFormat: MTLPixelFormat,
                 colorSpace: CGColorSpace,
+                bitmapInfo: UInt32,
                 usage: MTLTextureUsage = [.shaderRead, .shaderWrite, .renderTarget]) throws {
         guard let cvPixelFormat = pixelFormat.compatibleCVPixelFormat,
               let pixelFormatSize = pixelFormat.size,
-              let bitsPerComponent = pixelFormat.bitsPerComponent,
-              let bitmapInfo = pixelFormat.compatibleCGBitmapInfo()
+              let bitsPerComponent = pixelFormat.bitsPerComponent
         else { throw Error.unsupportedPixelFormat }
 
         let textureDescriptor = MTLTextureDescriptor()
