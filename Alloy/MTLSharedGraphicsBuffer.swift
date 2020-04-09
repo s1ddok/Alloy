@@ -14,45 +14,39 @@ final public class MTLSharedGraphicsBuffer {
     public let pixelBuffer: CVPixelBuffer
     public let buffer: MTLBuffer
     private(set) public var vImageBuffer: vImage_Buffer
+    public let cgContext: CGContext
     public let pixelFormat: MTLPixelFormat
     public let cvPixelFormat: OSType
-    public var rect: CGRect {
-        let size = CGSize(width: self.texture.width,
-                          height: self.texture.height)
-        return .init(origin: .zero,
-                     size: size)
-    }
-    public var region: MTLRegion {
-        self.texture.region
-    }
-    
-    public var cgImage: CGImage? { self.cgContext.makeImage() }
+    public let rect: CGRect
+    public let region: MTLRegion
 
-    private let cgContext: CGContext
     private var allocationPointer: UnsafeMutableRawPointer!
 
     public convenience init(context: MTLContext,
                             cgImage: CGImage,
-                            pixelFormat: MTLPixelFormat = .bgra8Unorm,
+                            pixelFormat: MTLPixelFormat,
+                            colorSpace: CGColorSpace,
                             usage: MTLTextureUsage = [.shaderRead, .shaderWrite, .renderTarget]) throws {
         try self.init(context: context,
                       width: cgImage.width,
                       height: cgImage.height,
                       pixelFormat: pixelFormat,
+                      colorSpace: colorSpace,
                       usage: usage)
-        self.cgContext.draw(cgImage, in: self.rect)
+        self.cgContext.draw(cgImage,
+                            in: self.rect)
     }
 
     public init(context: MTLContext,
                 width: Int,
                 height: Int,
-                pixelFormat: MTLPixelFormat = .bgra8Unorm,
+                pixelFormat: MTLPixelFormat,
+                colorSpace: CGColorSpace,
                 usage: MTLTextureUsage = [.shaderRead, .shaderWrite, .renderTarget]) throws {
-        guard let colorSpace = pixelFormat.compatibleCGColorSpace,
-              let bitmapInfo = pixelFormat.compatibleCGBitmapInfo(),
-              let cvPixelFormat = pixelFormat.compatibleCVPixelFormat,
+        guard let cvPixelFormat = pixelFormat.compatibleCVPixelFormat,
               let pixelFormatSize = pixelFormat.size,
-              let bitsPerComponent = pixelFormat.bitsPerComponent
+              let bitsPerComponent = pixelFormat.bitsPerComponent,
+              let bitmapInfo = pixelFormat.compatibleCGBitmapInfo()
         else { throw Error.unsupportedPixelFormat }
 
         let textureDescriptor = MTLTextureDescriptor()
@@ -158,6 +152,10 @@ final public class MTLSharedGraphicsBuffer {
         self.cgContext = cgContext
         self.pixelFormat = pixelFormat
         self.cvPixelFormat = cvPixelFormat
+        self.region = self.texture.region
+        self.rect = .init(origin: .zero,
+                          size: .init(width: self.texture.width,
+                                      height: self.texture.height))
     }
 }
 
