@@ -2,7 +2,7 @@ import Foundation
 import Accelerate
 import Metal
 
-@available(iOS 12.0, *)
+@available(iOS 12.0, macOS 10.14, *)
 final public class MTLSharedGraphicsBuffer {
 
     public enum Error: Swift.Error {
@@ -22,23 +22,6 @@ final public class MTLSharedGraphicsBuffer {
 
     private var allocationPointer: UnsafeMutableRawPointer!
 
-    public convenience init(context: MTLContext,
-                            cgImage: CGImage,
-                            pixelFormat: MTLPixelFormat,
-                            colorSpace: CGColorSpace,
-                            bitmapInfo: UInt32,
-                            usage: MTLTextureUsage = [.shaderRead, .shaderWrite, .renderTarget]) throws {
-        try self.init(context: context,
-                      width: cgImage.width,
-                      height: cgImage.height,
-                      pixelFormat: pixelFormat,
-                      colorSpace: colorSpace,
-                      bitmapInfo: bitmapInfo,
-                      usage: usage)
-        self.cgContext.draw(cgImage,
-                            in: self.rect)
-    }
-
     public init(context: MTLContext,
                 width: Int,
                 height: Int,
@@ -56,7 +39,11 @@ final public class MTLSharedGraphicsBuffer {
         textureDescriptor.usage = usage
         textureDescriptor.width = width
         textureDescriptor.height = height
+        #if os(iOS) && !targetEnvironment(macCatalyst)
         textureDescriptor.storageMode = .shared
+        #elseif os(macOS) || (os(iOS) && targetEnvironment(macCatalyst))
+        textureDescriptor.storageMode = .managed
+        #endif
 
         // MARK: - Page align allocation pointer.
 

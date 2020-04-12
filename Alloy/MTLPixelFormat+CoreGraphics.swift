@@ -18,7 +18,7 @@ public extension MTLPixelFormat {
         }
     }
 
-    func compatibleCGBitmapInfo(alpha: CGAlphaInfo? = .premultiplied) -> UInt32? {
+    func compatibleCGBitmapInfo(alpha: CGAlphaInfo? = .noneSkip) -> UInt32? {
         // AlphaFirst – the alpha channel is next to the red channel, argb and bgra are both alpha first formats.
         // AlphaLast – the alpha channel is next to the blue channel, rgba and abgr are both alpha last formats.
         // LittleEndian – blue comes before red, bgra and abgr are little endian formats.
@@ -54,24 +54,25 @@ public extension MTLPixelFormat {
         if let alpha = alpha {
             switch alpha {
             case .noneSkip:
-                alphaFirstInfo = CGImageAlphaInfo.noneSkipLast.rawValue
+                alphaLastInfo = CGImageAlphaInfo.noneSkipLast.rawValue
             case .premultiplied:
-                alphaFirstInfo = CGImageAlphaInfo.premultipliedLast.rawValue
+                alphaLastInfo = CGImageAlphaInfo.premultipliedLast.rawValue
             }
         }
 
         switch self {
         case .bgra8Unorm, .bgra8Unorm_srgb:
-            return CGBitmapInfo.byteOrder32Little.rawValue | alphaFirstInfo
+            return alphaFirstInfo | CGBitmapInfo.byteOrder32Little.rawValue
         case .rgba8Unorm, .rgba8Unorm_srgb:
-            return CGBitmapInfo.byteOrder32Big.rawValue | alphaLastInfo
-        case .rgba16Float, .rgba32Float:
-            let result = CGBitmapInfo.floatComponents.rawValue | alphaLastInfo
-            return result
-        case .r16Float:
+            return alphaLastInfo | CGBitmapInfo.byteOrder32Big.rawValue
+        case .rgba16Float:
+            return alphaLastInfo
+        case .rgba32Float:
+            return alphaLastInfo | CGBitmapInfo.floatComponents.rawValue
+        case .r8Unorm, .r8Unorm_srgb, .r16Float:
+            return CGImageAlphaInfo.none.rawValue
+        case .r32Float:
             return CGBitmapInfo.floatInfoMask.rawValue
-        case .r8Unorm, .r8Unorm_srgb, .r8Snorm:
-            return CGBitmapInfo.alphaInfoMask.rawValue
         default: return nil
         }
     }
