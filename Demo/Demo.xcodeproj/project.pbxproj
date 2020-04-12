@@ -21,6 +21,8 @@
 		18B1A085231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B1A083231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift */; };
 		18B1A087231E7867000A9BAB /* SwitchDataFormatEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B1A086231E7867000A9BAB /* SwitchDataFormatEncoder.swift */; };
 		18B1A088231E7867000A9BAB /* SwitchDataFormatEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B1A086231E7867000A9BAB /* SwitchDataFormatEncoder.swift */; };
+		18CF114E2442386700907867 /* MTLSharedBufferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CF114D2442386700907867 /* MTLSharedBufferTests.swift */; };
+		18CF114F2442386700907867 /* MTLSharedBufferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CF114D2442386700907867 /* MTLSharedBufferTests.swift */; };
 		4FBA92F23EE96BEC3B50A6F4 /* Pods_AlloyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2C9B19EDEBD9C61E5137353 /* Pods_AlloyTests.framework */; };
 		63F9C6B2B8704ABC4263F909 /* Pods_DemoAppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A47635EFD74A558403F5CB4 /* Pods_DemoAppTests.framework */; };
 		9348719F21B3D39A00733E6A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9348719E21B3D39A00733E6A /* AppDelegate.swift */; };
@@ -68,6 +70,7 @@
 		1847DEBC239FD60C00600DD5 /* texture_copy_test_cases */ = {isa = PBXFileReference; lastKnownFileType = folder; path = texture_copy_test_cases; sourceTree = "<group>"; };
 		18B1A083231E72EE000A9BAB /* MTLPixelFormat+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MTLPixelFormat+Extensions.swift"; sourceTree = "<group>"; };
 		18B1A086231E7867000A9BAB /* SwitchDataFormatEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchDataFormatEncoder.swift; sourceTree = "<group>"; };
+		18CF114D2442386700907867 /* MTLSharedBufferTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTLSharedBufferTests.swift; sourceTree = "<group>"; };
 		1E76F10B8D3E3E672C003BC2 /* Pods-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Demo/Pods-Demo.debug.xcconfig"; sourceTree = "<group>"; };
 		1EB46CA57B050108AAE74226 /* Pods-DemoApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DemoApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DemoApp/Pods-DemoApp.debug.xcconfig"; sourceTree = "<group>"; };
 		2D410A4283563A9FD82489DB /* Pods-Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.release.xcconfig"; path = "Pods/Target Support Files/Pods-Demo/Pods-Demo.release.xcconfig"; sourceTree = "<group>"; };
@@ -242,6 +245,7 @@
 			isa = PBXGroup;
 			children = (
 				93B3E23F21F505E1008835A0 /* AlloyTests.swift */,
+				18CF114D2442386700907867 /* MTLSharedBufferTests.swift */,
 				1804316D231FE33A006F2ED3 /* EuclideanDistanceTests.swift */,
 				18043170231FE45D006F2ED3 /* TextureCachingTests.swift */,
 				1847DE6B239FA80400600DD5 /* TextureCopyTests.swift */,
@@ -636,6 +640,7 @@
 				93B3E24021F505E1008835A0 /* AlloyTests.swift in Sources */,
 				18043171231FE45D006F2ED3 /* TextureCachingTests.swift in Sources */,
 				1825FE4523A799E200F9512B /* NSImage+Extenions.swift in Sources */,
+				18CF114E2442386700907867 /* MTLSharedBufferTests.swift in Sources */,
 				1847DEC2239FE02800600DD5 /* TextureCopyTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -660,6 +665,7 @@
 				93B3E29021F51997008835A0 /* AlloyTests.swift in Sources */,
 				18043172231FE45D006F2ED3 /* TextureCachingTests.swift in Sources */,
 				1825FE4623A799E200F9512B /* NSImage+Extenions.swift in Sources */,
+				18CF114F2442386700907867 /* MTLSharedBufferTests.swift in Sources */,
 				1847DEC0239FDF0800600DD5 /* TextureCopyTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -923,7 +929,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = U59P58LC6V;
 				INFOPLIST_FILE = DemoApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -945,7 +951,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = U59P58LC6V;
 				INFOPLIST_FILE = DemoApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
