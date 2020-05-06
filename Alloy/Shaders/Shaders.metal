@@ -881,3 +881,34 @@ generateKernels(textureInterpolation)
 
 #undef outerArguments
 #undef innerArguments
+
+// MARK: - YCbCr to RGBA
+
+constant float4x4 ycbcrToRGBTransform = {
+    { +1.0000f, +1.0000f, +1.0000f, +0.0000f },
+    { +0.0000f, -0.3441f, +1.7720f, +0.0000f },
+    { +1.4020f, -0.7141f, +0.0000f, +0.0000f },
+    { -0.7010f, +0.5291f, -0.8860f, +1.0000f }
+};
+
+kernel void ycbcrToRGBA(texture2d<float, access::sample> sourceYTexture [[ texture(0) ]],
+                        texture2d<float, access::sample> sourceCbCrTexture [[ texture(1) ]],
+                        texture2d<float, access::write> destinationRGBATexture [[ texture(2) ]],
+                        const ushort2 position [[ thread_position_in_grid ]],
+                        const ushort2 totalThreads [[ threads_per_grid ]]) {
+    const ushort2 textureSize = ushort2(destinationRGBATexture.get_width(),
+                                        destinationRGBATexture.get_height());
+    checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
+
+    constexpr sampler s(coord::normalized,
+                        address::clamp_to_zero,
+                        filter::linear);
+    const auto normalizedPosition = float2(position) / float2(textureSize);
+
+    const auto ycbcr = float4(sourceYTexture.sample(s, normalizedPosition).r,
+                              sourceCbCrTexture.sample(s, normalizedPosition).rg,
+                              1.0);
+    const auto destinationValue = ycbcrToRGBTransform * ycbcr;
+
+    destinationRGBATexture.write(destinationValue, position);
+}
