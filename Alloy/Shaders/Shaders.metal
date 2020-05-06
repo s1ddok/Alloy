@@ -843,3 +843,41 @@ kernel void textureAffineCrop(texture2d<half, access::sample> source [[ texture(
     // write it to destination texture
     destination.write(sourceColor, position);
 }
+
+// MARK: - Texture Interpolation
+
+template <typename T>
+void textureInterpolation(texture2d<T, access::read> sourceTextureOne,
+                          texture2d<T, access::read> sourceTextureTwo,
+                          texture2d<T, access::write> destinationTexture,
+                          constant float& weight,
+                          const ushort2 position) {
+    const ushort2 textureSize = ushort2(destinationTexture.get_width(),
+                                        destinationTexture.get_height());
+    checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
+
+    const auto sourceValueOne = sourceTextureOne.read(position);
+    const auto sourceValueTwo = sourceTextureTwo.read(position);
+    const auto resultValue = sourceValueOne + vec<T, 4>(float4(sourceValueTwo - sourceValueOne) * weight);
+
+    destinationTexture.write(resultValue, position);
+}
+
+#define outerArguments(T)                                        \
+(texture2d<T, access::read> sourceTextureOne [[ texture(0) ]],   \
+texture2d<T, access::read> sourceTextureTwo [[ texture(1) ]],   \
+texture2d<T, access::write> destinationTexture [[ texture(2) ]], \
+constant float& weight [[ buffer(0) ]],                          \
+const ushort2 position [[ thread_position_in_grid ]])            \
+
+#define innerArguments \
+(sourceTextureOne,     \
+sourceTextureTwo,      \
+destinationTexture,    \
+weight,                \
+position)              \
+
+generateKernels(textureInterpolation)
+
+#undef outerArguments
+#undef innerArguments
