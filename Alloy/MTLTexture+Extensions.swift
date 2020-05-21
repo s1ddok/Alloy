@@ -26,18 +26,18 @@ public extension MTLTexture {
             let rowBytes = self.width
             let length = rowBytes * self.height
 
-            let rgbaBytes = [UInt8](repeating: 0, count: length)
-            self.getBytes(UnsafeMutableRawPointer(mutating: rgbaBytes),
-                                                  bytesPerRow: rowBytes,
-                                                  from: self.region,
-                                                  mipmapLevel: 0)
+            var rBytes = [UInt8](repeating: 0, count: length)
+            self.getBytes(&rBytes,
+                          bytesPerRow: rowBytes,
+                          from: self.region,
+                          mipmapLevel: 0)
 
             let colorScape = colorSpace ?? CGColorSpaceCreateDeviceGray()
             let bitmapInfo = CGBitmapInfo(rawValue: self.pixelFormat == .a8Unorm
                                                     ? CGImageAlphaInfo.alphaOnly.rawValue
                                                     : CGImageAlphaInfo.none.rawValue)
             guard let data = CFDataCreate(nil,
-                                          rgbaBytes,
+                                          rBytes,
                                           length),
                   let dataProvider = CGDataProvider(data: data),
                   let cgImage = CGImage(width: self.width,
@@ -58,32 +58,16 @@ public extension MTLTexture {
             // read texture as byte array
             let rowBytes = self.width * 4
             let length = rowBytes * self.height
-            let bgraBytes = [UInt8](repeating: 0, count: length)
-            self.getBytes(UnsafeMutableRawPointer(mutating: bgraBytes),
-                                                  bytesPerRow: rowBytes,
-                                                  from: self.region,
-                                                  mipmapLevel: 0)
+            var bgraBytes = [UInt8](repeating: 0, count: length)
+            self.getBytes(&bgraBytes,
+                          bytesPerRow: rowBytes,
+                          from: self.region,
+                          mipmapLevel: 0)
 
-            // use Accelerate framework to convert from BGRA to RGBA
-            var bgraBuffer = vImage_Buffer(data: UnsafeMutableRawPointer(mutating: bgraBytes),
-                                           height: vImagePixelCount(self.height),
-                                           width: vImagePixelCount(self.width),
-                                           rowBytes: rowBytes)
-            let rgbaBytes = [UInt8](repeating: 0, count: length)
-            var rgbaBuffer = vImage_Buffer(data: UnsafeMutableRawPointer(mutating: rgbaBytes),
-                                           height: vImagePixelCount(self.height),
-                                           width: vImagePixelCount(self.width),
-                                           rowBytes: rowBytes)
-            let map: [UInt8] = [2, 1, 0, 3]
-            vImagePermuteChannels_ARGB8888(&bgraBuffer,
-                                           &rgbaBuffer,
-                                           map, 0)
-
-            // create CGImage with RGBA Flipped Bytes
             let colorScape = colorSpace ?? CGColorSpaceCreateDeviceRGB()
-            let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
+            let bitmapInfo = CGBitmapInfo(rawValue: CGBitmapInfo.byteOrder32Little.rawValue | CGImageAlphaInfo.first.rawValue)
             guard let data = CFDataCreate(nil,
-                                          rgbaBytes,
+                                          &bgraBytes,
                                           length),
                   let dataProvider = CGDataProvider(data: data),
                   let cgImage = CGImage(width: self.width,
@@ -104,9 +88,9 @@ public extension MTLTexture {
             let rowBytes = self.width * 4
             let length = rowBytes * self.height
 
-            let rgbaBytes = [UInt8](repeating: 0,
+            var rgbaBytes = [UInt8](repeating: 0,
                                     count: length)
-            self.getBytes(UnsafeMutableRawPointer(mutating: rgbaBytes),
+            self.getBytes(&rgbaBytes,
                           bytesPerRow: rowBytes,
                           from: self.region,
                           mipmapLevel: 0)
@@ -114,7 +98,7 @@ public extension MTLTexture {
             let colorScape = colorSpace ?? CGColorSpaceCreateDeviceRGB()
             let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
             guard let data = CFDataCreate(nil,
-                                          rgbaBytes,
+                                          &rgbaBytes,
                                           length),
                   let dataProvider = CGDataProvider(data: data),
                   let cgImage = CGImage(width: self.width,
