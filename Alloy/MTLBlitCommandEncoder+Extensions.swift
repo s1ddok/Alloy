@@ -1,10 +1,3 @@
-//
-//  MTLBlitCommandEncoder+Extensions.swift
-//  Alloy
-//
-//  Created by Andrey Volodin on 03.10.2018.
-//
-
 import Metal.MTLBlitCommandEncoder
 
 public extension MTLBlitCommandEncoder {

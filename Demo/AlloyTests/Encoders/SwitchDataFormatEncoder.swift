@@ -1,11 +1,3 @@
-//
-//  SwitchDataFormatEncoder.swift
-//  AlloyTests
-//
-//  Created by Eugene Bokhan on 03/09/2019.
-//  Copyright © 2019 avolodin. All rights reserved.
-//
-
 import Alloy
 
 /// Switch Data Format Encoder
@@ -55,6 +47,22 @@ final public class SwitchDataFormatEncoder {
     }
 
     // MARK: - Encode
+
+    public func callAsFunction(normalizedTexture: MTLTexture,
+                               unnormalizedTexture: MTLTexture,
+                               in commandBuffer: MTLCommandBuffer) {
+        self.encode(normalizedTexture: normalizedTexture,
+                    unnormalizedTexture: unnormalizedTexture,
+                    in: commandBuffer)
+    }
+
+    public func callAsFunction(normalizedTexture: MTLTexture,
+                               unnormalizedTexture: MTLTexture,
+                               using encoder: MTLComputeCommandEncoder) {
+        self.encode(normalizedTexture: normalizedTexture,
+                    unnormalizedTexture: unnormalizedTexture,
+                    using: encoder)
+    }
 
     public func encode(normalizedTexture: MTLTexture,
                        unnormalizedTexture: MTLTexture,

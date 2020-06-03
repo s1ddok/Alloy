@@ -1,11 +1,3 @@
-//
-//  Float16.swift
-//  Alloy
-//
-//  Created by Eugene Bokhan on 07/02/2019.
-//  Copyright © 2019 Eugene Bokhan. All rights reserved.
-//
-
 import Foundation
 import Accelerate
 

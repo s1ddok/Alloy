@@ -1,11 +1,3 @@
-//
-//  MPSImage+Extensions.swift
-//  Alloy
-//
-//  Created by Eugene Bokhan on 07/02/2019.
-//  Copyright © 2019 Eugene Bokhan. All rights reserved.
-//
-
 import MetalPerformanceShaders
 
 /* Utility functions for converting of MPSImages to floating point arrays. */

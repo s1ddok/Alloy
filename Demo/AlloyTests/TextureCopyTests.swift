@@ -1,11 +1,3 @@
-//
-//  TextureCopyTests.swift
-//  Alloy
-//
-//  Created by Eugene Bokhan on 10.12.2019.
-//  Copyright © 2019 avolodin. All rights reserved.
-//
-
 import XCTest
 import Alloy
 
@@ -111,18 +103,16 @@ final class TextureCopyTests: XCTestCase {
             // Dispatch.
             try self.testCases.forEach { testCase in
                 try self.context.scheduleAndWait { commandBuffer in
-                    self.textureCopy
-                        .copy(region: testCase.sourceRegion,
-                              from: testCase.sourceTexture,
-                              to: testCase.destinationOrigin,
-                              of: testCase.destinationTexture,
-                              in: commandBuffer)
+                    self.textureCopy(region: testCase.sourceRegion,
+                                     from: testCase.sourceTexture,
+                                     to: testCase.destinationOrigin,
+                                     of: testCase.destinationTexture,
+                                     in: commandBuffer)
 
-                    self.euclideanDistanceFloat
-                        .encode(textureOne: testCase.destinationTexture,
-                                textureTwo: testCase.desiredResultTexture,
-                                resultBuffer: resultBuffer,
-                                in: commandBuffer)
+                    self.euclideanDistanceFloat(textureOne: testCase.destinationTexture,
+                                                textureTwo: testCase.desiredResultTexture,
+                                                resultBuffer: resultBuffer,
+                                                in: commandBuffer)
                 }
 
                 let result = resultBuffer.pointer(of: Float.self)!.pointee

@@ -1,10 +1,3 @@
-//
-//  MPSUnaryImageKernels.swift
-//  Alloy
-//
-//  Created by Eugene Bokhan on 27.09.2019.
-//
-
 import MetalPerformanceShaders
 
 final public class MPSUnaryImageKernels {
@@ -20,6 +13,14 @@ final public class MPSUnaryImageKernels {
     }
 
     // MARK: - Encode
+
+    public func callAsFunction(sourceTexture: MTLTexture,
+                               destinationTexture: MTLTexture,
+                               in commandBuffer: MTLCommandBuffer) {
+        self.encode(sourceTexture: sourceTexture,
+                    destinationTexture: destinationTexture,
+                    in: commandBuffer)
+    }
 
     public func encode(sourceTexture: MTLTexture,
                        destinationTexture: MTLTexture,

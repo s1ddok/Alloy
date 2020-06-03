@@ -1,11 +1,3 @@
-//
-//  Metal.swift
-//  Alloy
-//
-//  Created by Andrey Volodin on 13.05.17.
-//  Copyright © 2017 s1ddok. All rights reserved.
-//
-
 import Metal
 import MetalKit
 

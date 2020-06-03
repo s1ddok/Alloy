@@ -1,11 +1,3 @@
-//
-//  AlloyTests.swift
-//  AlloyTests
-//
-//  Created by Andrey Volodin on 20/01/2019.
-//  Copyright © 2019 avolodin. All rights reserved.
-//
-
 import XCTest
 import Alloy
 import MetalKit

@@ -44,7 +44,7 @@ final public class RectangleRenderer {
         self.renderPipelineDescriptor.fragmentFunction = fragmentFunction
         self.renderPipelineDescriptor.colorAttachments[0].setup(blending: .alpha)
 
-        try self.renderPipelineState(for: pixelFormat)
+        self.renderPipelineState(for: pixelFormat)
     }
 
     @discardableResult
@@ -80,21 +80,33 @@ final public class RectangleRenderer {
 
     // MARK: - Rendering
 
+    public func callAsFunction(renderPassDescriptor: MTLRenderPassDescriptor,
+                               commandBuffer: MTLCommandBuffer) {
+        self.render(renderPassDescriptor: renderPassDescriptor,
+                    commandBuffer: commandBuffer)
+    }
+
+    public func callAsFunction(pixelFormat: MTLPixelFormat,
+                               renderEncoder: MTLRenderCommandEncoder) {
+        self.render(pixelFormat: pixelFormat,
+                    renderEncoder: renderEncoder)
+    }
+
     /// Render a rectangle in a target texture.
     ///
     /// - Parameters:
     ///   - renderPassDescriptor: Render pass descriptor to be used.
     ///   - commandBuffer: Command buffer to put the rendering work items into.
     public func render(renderPassDescriptor: MTLRenderPassDescriptor,
-                       commandBuffer: MTLCommandBuffer) throws {
+                       commandBuffer: MTLCommandBuffer) {
         guard let pixelFormat = renderPassDescriptor.colorAttachments[0]
                                                     .texture?
                                                     .pixelFormat
         else { return }
-        commandBuffer.render(descriptor: renderPassDescriptor, { renderEncoder in
+        commandBuffer.render(descriptor: renderPassDescriptor) { renderEncoder in
             self.render(pixelFormat: pixelFormat,
                         renderEncoder: renderEncoder)
-        })
+        }
     }
 
     /// Render a rectangle in a target texture.

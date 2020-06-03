@@ -1,10 +1,3 @@
-//
-//  EuclideanDistance.swift
-//  Alloy
-//
-//  Created by Eugene Bokhan on 30/08/2019.
-//
-
 import Metal
 
 final public class EuclideanDistance {
@@ -28,6 +21,26 @@ final public class EuclideanDistance {
     }
 
     // MARK: - Encode
+
+    public func callAsFunction(textureOne: MTLTexture,
+                               textureTwo: MTLTexture,
+                               resultBuffer: MTLBuffer,
+                               in commandBuffer: MTLCommandBuffer) {
+        self.encode(textureOne: textureOne,
+                    textureTwo: textureTwo,
+                    resultBuffer: resultBuffer,
+                    in: commandBuffer)
+    }
+
+    public func callAsFunction(textureOne: MTLTexture,
+                               textureTwo: MTLTexture,
+                               resultBuffer: MTLBuffer,
+                               using encoder: MTLComputeCommandEncoder) {
+        self.encode(textureOne: textureOne,
+                    textureTwo: textureTwo,
+                    resultBuffer: resultBuffer,
+                    using: encoder)
+    }
 
     public func encode(textureOne: MTLTexture,
                        textureTwo: MTLTexture,

@@ -1,10 +1,3 @@
-//
-//  ONNXConvolutionPadding.swift
-//  Alloy
-//
-//  Created by Andrey Volodin on 16/04/2019.
-//
-
 import MetalPerformanceShaders
 
 public typealias Kernel = (height: Int, width: Int)

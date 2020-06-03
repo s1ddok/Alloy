@@ -1,10 +1,3 @@
-//
-//  TextureAffineCrop.swift
-//  Pods
-//
-//  Created by Andrey Volodin on 18.11.2019.
-//
-
 import Metal
 
 final public class TextureAffineCrop {
@@ -32,6 +25,26 @@ final public class TextureAffineCrop {
     }
 
     // MARK: - Encode
+
+    public func callAsFunction(sourceTexture: MTLTexture,
+                               destinationTexture: MTLTexture,
+                               affineTransform: simd_float3x3,
+                               in commandBuffer: MTLCommandBuffer) {
+        self.encode(sourceTexture: sourceTexture,
+                    destinationTexture: destinationTexture,
+                    affineTransform: affineTransform,
+                    in: commandBuffer)
+    }
+
+    public func callAsFunction(sourceTexture: MTLTexture,
+                               destinationTexture: MTLTexture,
+                               affineTransform: simd_float3x3,
+                               using encoder: MTLComputeCommandEncoder) {
+        self.encode(sourceTexture: sourceTexture,
+                    destinationTexture: destinationTexture,
+                    affineTransform: affineTransform,
+                    using: encoder)
+    }
 
     public func encode(sourceTexture: MTLTexture,
                        destinationTexture: MTLTexture,

@@ -1,11 +1,3 @@
-//
-//  Shaders.metal
-//  AlloyTests
-//
-//  Created by Andrey Volodin on 20/01/2019.
-//  Copyright © 2019 avolodin. All rights reserved.
-//
-
 #include <metal_stdlib>
 #include "../../../Alloy/Shaders/Definitions.h"
 

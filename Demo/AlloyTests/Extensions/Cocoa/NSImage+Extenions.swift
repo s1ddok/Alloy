@@ -1,11 +1,3 @@
-//
-//  NSImage+Extenions.swift
-//  Demo
-//
-//  Created by Eugene Bokhan on 04.12.2019.
-//  Copyright © 2019 avolodin. All rights reserved.
-//
-
 #if os(macOS)
 import Cocoa
 

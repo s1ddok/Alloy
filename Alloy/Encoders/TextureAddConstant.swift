@@ -1,10 +1,3 @@
-//
-//  TextureAddConstant.swift
-//  Alloy
-//
-//  Created by Eugene Bokhan on 03/09/2019.
-//
-
 import Metal
 
 final public class TextureAddConstant {
@@ -36,6 +29,26 @@ final public class TextureAddConstant {
     }
 
     // MARK: - Encode
+
+    public func callAsFunction(sourceTexture: MTLTexture,
+                               destinationTexture: MTLTexture,
+                               constant: SIMD4<Float>,
+                               in commandBuffer: MTLCommandBuffer) {
+        self.encode(sourceTexture: sourceTexture,
+                    destinationTexture: destinationTexture,
+                    constant: constant,
+                    in: commandBuffer)
+    }
+
+    public func callAsFunction(sourceTexture: MTLTexture,
+                               destinationTexture: MTLTexture,
+                               constant: SIMD4<Float>,
+                               using encoder: MTLComputeCommandEncoder) {
+        self.encode(sourceTexture: sourceTexture,
+                    destinationTexture: destinationTexture,
+                    constant: constant,
+                    using: encoder)
+    }
 
     public func encode(sourceTexture: MTLTexture,
                        destinationTexture: MTLTexture,

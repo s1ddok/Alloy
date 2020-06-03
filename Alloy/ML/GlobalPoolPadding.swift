@@ -1,10 +1,3 @@
-//
-//  GlobalPoolPadding.swift
-//  Alloy
-//
-//  Created by Andrey Volodin on 05/05/2019.
-//
-
 import MetalPerformanceShaders
 
 public class GlobalPoolPadding: NSObject, MPSNNPadding {

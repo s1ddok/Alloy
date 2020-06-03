@@ -46,7 +46,7 @@ public class MaskRenderer {
         self.renderPipelineDescriptor.fragmentFunction = fragmentFunction
         self.renderPipelineDescriptor.colorAttachments[0].setup(blending: .alpha)
 
-        try self.renderPipelineState(for: pixelFormat)
+        self.renderPipelineState(for: pixelFormat)
     }
 
     @discardableResult
@@ -82,6 +82,22 @@ public class MaskRenderer {
 
     // MARK: - Rendering
 
+    public func callAsFunction(renderPassDescriptor: MTLRenderPassDescriptor,
+                               isInversed: Bool,
+                               commandBuffer: MTLCommandBuffer) {
+        self.render(renderPassDescriptor: renderPassDescriptor,
+                    isInversed: isInversed,
+                    commandBuffer: commandBuffer)
+    }
+
+    public func callAsFunction(pixelFormat: MTLPixelFormat,
+                               isInversed: Bool,
+                               renderEncoder: MTLRenderCommandEncoder) {
+        self.render(pixelFormat: pixelFormat,
+                    isInversed: isInversed,
+                    renderEncoder: renderEncoder)
+    }
+
     /// Render a rectangle with mask in a target texture.
     ///
     /// - Parameters:
@@ -89,7 +105,7 @@ public class MaskRenderer {
     ///   - commandBuffer: Command buffer to put the rendering work items into.
     public func render(renderPassDescriptor: MTLRenderPassDescriptor,
                        isInversed: Bool,
-                       commandBuffer: MTLCommandBuffer) throws {
+                       commandBuffer: MTLCommandBuffer) {
         guard let pixelFormat = renderPassDescriptor.colorAttachments[0]
                                                     .texture?
                                                     .pixelFormat

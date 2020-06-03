@@ -1,10 +1,3 @@
-//
-//  MaskGuidedBlur.swift
-//  Alloy
-//
-//  Created by Eugene Bokhan on 29/08/2019.
-//
-
 import Metal
 import MetalPerformanceShaders
 
@@ -35,6 +28,18 @@ final public class MaskGuidedBlur {
     }
 
     // MARK: - Encode
+
+    public func callAsFunction(sourceTexture: MTLTexture,
+                               maskTexture: MTLTexture,
+                               destinationTexture: MTLTexture,
+                               sigma: Float,
+                               in commandBuffer: MTLCommandBuffer) {
+        self.encode(sourceTexture: sourceTexture,
+                    maskTexture: maskTexture,
+                    destinationTexture: destinationTexture,
+                    sigma: sigma,
+                    in: commandBuffer)
+    }
 
     public func encode(sourceTexture: MTLTexture,
                        maskTexture: MTLTexture,

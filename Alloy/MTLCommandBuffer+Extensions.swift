@@ -1,10 +1,3 @@
-//
-//  MTLCommandBuffer+Extensions.swift
-//  Alloy
-//
-//  Created by Andrey Volodin on 02/12/2018.
-//
-
 import Metal
 
 public extension MTLCommandBuffer {

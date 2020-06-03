@@ -1,10 +1,3 @@
-//
-//  TextureMix.swift
-//  Alloy
-//
-//  Created by Eugene Bokhan on 26.09.2019.
-//
-
 import Metal
 
 final public class TextureMix {
@@ -31,6 +24,30 @@ final public class TextureMix {
     }
 
     // MARK: - Encode
+
+    public func callAsFunction(sourceTextureOne: MTLTexture,
+                               sourceTextureTwo: MTLTexture,
+                               maskTexture: MTLTexture,
+                               destinationTexture: MTLTexture,
+                               in commandBuffer: MTLCommandBuffer) {
+        self.encode(sourceTextureOne: sourceTextureOne,
+                    sourceTextureTwo: sourceTextureTwo,
+                    maskTexture: maskTexture,
+                    destinationTexture: destinationTexture,
+                    in: commandBuffer)
+    }
+
+    public func callAsFunction(sourceTextureOne: MTLTexture,
+                               sourceTextureTwo: MTLTexture,
+                               maskTexture: MTLTexture,
+                               destinationTexture: MTLTexture,
+                               using encoder: MTLComputeCommandEncoder) {
+        self.encode(sourceTextureOne: sourceTextureOne,
+                    sourceTextureTwo: sourceTextureTwo,
+                    maskTexture: maskTexture,
+                    destinationTexture: destinationTexture,
+                    using: encoder)
+    }
 
     public func encode(sourceTextureOne: MTLTexture,
                        sourceTextureTwo: MTLTexture,

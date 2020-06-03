@@ -65,7 +65,7 @@ final public class LinesRenderer {
         self.renderPipelineDescriptor.fragmentFunction = fragmentFunction
         self.renderPipelineDescriptor.colorAttachments[0].setup(blending: .alpha)
 
-        try self.renderPipelineState(for: pixelFormat)
+        self.renderPipelineState(for: pixelFormat)
     }
 
     @discardableResult
@@ -83,6 +83,18 @@ final public class LinesRenderer {
     }
 
     // MARK: - Rendering
+
+    public func callAsFunction(renderPassDescriptor: MTLRenderPassDescriptor,
+                               commandBuffer: MTLCommandBuffer) {
+        self.render(renderPassDescriptor: renderPassDescriptor,
+                    commandBuffer: commandBuffer)
+    }
+
+    public func callAsFunction(pixelFormat: MTLPixelFormat,
+                               renderEncoder: MTLRenderCommandEncoder) {
+        self.render(pixelFormat: pixelFormat,
+                    renderEncoder: renderEncoder)
+    }
 
     /// Render lines in a target texture.
     ///

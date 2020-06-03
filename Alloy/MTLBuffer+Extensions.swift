@@ -1,10 +1,3 @@
-//
-//  MTLBuffer+Extensions.swift
-//  Alloy
-//
-//  Created by Andrey Volodin on 18/01/2019.
-//
-
 import Metal
 
 public extension MTLBuffer {

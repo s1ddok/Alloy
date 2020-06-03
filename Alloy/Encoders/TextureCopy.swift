@@ -1,10 +1,3 @@
-//
-//  TextureCopy.swift
-//  Alloy
-//
-//  Created by Andrey Volodin on 31/01/2019.
-//
-
 import Metal
 
 final public class TextureCopy {
@@ -35,6 +28,46 @@ final public class TextureCopy {
     }
 
     // MARK: - Encode
+
+    public func callAsFunction(sourceTexture: MTLTexture,
+                               destinationTexture: MTLTexture,
+                               in commandBuffer: MTLCommandBuffer) {
+        self.encode(sourceTexture: sourceTexture,
+                    destinationTexture: destinationTexture,
+                    in: commandBuffer)
+    }
+
+    public func callAsFunction(sourceTexture: MTLTexture,
+                               destinationTexture: MTLTexture,
+                               using encoder: MTLComputeCommandEncoder) {
+        self.encode(sourceTexture: sourceTexture,
+                    destinationTexture: destinationTexture,
+                    using: encoder)
+    }
+
+    public func callAsFunction(region sourceTexureRegion: MTLRegion,
+                               from sourceTexture: MTLTexture,
+                               to destinationTextureOrigin: MTLOrigin,
+                               of destinationTexture: MTLTexture,
+                               in commandBuffer: MTLCommandBuffer) {
+        self.copy(region: sourceTexureRegion,
+                  from: sourceTexture,
+                  to: destinationTextureOrigin,
+                  of: destinationTexture,
+                  in: commandBuffer)
+    }
+
+    public func callAsFunction(region sourceTexureRegion: MTLRegion,
+                               from sourceTexture: MTLTexture,
+                               to destinationTextureOrigin: MTLOrigin,
+                               of destinationTexture: MTLTexture,
+                               using encoder: MTLComputeCommandEncoder) {
+        self.copy(region: sourceTexureRegion,
+                  from: sourceTexture,
+                  to: destinationTextureOrigin,
+                  of: destinationTexture,
+                  using: encoder)
+    }
 
     public func encode(sourceTexture: MTLTexture,
                        destinationTexture: MTLTexture,

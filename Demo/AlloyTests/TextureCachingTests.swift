@@ -1,11 +1,3 @@
-//
-//  TextureCachingTests.swift
-//  Demo
-//
-//  Created by Eugene Bokhan on 04/09/2019.
-//  Copyright © 2019 avolodin. All rights reserved.
-//
-
 import XCTest
 import Alloy
 import MetalKit
@@ -119,8 +111,7 @@ final class TextureCachingTests: XCTestCase {
                                                                   from: encodedData)
             let decodedTexture = try decodedTextureCodableBox.texture(device: self.context.device)
 
-            try self.context
-                    .scheduleAndWait { commadBuffer in
+            try self.context.scheduleAndWait { commadBuffer in
 
                 if originalTexture.mipmapLevelCount > 1 {
 
@@ -134,10 +125,10 @@ final class TextureCachingTests: XCTestCase {
                               let decodedTextureView = decodedTexture.view(level: level)
                         else { fatalError("Couldn't create texture view at level \(level)") }
 
-                        euclideanDistance.encode(textureOne: originalTextureView,
-                                                 textureTwo: decodedTextureView,
-                                                 resultBuffer: resultBuffer,
-                                                 in: commadBuffer)
+                        euclideanDistance(textureOne: originalTextureView,
+                                          textureTwo: decodedTextureView,
+                                          resultBuffer: resultBuffer,
+                                          in: commadBuffer)
 
                         width = originalTextureView.width
                         height = originalTextureView.height
@@ -145,10 +136,10 @@ final class TextureCachingTests: XCTestCase {
                     }
 
                 } else {
-                    euclideanDistance.encode(textureOne: originalTexture,
-                                             textureTwo: decodedTexture,
-                                             resultBuffer: resultBuffer,
-                                             in: commadBuffer)
+                    euclideanDistance(textureOne: originalTexture,
+                                      textureTwo: decodedTexture,
+                                      resultBuffer: resultBuffer,
+                                      in: commadBuffer)
                 }
             }
 
@@ -188,10 +179,9 @@ final class TextureCachingTests: XCTestCase {
             let unnormalizedTexture = try self.context
                                               .texture(descriptor: unnormalizedTextureDescriptor)
 
-            self.denormalize
-                .encode(normalizedTexture: normalizedTexture,
-                        unnormalizedTexture: unnormalizedTexture,
-                        in: commandBuffer)
+            self.denormalize(normalizedTexture: normalizedTexture,
+                             unnormalizedTexture: unnormalizedTexture,
+                             in: commandBuffer)
 
             resultTexture = unnormalizedTexture
         default: throw Error.unsutablePixelFormat
