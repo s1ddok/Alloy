@@ -42,7 +42,7 @@ final public class NormalizeKernel {
                                destinationTexture: MTLTexture,
                                mean: SIMD3<Float>,
                                std: SIMD3<Float>,
-    using encoder: MTLComputeCommandEncoder) {
+                               using encoder: MTLComputeCommandEncoder) {
         self.encode(sourceTexture: sourceTexture,
                     destinationTexture: destinationTexture,
                     mean: mean,
