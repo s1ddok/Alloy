@@ -9,10 +9,9 @@ public extension MPSUnaryImageKernel {
                     destinationTexture: destinationTexture)
     }
 
-    func callAsFunction(inPlaceTexture: MTLTexture,
+    func callAsFunction(inPlaceTexture: inout MTLTexture,
                         fallbackCopyAllocator: MPSCopyAllocator? = nil,
                         in commandBuffer: MTLCommandBuffer) {
-        var inPlaceTexture = inPlaceTexture
         self.encode(commandBuffer: commandBuffer,
                     inPlaceTexture: &inPlaceTexture,
                     fallbackCopyAllocator: fallbackCopyAllocator)
