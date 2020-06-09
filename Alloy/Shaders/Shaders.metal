@@ -289,13 +289,13 @@ void textureMean(texture2d<T, access::read> sourceTexture,
         blockSize = originalBlockSize - (readTerritory - inputTextureSize);
     }
 
-    float4 totalSumInBlock = float4(0, 0, 0, 0);
+    auto totalSumInBlock = float4(0);
 
-    for (ushort x = 0; x < blockSize.x; x++) {
-        for (ushort y = 0; y < blockSize.y; y++) {
-            const ushort2 read_position = blockStartPosition + ushort2(x, y);
-            const float4 currentValue = float4(sourceTexture.read(read_position));
-            totalSumInBlock += currentValue;
+    for (ushort x = 0; x < blockSize.x; ++x) {
+        for (ushort y = 0; y < blockSize.y; ++y) {
+            const auto readPosition = blockStartPosition + ushort2(x, y);
+            const auto currentVariance = float4(sourceTexture.read(readPosition));
+            totalSumInBlock += currentVariance;
         }
     }
 
@@ -304,18 +304,14 @@ void textureMean(texture2d<T, access::read> sourceTexture,
     threadgroup_barrier(mem_flags::mem_threadgroup);
 
     if (index == 0) {
-
-        float4 totalSum = sharedMemory[0];
+        auto totalSum = sharedMemory[0];
         const ushort threadsInThreadgroup = threadsPerThreadgroup.x * threadsPerThreadgroup.y;
-        for (ushort i = 1; i < threadsInThreadgroup; i++) {
-            float4 totalSumInBlock = sharedMemory[i];
-            totalSum += totalSumInBlock;
+        for (ushort i = 1; i < threadsInThreadgroup; ++i) {
+            totalSum += sharedMemory[i];
         }
 
-        half gridSize = inputTextureSize.x * inputTextureSize.y;
-        float4 meanValue = totalSum / gridSize;
-
-        result = meanValue;
+        const auto gridSize = float(inputTextureSize.x) * float(inputTextureSize.y);
+        result = totalSum / gridSize;
     }
 }
 
