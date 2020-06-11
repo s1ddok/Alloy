@@ -1,10 +1,3 @@
-//
-//  MTLSizeAndAlign+Extensions.swift
-//  Alloy
-//
-//  Created by Andrey Volodin on 24.09.2018.
-//
-
 import Metal.MTLHeap
 
 // Returns a size of the 'inSize' aligned to 'align' as long as align is a power of 2

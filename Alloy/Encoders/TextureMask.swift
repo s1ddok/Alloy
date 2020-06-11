@@ -1,10 +1,3 @@
-//
-//  TextureMask.swift
-//  Alloy
-//
-//  Created by Andrey Volodin on 26/04/2019.
-//
-
 import Metal
 
 final public class TextureMask {
@@ -35,6 +28,26 @@ final public class TextureMask {
     }
 
     // MARK: - Encode
+
+    public func callAsFunction(sourceTexture: MTLTexture,
+                               maskTexture: MTLTexture,
+                               destinationTexture: MTLTexture,
+                               in commandBuffer: MTLCommandBuffer) {
+        self.encode(sourceTexture: sourceTexture,
+                    maskTexture: maskTexture,
+                    destinationTexture: destinationTexture,
+                    in: commandBuffer)
+    }
+
+    public func callAsFunction(sourceTexture: MTLTexture,
+                               maskTexture: MTLTexture,
+                               destinationTexture: MTLTexture,
+                               using encoder: MTLComputeCommandEncoder) {
+        self.encode(sourceTexture: sourceTexture,
+                    maskTexture: maskTexture,
+                    destinationTexture: destinationTexture,
+                    using: encoder)
+    }
 
     public func encode(sourceTexture: MTLTexture,
                        maskTexture: MTLTexture,

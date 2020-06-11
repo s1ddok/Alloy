@@ -1,10 +1,3 @@
-//
-//  MTLTextureDescriptor+Extensions.swift
-//  Alloy
-//
-//  Created by Eugene Bokhan on 14.11.2019.
-//
-
 import Metal
 
 public extension MTLTextureDescriptor {

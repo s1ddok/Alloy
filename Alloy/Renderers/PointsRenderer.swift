@@ -66,7 +66,7 @@ final public class PointsRenderer {
         self.renderPipelineDescriptor.fragmentFunction = fragmentFunction
         self.renderPipelineDescriptor.colorAttachments[0].setup(blending: .alpha)
 
-        try self.renderPipelineState(for: pixelFormat)
+        self.renderPipelineState(for: pixelFormat)
     }
 
     @discardableResult
@@ -85,13 +85,25 @@ final public class PointsRenderer {
 
     // MARK: - Rendering
 
+    public func callAsFunction(renderPassDescriptor: MTLRenderPassDescriptor,
+                               commandBuffer: MTLCommandBuffer) {
+        self.render(renderPassDescriptor: renderPassDescriptor,
+                    commandBuffer: commandBuffer)
+    }
+
+    public func callAsFunction(pixelFormat: MTLPixelFormat,
+                               renderEncoder: MTLRenderCommandEncoder) {
+        self.render(pixelFormat: pixelFormat,
+                    renderEncoder: renderEncoder)
+    }
+
     /// Render points in a target texture.
     ///
     /// - Parameters:
     ///   - renderPassDescriptor: Render pass descriptor to be used.
     ///   - commandBuffer: Command buffer to put the rendering work items into.
     public func render(renderPassDescriptor: MTLRenderPassDescriptor,
-                       commandBuffer: MTLCommandBuffer) throws {
+                       commandBuffer: MTLCommandBuffer) {
         guard let renderTarget = renderPassDescriptor.colorAttachments[0].texture
         else { return }
         commandBuffer.render(descriptor: renderPassDescriptor) { renderEncoder in

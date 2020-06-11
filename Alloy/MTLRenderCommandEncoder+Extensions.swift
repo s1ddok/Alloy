@@ -1,10 +1,3 @@
-//
-//  MTLRenderCommandEncoder+Extensions.swift
-//  Alloy
-//
-//  Created by Andrey Volodin on 27/12/2018.
-//
-
 import Metal
 
 public extension MTLRenderCommandEncoder {

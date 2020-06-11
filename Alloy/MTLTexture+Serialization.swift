@@ -1,10 +1,3 @@
-//
-//  MTLTexture+Serialization.swift
-//  Alloy
-//
-//  Created by Andrey Volodin on 27/08/2019.
-//
-
 import Metal
 
 public class MTLTextureCodableBox: Codable {

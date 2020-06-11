@@ -1,10 +1,3 @@
-//
-//  MTLTexture+Extensions.swift
-//  Alloy
-//
-//  Created by Andrey Volodin on 24.09.2018.
-//
-
 import Foundation
 import CoreGraphics
 import MetalKit

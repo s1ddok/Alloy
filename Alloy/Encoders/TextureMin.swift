@@ -1,10 +1,3 @@
-//
-//  TextureMin.swift
-//  Alloy
-//
-//  Created by Eugene Bokhan on 14/02/2019.
-//
-
 import Metal
 
 final public class TextureMin {
@@ -28,6 +21,22 @@ final public class TextureMin {
     }
 
     // MARK: - Encode
+
+    public func callAsFunction(sourceTexture: MTLTexture,
+                               resultBuffer: MTLBuffer,
+                               in commandBuffer: MTLCommandBuffer) {
+        self.encode(sourceTexture: sourceTexture,
+                    resultBuffer: resultBuffer,
+                    in: commandBuffer)
+    }
+
+    public func callAsFunction(sourceTexture: MTLTexture,
+                               resultBuffer: MTLBuffer,
+                               using encoder: MTLComputeCommandEncoder) {
+        self.encode(sourceTexture: sourceTexture,
+                    resultBuffer: resultBuffer,
+                    using: encoder)
+    }
 
     public func encode(sourceTexture: MTLTexture,
                        resultBuffer: MTLBuffer,

@@ -1,10 +1,3 @@
-//
-//  MTLTextureDescriptor+Serialization.swift
-//  Alloy
-//
-//  Created by Andrey Volodin on 29/08/2019.
-//
-
 import Metal
 
 internal class MTLTextureDescriptorCodableBox: Codable {

@@ -1,11 +1,3 @@
-//
-//  MTLPixelFormat+Extensions.swift
-//  AlloyTests
-//
-//  Created by Eugene Bokhan on 03/09/2019.
-//  Copyright © 2019 avolodin. All rights reserved.
-//
-
 import Alloy
 
 extension MTLPixelFormat {

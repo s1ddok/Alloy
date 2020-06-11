@@ -1,10 +1,3 @@
-//
-//  MTLDevice+FeatureSet.swift
-//  Alloy
-//
-//  Created by Andrey Volodin on 26/04/2019.
-//
-
 import Metal
 
 public enum Feature {

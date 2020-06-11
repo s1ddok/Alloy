@@ -1,11 +1,3 @@
-//
-//  CVPixelFormat+MTLTexture.swift
-//  Alloy
-//
-//  Created by Andrey Volodin on 20.10.17.
-//  Copyright © 2017 Andrey Volodin. All rights reserved.
-//
-
 import Metal
 import CoreVideo.CVPixelBuffer
 

@@ -1,23 +1,28 @@
-//
-//  MTLOffscreenRenderer.swift
-//  Alloy
-//
-//  Created by Andrey Volodin on 28.10.2018.
-//
-
 import Metal
 
 public class MTLOffscreenRenderer {
+
+    // MARK: - Properties
     
-    fileprivate var renderPassDescriptor: MTLRenderPassDescriptor
+    private var renderPassDescriptor: MTLRenderPassDescriptor
     
     public var texture: MTLTexture! {
         return self.renderPassDescriptor.colorAttachments[0].resolveTexture
             ?? self.renderPassDescriptor.colorAttachments[0].texture
     }
+
+    // MARK: - Init
     
     public init(renderPassDescriptor: MTLRenderPassDescriptor) {
         self.renderPassDescriptor = renderPassDescriptor
+    }
+
+    // MARK: - Draw
+
+    public func callAsFunction(in commandBuffer: MTLCommandBuffer,
+                               drawCommands: (MTLRenderCommandEncoder) -> Void) {
+        self.draw(in: commandBuffer,
+                  drawCommands: drawCommands)
     }
     
     public func draw(in commandBuffer: MTLCommandBuffer,
@@ -26,7 +31,7 @@ public class MTLOffscreenRenderer {
         else { return }
         
         drawCommands(renderEncoder)
-        
+
         renderEncoder.endEncoding()
     }
     
@@ -70,7 +75,7 @@ public class MTLOffscreenRenderer {
         renderPassDescriptor.stencilAttachment.storeAction = .dontCare
         renderPassDescriptor.stencilAttachment.loadAction = .dontCare
         
-        return MTLOffscreenRenderer(renderPassDescriptor: renderPassDescriptor)
+        return .init(renderPassDescriptor: renderPassDescriptor)
     }
     
 }

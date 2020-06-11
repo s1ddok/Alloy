@@ -1,10 +1,3 @@
-//
-//  MTLCommandQueue+Extensions.swift
-//  Alloy
-//
-//  Created by Eugene Bokhan on 27.11.2019.
-//
-
 import Metal
 
 public extension MTLCommandQueue {

@@ -1,10 +1,3 @@
-//
-//  TextureResize.swift
-//  Alloy
-//
-//  Created by Eugene Bokhan on 30.09.2019.
-//
-
 import Metal
 
 final public class TextureResize {
@@ -61,6 +54,22 @@ final public class TextureResize {
     }
 
     // MARK: - Encode
+
+    public func callAsFunction(sourceTexture: MTLTexture,
+                               destinationTexture: MTLTexture,
+                               in commandBuffer: MTLCommandBuffer) {
+        self.encode(sourceTexture: sourceTexture,
+                    destinationTexture: destinationTexture,
+                    in: commandBuffer)
+    }
+
+    public func callAsFunction(sourceTexture: MTLTexture,
+                               destinationTexture: MTLTexture,
+                               using encoder: MTLComputeCommandEncoder) {
+        self.encode(sourceTexture: sourceTexture,
+                    destinationTexture: destinationTexture,
+                    using: encoder)
+    }
 
     public func encode(sourceTexture: MTLTexture,
                        destinationTexture: MTLTexture,
