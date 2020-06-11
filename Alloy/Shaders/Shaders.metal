@@ -294,8 +294,8 @@ void textureMean(texture2d<T, access::read> sourceTexture,
     for (ushort x = 0; x < blockSize.x; ++x) {
         for (ushort y = 0; y < blockSize.y; ++y) {
             const auto readPosition = blockStartPosition + ushort2(x, y);
-            const auto currentVariance = float4(sourceTexture.read(readPosition));
-            totalSumInBlock += currentVariance;
+            const auto currentValue = float4(sourceTexture.read(readPosition));
+            totalSumInBlock += currentValue;
         }
     }
 
