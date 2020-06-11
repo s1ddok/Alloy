@@ -1,10 +1,3 @@
-//
-//  PyTorchPoolPadding.swift
-//  Alloy
-//
-//  Created by Andrey Volodin on 07/03/2019.
-//
-
 import MetalPerformanceShaders
 
 public class PyTorchPoolPadding: NSObject, MPSNNPadding {

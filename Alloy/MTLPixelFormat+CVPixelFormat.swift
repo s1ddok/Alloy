@@ -1,10 +1,3 @@
-//
-//  MTLPixelFormat+CVPixelFormat.swift
-//  Alloy
-//
-//  Created by Eugene Bokhan on 19.12.2019.
-//
-
 import Metal
 
 public extension MTLPixelFormat {

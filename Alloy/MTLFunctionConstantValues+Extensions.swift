@@ -1,10 +1,3 @@
-//
-//  MTLFunctionConstantValues+Extensions.swift
-//  Alloy
-//
-//  Created by Eugene Bokhan on 08/09/2019.
-//
-
 import Metal
 
 public extension MTLFunctionConstantValues {

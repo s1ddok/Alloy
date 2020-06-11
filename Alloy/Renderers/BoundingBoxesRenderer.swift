@@ -95,13 +95,25 @@ final public class BoundingBoxesRenderer {
 
     // MARK: - Rendering
 
+    public func callAsFunction(renderPassDescriptor: MTLRenderPassDescriptor,
+                               commandBuffer: MTLCommandBuffer) {
+        self.render(renderPassDescriptor: renderPassDescriptor,
+                    commandBuffer: commandBuffer)
+    }
+
+    public func callAsFunction(pixelFormat: MTLPixelFormat,
+                               renderEncoder: MTLRenderCommandEncoder) {
+        self.render(pixelFormat: pixelFormat,
+                    renderEncoder: renderEncoder)
+    }
+
     /// Render bounding boxes in a target texture.
     ///
     /// - Parameters:
     ///   - renderPassDescriptor: Render pass descriptor to be used.
     ///   - commandBuffer: Command buffer to put the rendering work items into.
     public func render(renderPassDescriptor: MTLRenderPassDescriptor,
-                       commandBuffer: MTLCommandBuffer) throws {
+                       commandBuffer: MTLCommandBuffer) {
         guard let renderTarget = renderPassDescriptor.colorAttachments[0].texture
         else { return }
         self.renderTargetSize = renderTarget.size

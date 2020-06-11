@@ -1,10 +1,3 @@
-//
-//  MTLResource+Extensions.swift
-//  Alloy
-//
-//  Created by Eugene Bokhan on 25/02/2019.
-//
-
 import Metal
 
 public extension MTLResource {

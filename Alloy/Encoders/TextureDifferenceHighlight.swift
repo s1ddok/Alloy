@@ -1,10 +1,3 @@
-//
-//  TextureDifferenceHighlight.swift
-//  Alloy
-//
-//  Created by Eugene Bokhan on 23.12.2019.
-//
-
 import Metal
 
 final public class TextureDifferenceHighlight {
@@ -31,6 +24,34 @@ final public class TextureDifferenceHighlight {
     }
 
     // MARK: - Encode
+
+    public func callAsFunction(sourceTextureOne: MTLTexture,
+                               sourceTextureTwo: MTLTexture,
+                               destinationTexture: MTLTexture,
+                               color: SIMD4<Float>,
+                               threshold: Float,
+                               in commandBuffer: MTLCommandBuffer) {
+        self.encode(sourceTextureOne: sourceTextureOne,
+                    sourceTextureTwo: sourceTextureTwo,
+                    destinationTexture: destinationTexture,
+                    color: color,
+                    threshold: threshold,
+                    in: commandBuffer)
+    }
+
+    public func callAsFunction(sourceTextureOne: MTLTexture,
+                               sourceTextureTwo: MTLTexture,
+                               destinationTexture: MTLTexture,
+                               color: SIMD4<Float>,
+                               threshold: Float,
+                               using encoder: MTLComputeCommandEncoder) {
+        self.encode(sourceTextureOne: sourceTextureOne,
+                    sourceTextureTwo: sourceTextureTwo,
+                    destinationTexture: destinationTexture,
+                    color: color,
+                    threshold: threshold,
+                    using: encoder)
+    }
 
     public func encode(sourceTextureOne: MTLTexture,
                        sourceTextureTwo: MTLTexture,

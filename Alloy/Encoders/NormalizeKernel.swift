@@ -1,10 +1,3 @@
-//
-//  NormalizeKernel.swift
-//  Alloy
-//
-//  Created by Eugene Bokhan on 08/05/2019.
-//
-
 import Metal
 import simd
 
@@ -32,6 +25,30 @@ final public class NormalizeKernel {
     }
 
     // MARK: - Encode
+
+    public func callAsFunction(sourceTexture: MTLTexture,
+                               destinationTexture: MTLTexture,
+                               mean: SIMD3<Float>,
+                               std: SIMD3<Float>,
+                               in commandBuffer: MTLCommandBuffer) {
+        self.encode(sourceTexture: sourceTexture,
+                    destinationTexture: destinationTexture,
+                    mean: mean,
+                    std: std,
+                    in: commandBuffer)
+    }
+
+    public func callAsFunction(sourceTexture: MTLTexture,
+                               destinationTexture: MTLTexture,
+                               mean: SIMD3<Float>,
+                               std: SIMD3<Float>,
+                               using encoder: MTLComputeCommandEncoder) {
+        self.encode(sourceTexture: sourceTexture,
+                    destinationTexture: destinationTexture,
+                    mean: mean,
+                    std: std,
+                    using: encoder)
+    }
 
     public func encode(sourceTexture: MTLTexture,
                        destinationTexture: MTLTexture,

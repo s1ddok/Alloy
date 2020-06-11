@@ -1,10 +1,3 @@
-//
-//  LookUpTable.swift
-//  Alloy
-//
-//  Created by Andrey Volodin on 29.10.2019.
-//
-
 import Metal
 
 final public class LookUpTable {
@@ -32,6 +25,30 @@ final public class LookUpTable {
     }
 
     // MARK: - Encode
+
+    public func callAsFunction(sourceTexture: MTLTexture,
+                               outputTexture: MTLTexture,
+                               lut: MTLTexture,
+                               intensity: Float,
+                               in commandBuffer: MTLCommandBuffer) {
+        self.encode(sourceTexture: sourceTexture,
+                    outputTexture: outputTexture,
+                    lut: lut,
+                    intensity: intensity,
+                    in: commandBuffer)
+    }
+
+    public func callAsFunction(sourceTexture: MTLTexture,
+                               outputTexture: MTLTexture,
+                               lut: MTLTexture,
+                               intensity: Float,
+                               using encoder: MTLComputeCommandEncoder) {
+        self.encode(sourceTexture: sourceTexture,
+                    outputTexture: outputTexture,
+                    lut: lut,
+                    intensity: intensity,
+                    using: encoder)
+    }
 
     public func encode(sourceTexture: MTLTexture,
                        outputTexture: MTLTexture,

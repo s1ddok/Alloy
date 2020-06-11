@@ -1,10 +1,3 @@
-//
-//  MTLIndexBuffer.swift
-//  Alloy
-//
-//  Created by Andrey Volodin on 30/04/2019.
-//
-
 import Metal
 
 public class MTLIndexBuffer {

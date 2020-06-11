@@ -1,10 +1,3 @@
-//
-//  MTLRenderPipelineColorAttachmentDescriptor+Extensions.swift
-//  Alloy
-//
-//  Created by Eugene Bokhan on 26/04/2019.
-//
-
 import Metal
 
 public typealias BlendingMode = MTLRenderPipelineColorAttachmentDescriptor.BlendingMode

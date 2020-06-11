@@ -1,10 +1,3 @@
-//
-//  MTLComputeCommandEncoder+Extensions.swift
-//  Alloy
-//
-//  Created by Andrey Volodin on 27/11/2018.
-//
-
 import Metal
 
 public extension MTLComputeCommandEncoder {

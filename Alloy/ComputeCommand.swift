@@ -1,11 +1,3 @@
-//
-//  ComputeFunction.swift
-//  AlloyDemo
-//
-//  Created by Andrey Volodin on 28.08.2018.
-//  Copyright © 2018 Andrey Volodin. All rights reserved.
-//
-
 import Metal
 
 @dynamicMemberLookup

@@ -1,10 +1,3 @@
-//
-//  MTLDevice+Extensions.swift
-//  Alloy
-//
-//  Created by Vladimir Pavlov on 06/05/2019.
-//
-
 import Metal
 
 public extension MTLDevice {

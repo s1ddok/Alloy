@@ -1,11 +1,3 @@
-//
-//  EuclideanDistanceTests.swift
-//  Demo
-//
-//  Created by Eugene Bokhan on 04/09/2019.
-//  Copyright © 2019 avolodin. All rights reserved.
-//
-
 import XCTest
 import Alloy
 import MetalKit
@@ -58,19 +50,16 @@ final class EuclideanDistanceTests: XCTestCase {
             let originalTextureArea = Float(originalTexture.width * originalTexture.height)
             let euclideanDistance = originalTextureArea * sqrt(4 * (pow(constant, 2)))
 
-            try self.context
-                    .scheduleAndWait { commandBuffer in
-                self.textureAddConstantFloat
-                    .encode(sourceTexture: originalTexture,
-                            destinationTexture: modifiedTexture,
-                            constant: .init(repeating: -0.1),
-                            in: commandBuffer)
+            try self.context.scheduleAndWait { commandBuffer in
+                self.textureAddConstantFloat(sourceTexture: originalTexture,
+                                             destinationTexture: modifiedTexture,
+                                             constant: .init(repeating: -0.1),
+                                             in: commandBuffer)
 
-                self.euclideanDistanceFloat
-                    .encode(textureOne: originalTexture,
-                            textureTwo: modifiedTexture,
-                            resultBuffer: resultBuffer,
-                            in: commandBuffer)
+                self.euclideanDistanceFloat(textureOne: originalTexture,
+                                            textureTwo: modifiedTexture,
+                                            resultBuffer: resultBuffer,
+                                            in: commandBuffer)
             }
 
             let result = resultBuffer.pointer(of: Float.self)!.pointee

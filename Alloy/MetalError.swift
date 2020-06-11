@@ -1,10 +1,3 @@
-//
-//  MetalError.swift
-//  Alloy
-//
-//  Created by Andrey Volodin on 15/05/2019.
-//
-
 public enum MetalError {
     public enum MTLContextError: Error {
         case textureCacheCreationFailed
