@@ -32,32 +32,38 @@ final public class TextureMask {
     public func callAsFunction(sourceTexture: MTLTexture,
                                maskTexture: MTLTexture,
                                destinationTexture: MTLTexture,
+                               isInversed: Bool = false,
                                in commandBuffer: MTLCommandBuffer) {
         self.encode(sourceTexture: sourceTexture,
                     maskTexture: maskTexture,
                     destinationTexture: destinationTexture,
+                    isInversed: isInversed,
                     in: commandBuffer)
     }
 
     public func callAsFunction(sourceTexture: MTLTexture,
                                maskTexture: MTLTexture,
                                destinationTexture: MTLTexture,
+                               isInversed: Bool = false,
                                using encoder: MTLComputeCommandEncoder) {
         self.encode(sourceTexture: sourceTexture,
                     maskTexture: maskTexture,
                     destinationTexture: destinationTexture,
+                    isInversed: isInversed,
                     using: encoder)
     }
 
     public func encode(sourceTexture: MTLTexture,
                        maskTexture: MTLTexture,
                        destinationTexture: MTLTexture,
+                       isInversed: Bool = false,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
             encoder.label = "Texture Mask"
             self.encode(sourceTexture: sourceTexture,
                         maskTexture: maskTexture,
                         destinationTexture: destinationTexture,
+                        isInversed: isInversed,
                         using: encoder)
         }
     }
@@ -65,11 +71,13 @@ final public class TextureMask {
     public func encode(sourceTexture: MTLTexture,
                        maskTexture: MTLTexture,
                        destinationTexture: MTLTexture,
+                       isInversed: Bool = false,
                        using encoder: MTLComputeCommandEncoder) {
         encoder.set(textures: [sourceTexture,
                                maskTexture,
                                destinationTexture])
-
+        encoder.set(isInversed, at: 0)
+        
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: pipelineState,
                                exactly: destinationTexture.size)
