@@ -1,4 +1,5 @@
 import Metal
+import simd
 
 final public class SimpleGeometryRenderer {
 

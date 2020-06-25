@@ -1,4 +1,5 @@
 import Metal
+import CoreVideo
 
 public extension MTLPixelFormat {
 

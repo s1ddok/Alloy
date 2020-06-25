@@ -1,5 +1,7 @@
 import Metal
 import simd
+import CoreGraphics
+import ShadersSharedCode
 
 public class MaskRenderer {
 

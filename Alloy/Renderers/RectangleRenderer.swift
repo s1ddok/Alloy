@@ -1,4 +1,6 @@
 import Metal
+import CoreGraphics
+import ShadersSharedCode
 
 final public class RectangleRenderer {
 
