@@ -11,7 +11,7 @@ let package = Package(
     products: [
         .library(
             name: "Alloy",
-            targets: ["Alloy"]),
+            targets: ["Alloy", "ShadersSharedCode"]),
     ],
     dependencies: [
     ],
