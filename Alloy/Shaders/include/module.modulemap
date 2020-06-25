@@ -1,0 +1,4 @@
+module ShadersSharedCode {
+    header "../ShaderStructures.h"
+    export *
+}
