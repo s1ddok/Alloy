@@ -175,11 +175,18 @@ public extension MTLPixelFormat {
 
     var isCompressed: Bool {
         #if os(iOS) && !targetEnvironment(macCatalyst)
-        return self.isPVRTC
-            || self.isEAC
-            || self.isETC
-            || self.isASTC
-            || self.isHDRASTC
+        if #available(iOS 13.0, *) {
+            return self.isPVRTC
+                || self.isEAC
+                || self.isETC
+                || self.isASTC
+                || self.isHDRASTC
+        } else {
+            return self.isPVRTC
+                || self.isEAC
+                || self.isETC
+                || self.isASTC
+        }
         #elseif os(macOS) || (os(iOS) && targetEnvironment(macCatalyst))
         return self.isS3TC
             || self.isRGTC
@@ -210,12 +217,13 @@ public extension MTLPixelFormat {
         }
     }
 
+    @available(iOS 13.0, *)
     var isHDRASTC: Bool {
         switch self {
-            case .astc_4x4_hdr, .astc_5x4_hdr, .astc_5x6_hdr, .astc_6x5_hdr, .astc_8x5_hdr, .astc_8x6_hdr,
-                 .astc_8x8_hdr, .astc_10x5_hdr, .astc_10x6_hdr, .astc_10x8_hdr, .astc_10x10_hdr, .astc_12x10_hdr,
-                 .astc_12x12_hdr:
-                return true
+        case .astc_4x4_hdr, .astc_5x4_hdr, .astc_5x5_hdr, .astc_6x5_hdr, .astc_6x6_hdr, .astc_8x5_hdr,
+             .astc_8x6_hdr, .astc_8x8_hdr, .astc_10x5_hdr, .astc_10x6_hdr, .astc_10x8_hdr, .astc_10x10_hdr,
+             .astc_12x10_hdr, .astc_12x12_hdr:
+            return true
         default: return false
         }
     }
@@ -279,10 +287,16 @@ public extension MTLPixelFormat {
     }
 
     var isDepth: Bool {
-        switch self {
-        case .depth16Unorm, .depth32Float:
-            return true
-        default: return false
+        if #available(iOS 13.0, *) {
+            switch self {
+            case .depth16Unorm, .depth32Float: return true
+            default: return false
+            }
+        } else {
+            switch self {
+            case .depth32Float: return true
+            default: return false
+            }
         }
     }
 
