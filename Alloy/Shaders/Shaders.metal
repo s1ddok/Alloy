@@ -96,7 +96,7 @@ void textureMask(texture2d<T, access::read> sourceTexture,
     const auto originalPixel = sourceTexture.read(position);
 
     constexpr sampler s(coord::normalized,
-                        address::clamp_to_zero,
+                        address::clamp_to_edge,
                         filter::linear);
 
     const auto maskValue = maskTexture.sample(s, (float2(position) + 0.5) / float2(textureSize));
@@ -703,7 +703,7 @@ fragment float4 maskFragment(MaskVertexOut in [[ stage_in ]],
                              constant float4& color [[ buffer(0) ]],
                              constant bool& isInversed [[ buffer(1) ]]) {
     constexpr sampler s(coord::normalized,
-                        address::clamp_to_zero,
+                        address::clamp_to_edge,
                         filter::linear);
     float4 maskValue = (float4)maskTexture.sample(s, in.uv).rrrr;
     if (isInversed) {
@@ -829,7 +829,7 @@ kernel void textureAffineCrop(texture2d<half, access::sample> source [[ texture(
     checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
 
     constexpr sampler s(coord::normalized,
-                        address::clamp_to_zero,
+                        address::clamp_to_edge,
                         filter::linear);
 
     const float2 textureSizef = float2(textureSize);
@@ -901,7 +901,7 @@ kernel void ycbcrToRGBA(texture2d<float, access::sample> sourceYTexture [[ textu
     checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
 
     constexpr sampler s(coord::normalized,
-                        address::clamp_to_zero,
+                        address::clamp_to_edge,
                         filter::linear);
     const auto normalizedPosition = float2(position) / float2(textureSize);
 
