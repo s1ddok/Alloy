@@ -11,7 +11,7 @@ final public class TextureMultiplyAdd {
 
     public convenience init(context: MTLContext,
                             multiplier: Float) throws {
-        try self.init(library: context.library(for: Self.self),
+        try self.init(library: context.library(for: Bundle.module),
                       multiplier: multiplier)
     }
 

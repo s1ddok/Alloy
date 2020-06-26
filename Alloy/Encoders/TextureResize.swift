@@ -22,7 +22,7 @@ final public class TextureResize {
 
     public convenience init(context: MTLContext,
                             samplerDescriptor: MTLSamplerDescriptor) throws {
-        try self.init(library: context.library(for: Self.self),
+        try self.init(library: context.library(for: Bundle.module),
                       samplerDescriptor: samplerDescriptor)
     }
 

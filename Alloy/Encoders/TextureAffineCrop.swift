@@ -11,7 +11,7 @@ final public class TextureAffineCrop {
     // MARK: - Life Cycle
 
     public convenience init(context: MTLContext) throws {
-        try self.init(library: context.library(for: Self.self))
+        try self.init(library: context.library(for: Bundle.module))
     }
 
     public init(library: MTLLibrary) throws {

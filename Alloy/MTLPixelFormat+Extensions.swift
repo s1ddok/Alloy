@@ -212,7 +212,7 @@ public extension MTLPixelFormat {
 
     var isHDRASTC: Bool {
         switch self {
-            case .astc_4x4_hdr, .astc_5x4_hdr, .astc_5x6_hdr, .astc_6x5_hdr, .astc_8x5_hdr, .astc_8x6_hdr,
+            case .astc_4x4_hdr, .astc_5x4_hdr, /*.astc_5x6_hdr,*/ .astc_6x5_hdr, .astc_8x5_hdr, .astc_8x6_hdr,
                  .astc_8x8_hdr, .astc_10x5_hdr, .astc_10x6_hdr, .astc_10x8_hdr, .astc_10x10_hdr, .astc_12x10_hdr,
                  .astc_12x12_hdr:
                 return true

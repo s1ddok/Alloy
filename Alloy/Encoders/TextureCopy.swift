@@ -11,7 +11,7 @@ final public class TextureCopy {
 
     public convenience init(context: MTLContext,
                             scalarType: MTLPixelFormat.ScalarType = .half) throws {
-        try self.init(library: context.library(for: Self.self),
+        try self.init(library: context.library(for: Bundle.module),
                       scalarType: scalarType)
     }
 
