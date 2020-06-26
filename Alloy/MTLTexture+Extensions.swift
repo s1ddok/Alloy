@@ -19,11 +19,12 @@ public extension MTLTexture {
             let rowBytes = self.width
             let length = rowBytes * self.height
 
-            let rgbaBytes = [UInt8](repeating: 0, count: length)
-            self.getBytes(UnsafeMutableRawPointer(mutating: rgbaBytes),
-                                                  bytesPerRow: rowBytes,
-                                                  from: self.region,
-                                                  mipmapLevel: 0)
+            let rgbaBytes = UnsafeMutablePointer<UInt8>.allocate(capacity: length)
+            defer { rgbaBytes.deallocate() }
+            self.getBytes(rgbaBytes,
+                          bytesPerRow: rowBytes,
+                          from: self.region,
+                          mipmapLevel: 0)
 
             let colorScape = colorSpace ?? CGColorSpaceCreateDeviceGray()
             let bitmapInfo = CGBitmapInfo(rawValue: self.pixelFormat == .a8Unorm
@@ -51,19 +52,21 @@ public extension MTLTexture {
             // read texture as byte array
             let rowBytes = self.width * 4
             let length = rowBytes * self.height
-            let bgraBytes = [UInt8](repeating: 0, count: length)
-            self.getBytes(UnsafeMutableRawPointer(mutating: bgraBytes),
-                                                  bytesPerRow: rowBytes,
-                                                  from: self.region,
-                                                  mipmapLevel: 0)
+            let bgraBytes = UnsafeMutablePointer<UInt8>.allocate(capacity: length)
+            let rgbaBytes = UnsafeMutablePointer<UInt8>.allocate(capacity: length)
+            defer { bgraBytes.deallocate(); rgbaBytes.deallocate() }
+            self.getBytes(bgraBytes,
+                          bytesPerRow: rowBytes,
+                          from: self.region,
+                          mipmapLevel: 0)
 
             // use Accelerate framework to convert from BGRA to RGBA
-            var bgraBuffer = vImage_Buffer(data: UnsafeMutableRawPointer(mutating: bgraBytes),
+
+            var bgraBuffer = vImage_Buffer(data: bgraBytes,
                                            height: vImagePixelCount(self.height),
                                            width: vImagePixelCount(self.width),
                                            rowBytes: rowBytes)
-            let rgbaBytes = [UInt8](repeating: 0, count: length)
-            var rgbaBuffer = vImage_Buffer(data: UnsafeMutableRawPointer(mutating: rgbaBytes),
+            var rgbaBuffer = vImage_Buffer(data: rgbaBytes,
                                            height: vImagePixelCount(self.height),
                                            width: vImagePixelCount(self.width),
                                            rowBytes: rowBytes)
@@ -97,9 +100,9 @@ public extension MTLTexture {
             let rowBytes = self.width * 4
             let length = rowBytes * self.height
 
-            let rgbaBytes = [UInt8](repeating: 0,
-                                    count: length)
-            self.getBytes(UnsafeMutableRawPointer(mutating: rgbaBytes),
+            let rgbaBytes = UnsafeMutablePointer<UInt8>.allocate(capacity: length)
+            defer { rgbaBytes.deallocate() }
+            self.getBytes(rgbaBytes,
                           bytesPerRow: rowBytes,
                           from: self.region,
                           mipmapLevel: 0)
