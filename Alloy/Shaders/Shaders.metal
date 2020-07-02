@@ -547,6 +547,38 @@ generateKernels(addConstant)
 #undef outerArguments
 #undef innerArguments
 
+template <typename T>
+void divideByConstant(texture2d<T, access::read> sourceTexture,
+                      texture2d<T, access::write> destinationTexture,
+                      constant float4& constantValue,
+                      const ushort2 position) {
+    const ushort2 textureSize = ushort2(sourceTexture.get_width(),
+                                        sourceTexture.get_height());
+    checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
+
+    auto sourceTextureValue = sourceTexture.read(position);
+    auto destinationTextureValue = sourceTextureValue / vec<T, 4>(constantValue);
+    destinationTexture.write(destinationTextureValue, position);
+}
+
+#define outerArguments(T)                                        \
+(texture2d<T, access::read> sourceTexture [[ texture(0) ]],      \
+texture2d<T, access::write> destinationTexture [[ texture(1) ]], \
+constant float4& constantValue [[ buffer(0) ]],                  \
+const ushort2 position [[ thread_position_in_grid ]])
+
+#define innerArguments \
+(sourceTexture,        \
+destinationTexture,    \
+constantValue,         \
+position)
+
+generateKernels(divideByConstant)
+
+#undef outerArguments
+#undef innerArguments
+
+
 // MARK: - Texture Mix
 
 kernel void textureMix(texture2d<float, access::read> sourceTextureOne [[ texture(0) ]],
