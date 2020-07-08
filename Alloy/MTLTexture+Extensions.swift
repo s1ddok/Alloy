@@ -1,6 +1,7 @@
 import Foundation
 import CoreGraphics
 import MetalKit
+import MetalPerformanceShaders
 import Accelerate
 
 public extension MTLTexture {
@@ -191,6 +192,19 @@ public extension MTLTexture {
         else { throw MetalError.MTLDeviceError.textureCreationFailed }
         
         return matchingTexture
+    }
+    
+    func matchingTemporaryImage(commandBuffer: MTLCommandBuffer,
+                                usage: MTLTextureUsage? = nil) -> MPSTemporaryImage {
+        let matchingDescriptor = self.descriptor
+        
+        if let u = usage {
+            matchingDescriptor.usage = u
+        }
+        // it has to be enforced for temporary image
+        matchingDescriptor.storageMode = .private
+        
+        return MPSTemporaryImage(commandBuffer: commandBuffer, textureDescriptor: matchingDescriptor)
     }
     
     func view(slice: Int,

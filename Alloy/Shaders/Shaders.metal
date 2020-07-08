@@ -96,7 +96,7 @@ void textureMask(texture2d<T, access::read> sourceTexture,
     const auto originalPixel = sourceTexture.read(position);
 
     constexpr sampler s(coord::normalized,
-                        address::clamp_to_zero,
+                        address::clamp_to_edge,
                         filter::linear);
 
     const auto maskValue = maskTexture.sample(s, (float2(position) + 0.5) / float2(textureSize));
@@ -547,6 +547,38 @@ generateKernels(addConstant)
 #undef outerArguments
 #undef innerArguments
 
+template <typename T>
+void divideByConstant(texture2d<T, access::read> sourceTexture,
+                      texture2d<T, access::write> destinationTexture,
+                      constant float4& constantValue,
+                      const ushort2 position) {
+    const ushort2 textureSize = ushort2(sourceTexture.get_width(),
+                                        sourceTexture.get_height());
+    checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
+
+    auto sourceTextureValue = sourceTexture.read(position);
+    auto destinationTextureValue = sourceTextureValue / vec<T, 4>(constantValue);
+    destinationTexture.write(destinationTextureValue, position);
+}
+
+#define outerArguments(T)                                        \
+(texture2d<T, access::read> sourceTexture [[ texture(0) ]],      \
+texture2d<T, access::write> destinationTexture [[ texture(1) ]], \
+constant float4& constantValue [[ buffer(0) ]],                  \
+const ushort2 position [[ thread_position_in_grid ]])
+
+#define innerArguments \
+(sourceTexture,        \
+destinationTexture,    \
+constantValue,         \
+position)
+
+generateKernels(divideByConstant)
+
+#undef outerArguments
+#undef innerArguments
+
+
 // MARK: - Texture Mix
 
 kernel void textureMix(texture2d<float, access::read> sourceTextureOne [[ texture(0) ]],
@@ -703,7 +735,7 @@ fragment float4 maskFragment(MaskVertexOut in [[ stage_in ]],
                              constant float4& color [[ buffer(0) ]],
                              constant bool& isInversed [[ buffer(1) ]]) {
     constexpr sampler s(coord::normalized,
-                        address::clamp_to_zero,
+                        address::clamp_to_edge,
                         filter::linear);
     float4 maskValue = (float4)maskTexture.sample(s, in.uv).rrrr;
     if (isInversed) {
@@ -829,7 +861,7 @@ kernel void textureAffineCrop(texture2d<half, access::sample> source [[ texture(
     checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
 
     constexpr sampler s(coord::normalized,
-                        address::clamp_to_zero,
+                        address::clamp_to_edge,
                         filter::linear);
 
     const float2 textureSizef = float2(textureSize);
@@ -901,7 +933,7 @@ kernel void ycbcrToRGBA(texture2d<float, access::sample> sourceYTexture [[ textu
     checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
 
     constexpr sampler s(coord::normalized,
-                        address::clamp_to_zero,
+                        address::clamp_to_edge,
                         filter::linear);
     const auto normalizedPosition = float2(position) / float2(textureSize);
 
