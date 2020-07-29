@@ -11,7 +11,7 @@ final public class TextureAddConstant {
 
     public convenience init(context: MTLContext,
                             scalarType: MTLPixelFormat.ScalarType = .half) throws {
-        try self.init(library: context.library(for: Bundle.module),
+        try self.init(library: context.library(for: .module),
                       scalarType: scalarType)
     }
 

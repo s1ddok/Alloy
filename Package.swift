@@ -36,7 +36,9 @@ let package = Package(
                 publicHeadersPath: nil,
                 cSettings: nil,
                 cxxSettings: nil,
-                swiftSettings: nil,
+                swiftSettings: [
+                    .define("SwiftPM")
+                ],
                 linkerSettings: [
                     .linkedFramework("Metal"),
                     .linkedFramework("CoreVideo"),
