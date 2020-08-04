@@ -29,24 +29,24 @@ final public class MaskGuidedBlur {
 
     // MARK: - Encode
 
-    public func callAsFunction(sourceTexture: MTLTexture,
-                               maskTexture: MTLTexture,
-                               destinationTexture: MTLTexture,
+    public func callAsFunction(source: MTLTexture,
+                               mask: MTLTexture,
+                               destination: MTLTexture,
                                sigma: Float,
                                in commandBuffer: MTLCommandBuffer) {
-        self.encode(sourceTexture: sourceTexture,
-                    maskTexture: maskTexture,
-                    destinationTexture: destinationTexture,
+        self.encode(source: source,
+                    mask: mask,
+                    destination: destination,
                     sigma: sigma,
                     in: commandBuffer)
     }
 
-    public func encode(sourceTexture: MTLTexture,
-                       maskTexture: MTLTexture,
-                       destinationTexture: MTLTexture,
+    public func encode(source: MTLTexture,
+                       mask: MTLTexture,
+                       destination: MTLTexture,
                        sigma: Float,
                        in commandBuffer: MTLCommandBuffer) {
-        let temporaryTextureDescriptor = sourceTexture.descriptor
+        let temporaryTextureDescriptor = source.descriptor
         temporaryTextureDescriptor.usage = [.shaderRead, .shaderWrite]
         temporaryTextureDescriptor.storageMode = .private
         temporaryTextureDescriptor.pixelFormat = .rgba8Unorm
@@ -57,30 +57,30 @@ final public class MaskGuidedBlur {
                                                    textureDescriptor: temporaryTextureDescriptor)
             defer { temporaryImage.readCount = 0 }
 
-            encoder.set(textures: [sourceTexture,
-                                   maskTexture,
+            encoder.set(textures: [source,
+                                   mask,
                                    temporaryImage.texture])
             encoder.set(sigma, at: 0)
 
             if self.deviceSupportsNonuniformThreadgroups {
                 encoder.dispatch2d(state: self.blurRowPassState,
-                                   exactly: sourceTexture.size)
+                                   exactly: source.size)
             } else {
                 encoder.dispatch2d(state: self.blurRowPassState,
-                                   covering: sourceTexture.size)
+                                   covering: source.size)
             }
 
             encoder.set(textures: [temporaryImage.texture,
-                                   maskTexture,
-                                   destinationTexture])
+                                   mask,
+                                   destination])
             encoder.set(sigma, at: 0)
 
             if self.deviceSupportsNonuniformThreadgroups {
                 encoder.dispatch2d(state: self.blurColumnPassState,
-                                   exactly: sourceTexture.size)
+                                   exactly: source.size)
             } else {
                 encoder.dispatch2d(state: self.blurColumnPassState,
-                                   covering: sourceTexture.size)
+                                   covering: source.size)
             }
         }
     }

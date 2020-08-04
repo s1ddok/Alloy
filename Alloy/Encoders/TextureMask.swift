@@ -29,53 +29,53 @@ final public class TextureMask {
 
     // MARK: - Encode
 
-    public func callAsFunction(sourceTexture: MTLTexture,
-                               maskTexture: MTLTexture,
-                               destinationTexture: MTLTexture,
+    public func callAsFunction(source: MTLTexture,
+                               mask: MTLTexture,
+                               destination: MTLTexture,
                                in commandBuffer: MTLCommandBuffer) {
-        self.encode(sourceTexture: sourceTexture,
-                    maskTexture: maskTexture,
-                    destinationTexture: destinationTexture,
+        self.encode(source: source,
+                    mask: mask,
+                    destination: destination,
                     in: commandBuffer)
     }
 
-    public func callAsFunction(sourceTexture: MTLTexture,
-                               maskTexture: MTLTexture,
-                               destinationTexture: MTLTexture,
+    public func callAsFunction(source: MTLTexture,
+                               mask: MTLTexture,
+                               destination: MTLTexture,
                                using encoder: MTLComputeCommandEncoder) {
-        self.encode(sourceTexture: sourceTexture,
-                    maskTexture: maskTexture,
-                    destinationTexture: destinationTexture,
+        self.encode(source: source,
+                    mask: mask,
+                    destination: destination,
                     using: encoder)
     }
 
-    public func encode(sourceTexture: MTLTexture,
-                       maskTexture: MTLTexture,
-                       destinationTexture: MTLTexture,
+    public func encode(source: MTLTexture,
+                       mask: MTLTexture,
+                       destination: MTLTexture,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
             encoder.label = "Texture Mask"
-            self.encode(sourceTexture: sourceTexture,
-                        maskTexture: maskTexture,
-                        destinationTexture: destinationTexture,
+            self.encode(source: source,
+                        mask: mask,
+                        destination: destination,
                         using: encoder)
         }
     }
 
-    public func encode(sourceTexture: MTLTexture,
-                       maskTexture: MTLTexture,
-                       destinationTexture: MTLTexture,
+    public func encode(source: MTLTexture,
+                       mask: MTLTexture,
+                       destination: MTLTexture,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [sourceTexture,
-                               maskTexture,
-                               destinationTexture])
+        encoder.set(textures: [source,
+                               mask,
+                               destination])
 
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: pipelineState,
-                               exactly: destinationTexture.size)
+                               exactly: destination.size)
         } else {
             encoder.dispatch2d(state: pipelineState,
-                               covering: destinationTexture.size)
+                               covering: destination.size)
         }
     }
 

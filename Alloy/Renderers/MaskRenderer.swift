@@ -8,7 +8,7 @@ public class MaskRenderer {
     /// Mask color. Red in default.
     public var color: SIMD4<Float> = .init(1, 0, 0, 0.3)
     /// Texture containig mask information.
-    public var maskTexture: MTLTexture? = nil
+    public var mask: MTLTexture? = nil
     /// Rectrangle described in a normalized coodrinate system.
     public var normalizedRect: CGRect = .zero
 
@@ -135,7 +135,7 @@ public class MaskRenderer {
         let rectangle = self.constructRectangle()
         renderEncoder.set(vertexValue: rectangle,
                           at: 0)
-        renderEncoder.setFragmentTexture(self.maskTexture,
+        renderEncoder.setFragmentTexture(self.mask,
                                          index: 0)
         renderEncoder.set(fragmentValue: self.color,
                           at: 0)

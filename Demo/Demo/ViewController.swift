@@ -55,8 +55,8 @@ class ViewController: NSViewController {
 
         try? self.context.scheduleAndWait { buffer in
             buffer.compute { encoder in
-                self.affineCropEncoder.encode(sourceTexture: texture,
-                                              destinationTexture: cropTexture,
+                self.affineCropEncoder.encode(source: texture,
+                                              destination: crop,
                                               affineTransform: simd_float3x3(transform),
                                               using: encoder)
             }
@@ -64,11 +64,11 @@ class ViewController: NSViewController {
             // For Mac applications (doesn't actually do anything, serves as an example)
             if case .managed = texture.storageMode {
                 buffer.blit { encoder in
-                    encoder.synchronize(resource: cropTexture)
+                    encoder.synchronize(resource: crop)
                 }
             }
         }
         
-        self.imageView.image = try! cropTexture.image()
+        self.imageView.image = try! crop.image()
     }
 }

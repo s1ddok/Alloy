@@ -55,48 +55,48 @@ final public class TextureResize {
 
     // MARK: - Encode
 
-    public func callAsFunction(sourceTexture: MTLTexture,
-                               destinationTexture: MTLTexture,
+    public func callAsFunction(source: MTLTexture,
+                               destination: MTLTexture,
                                in commandBuffer: MTLCommandBuffer) {
-        self.encode(sourceTexture: sourceTexture,
-                    destinationTexture: destinationTexture,
+        self.encode(source: source,
+                    destination: destination,
                     in: commandBuffer)
     }
 
-    public func callAsFunction(sourceTexture: MTLTexture,
-                               destinationTexture: MTLTexture,
+    public func callAsFunction(source: MTLTexture,
+                               destination: MTLTexture,
                                using encoder: MTLComputeCommandEncoder) {
-        self.encode(sourceTexture: sourceTexture,
-                    destinationTexture: destinationTexture,
+        self.encode(source: source,
+                    destination: destination,
                     using: encoder)
     }
 
-    public func encode(sourceTexture: MTLTexture,
-                       destinationTexture: MTLTexture,
+    public func encode(source: MTLTexture,
+                       destination: MTLTexture,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
             encoder.label = "Texture Resize"
-            self.encode(sourceTexture: sourceTexture,
-                        destinationTexture: destinationTexture,
+            self.encode(source: source,
+                        destination: destination,
                         using: encoder)
         }
     }
 
-    public func encode(sourceTexture: MTLTexture,
-                       destinationTexture: MTLTexture,
+    public func encode(source: MTLTexture,
+                       destination: MTLTexture,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [sourceTexture,
-                               destinationTexture])
+        encoder.set(textures: [source,
+                               destination])
 
         encoder.setSamplerState(self.samplerState,
                                 index: 0)
 
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: self.pipelineState,
-                               exactly: destinationTexture.size)
+                               exactly: destination.size)
         } else {
             encoder.dispatch2d(state: self.pipelineState,
-                               covering: destinationTexture.size)
+                               covering: destination.size)
         }
     }
 

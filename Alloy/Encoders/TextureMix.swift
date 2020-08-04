@@ -25,60 +25,60 @@ final public class TextureMix {
 
     // MARK: - Encode
 
-    public func callAsFunction(sourceTextureOne: MTLTexture,
-                               sourceTextureTwo: MTLTexture,
-                               maskTexture: MTLTexture,
-                               destinationTexture: MTLTexture,
+    public func callAsFunction(sourceOne: MTLTexture,
+                               sourceTwo: MTLTexture,
+                               mask: MTLTexture,
+                               destination: MTLTexture,
                                in commandBuffer: MTLCommandBuffer) {
-        self.encode(sourceTextureOne: sourceTextureOne,
-                    sourceTextureTwo: sourceTextureTwo,
-                    maskTexture: maskTexture,
-                    destinationTexture: destinationTexture,
+        self.encode(sourceOne: sourceOne,
+                    sourceTwo: sourceTwo,
+                    mask: mask,
+                    destination: destination,
                     in: commandBuffer)
     }
 
-    public func callAsFunction(sourceTextureOne: MTLTexture,
-                               sourceTextureTwo: MTLTexture,
-                               maskTexture: MTLTexture,
-                               destinationTexture: MTLTexture,
+    public func callAsFunction(sourceOne: MTLTexture,
+                               sourceTwo: MTLTexture,
+                               mask: MTLTexture,
+                               destination: MTLTexture,
                                using encoder: MTLComputeCommandEncoder) {
-        self.encode(sourceTextureOne: sourceTextureOne,
-                    sourceTextureTwo: sourceTextureTwo,
-                    maskTexture: maskTexture,
-                    destinationTexture: destinationTexture,
+        self.encode(sourceOne: sourceOne,
+                    sourceTwo: sourceTwo,
+                    mask: mask,
+                    destination: destination,
                     using: encoder)
     }
 
-    public func encode(sourceTextureOne: MTLTexture,
-                       sourceTextureTwo: MTLTexture,
-                       maskTexture: MTLTexture,
-                       destinationTexture: MTLTexture,
+    public func encode(sourceOne: MTLTexture,
+                       sourceTwo: MTLTexture,
+                       mask: MTLTexture,
+                       destination: MTLTexture,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
             encoder.label = "Texture Mix"
-            self.encode(sourceTextureOne: sourceTextureOne,
-                        sourceTextureTwo: sourceTextureTwo,
-                        maskTexture: maskTexture,
-                        destinationTexture: destinationTexture,
+            self.encode(sourceOne: sourceOne,
+                        sourceTwo: sourceTwo,
+                        mask: mask,
+                        destination: destination,
                         using: encoder)
         }
     }
 
-    public func encode(sourceTextureOne: MTLTexture,
-                       sourceTextureTwo: MTLTexture,
-                       maskTexture: MTLTexture,
-                       destinationTexture: MTLTexture,
+    public func encode(sourceOne: MTLTexture,
+                       sourceTwo: MTLTexture,
+                       mask: MTLTexture,
+                       destination: MTLTexture,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [sourceTextureOne,
-                               sourceTextureTwo,
-                               maskTexture,
-                               destinationTexture])
+        encoder.set(textures: [sourceOne,
+                               sourceTwo,
+                               mask,
+                               destination])
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: self.pipelineState,
-                               exactly: destinationTexture.size)
+                               exactly: destination.size)
         } else {
             encoder.dispatch2d(state: self.pipelineState,
-                               covering: destinationTexture.size)
+                               covering: destination.size)
         }
     }
 

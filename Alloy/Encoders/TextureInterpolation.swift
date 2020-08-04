@@ -30,61 +30,61 @@ final public class TextureInterpolation {
 
     // MARK: - Encode
 
-    public func callAsFunction(sourceTextureOne: MTLTexture,
-                               sourceTextureTwo: MTLTexture,
-                               destinationTexture: MTLTexture,
+    public func callAsFunction(sourceOne: MTLTexture,
+                               sourceTwo: MTLTexture,
+                               destination: MTLTexture,
                                weight: Float,
                                in commandBuffer: MTLCommandBuffer) {
-        self.encode(sourceTextureOne: sourceTextureOne,
-                    sourceTextureTwo: sourceTextureTwo,
-                    destinationTexture: destinationTexture,
+        self.encode(sourceOne: sourceOne,
+                    sourceTwo: sourceTwo,
+                    destination: destination,
                     weight: weight,
                     in: commandBuffer)
     }
 
-    public func callAsFunction(sourceTextureOne: MTLTexture,
-                               sourceTextureTwo: MTLTexture,
-                               destinationTexture: MTLTexture,
+    public func callAsFunction(sourceOne: MTLTexture,
+                               sourceTwo: MTLTexture,
+                               destination: MTLTexture,
                                weight: Float,
                                using encoder: MTLComputeCommandEncoder) {
-        self.encode(sourceTextureOne: sourceTextureOne,
-                    sourceTextureTwo: sourceTextureTwo,
-                    destinationTexture: destinationTexture,
+        self.encode(sourceOne: sourceOne,
+                    sourceTwo: sourceTwo,
+                    destination: destination,
                     weight: weight,
                     using: encoder)
     }
 
-    public func encode(sourceTextureOne: MTLTexture,
-                       sourceTextureTwo: MTLTexture,
-                       destinationTexture: MTLTexture,
+    public func encode(sourceOne: MTLTexture,
+                       sourceTwo: MTLTexture,
+                       destination: MTLTexture,
                        weight: Float,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
             encoder.label = "Texture Interpolation"
-            self.encode(sourceTextureOne: sourceTextureOne,
-                        sourceTextureTwo: sourceTextureTwo,
-                        destinationTexture: destinationTexture,
+            self.encode(sourceOne: sourceOne,
+                        sourceTwo: sourceTwo,
+                        destination: destination,
                         weight: weight,
                         using: encoder)
         }
     }
 
-    public func encode(sourceTextureOne: MTLTexture,
-                       sourceTextureTwo: MTLTexture,
-                       destinationTexture: MTLTexture,
+    public func encode(sourceOne: MTLTexture,
+                       sourceTwo: MTLTexture,
+                       destination: MTLTexture,
                        weight: Float,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [sourceTextureOne,
-                               sourceTextureTwo,
-                               destinationTexture])
+        encoder.set(textures: [sourceOne,
+                               sourceTwo,
+                               destination])
         encoder.set(weight, at: 0)
 
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: self.pipelineState,
-                               exactly: destinationTexture.size)
+                               exactly: destination.size)
         } else {
             encoder.dispatch2d(state: self.pipelineState,
-                               covering: destinationTexture.size)
+                               covering: destination.size)
         }
     }
 

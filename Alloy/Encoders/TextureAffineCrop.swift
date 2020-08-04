@@ -27,53 +27,53 @@ final public class TextureAffineCrop {
 
     // MARK: - Encode
 
-    public func callAsFunction(sourceTexture: MTLTexture,
-                               destinationTexture: MTLTexture,
+    public func callAsFunction(source: MTLTexture,
+                               destination: MTLTexture,
                                affineTransform: simd_float3x3,
                                in commandBuffer: MTLCommandBuffer) {
-        self.encode(sourceTexture: sourceTexture,
-                    destinationTexture: destinationTexture,
+        self.encode(source: source,
+                    destination: destination,
                     affineTransform: affineTransform,
                     in: commandBuffer)
     }
 
-    public func callAsFunction(sourceTexture: MTLTexture,
-                               destinationTexture: MTLTexture,
+    public func callAsFunction(source: MTLTexture,
+                               destination: MTLTexture,
                                affineTransform: simd_float3x3,
                                using encoder: MTLComputeCommandEncoder) {
-        self.encode(sourceTexture: sourceTexture,
-                    destinationTexture: destinationTexture,
+        self.encode(source: source,
+                    destination: destination,
                     affineTransform: affineTransform,
                     using: encoder)
     }
 
-    public func encode(sourceTexture: MTLTexture,
-                       destinationTexture: MTLTexture,
+    public func encode(source: MTLTexture,
+                       destination: MTLTexture,
                        affineTransform: simd_float3x3,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
             encoder.label = "Texture Affine Crop"
-            self.encode(sourceTexture: sourceTexture,
-                        destinationTexture: destinationTexture,
+            self.encode(source: source,
+                        destination: destination,
                         affineTransform: affineTransform,
                         using: encoder)
         }
     }
 
-    public func encode(sourceTexture: MTLTexture,
-                       destinationTexture: MTLTexture,
+    public func encode(source: MTLTexture,
+                       destination: MTLTexture,
                        affineTransform: simd_float3x3,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [sourceTexture,
-                               destinationTexture])
+        encoder.set(textures: [source,
+                               destination])
         encoder.set(affineTransform, at: 0)
 
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: self.pipelineState,
-                               exactly: destinationTexture.size)
+                               exactly: destination.size)
         } else {
             encoder.dispatch2d(state: self.pipelineState,
-                               covering: destinationTexture.size)
+                               covering: destination.size)
         }
     }
 

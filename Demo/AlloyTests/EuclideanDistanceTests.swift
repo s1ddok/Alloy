@@ -41,23 +41,21 @@ final class EuclideanDistanceTests: XCTestCase {
             guard let cgImage = UIImage(named: "255")?.cgImage
             else { throw Error.cgImageCreationFailed }
             
-            let originalTexture = try self.context
-                                          .texture(from: cgImage,
-                                                   usage: [.shaderRead, .shaderWrite])
-            let modifiedTexture = try originalTexture.matchingTexture()
+            let original = try self.context.texture(from: cgImage,
+                                                    usage: [.shaderRead, .shaderWrite])
+            let modified = try original.matchingTexture()
 
             let constant = Float(-0.1)
-            let originalTextureArea = Float(originalTexture.width * originalTexture.height)
+            let originalTextureArea = Float(original.width * original.height)
             let euclideanDistance = originalTextureArea * sqrt(4 * (pow(constant, 2)))
 
             try self.context.scheduleAndWait { commandBuffer in
-                self.textureAddConstantFloat(sourceTexture: originalTexture,
-                                             destinationTexture: modifiedTexture,
+                self.textureAddConstantFloat(source: original,
+                                             destination: modified,
                                              constant: .init(repeating: -0.1),
                                              in: commandBuffer)
-
-                self.euclideanDistanceFloat(textureOne: originalTexture,
-                                            textureTwo: modifiedTexture,
+                self.euclideanDistanceFloat(textureOne: original,
+                                            textureTwo: modified,
                                             resultBuffer: resultBuffer,
                                             in: commandBuffer)
             }
