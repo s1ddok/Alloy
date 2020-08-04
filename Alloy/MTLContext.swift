@@ -105,5 +105,25 @@ public final class MTLContext {
                                    options: options)
     }
 
+    @available(iOS 12.0, tvOS 12.0, macOS 10.14, *)
+    public func privateStorageCopy(of source: MTLTexture,
+                                   usage: MTLTextureUsage? = nil,
+                                   optimizeContentsForGPUAccess: Bool = false) throws -> MTLTexture {
+        let destination = try source.matchingTexture(usage: usage,
+                                                     storage: .private)
+        try self.scheduleAndWait { commandBuffer in
+            commandBuffer.blit { encoder in
+                encoder.copy(region: source.region,
+                             from: source,
+                             to: .zero,
+                             of: destination)
+                if optimizeContentsForGPUAccess {
+                    encoder.optimizeContentsForGPUAccess(texture: destination)
+                }
+            }
+        }
+        return destination
+    }
+
 }
 
