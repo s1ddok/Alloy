@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                  = 'Alloy'
-  s.version               = '0.14.4'
+  s.version               = '0.14.5'
   s.license               = { :type => 'MIT', :file => 'LICENSE' }
   s.summary               = 'Nano helpers for Metal framework'
   s.homepage              = 'https://github.com/s1ddok/Alloy'
@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   s.source                = { :git => 'https://github.com/s1ddok/Alloy.git', :tag => s.version.to_s }
   s.ios.deployment_target = '11.0'
   s.osx.deployment_target = '10.13'
-  s.swift_version         = '5.1'
+  s.swift_version         = '5.2'
   s.default_subspec       = 'Core'
 
   s.subspec 'Core' do |core|

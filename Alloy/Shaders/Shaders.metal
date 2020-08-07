@@ -581,22 +581,40 @@ generateKernels(divideByConstant)
 
 // MARK: - Texture Mix
 
-kernel void textureMix(texture2d<float, access::read> sourceTextureOne [[ texture(0) ]],
-                       texture2d<float, access::read> sourceTextureTwo [[ texture(1) ]],
-                       texture2d<float, access::read> maskTexture [[ texture(2) ]],
-                       texture2d<float, access::write> destinationTexture [[ texture(3) ]],
-                       const ushort2 position [[ thread_position_in_grid ]]) {
-    const ushort2 textureSize = ushort2(destinationTexture.get_width(),
-                                        destinationTexture.get_height());
+kernel void textureMaskedMix(texture2d<float, access::read> sourceOne [[ texture(0) ]],
+                             texture2d<float, access::read> sourceTwo [[ texture(1) ]],
+                             texture2d<float, access::read> mask [[ texture(2) ]],
+                             texture2d<float, access::write> destination [[ texture(3) ]],
+                             const ushort2 position [[ thread_position_in_grid ]]) {
+    const ushort2 textureSize = ushort2(destination.get_width(),
+                                        destination.get_height());
     checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
 
-    const auto sourceTextureOneValue = sourceTextureOne.read(position);
-    const auto sourceTextureTwoValue = sourceTextureTwo.read(position);
-    const auto maskTextureValue = maskTexture.read(position).r;
-    const auto resultValue = mix(sourceTextureOneValue,
-                                 sourceTextureTwoValue,
-                                 maskTextureValue);
-    destinationTexture.write(resultValue, position);
+    const auto sourceOneValue = sourceOne.read(position);
+    const auto sourceTwoValue = sourceTwo.read(position);
+    const auto maskValue = mask.read(position).r;
+    const auto resultValue = mix(sourceOneValue,
+                                 sourceTwoValue,
+                                 maskValue);
+    destination.write(resultValue, position);
+}
+
+kernel void textureMix(texture2d<float, access::read> sourceOne [[ texture(0) ]],
+                       texture2d<float, access::read> sourceTwo [[ texture(1) ]],
+                       texture2d<float, access::write> destination [[ texture(2) ]],
+                       constant float& weight [[ buffer(0) ]],
+                       const ushort2 position [[ thread_position_in_grid ]]) {
+    const ushort2 textureSize = ushort2(destination.get_width(),
+                                        destination.get_height());
+    checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
+
+    const auto sourceOneValue = sourceOne.read(position);
+    const auto sourceTwoValue = sourceTwo.read(position);
+    const auto resultValue = mix(sourceOneValue,
+                                 sourceTwoValue,
+                                 weight);
+
+    destination.write(resultValue, position);
 }
 
 // MARK: - Texture Multiply Add
