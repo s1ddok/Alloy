@@ -1,6 +1,6 @@
 import Metal
 
-final public class TextureWeightedMix {
+final public class TextureMaskedMix {
 
     // MARK: - Properties
 
@@ -25,70 +25,63 @@ final public class TextureWeightedMix {
 
     // MARK: - Encode
 
-    public func callAsFunction(sourceOne: MTLTexture,
-                               sourceTwo: MTLTexture,
+    public func callAsFunction(sourceTextureOne: MTLTexture,
+                               sourceTextureTwo: MTLTexture,
                                maskTexture: MTLTexture,
-                               destination: MTLTexture,
-                               weight: Float,
+                               destinationTexture: MTLTexture,
                                in commandBuffer: MTLCommandBuffer) {
-        self.encode(sourceOne: sourceOne,
-                    sourceTwo: sourceTwo,
+        self.encode(sourceTextureOne: sourceTextureOne,
+                    sourceTextureTwo: sourceTextureTwo,
                     maskTexture: maskTexture,
-                    destination: destination,
-                    weight: weight,
+                    destinationTexture: destinationTexture,
                     in: commandBuffer)
     }
 
-    public func callAsFunction(sourceOne: MTLTexture,
-                               sourceTwo: MTLTexture,
+    public func callAsFunction(sourceTextureOne: MTLTexture,
+                               sourceTextureTwo: MTLTexture,
                                maskTexture: MTLTexture,
-                               destination: MTLTexture,
-                               weight: Float,
+                               destinationTexture: MTLTexture,
                                using encoder: MTLComputeCommandEncoder) {
-        self.encode(sourceOne: sourceOne,
-                    sourceTwo: sourceTwo,
+        self.encode(sourceTextureOne: sourceTextureOne,
+                    sourceTextureTwo: sourceTextureTwo,
                     maskTexture: maskTexture,
-                    destination: destination,
-                    weight: weight,
+                    destinationTexture: destinationTexture,
                     using: encoder)
     }
 
-    public func encode(sourceOne: MTLTexture,
-                       sourceTwo: MTLTexture,
+    public func encode(sourceTextureOne: MTLTexture,
+                       sourceTextureTwo: MTLTexture,
                        maskTexture: MTLTexture,
-                       destination: MTLTexture,
-                       weight: Float,
+                       destinationTexture: MTLTexture,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
             encoder.label = "Texture Mix"
-            self.encode(sourceOne: sourceOne,
-                        sourceTwo: sourceTwo,
+            self.encode(sourceTextureOne: sourceTextureOne,
+                        sourceTextureTwo: sourceTextureTwo,
                         maskTexture: maskTexture,
-                        destination: destination,
-                        weight: weight,
+                        destinationTexture: destinationTexture,
                         using: encoder)
         }
     }
 
-    public func encode(sourceOne: MTLTexture,
-                       sourceTwo: MTLTexture,
+    public func encode(sourceTextureOne: MTLTexture,
+                       sourceTextureTwo: MTLTexture,
                        maskTexture: MTLTexture,
-                       destination: MTLTexture,
-                       weight: Float,
+                       destinationTexture: MTLTexture,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [sourceOne,
-                               sourceTwo,
-                               destination])
-        encoder.set(weight, at: 0)
+        encoder.set(textures: [sourceTextureOne,
+                               sourceTextureTwo,
+                               maskTexture,
+                               destinationTexture])
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: self.pipelineState,
-                               exactly: destination.size)
+                               exactly: destinationTexture.size)
         } else {
             encoder.dispatch2d(state: self.pipelineState,
-                               covering: destination.size)
+                               covering: destinationTexture.size)
         }
     }
 
-    public static let functionName = "textureWeightedMix"
+    public static let functionName = "textureMaskedMix"
 }
 
