@@ -12,7 +12,7 @@ final public class MaskGuidedBlur {
     // MARK: - Life Cycle
 
     public convenience init(context: MTLContext) throws {
-        try self.init(library: context.library(for: Bundle.module))
+        try self.init(library: context.library(for: .module))
     }
 
     public init(library: MTLLibrary) throws {

@@ -23,8 +23,7 @@ class AlloyTests: XCTestCase {
         do {
             self.context = try MTLContext()
 
-            let library = try self.context
-                                  .library(for: Self.self)
+            let library = try self.context.library(for: Self.self)
 
             self.evenInitState = try library.computePipelineState(function: "initialize_even")
 
@@ -156,8 +155,7 @@ class IdealSizeTests: XCTestCase {
         do {
             self.context = try MTLContext()
 
-            let library = try self.context
-                                  .library(for: Self.self)
+            let library = try self.context.library(for: .module)
 
             self.evenState = try library.computePipelineState(function: "fill_with_threadgroup_size_even")
 

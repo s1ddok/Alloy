@@ -1,5 +1,7 @@
 import Metal
+#if SWIFT_PM
 import ShadersSharedCode
+#endif
 
 final public class LinesRenderer {
 
@@ -45,7 +47,7 @@ final public class LinesRenderer {
     /// - Throws: Library or function creation errors.
     public convenience init(context: MTLContext,
                             pixelFormat: MTLPixelFormat = .bgra8Unorm) throws {
-        try self.init(library: context.library(for: Self.self),
+        try self.init(library: context.library(for: .module),
                       pixelFormat: pixelFormat)
     }
 

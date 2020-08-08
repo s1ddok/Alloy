@@ -13,7 +13,7 @@ final public class SimpleGeometryRenderer {
     public convenience init(context: MTLContext,
                             pixelFormat: MTLPixelFormat,
                             blending: BlendingMode = .alpha) throws {
-        try self.init(library: context.library(for: Self.self),
+        try self.init(library: context.library(for: .module),
                       pixelFormat: pixelFormat,
                       blending: blending)
     }
