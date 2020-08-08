@@ -1,6 +1,8 @@
 import Metal
 import CoreGraphics
+#if SwiftPM
 import ShadersSharedCode
+#endif
 
 final public class BoundingBoxesRenderer {
 

@@ -1,5 +1,7 @@
 import Metal
+#if SwiftPM
 import ShadersSharedCode
+#endif
 
 final public class LinesRenderer {
 

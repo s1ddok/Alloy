@@ -1,7 +1,9 @@
 import Metal
 import simd
 import CoreGraphics
+#if SwiftPM
 import ShadersSharedCode
+#endif
 
 public class MaskRenderer {
 
