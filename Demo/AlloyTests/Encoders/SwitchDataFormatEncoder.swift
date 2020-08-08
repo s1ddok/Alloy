@@ -23,7 +23,7 @@ final public class SwitchDataFormatEncoder {
 
     public convenience init(context: MTLContext,
                             conversionType: ConversionType) throws {
-        try self.init(library: context.library(for: .module),
+        try self.init(library: context.library(for: Self.self),
                       conversionType: conversionType)
     }
 
