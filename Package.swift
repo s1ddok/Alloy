@@ -37,7 +37,7 @@ let package = Package(
                 cSettings: nil,
                 cxxSettings: nil,
                 swiftSettings: [
-                    .define("SwiftPM")
+                    .define("SWIFT_PM")
                 ],
                 linkerSettings: [
                     .linkedFramework("Metal"),

@@ -1,6 +1,6 @@
 import Metal
 import CoreGraphics
-#if SwiftPM
+#if SWIFT_PM
 import ShadersSharedCode
 #endif
 

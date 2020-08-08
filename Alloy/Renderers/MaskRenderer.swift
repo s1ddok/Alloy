@@ -1,7 +1,7 @@
 import Metal
 import simd
 import CoreGraphics
-#if SwiftPM
+#if SWIFT_PM
 import ShadersSharedCode
 #endif
 

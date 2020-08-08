@@ -1,7 +1,6 @@
-#if !SwiftPM
+#if !SWIFT_PM
 import Foundation
-private class BundleFinder {}
-extension Foundation.Bundle {
-    static var module = Bundle(for: BundleFinder.self)
+public extension Bundle {
+    static var module = Bundle(for: AlloyTests.self)
 }
 #endif

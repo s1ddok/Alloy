@@ -1,5 +1,5 @@
 import Metal
-#if SwiftPM
+#if SWIFT_PM
 import ShadersSharedCode
 #endif
 

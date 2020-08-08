@@ -1,7 +1,7 @@
-#if !SwiftPM
 import Foundation
-private class BundleFinder {}
-extension Foundation.Bundle {
-    static var module = Bundle(for: BundleFinder.self)
+#if !SWIFT_PM
+public extension Bundle {
+    static var module = Bundle(for: MTLContext.self)
 }
 #endif
+public let bundle = Bundle.module
