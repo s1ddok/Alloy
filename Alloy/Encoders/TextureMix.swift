@@ -1,6 +1,6 @@
 import Metal
 
-final public class TextureMix {
+final public class TextureWeightedMix {
 
     // MARK: - Properties
 
@@ -89,6 +89,6 @@ final public class TextureMix {
         }
     }
 
-    public static let functionName = "textureMix"
+    public static let functionName = "textureWeightedMix"
 }
 
