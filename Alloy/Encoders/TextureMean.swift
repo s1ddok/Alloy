@@ -60,8 +60,8 @@ final public class TextureMean {
         let blockSize = BlockSize(width: blockSizeWidth,
                                   height: blockSizeHeight)
 
-        encoder.set(textures: [source])
-        encoder.set(blockSize, at: 0)
+        encoder.setTextures(source)
+        encoder.setValue(blockSize, at: 0)
         encoder.setBuffer(result,
                           offset: 0,
                           index: 1)

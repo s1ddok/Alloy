@@ -69,10 +69,7 @@ final public class TextureMix {
                        mask: MTLTexture,
                        destination: MTLTexture,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [sourceOne,
-                               sourceTwo,
-                               mask,
-                               destination])
+        encoder.setTextures(sourceOne, sourceTwo, mask, destination)
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: self.pipelineState,
                                exactly: destination.size)

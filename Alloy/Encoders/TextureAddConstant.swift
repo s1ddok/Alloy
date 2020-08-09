@@ -67,9 +67,8 @@ final public class TextureAddConstant {
                        destination: MTLTexture,
                        constant: SIMD4<Float>,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [source,
-                               destination])
-        encoder.set(constant, at: 0)
+        encoder.setTextures(source, destination)
+        encoder.setValue(constant, at: 0)
 
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: self.pipelineState,

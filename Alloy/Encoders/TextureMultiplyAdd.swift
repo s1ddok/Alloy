@@ -67,9 +67,7 @@ final public class TextureMultiplyAdd {
                        sourceTwo: MTLTexture,
                        destination: MTLTexture,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [sourceOne,
-                               sourceTwo,
-                               destination])
+        encoder.setTextures(sourceOne, sourceTwo, destination)
 
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: pipelineState,

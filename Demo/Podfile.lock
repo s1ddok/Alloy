@@ -1,10 +1,10 @@
 PODS:
-  - Alloy (0.14.4):
-    - Alloy/Core (= 0.14.4)
-  - Alloy/Core (0.14.4)
-  - Alloy/ML (0.14.4):
+  - Alloy (0.15.0):
+    - Alloy/Core (= 0.15.0)
+  - Alloy/Core (0.15.0)
+  - Alloy/ML (0.15.0):
     - Alloy/Core
-  - Alloy/Shaders (0.14.4):
+  - Alloy/Shaders (0.15.0):
     - Alloy/Core
   - SwiftMath (3.2.0)
 
@@ -23,7 +23,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Alloy: 3f29a6636a6cb5d78413677faa8f944e5e162949
+  Alloy: 84e03ebb5735cd42203396a4d28f019079369f28
   SwiftMath: d010d63f42454f782680c28df987323b08a85caa
 
 PODFILE CHECKSUM: 0e625e0798aefa71c5baa3004987245f7e468dd7

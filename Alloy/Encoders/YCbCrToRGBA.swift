@@ -62,9 +62,7 @@ final public class YCbCrToRGBA {
                        sourceCbCr: MTLTexture,
                        destinationRGBA: MTLTexture,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [sourceY,
-                               sourceCbCr,
-                               destinationRGBA])
+        encoder.setTextures(sourceY, sourceCbCr, destinationRGBA)
 
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: self.pipelineState,

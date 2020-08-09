@@ -67,9 +67,8 @@ final public class TextureDivideByConstant {
                        destination: MTLTexture,
                        constant: SIMD4<Float>,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [source,
-                               destination])
-        encoder.set(constant, at: 0)
+        encoder.setTextures(source, destination)
+        encoder.setValue(constant, at: 0)
 
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: self.pipelineState,
@@ -117,8 +116,7 @@ final public class TextureDivideByConstant {
                        destination: MTLTexture,
                        constant: MTLBuffer,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [source,
-                               destination])
+        encoder.setTextures(source, destination)
         encoder.setBuffer(constant, offset: 0, index: 0)
 
         if self.deviceSupportsNonuniformThreadgroups {

@@ -128,10 +128,8 @@ final public class PointsRenderer {
         renderEncoder.setVertexBuffer(self.pointsPositionsBuffer,
                                       offset: 0,
                                       index: 0)
-        renderEncoder.set(vertexValue: self.pointSize,
-                          at: 1)
-        renderEncoder.set(fragmentValue: self.color,
-                          at: 0)
+        renderEncoder.setVertexValue(self.pointSize, at: 1)
+        renderEncoder.setFragmentValue(self.color, at: 0)
         // Draw.
         renderEncoder.drawPrimitives(type: .point,
                                      vertexStart: 0,

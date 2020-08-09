@@ -130,8 +130,7 @@ final public class LinesRenderer {
         renderEncoder.setVertexBuffer(self.linesBuffer,
                                       offset: 0,
                                       index: 0)
-        renderEncoder.set(fragmentValue: self.color,
-                          at: 0)
+        renderEncoder.setFragmentValue(self.color, at: 0)
         // Draw.
         renderEncoder.drawPrimitives(type: .triangleStrip,
                                      vertexStart: 0,
