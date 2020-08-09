@@ -66,9 +66,7 @@ final public class TextureMask {
                        mask: MTLTexture,
                        destination: MTLTexture,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [source,
-                               mask,
-                               destination])
+        encoder.setTextures(source, mask, destination)
 
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: pipelineState,

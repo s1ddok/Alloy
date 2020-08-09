@@ -16,7 +16,7 @@ class ViewController: NSViewController {
     @IBOutlet weak var imageView: NSImageView!
     @IBOutlet weak var slider: NSSlider!
     
-    let context = try! MTLContext(device: Metal.lowPowerDevice!)
+    let context = try! MTLContext()
     var affineCropEncoder: TextureAffineCrop!
 
     let image = NSImage(named: "flower")!
@@ -56,7 +56,7 @@ class ViewController: NSViewController {
         try? self.context.scheduleAndWait { buffer in
             buffer.compute { encoder in
                 self.affineCropEncoder.encode(source: texture,
-                                              destination: crop,
+                                              destination: cropTexture,
                                               affineTransform: simd_float3x3(transform),
                                               using: encoder)
             }
@@ -64,11 +64,11 @@ class ViewController: NSViewController {
             // For Mac applications (doesn't actually do anything, serves as an example)
             if case .managed = texture.storageMode {
                 buffer.blit { encoder in
-                    encoder.synchronize(resource: crop)
+                    encoder.synchronize(resource: cropTexture)
                 }
             }
         }
         
-        self.imageView.image = try! crop.image()
+        self.imageView.image = try! cropTexture.image()
     }
 }

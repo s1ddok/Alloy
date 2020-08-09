@@ -70,10 +70,9 @@ final public class NormalizeKernel {
                        mean: SIMD3<Float>,
                        std: SIMD3<Float>,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [source,
-                               destination])
-        encoder.set(mean, at: 0)
-        encoder.set(std, at: 1)
+        encoder.setTextures(source, destination)
+        encoder.setValue(mean, at: 0)
+        encoder.setValue(std, at: 1)
 
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: self.pipelineState,

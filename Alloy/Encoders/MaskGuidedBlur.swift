@@ -57,10 +57,8 @@ final public class MaskGuidedBlur {
                                                    textureDescriptor: temporaryTextureDescriptor)
             defer { temporaryImage.readCount = 0 }
 
-            encoder.set(textures: [source,
-                                   mask,
-                                   temporaryImage.texture])
-            encoder.set(sigma, at: 0)
+            encoder.setTextures(source, mask, temporaryImage.texture)
+            encoder.setValue(sigma, at: 0)
 
             if self.deviceSupportsNonuniformThreadgroups {
                 encoder.dispatch2d(state: self.blurRowPassState,
@@ -70,10 +68,8 @@ final public class MaskGuidedBlur {
                                    covering: source.size)
             }
 
-            encoder.set(textures: [temporaryImage.texture,
-                                   mask,
-                                   destination])
-            encoder.set(sigma, at: 0)
+            encoder.setTextures(temporaryImage.texture, mask, destination)
+            encoder.setValue(sigma, at: 0)
 
             if self.deviceSupportsNonuniformThreadgroups {
                 encoder.dispatch2d(state: self.blurColumnPassState,

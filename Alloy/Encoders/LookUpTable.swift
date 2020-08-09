@@ -70,10 +70,8 @@ final public class LookUpTable {
                        lut: MTLTexture,
                        intensity: Float,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [source,
-                               destination,
-                               lut])
-        encoder.set(intensity, at: 0)
+        encoder.setTextures(source, destination, lut)
+        encoder.setValue(intensity, at: 0)
 
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: pipelineState,

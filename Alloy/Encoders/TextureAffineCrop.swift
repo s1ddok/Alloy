@@ -64,9 +64,8 @@ final public class TextureAffineCrop {
                        destination: MTLTexture,
                        affineTransform: simd_float3x3,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [source,
-                               destination])
-        encoder.set(affineTransform, at: 0)
+        encoder.setTextures(source, destination)
+        encoder.setValue(affineTransform, at: 0)
 
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: self.pipelineState,

@@ -85,8 +85,7 @@ final public class TextureResize {
     public func encode(source: MTLTexture,
                        destination: MTLTexture,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [source,
-                               destination])
+        encoder.setTextures(source, destination)
 
         encoder.setSamplerState(self.samplerState,
                                 index: 0)

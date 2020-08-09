@@ -76,11 +76,9 @@ final public class TextureDifferenceHighlight {
                        color: SIMD4<Float>,
                        threshold: Float,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [sourceOne,
-                               sourceTwo,
-                               destination])
-        encoder.set(color, at: 0)
-        encoder.set(threshold, at: 1)
+        encoder.setTextures(sourceOne, sourceTwo, destination)
+        encoder.setValue(color, at: 0)
+        encoder.setValue(threshold, at: 1)
 
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: self.pipelineState,

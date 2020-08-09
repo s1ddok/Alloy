@@ -133,14 +133,11 @@ public class MaskRenderer {
         renderEncoder.setRenderPipelineState(renderPipelineState)
         // Set any buffers fed into our render pipeline.
         let rectangle = self.constructRectangle()
-        renderEncoder.set(vertexValue: rectangle,
-                          at: 0)
+        renderEncoder.setVertexValue(rectangle, at: 0)
         renderEncoder.setFragmentTexture(self.mask,
                                          index: 0)
-        renderEncoder.set(fragmentValue: self.color,
-                          at: 0)
-        renderEncoder.set(fragmentValue: isInversed,
-                          at: 1)
+        renderEncoder.setFragmentValue(self.color, at: 0)
+        renderEncoder.setFragmentValue(isInversed, at: 1)
         // Draw.
         renderEncoder.drawPrimitives(type: .triangleStrip,
                                      vertexStart: 0,

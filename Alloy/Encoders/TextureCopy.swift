@@ -165,20 +165,19 @@ final public class TextureCopy {
         let writeOffset = SIMD2<Int16>(x: .init(writeOrigin.x),
                                        y: .init(writeOrigin.y))
 
-        encoder.set(textures: [source,
-                               destination])
-        encoder.set(readOffset,
+        encoder.setTextures(source, destination)
+        encoder.setValue(readOffset,
                     at: 0)
-        encoder.set(writeOffset,
+        encoder.setValue(writeOffset,
                     at: 1)
 
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: self.pipelineState,
                                exactly: gridSize)
         } else {
-            encoder.set(SIMD2<UInt16>(x: .init(gridSize.width),
-                                      y: .init(gridSize.height)),
-                        at: 2)
+            encoder.setValue(SIMD2<UInt16>(x: .init(gridSize.width),
+                                           y: .init(gridSize.height)),
+                             at: 2)
             encoder.dispatch2d(state: self.pipelineState,
                                covering: gridSize)
         }
