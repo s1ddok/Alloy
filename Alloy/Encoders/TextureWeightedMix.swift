@@ -27,13 +27,11 @@ final public class TextureWeightedMix {
 
     public func callAsFunction(sourceOne: MTLTexture,
                                sourceTwo: MTLTexture,
-                               maskTexture: MTLTexture,
                                destination: MTLTexture,
                                weight: Float,
                                in commandBuffer: MTLCommandBuffer) {
         self.encode(sourceOne: sourceOne,
                     sourceTwo: sourceTwo,
-                    maskTexture: maskTexture,
                     destination: destination,
                     weight: weight,
                     in: commandBuffer)
@@ -41,13 +39,11 @@ final public class TextureWeightedMix {
 
     public func callAsFunction(sourceOne: MTLTexture,
                                sourceTwo: MTLTexture,
-                               maskTexture: MTLTexture,
                                destination: MTLTexture,
                                weight: Float,
                                using encoder: MTLComputeCommandEncoder) {
         self.encode(sourceOne: sourceOne,
                     sourceTwo: sourceTwo,
-                    maskTexture: maskTexture,
                     destination: destination,
                     weight: weight,
                     using: encoder)
@@ -55,7 +51,6 @@ final public class TextureWeightedMix {
 
     public func encode(sourceOne: MTLTexture,
                        sourceTwo: MTLTexture,
-                       maskTexture: MTLTexture,
                        destination: MTLTexture,
                        weight: Float,
                        in commandBuffer: MTLCommandBuffer) {
@@ -63,7 +58,6 @@ final public class TextureWeightedMix {
             encoder.label = "Texture Mix"
             self.encode(sourceOne: sourceOne,
                         sourceTwo: sourceTwo,
-                        maskTexture: maskTexture,
                         destination: destination,
                         weight: weight,
                         using: encoder)
@@ -72,7 +66,6 @@ final public class TextureWeightedMix {
 
     public func encode(sourceOne: MTLTexture,
                        sourceTwo: MTLTexture,
-                       maskTexture: MTLTexture,
                        destination: MTLTexture,
                        weight: Float,
                        using encoder: MTLComputeCommandEncoder) {
