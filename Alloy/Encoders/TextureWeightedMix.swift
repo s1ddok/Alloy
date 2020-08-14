@@ -69,10 +69,10 @@ final public class TextureWeightedMix {
                        destination: MTLTexture,
                        weight: Float,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [sourceOne,
-                               sourceTwo,
-                               destination])
-        encoder.set(weight, at: 0)
+        encoder.setTextures(sourceOne,
+                            sourceTwo,
+                            destination)
+        encoder.setValue(weight, at: 0)
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: self.pipelineState,
                                exactly: destination.size)
