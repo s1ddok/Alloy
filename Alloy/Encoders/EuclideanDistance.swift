@@ -76,7 +76,7 @@ final public class EuclideanDistance {
         let threadgroupMemoryLength = threadgroupSize.width
                                     * threadgroupSize.height
                                     * 4
-                                    * MemoryLayout<Float16>.stride
+                                    * MemoryLayout<SIMD4<Float>>.stride
 
         encoder.setThreadgroupMemoryLength(threadgroupMemoryLength,
                                            index: 0)
