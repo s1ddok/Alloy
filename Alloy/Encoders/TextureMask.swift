@@ -32,32 +32,38 @@ final public class TextureMask {
     public func callAsFunction(source: MTLTexture,
                                mask: MTLTexture,
                                destination: MTLTexture,
+                               isInversed: Bool = false,
                                in commandBuffer: MTLCommandBuffer) {
         self.encode(source: source,
                     mask: mask,
                     destination: destination,
+                    isInversed: isInversed,
                     in: commandBuffer)
     }
 
     public func callAsFunction(source: MTLTexture,
                                mask: MTLTexture,
                                destination: MTLTexture,
+                               isInversed: Bool = false,
                                using encoder: MTLComputeCommandEncoder) {
         self.encode(source: source,
                     mask: mask,
                     destination: destination,
+                    isInversed: isInversed,
                     using: encoder)
     }
 
     public func encode(source: MTLTexture,
                        mask: MTLTexture,
                        destination: MTLTexture,
+                       isInversed: Bool = false,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
             encoder.label = "Texture Mask"
             self.encode(source: source,
                         mask: mask,
                         destination: destination,
+                        isInversed: isInversed,
                         using: encoder)
         }
     }
@@ -65,8 +71,10 @@ final public class TextureMask {
     public func encode(source: MTLTexture,
                        mask: MTLTexture,
                        destination: MTLTexture,
+                       isInversed: Bool = false,
                        using encoder: MTLComputeCommandEncoder) {
         encoder.setTextures(source, mask, destination)
+        encoder.setValue(isInversed, at: 0)
 
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: pipelineState,

@@ -81,6 +81,7 @@ template <typename T>
 void textureMask(texture2d<T, access::read> source,
                  texture2d<float, access::sample> mask,
                  texture2d<T, access::write> destination,
+                 constant bool& isInversed,
                  const ushort2 position [[ thread_position_in_grid ]]) {
     const auto textureSize = ushort2(destination.get_width(),
                                      destination.get_height());
@@ -93,10 +94,12 @@ void textureMask(texture2d<T, access::read> source,
                         filter::linear);
     const auto positionF = float2(position);
     const auto textureSizeF = float2(textureSize);
-    const auto normalizedPosition = float2((positionF.x + 0.5f) / textureSizeF.x,
-                                           (positionF.y + 0.5f) / textureSizeF.y);
+    const auto normalizedPosition = (positionF.x + 0.5f) / textureSizeF;
 
-    const auto maskValue = mask.sample(s, normalizedPosition);
+    auto maskValue = mask.sample(s, normalizedPosition);
+    if (isInversed) {
+        maskValue = 1.0f - maskValue;
+    }
     const auto resultValue = vec<T, 4>(sourceValue * maskValue.r);
 
     destination.write(resultValue, position);
@@ -106,12 +109,14 @@ void textureMask(texture2d<T, access::read> source,
 (texture2d<T, access::read> source [[ texture(0) ]],      \
 texture2d<float, access::sample> mask [[ texture(1) ]],   \
 texture2d<T, access::write> destination [[ texture(2) ]], \
+constant bool& isInversed [[ buffer(0) ]],                \
 const ushort2 position [[thread_position_in_grid]])       \
 
 #define innerArguments \
 (source,               \
 mask,                  \
 destination,           \
+isInversed,            \
 position)              \
 
 generateKernels(textureMask)
