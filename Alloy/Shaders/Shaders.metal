@@ -68,8 +68,7 @@ kernel void textureResize(texture2d<float, access::sample> source [[ texture(0) 
 
     const auto positionF = float2(position);
     const auto textureSizeF = float2(textureSize);
-    const auto normalizedPosition = float2((positionF.x + 0.5f) / textureSizeF.x,
-                                           (positionF.y + 0.5f) / textureSizeF.y);
+    const auto normalizedPosition = (positionF + 0.5f) / textureSizeF;
 
     auto sampledValue = source.sample(s, normalizedPosition);
     destination.write(sampledValue, position);
@@ -93,8 +92,7 @@ void textureMask(texture2d<T, access::read> source,
                         filter::linear);
     const auto positionF = float2(position);
     const auto textureSizeF = float2(textureSize);
-    const auto normalizedPosition = float2((positionF.x + 0.5f) / textureSizeF.x,
-                                           (positionF.y + 0.5f) / textureSizeF.y);
+    const auto normalizedPosition = (positionF + 0.5f) / textureSizeF;
 
     const auto maskValue = mask.sample(s, normalizedPosition);
     const auto resultValue = vec<T, 4>(sourceValue * maskValue.r);
@@ -350,10 +348,9 @@ kernel void maskGuidedBlurRowPass(texture2d<float, access::read> source [[ textu
                         address::clamp_to_edge,
                         filter::linear);
 
-    const auto textureSizeF = float2(textureSize);
     const auto positionF = float2(position);
-    const auto normalizedPosition = float2((positionF.x + 0.5f) / textureSizeF.x,
-                                           (positionF.y + 0.5f) / textureSizeF.y);
+    const auto textureSizeF = float2(textureSize);
+    const auto normalizedPosition = (positionF + 0.5f) / textureSizeF;
 
     const auto maskValue = mask.sample(s, normalizedPosition).r;
 
@@ -367,8 +364,7 @@ kernel void maskGuidedBlurRowPass(texture2d<float, access::read> source [[ textu
         const auto kernelValue = exp(float(-row * row) / (2.0f * sigmaValue * sigmaValue + 1e-5f));
         const auto readPosition = uint2(clamp(position.x + row, 0, position.y - 1), position.y);
         const auto readPositionF = float2(readPosition);
-        const auto normalizedPosition = float2((readPositionF.x + 0.5f) / textureSizeF.x,
-                                               (readPositionF.y + 0.5f) / textureSizeF.y);
+        const auto normalizedPosition = (readPositionF.x + 0.5f) / textureSizeF;
         const auto maskMultiplier = 1.0f - mask.sample(s, normalizedPosition).r + 1e-5f;
         const auto totalFactor = kernelValue * maskMultiplier;
         normalizingConstant += float(totalFactor);
@@ -396,8 +392,7 @@ kernel void maskGuidedBlurColumnPass(texture2d<float, access::read> source [[ te
 
     const auto textureSizeF = float2(textureSize);
     const auto positionF = float2(position);
-    const auto normalizedPosition = float2((positionF.x + 0.5f) / textureSizeF.x,
-                                           (positionF.y + 0.5f) / textureSizeF.y);
+    const auto normalizedPosition = (positionF.x + 0.5f) / textureSizeF;
 
     const auto maskValue = mask.sample(s, normalizedPosition).r;
 
@@ -411,8 +406,7 @@ kernel void maskGuidedBlurColumnPass(texture2d<float, access::read> source [[ te
         const auto kernelValue = exp(float(-column * column) / (2.0f * sigmaValue * sigmaValue + 1e-5f));
         const auto readPosition = uint2(position.x, clamp(position.y + column, 0u, position.y - 1));
         const auto readPositionF = float2(readPosition);
-        const auto normalizedPosition = float2((readPositionF.x + 0.5f) / textureSizeF.x,
-                                               (readPositionF.y + 0.5f) / textureSizeF.y);
+        const auto normalizedPosition = (readPositionF.x + 0.5f) / textureSizeF;
         const auto maskMultiplier = 1.0f - mask.sample(s, normalizedPosition).r + 1e-5f;
         const auto totalFactor = kernelValue * maskMultiplier;
         normalizingConstant += float(totalFactor);
@@ -581,10 +575,9 @@ kernel void textureMaskedMix(texture2d<float, access::read> sourceOne [[ texture
     constexpr sampler s(coord::normalized,
                         address::clamp_to_edge,
                         filter::linear);
-
-    const auto textureSizef = float2(textureSize);
     const auto positionF = float2(position);
-    const auto normalizedPosition = positionF / textureSizef;
+    const auto textureSizeF = float2(textureSize);
+    const auto normalizedPosition = (positionF + 0.5f) / textureSizeF;
 
     const auto sourceOneValue = sourceOne.read(position);
     const auto sourceTwoValue = sourceTwo.read(position);
@@ -874,9 +867,9 @@ kernel void textureAffineCrop(texture2d<half, access::sample> source [[ texture(
     constexpr sampler s(coord::normalized,
                         address::clamp_to_edge,
                         filter::linear);
-
-    const auto textureSizef = float2(textureSize);
-    const auto normalizedPosition = float2(position) / textureSizef;
+    const auto positionF = float2(position);
+    const auto textureSizeF = float2(textureSize);
+    const auto normalizedPosition = (positionF + 0.5f) / textureSizeF;
 
     const auto targetPosition = transform * float3(normalizedPosition, 1.0f);
 
@@ -948,8 +941,7 @@ kernel void ycbcrToRGBA(texture2d<float, access::sample> sourceY [[ texture(0) ]
                         filter::linear);
     const auto positionF = float2(position);
     const auto textureSizeF = float2(textureSize);
-    const auto normalizedPosition = float2((positionF.x + 0.5f) / textureSizeF.x,
-                                           (positionF.y + 0.5f) / textureSizeF.y);
+    const auto normalizedPosition = (positionF + 0.5f) / textureSizeF;
 
     const auto ycbcr = float4(sourceY.sample(s, normalizedPosition).r,
                               sourceCbCr.sample(s, normalizedPosition).rg,
@@ -957,4 +949,38 @@ kernel void ycbcrToRGBA(texture2d<float, access::sample> sourceY [[ texture(0) ]
     const auto destinationValue = ycbcrToRGBTransform * ycbcr;
 
     destinationRGBA.write(destinationValue, position);
+}
+
+// MARK: - RGBA to YCbCr
+
+constant float4x4 rgbaToYCbCrTransform = {
+    { +0.2990f, -0.1687f, +0.5000f, +0.0000f },
+    { +0.5870f, -0.3313f, -0.4187f, +0.0000f },
+    { +0.1140f, +0.5000f, -0.0813f, +0.0000f },
+    { -0.0000f, +0.5000f, +0.5000f, +1.0000f }
+};
+
+kernel void rgbaToYCbCr(texture2d<float, access::sample> sourceRGBA [[ texture(0) ]],
+                        texture2d<float, access::write> destinationY [[ texture(1) ]],
+                        texture2d<float, access::write> destinationCbCr [[ texture(2) ]],
+                        const ushort2 position [[ thread_position_in_grid ]],
+                        const ushort2 totalThreads [[ threads_per_grid ]]) {
+    const auto textureSize = ushort2(destinationY.get_width(),
+                                     destinationY.get_height());
+    checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
+
+    constexpr sampler s(coord::normalized,
+                        address::clamp_to_edge,
+                        filter::linear);
+    const auto positionF = float2(position);
+    const auto textureSizeF = float2(textureSize);
+    const auto normalizedPosition = (positionF + 0.5f) / textureSizeF;
+
+    const auto rgba = sourceRGBA.sample(s, normalizedPosition);
+    const auto ycbcr = rgbaToYCbCrTransform * rgba;
+
+    const auto y = ycbcr.r;
+    const auto cbcr = float4(ycbcr.gb, 0.0f, 0.0f);
+    destinationY.write(y, position);
+    destinationCbCr.write(cbcr, position);
 }
