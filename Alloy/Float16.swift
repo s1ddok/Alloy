@@ -31,10 +31,10 @@ public func float16to32(_ input: UnsafeMutableRawPointer,
                                                 &bufferFloat32,
                                                 0)
     }
-    return status != kvImageNoError ? output : nil
+    return status == kvImageNoError ? output : nil
 }
 
-/// Uses vImage to convert an array of Swift floats  into a buffer of float16s.
+/// Uses vImage to convert an array of Swift floats into a buffer of float16s.
 ///
 /// - Parameters:
 ///   - input: A pointer to an array of `Float`s.
@@ -55,5 +55,5 @@ public func float32to16(_ input: UnsafeMutablePointer<Float>,
                                           rowBytes: count * 2)
         return vImageConvert_PlanarFtoPlanar16F(&bufferFloat32, &bufferFloat16, 0)
     }
-    return status != kvImageNoError ? output : nil
+    return status == kvImageNoError ? output : nil
 }
