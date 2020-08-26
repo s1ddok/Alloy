@@ -82,7 +82,7 @@ void textureMask(texture2d<T, access::read> source,
                  texture2d<float, access::sample> mask,
                  texture2d<T, access::write> destination,
                  constant bool& isInversed,
-                 const ushort2 position [[ thread_position_in_grid ]]) {
+                 const ushort2 position) {
     const auto textureSize = ushort2(destination.get_width(),
                                      destination.get_height());
     checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
