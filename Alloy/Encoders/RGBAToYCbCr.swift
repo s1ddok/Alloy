@@ -6,24 +6,27 @@ final public class RGBAToYCbCr {
     // MARK: - Properties
 
     public let pipelineState: MTLComputePipelineState
-    public let scale: MPSImageBilinearScale
     private let deviceSupportsNonuniformThreadgroups: Bool
 
     // MARK: - Life Cycle
 
-    public convenience init(context: MTLContext) throws {
-        try self.init(library: context.library(for: Self.self))
+    public convenience init(context: MTLContext,
+                            halfSizedCbCr: Bool = true) throws {
+        try self.init(library: context.library(for: Self.self),
+                      halfSizedCbCr: halfSizedCbCr)
     }
 
-    public init(library: MTLLibrary) throws {
+    public init(library: MTLLibrary,
+                halfSizedCbCr: Bool = true) throws {
         self.deviceSupportsNonuniformThreadgroups = library.device
                                                            .supports(feature: .nonUniformThreadgroups)
         let constantValues = MTLFunctionConstantValues()
         constantValues.set(self.deviceSupportsNonuniformThreadgroups,
                            at: 0)
+        constantValues.set(halfSizedCbCr,
+                           at: 2)
         self.pipelineState = try library.computePipelineState(function: Self.functionName,
                                                               constants: constantValues)
-        self.scale = .init(device: library.device)
     }
 
     // MARK: - Encode
@@ -38,35 +41,26 @@ final public class RGBAToYCbCr {
                     in: commandBuffer)
     }
 
+    public func callAsFunction(sourceRGBA: MTLTexture,
+                               destinationY: MTLTexture,
+                               destinationCbCr: MTLTexture,
+                               using encoder: MTLComputeCommandEncoder) {
+        self.encode(sourceRGBA: sourceRGBA,
+                    destinationY: destinationY,
+                    destinationCbCr: destinationCbCr,
+                    using: encoder)
+    }
+
     public func encode(sourceRGBA: MTLTexture,
                        destinationY: MTLTexture,
                        destinationCbCr: MTLTexture,
                        in commandBuffer: MTLCommandBuffer) {
-        if destinationCbCr.size != destinationY.size {
-            let temporaryCbCrDescriptor = destinationY.descriptor
-            temporaryCbCrDescriptor.pixelFormat = .rg8Unorm
-            temporaryCbCrDescriptor.storageMode = .private
-            let temporaryCbCr = MPSTemporaryImage(commandBuffer: commandBuffer,
-                                                  textureDescriptor: temporaryCbCrDescriptor)
-            defer { temporaryCbCr.readCount = 0 }
-            commandBuffer.compute { encoder in
-                encoder.label = "RGBA To YCbCr"
-                self.encode(sourceRGBA: sourceRGBA,
-                            destinationY: destinationY,
-                            destinationCbCr: temporaryCbCr.texture,
-                            using: encoder)
-            }
-            self.scale(source: temporaryCbCr.texture,
-                       destination: destinationCbCr,
-                       in: commandBuffer)
-        } else {
-            commandBuffer.compute { encoder in
-                encoder.label = "RGBA To YCbCr"
-                self.encode(sourceRGBA: sourceRGBA,
-                            destinationY: destinationY,
-                            destinationCbCr: destinationCbCr,
-                            using: encoder)
-            }
+        commandBuffer.compute { encoder in
+            encoder.label = "RGBA To YCbCr"
+            self.encode(sourceRGBA: sourceRGBA,
+                        destinationY: destinationY,
+                        destinationCbCr: destinationCbCr,
+                        using: encoder)
         }
     }
 
@@ -86,5 +80,5 @@ final public class RGBAToYCbCr {
         }
     }
 
-    public static let functionName = "ycbcrToRGBA"
+    public static let functionName = "rgbaToYCbCr"
 }

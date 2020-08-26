@@ -7,7 +7,8 @@ using namespace metal;
 
 constant bool deviceSupportsNonuniformThreadgroups [[ function_constant(0) ]];
 constant bool deviceDoesntSupportNonuniformThreadgroups = !deviceSupportsNonuniformThreadgroups;
-constant float multiplierFC [[function_constant(1)]];
+constant float multiplierFC [[ function_constant(1) ]];
+constant bool halfSizedCbCr [[ function_constant(2) ]];
 
 struct BlockSize {
     ushort width;
@@ -963,8 +964,7 @@ constant float4x4 rgbaToYCbCrTransform = {
 kernel void rgbaToYCbCr(texture2d<float, access::sample> sourceRGBA [[ texture(0) ]],
                         texture2d<float, access::write> destinationY [[ texture(1) ]],
                         texture2d<float, access::write> destinationCbCr [[ texture(2) ]],
-                        const ushort2 position [[ thread_position_in_grid ]],
-                        const ushort2 totalThreads [[ threads_per_grid ]]) {
+                        const ushort2 position [[ thread_position_in_grid ]]) {
     const auto textureSize = ushort2(destinationY.get_width(),
                                      destinationY.get_height());
     checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
@@ -980,7 +980,12 @@ kernel void rgbaToYCbCr(texture2d<float, access::sample> sourceRGBA [[ texture(0
     const auto ycbcr = rgbaToYCbCrTransform * rgba;
 
     const auto y = ycbcr.r;
-    const auto cbcr = float4(ycbcr.gb, 0.0f, 0.0f);
+    const auto cbcr = float4(ycbcr.gb, 0.0f);
     destinationY.write(y, position);
-    destinationCbCr.write(cbcr, position);
+
+    if (halfSizedCbCr) {
+        destinationCbCr.write(cbcr, position / 2);
+    } else {
+        destinationCbCr.write(cbcr, position);
+    }
 }
