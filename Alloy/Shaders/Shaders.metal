@@ -982,10 +982,10 @@ kernel void rgbaToYCbCr(texture2d<float, access::sample> sourceRGBA [[ texture(0
                                                       0, component::y);
         const auto bValuesForQuad = sourceRGBA.gather(s, gatherPosition,
                                                       0, component::z);
-        const auto rgbaValues = float4x4(float4(rValuesForQuad.r, gValuesForQuad.r, bValuesForQuad.r, 1.0f),
-                                         float4(rValuesForQuad.g, gValuesForQuad.g, bValuesForQuad.g, 1.0f),
-                                         float4(rValuesForQuad.b, gValuesForQuad.b, bValuesForQuad.b, 1.0f),
-                                         float4(rValuesForQuad.a, gValuesForQuad.a, bValuesForQuad.a, 1.0f));
+        const auto rgbaValues = transpose(float4x4(rValuesForQuad,
+                                                   gValuesForQuad,
+                                                   bValuesForQuad,
+                                                   float4(1.0f)));
         const auto ycbcrValues = rgbaToYCbCrTransform * rgbaValues;
 
         destinationY.write(ycbcrValues[0].r, position * 2 + ushort2(0, 1));
