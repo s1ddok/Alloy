@@ -29,86 +29,86 @@ final public class TextureCopy {
 
     // MARK: - Encode
 
-    public func callAsFunction(sourceTexture: MTLTexture,
-                               destinationTexture: MTLTexture,
+    public func callAsFunction(source: MTLTexture,
+                               destination: MTLTexture,
                                in commandBuffer: MTLCommandBuffer) {
-        self.encode(sourceTexture: sourceTexture,
-                    destinationTexture: destinationTexture,
+        self.encode(source: source,
+                    destination: destination,
                     in: commandBuffer)
     }
 
-    public func callAsFunction(sourceTexture: MTLTexture,
-                               destinationTexture: MTLTexture,
+    public func callAsFunction(source: MTLTexture,
+                               destination: MTLTexture,
                                using encoder: MTLComputeCommandEncoder) {
-        self.encode(sourceTexture: sourceTexture,
-                    destinationTexture: destinationTexture,
+        self.encode(source: source,
+                    destination: destination,
                     using: encoder)
     }
 
     public func callAsFunction(region sourceTexureRegion: MTLRegion,
-                               from sourceTexture: MTLTexture,
+                               from source: MTLTexture,
                                to destinationTextureOrigin: MTLOrigin,
-                               of destinationTexture: MTLTexture,
+                               of destination: MTLTexture,
                                in commandBuffer: MTLCommandBuffer) {
         self.copy(region: sourceTexureRegion,
-                  from: sourceTexture,
+                  from: source,
                   to: destinationTextureOrigin,
-                  of: destinationTexture,
+                  of: destination,
                   in: commandBuffer)
     }
 
     public func callAsFunction(region sourceTexureRegion: MTLRegion,
-                               from sourceTexture: MTLTexture,
+                               from source: MTLTexture,
                                to destinationTextureOrigin: MTLOrigin,
-                               of destinationTexture: MTLTexture,
+                               of destination: MTLTexture,
                                using encoder: MTLComputeCommandEncoder) {
         self.copy(region: sourceTexureRegion,
-                  from: sourceTexture,
+                  from: source,
                   to: destinationTextureOrigin,
-                  of: destinationTexture,
+                  of: destination,
                   using: encoder)
     }
 
-    public func encode(sourceTexture: MTLTexture,
-                       destinationTexture: MTLTexture,
+    public func encode(source: MTLTexture,
+                       destination: MTLTexture,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
             encoder.label = "Texture Copy"
-            self.encode(sourceTexture: sourceTexture,
-                        destinationTexture: destinationTexture,
+            self.encode(source: source,
+                        destination: destination,
                         using: encoder)
         }
     }
 
-    public func encode(sourceTexture: MTLTexture,
-                       destinationTexture: MTLTexture,
+    public func encode(source: MTLTexture,
+                       destination: MTLTexture,
                        using encoder: MTLComputeCommandEncoder) {
-        self.copy(region: sourceTexture.region,
-                  from: sourceTexture,
+        self.copy(region: source.region,
+                  from: source,
                   to: .zero,
-                  of: destinationTexture,
+                  of: destination,
                   using: encoder)
     }
 
     public func copy(region sourceTexureRegion: MTLRegion,
-                     from sourceTexture: MTLTexture,
+                     from source: MTLTexture,
                      to destinationTextureOrigin: MTLOrigin,
-                     of destinationTexture: MTLTexture,
+                     of destination: MTLTexture,
                      in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
             encoder.label = "Texture Copy"
             self.copy(region: sourceTexureRegion,
-                      from: sourceTexture,
+                      from: source,
                       to: destinationTextureOrigin,
-                      of: destinationTexture,
+                      of: destination,
                       using: encoder)
         }
     }
 
     public func copy(region sourceTexureRegion: MTLRegion,
-                     from sourceTexture: MTLTexture,
+                     from source: MTLTexture,
                      to destinationTextureOrigin: MTLOrigin,
-                     of destinationTexture: MTLTexture,
+                     of destination: MTLTexture,
                      using encoder: MTLComputeCommandEncoder) {
         // 1. Calculate read origin correction.
         let readOriginCorrection = MTLOrigin(x: abs(min(0, sourceTexureRegion.origin.x)),
@@ -116,7 +116,7 @@ final public class TextureCopy {
                                              z: 0)
 
         // 2. Clamp read region to read texture.
-        guard var readRegion = sourceTexureRegion.clamped(to: sourceTexture.region)
+        guard var readRegion = sourceTexureRegion.clamped(to: source.region)
         else {
             #if DEBUG
             print("Read region is less or outside of source texture.")
@@ -146,9 +146,9 @@ final public class TextureCopy {
 
         // 7. Calculate grid size.
         let gridSize = MTLSize(width: min(readRegion.size.width,
-                                          destinationTexture.width - writeOrigin.x),
+                                          destination.width - writeOrigin.x),
                                height: min(readRegion.size.height,
-                                           destinationTexture.height - writeOrigin.y),
+                                           destination.height - writeOrigin.y),
                                depth: 1)
 
         guard gridSize.width > 0
@@ -165,20 +165,19 @@ final public class TextureCopy {
         let writeOffset = SIMD2<Int16>(x: .init(writeOrigin.x),
                                        y: .init(writeOrigin.y))
 
-        encoder.set(textures: [sourceTexture,
-                               destinationTexture])
-        encoder.set(readOffset,
+        encoder.setTextures(source, destination)
+        encoder.setValue(readOffset,
                     at: 0)
-        encoder.set(writeOffset,
+        encoder.setValue(writeOffset,
                     at: 1)
 
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: self.pipelineState,
                                exactly: gridSize)
         } else {
-            encoder.set(SIMD2<UInt16>(x: .init(gridSize.width),
-                                      y: .init(gridSize.height)),
-                        at: 2)
+            encoder.setValue(SIMD2<UInt16>(x: .init(gridSize.width),
+                                           y: .init(gridSize.height)),
+                             at: 2)
             encoder.dispatch2d(state: self.pipelineState,
                                covering: gridSize)
         }

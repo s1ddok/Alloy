@@ -26,61 +26,59 @@ final public class LookUpTable {
 
     // MARK: - Encode
 
-    public func callAsFunction(sourceTexture: MTLTexture,
-                               outputTexture: MTLTexture,
+    public func callAsFunction(source: MTLTexture,
+                               destination: MTLTexture,
                                lut: MTLTexture,
                                intensity: Float,
                                in commandBuffer: MTLCommandBuffer) {
-        self.encode(sourceTexture: sourceTexture,
-                    outputTexture: outputTexture,
+        self.encode(source: source,
+                    destination: destination,
                     lut: lut,
                     intensity: intensity,
                     in: commandBuffer)
     }
 
-    public func callAsFunction(sourceTexture: MTLTexture,
-                               outputTexture: MTLTexture,
+    public func callAsFunction(source: MTLTexture,
+                               destination: MTLTexture,
                                lut: MTLTexture,
                                intensity: Float,
                                using encoder: MTLComputeCommandEncoder) {
-        self.encode(sourceTexture: sourceTexture,
-                    outputTexture: outputTexture,
+        self.encode(source: source,
+                    destination: destination,
                     lut: lut,
                     intensity: intensity,
                     using: encoder)
     }
 
-    public func encode(sourceTexture: MTLTexture,
-                       outputTexture: MTLTexture,
+    public func encode(source: MTLTexture,
+                       destination: MTLTexture,
                        lut: MTLTexture,
                        intensity: Float,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
             encoder.label = "Look Up Table"
-            self.encode(sourceTexture: sourceTexture,
-                        outputTexture: outputTexture,
+            self.encode(source: source,
+                        destination: destination,
                         lut: lut,
                         intensity: intensity,
                         using: encoder)
         }
     }
 
-    public func encode(sourceTexture: MTLTexture,
-                       outputTexture: MTLTexture,
+    public func encode(source: MTLTexture,
+                       destination: MTLTexture,
                        lut: MTLTexture,
                        intensity: Float,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [sourceTexture,
-                               outputTexture,
-                               lut])
-        encoder.set(intensity, at: 0)
+        encoder.setTextures(source, destination, lut)
+        encoder.setValue(intensity, at: 0)
 
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: pipelineState,
-                               exactly: outputTexture.size)
+                               exactly: destination.size)
         } else {
             encoder.dispatch2d(state: pipelineState,
-                               covering: outputTexture.size)
+                               covering: destination.size)
         }
     }
 

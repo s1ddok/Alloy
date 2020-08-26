@@ -25,53 +25,51 @@ final public class YCbCrToRGBA {
 
     // MARK: - Encode
 
-    public func callAsFunction(sourceYTexture: MTLTexture,
-                               sourceCbCrTexture: MTLTexture,
-                               destinationRGBATexture: MTLTexture,
+    public func callAsFunction(sourceY: MTLTexture,
+                               sourceCbCr: MTLTexture,
+                               destinationRGBA: MTLTexture,
                                in commandBuffer: MTLCommandBuffer) {
-        self.encode(sourceYTexture: sourceYTexture,
-                    sourceCbCrTexture: sourceCbCrTexture,
-                    destinationRGBATexture: destinationRGBATexture,
+        self.encode(sourceY: sourceY,
+                    sourceCbCr: sourceCbCr,
+                    destinationRGBA: destinationRGBA,
                     in: commandBuffer)
     }
 
-    public func callAsFunction(sourceYTexture: MTLTexture,
-                               sourceCbCrTexture: MTLTexture,
-                               destinationRGBATexture: MTLTexture,
+    public func callAsFunction(sourceY: MTLTexture,
+                               sourceCbCr: MTLTexture,
+                               destinationRGBA: MTLTexture,
                                using encoder: MTLComputeCommandEncoder) {
-        self.encode(sourceYTexture: sourceYTexture,
-                    sourceCbCrTexture: sourceCbCrTexture,
-                    destinationRGBATexture: destinationRGBATexture,
+        self.encode(sourceY: sourceY,
+                    sourceCbCr: sourceCbCr,
+                    destinationRGBA: destinationRGBA,
                     using: encoder)
     }
 
-    public func encode(sourceYTexture: MTLTexture,
-                       sourceCbCrTexture: MTLTexture,
-                       destinationRGBATexture: MTLTexture,
+    public func encode(sourceY: MTLTexture,
+                       sourceCbCr: MTLTexture,
+                       destinationRGBA: MTLTexture,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
             encoder.label = "YCbCr To RGBA"
-            self.encode(sourceYTexture: sourceYTexture,
-                        sourceCbCrTexture: sourceCbCrTexture,
-                        destinationRGBATexture: destinationRGBATexture,
+            self.encode(sourceY: sourceY,
+                        sourceCbCr: sourceCbCr,
+                        destinationRGBA: destinationRGBA,
                         using: encoder)
         }
     }
 
-    public func encode(sourceYTexture: MTLTexture,
-                       sourceCbCrTexture: MTLTexture,
-                       destinationRGBATexture: MTLTexture,
+    public func encode(sourceY: MTLTexture,
+                       sourceCbCr: MTLTexture,
+                       destinationRGBA: MTLTexture,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [sourceYTexture,
-                               sourceCbCrTexture,
-                               destinationRGBATexture])
+        encoder.setTextures(sourceY, sourceCbCr, destinationRGBA)
 
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: self.pipelineState,
-                               exactly: destinationRGBATexture.size)
+                               exactly: destinationRGBA.size)
         } else {
             encoder.dispatch2d(state: self.pipelineState,
-                               covering: destinationRGBATexture.size)
+                               covering: destinationRGBA.size)
         }
     }
 

@@ -12,9 +12,9 @@ final class TextureCopyTests: XCTestCase {
     struct TestCase {
         let sourceRegion: MTLRegion
         let destinationOrigin: MTLOrigin
-        let sourceTexture: MTLTexture
-        let destinationTexture: MTLTexture
-        let desiredResultTexture: MTLTexture
+        let source: MTLTexture
+        let destination: MTLTexture
+        let desiredResult: MTLTexture
 
         init(context: MTLContext,
              sourceRegion: MTLRegion,
@@ -24,12 +24,12 @@ final class TextureCopyTests: XCTestCase {
              desiredResultImage: CGImage) throws {
             self.sourceRegion = sourceRegion
             self.destinationOrigin = destinationOrigin
-            try self.sourceTexture = context.texture(from: sourceImage,
+            try self.source = context.texture(from: sourceImage,
+                                              usage: [.shaderRead, .shaderWrite])
+            try self.destination = context.texture(from: destinationImage,
+                                                   usage: [.shaderRead, .shaderWrite])
+            try self.desiredResult = context.texture(from: desiredResultImage,
                                                      usage: [.shaderRead, .shaderWrite])
-            try self.destinationTexture = context.texture(from: destinationImage,
-                                                          usage: [.shaderRead, .shaderWrite])
-            try self.desiredResultTexture = context.texture(from: desiredResultImage,
-                                                            usage: [.shaderRead, .shaderWrite])
         }
     }
 
@@ -104,13 +104,13 @@ final class TextureCopyTests: XCTestCase {
             try self.testCases.forEach { testCase in
                 try self.context.scheduleAndWait { commandBuffer in
                     self.textureCopy(region: testCase.sourceRegion,
-                                     from: testCase.sourceTexture,
+                                     from: testCase.source,
                                      to: testCase.destinationOrigin,
-                                     of: testCase.destinationTexture,
+                                     of: testCase.destination,
                                      in: commandBuffer)
 
-                    self.euclideanDistanceFloat(textureOne: testCase.destinationTexture,
-                                                textureTwo: testCase.desiredResultTexture,
+                    self.euclideanDistanceFloat(textureOne: testCase.destination,
+                                                textureTwo: testCase.desiredResult,
                                                 resultBuffer: resultBuffer,
                                                 in: commandBuffer)
                 }
