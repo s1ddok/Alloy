@@ -68,15 +68,19 @@ final public class RGBAToYCbCr {
                         destinationY: MTLTexture,
                         destinationCbCr: MTLTexture,
                         using encoder: MTLComputeCommandEncoder) {
+        #if DEBUG
+        assert(sourceRGBA.size == destinationY.size,
+               "RGBA and Y textures must have equal sizes.")
+        #endif
         encoder.setTextures(sourceRGBA,
                             destinationY,
                             destinationCbCr)
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: self.pipelineState,
-                               exactly: destinationY.size)
+                               exactly: destinationCbCr.size)
         } else {
             encoder.dispatch2d(state: self.pipelineState,
-                               covering: destinationY.size)
+                               covering: destinationCbCr.size)
         }
     }
 

@@ -965,27 +965,49 @@ kernel void rgbaToYCbCr(texture2d<float, access::sample> sourceRGBA [[ texture(0
                         texture2d<float, access::write> destinationY [[ texture(1) ]],
                         texture2d<float, access::write> destinationCbCr [[ texture(2) ]],
                         const ushort2 position [[ thread_position_in_grid ]]) {
-    const auto textureSize = ushort2(destinationY.get_width(),
-                                     destinationY.get_height());
+    const auto textureSize = ushort2(destinationCbCr.get_width(),
+                                     destinationCbCr.get_height());
     checkPosition(position, textureSize, deviceSupportsNonuniformThreadgroups);
 
-    constexpr sampler s(coord::normalized,
-                        address::clamp_to_edge,
-                        filter::linear);
-    const auto positionF = float2(position);
-    const auto textureSizeF = float2(textureSize);
-    const auto normalizedPosition = (positionF + 0.5f) / textureSizeF;
-
-    const auto rgba = sourceRGBA.sample(s, normalizedPosition);
-    const auto ycbcr = rgbaToYCbCrTransform * rgba;
-
-    const auto y = ycbcr.r;
-    const auto cbcr = float4(ycbcr.gb, 0.0f);
-    destinationY.write(y, position);
-
     if (halfSizedCbCr) {
-        destinationCbCr.write(cbcr, position / 2);
+        constexpr sampler s(coord::pixel,
+                            address::clamp_to_edge,
+                            filter::nearest);
+        const auto positionF = float2(position);
+        const auto gatherPosition = positionF * 2.0f + 0.5f;
+
+        const auto rValuesForQuad = sourceRGBA.gather(s, gatherPosition,
+                                                      0, component::x);
+        const auto gValuesForQuad = sourceRGBA.gather(s, gatherPosition,
+                                                      0, component::y);
+        const auto bValuesForQuad = sourceRGBA.gather(s, gatherPosition,
+                                                      0, component::z);
+        const float4 rgbaValues[4] = {
+            float4(rValuesForQuad.r, gValuesForQuad.r, bValuesForQuad.r, 1.0f),
+            float4(rValuesForQuad.g, gValuesForQuad.g, bValuesForQuad.g, 1.0f),
+            float4(rValuesForQuad.b, gValuesForQuad.b, bValuesForQuad.b, 1.0f),
+            float4(rValuesForQuad.a, gValuesForQuad.a, bValuesForQuad.a, 1.0f),
+        };
+        const float4 ycbcrValues[4] = {
+            rgbaToYCbCrTransform * rgbaValues[0],
+            rgbaToYCbCrTransform * rgbaValues[1],
+            rgbaToYCbCrTransform * rgbaValues[2],
+            rgbaToYCbCrTransform * rgbaValues[3]
+        };
+
+        destinationY.write(ycbcrValues[0].r, position * 2 + ushort2(0, 1));
+        destinationY.write(ycbcrValues[1].r, position * 2 + ushort2(1, 1));
+        destinationY.write(ycbcrValues[2].r, position * 2 + ushort2(0, 1));
+        destinationY.write(ycbcrValues[3].r, position * 2 + ushort2(0, 0));
+
+        const auto cbcrValue = (ycbcrValues[0].gb + ycbcrValues[1].gb + ycbcrValues[2].gb + ycbcrValues[3].gb) / 4.0f;
+        destinationCbCr.write(float4(cbcrValue, 0.0f), position);
     } else {
-        destinationCbCr.write(cbcr, position);
+        const auto rgbaValue = sourceRGBA.read(position);
+        const auto ycbcrValue = rgbaToYCbCrTransform * rgbaValue;
+        const auto yValue = ycbcrValue.r;
+        const auto cbcrValue = float4(ycbcrValue.gb, 0.0f);
+        destinationY.write(yValue, position);
+        destinationCbCr.write(cbcrValue, position);
     }
 }
