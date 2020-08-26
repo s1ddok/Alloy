@@ -993,7 +993,7 @@ kernel void rgbaToYCbCr(texture2d<float, access::sample> sourceRGBA [[ texture(0
         destinationY.write(ycbcrValues[2].r, position * 2 + ushort2(1, 0));
         destinationY.write(ycbcrValues[3].r, position * 2 + ushort2(0, 0));
 
-        const auto cbcrValue = (ycbcrValues * float4(1.0f)).gb * 0.25f;
+        const auto cbcrValue = (ycbcrValues * float4(0.25f)).gb;
         destinationCbCr.write(float4(cbcrValue, 0.0f), position);
     } else {
         const auto rgbaValue = sourceRGBA.read(position);
