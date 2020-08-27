@@ -24,6 +24,10 @@ public extension MTLRegion {
     var maxZ: Int {
         return self.origin.z + self.size.depth
     }
+
+    var area: Int {
+        self.size.width * self.size.height
+    }
     
     func clamped(to region: MTLRegion) -> MTLRegion? {
         let ox = max(self.origin.x, region.origin.x)
@@ -37,12 +41,17 @@ public extension MTLRegion {
         guard ox < maxX && oy < maxY && oz < maxZ
         else { return nil }
         
-        return MTLRegion(origin: MTLOrigin(x: ox,
-                                           y: oy,
-                                           z: oz),
-                         size: MTLSize(width:  maxX - ox,
-                                       height: maxY - oy,
-                                       depth:  maxZ - oz))
+        return MTLRegion(origin: .init(x: ox,
+                                       y: oy,
+                                       z: oz),
+                         size: .init(width:  maxX - ox,
+                                     height: maxY - oy,
+                                     depth:  maxZ - oz))
         
+    }
+
+    static func ==(lhs: MTLRegion, rhs: MTLRegion) -> Bool {
+        return lhs.origin == rhs.origin
+            && lhs.size == rhs.size
     }
 }
