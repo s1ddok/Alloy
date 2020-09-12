@@ -88,10 +88,8 @@ final public class SimpleGeometryRenderer {
         renderEncoder.setVertexBuffer(geometry,
                                       offset: 0,
                                       index: 0)
-        renderEncoder.set(vertexValue: matrix,
-                          at: 1)
-        renderEncoder.set(fragmentValue: color,
-                          at: 0)
+        renderEncoder.setVertexValue(matrix, at: 1)
+        renderEncoder.setFragmentValue(color, at: 0)
         renderEncoder.setTriangleFillMode(fillMode)
         renderEncoder.setRenderPipelineState(renderPipelineState)
         renderEncoder.drawIndexedPrimitives(type: type,

@@ -67,17 +67,15 @@ final public class EuclideanDistance {
         let blockSize = BlockSize(width: blockSizeWidth,
                                   height: blockSizeHeight)
 
-        encoder.set(textures: [textureOne,
-                               textureTwo])
-        encoder.set(blockSize, at: 0)
+        encoder.setTextures(textureOne, textureTwo)
+        encoder.setValue(blockSize, at: 0)
         encoder.setBuffer(resultBuffer,
                           offset: 0,
                           index: 1)
 
         let threadgroupMemoryLength = threadgroupSize.width
                                     * threadgroupSize.height
-                                    * 4
-                                    * MemoryLayout<Float16>.stride
+                                    * MemoryLayout<Float>.stride
 
         encoder.setThreadgroupMemoryLength(threadgroupMemoryLength,
                                            index: 0)

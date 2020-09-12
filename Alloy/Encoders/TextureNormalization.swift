@@ -11,7 +11,7 @@ final public class TextureNormalization {
     // MARK: - Life Cycle
 
     public convenience init(context: MTLContext) throws {
-        try self.init(library: context.library(for: .module))
+        try self.init(library: context.library(for: Self.self))
     }
 
     public init(library: MTLLibrary) throws {
@@ -23,41 +23,41 @@ final public class TextureNormalization {
 
     // MARK: - Encode
 
-    public func callAsFunction(sourceTexture: MTLTexture,
-                               destinationTexture: MTLTexture,
+    public func callAsFunction(source: MTLTexture,
+                               destination: MTLTexture,
                                in commandBuffer: MTLCommandBuffer) {
-        self.encode(sourceTexture: sourceTexture,
-                    destinationTexture: destinationTexture,
+        self.encode(source: source,
+                    destination: destination,
                     in: commandBuffer)
     }
 
-    public func callAsFunction(sourceTexture: MTLTexture,
-                               destinationTexture: MTLTexture,
+    public func callAsFunction(source: MTLTexture,
+                               destination: MTLTexture,
                                using encoder: MTLComputeCommandEncoder) {
-        self.encode(sourceTexture: sourceTexture,
-                    destinationTexture: destinationTexture,
+        self.encode(source: source,
+                    destination: destination,
                     using: encoder)
     }
 
-    public func encode(sourceTexture: MTLTexture,
-                       destinationTexture: MTLTexture,
+    public func encode(source: MTLTexture,
+                       destination: MTLTexture,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
             encoder.label = "Texture Normalization"
-            self.encode(sourceTexture: sourceTexture,
-                        destinationTexture: destinationTexture,
+            self.encode(source: source,
+                        destination: destination,
                         using: encoder)
         }
     }
 
-    public func encode(sourceTexture: MTLTexture,
-                       destinationTexture: MTLTexture,
+    public func encode(source: MTLTexture,
+                       destination: MTLTexture,
                        using encoder: MTLComputeCommandEncoder) {
-        self.textureMax(sourceTexture: sourceTexture,
-                        resultBuffer: self.intermediateBuffer,
+        self.textureMax(source: source,
+                        result: self.intermediateBuffer,
                         using: encoder)
-        self.textureDivide(sourceTexture: sourceTexture,
-                           destinationTexture: destinationTexture,
+        self.textureDivide(source: source,
+                           destination: destination,
                            constant: self.intermediateBuffer,
                            using: encoder)
     }

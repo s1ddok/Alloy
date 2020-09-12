@@ -11,7 +11,7 @@ final public class StdMeanNormalization {
     // MARK: - Life Cycle
 
     public convenience init(context: MTLContext) throws {
-        try self.init(library: context.library(for: .module))
+        try self.init(library: context.library(for: Self.self))
     }
 
     public init(library: MTLLibrary) throws {
@@ -26,61 +26,60 @@ final public class StdMeanNormalization {
 
     // MARK: - Encode
 
-    public func callAsFunction(sourceTexture: MTLTexture,
-                               destinationTexture: MTLTexture,
+    public func callAsFunction(source: MTLTexture,
+                               destination: MTLTexture,
                                mean: SIMD3<Float>,
                                std: SIMD3<Float>,
                                in commandBuffer: MTLCommandBuffer) {
-        self.encode(sourceTexture: sourceTexture,
-                    destinationTexture: destinationTexture,
+        self.encode(source: source,
+                    destination: destination,
                     mean: mean,
                     std: std,
                     in: commandBuffer)
     }
 
-    public func callAsFunction(sourceTexture: MTLTexture,
-                               destinationTexture: MTLTexture,
+    public func callAsFunction(source: MTLTexture,
+                               destination: MTLTexture,
                                mean: SIMD3<Float>,
                                std: SIMD3<Float>,
                                using encoder: MTLComputeCommandEncoder) {
-        self.encode(sourceTexture: sourceTexture,
-                    destinationTexture: destinationTexture,
+        self.encode(source: source,
+                    destination: destination,
                     mean: mean,
                     std: std,
                     using: encoder)
     }
 
-    public func encode(sourceTexture: MTLTexture,
-                       destinationTexture: MTLTexture,
+    public func encode(source: MTLTexture,
+                       destination: MTLTexture,
                        mean: SIMD3<Float>,
                        std: SIMD3<Float>,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
             encoder.label = "Normalize Kernel"
-            self.encode(sourceTexture: sourceTexture,
-                        destinationTexture: destinationTexture,
+            self.encode(source: source,
+                        destination: destination,
                         mean: mean,
                         std: std,
                         using: encoder)
         }
     }
 
-    public func encode(sourceTexture: MTLTexture,
-                       destinationTexture: MTLTexture,
+    public func encode(source: MTLTexture,
+                       destination: MTLTexture,
                        mean: SIMD3<Float>,
                        std: SIMD3<Float>,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [sourceTexture,
-                               destinationTexture])
-        encoder.set(mean, at: 0)
-        encoder.set(std, at: 1)
+        encoder.setTextures(source, destination)
+        encoder.setValue(mean, at: 0)
+        encoder.setValue(std, at: 1)
 
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: self.pipelineState,
-                               exactly: destinationTexture.size)
+                               exactly: destination.size)
         } else {
             encoder.dispatch2d(state: self.pipelineState,
-                               covering: destinationTexture.size)
+                               covering: destination.size)
         }
     }
 

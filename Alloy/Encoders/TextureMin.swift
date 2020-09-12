@@ -22,54 +22,53 @@ final public class TextureMin {
 
     // MARK: - Encode
 
-    public func callAsFunction(sourceTexture: MTLTexture,
-                               resultBuffer: MTLBuffer,
+    public func callAsFunction(source: MTLTexture,
+                               result: MTLBuffer,
                                in commandBuffer: MTLCommandBuffer) {
-        self.encode(sourceTexture: sourceTexture,
-                    resultBuffer: resultBuffer,
+        self.encode(source: source,
+                    result: result,
                     in: commandBuffer)
     }
 
-    public func callAsFunction(sourceTexture: MTLTexture,
-                               resultBuffer: MTLBuffer,
+    public func callAsFunction(source: MTLTexture,
+                               result: MTLBuffer,
                                using encoder: MTLComputeCommandEncoder) {
-        self.encode(sourceTexture: sourceTexture,
-                    resultBuffer: resultBuffer,
+        self.encode(source: source,
+                    result: result,
                     using: encoder)
     }
 
-    public func encode(sourceTexture: MTLTexture,
-                       resultBuffer: MTLBuffer,
+    public func encode(source: MTLTexture,
+                       result: MTLBuffer,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
             encoder.label = "Texture Min"
-            self.encode(sourceTexture: sourceTexture,
-                        resultBuffer: resultBuffer,
+            self.encode(source: source,
+                        result: result,
                         using: encoder)
         }
     }
 
-    public func encode(sourceTexture: MTLTexture,
-                       resultBuffer: MTLBuffer,
+    public func encode(source: MTLTexture,
+                       result: MTLBuffer,
                        using encoder: MTLComputeCommandEncoder) {
-        let threadgroupSize = MTLSize(width: 8, height: 8, depth: 1).clamped(to: sourceTexture.size)
-        let blockSizeWidth = (sourceTexture.width + threadgroupSize.width - 1)
+        let threadgroupSize = MTLSize(width: 8, height: 8, depth: 1).clamped(to: source.size)
+        let blockSizeWidth = (source.width + threadgroupSize.width - 1)
                            / threadgroupSize.width
-        let blockSizeHeight = (sourceTexture.height + threadgroupSize.height - 1)
+        let blockSizeHeight = (source.height + threadgroupSize.height - 1)
                             / threadgroupSize.height
         let blockSize = BlockSize(width: blockSizeWidth,
                                   height: blockSizeHeight)
 
-        encoder.set(textures: [sourceTexture])
-        encoder.set(blockSize, at: 0)
-        encoder.setBuffer(resultBuffer,
+        encoder.setTextures(source)
+        encoder.setValue(blockSize, at: 0)
+        encoder.setBuffer(result,
                           offset: 0,
                           index: 1)
 
         let threadgroupMemoryLength = threadgroupSize.width
                                     * threadgroupSize.height
-                                    * 4
-                                    * MemoryLayout<Float16>.stride
+                                    * MemoryLayout<SIMD4<Float>>.stride
 
         encoder.setThreadgroupMemoryLength(threadgroupMemoryLength,
                                            index: 0)

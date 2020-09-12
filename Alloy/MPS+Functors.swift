@@ -1,19 +1,19 @@
 import MetalPerformanceShaders
 
 public extension MPSUnaryImageKernel {
-    func callAsFunction(sourceTexture: MTLTexture,
-                        destinationTexture: MTLTexture,
+    func callAsFunction(source: MTLTexture,
+                        destination: MTLTexture,
                         in commandBuffer: MTLCommandBuffer) {
         self.encode(commandBuffer: commandBuffer,
-                    sourceTexture: sourceTexture,
-                    destinationTexture: destinationTexture)
+                    sourceTexture: source,
+                    destinationTexture: destination)
     }
 
-    func callAsFunction(inPlaceTexture: UnsafeMutablePointer<MTLTexture>,
+    func callAsFunction(inPlace: UnsafeMutablePointer<MTLTexture>,
                         fallbackCopyAllocator: MPSCopyAllocator? = nil,
                         in commandBuffer: MTLCommandBuffer) {
         self.encode(commandBuffer: commandBuffer,
-                    inPlaceTexture: inPlaceTexture,
+                    inPlaceTexture: inPlace,
                     fallbackCopyAllocator: fallbackCopyAllocator)
     }
 

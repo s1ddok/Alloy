@@ -11,7 +11,7 @@ final public class TextureDivideByConstant {
 
     public convenience init(context: MTLContext,
                             scalarType: MTLPixelFormat.ScalarType = .half) throws {
-        try self.init(library: context.library(for: .module),
+        try self.init(library: context.library(for: Self.self),
                       scalarType: scalarType)
     }
 
@@ -30,103 +30,101 @@ final public class TextureDivideByConstant {
 
     // MARK: - Encode
 
-    public func callAsFunction(sourceTexture: MTLTexture,
-                               destinationTexture: MTLTexture,
+    public func callAsFunction(source: MTLTexture,
+                               destination: MTLTexture,
                                constant: SIMD4<Float>,
                                in commandBuffer: MTLCommandBuffer) {
-        self.encode(sourceTexture: sourceTexture,
-                    destinationTexture: destinationTexture,
+        self.encode(source: source,
+                    destination: destination,
                     constant: constant,
                     in: commandBuffer)
     }
 
-    public func callAsFunction(sourceTexture: MTLTexture,
-                               destinationTexture: MTLTexture,
+    public func callAsFunction(source: MTLTexture,
+                               destination: MTLTexture,
                                constant: SIMD4<Float>,
                                using encoder: MTLComputeCommandEncoder) {
-        self.encode(sourceTexture: sourceTexture,
-                    destinationTexture: destinationTexture,
+        self.encode(source: source,
+                    destination: destination,
                     constant: constant,
                     using: encoder)
     }
 
-    public func encode(sourceTexture: MTLTexture,
-                       destinationTexture: MTLTexture,
+    public func encode(source: MTLTexture,
+                       destination: MTLTexture,
                        constant: SIMD4<Float>,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
             encoder.label = "Texture Divide by Constant"
-            self.encode(sourceTexture: sourceTexture,
-                        destinationTexture: destinationTexture,
+            self.encode(source: source,
+                        destination: destination,
                         constant: constant,
                         using: encoder)
         }
     }
 
-    public func encode(sourceTexture: MTLTexture,
-                       destinationTexture: MTLTexture,
+    public func encode(source: MTLTexture,
+                       destination: MTLTexture,
                        constant: SIMD4<Float>,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [sourceTexture,
-                               destinationTexture])
-        encoder.set(constant, at: 0)
+        encoder.setTextures(source, destination)
+        encoder.setValue(constant, at: 0)
 
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: self.pipelineState,
-                               exactly: sourceTexture.size)
+                               exactly: source.size)
         } else {
             encoder.dispatch2d(state: self.pipelineState,
-                               covering: sourceTexture.size)
+                               covering: source.size)
         }
     }
     
-    public func callAsFunction(sourceTexture: MTLTexture,
-                               destinationTexture: MTLTexture,
+    public func callAsFunction(source: MTLTexture,
+                               destination: MTLTexture,
                                constant: MTLBuffer,
                                in commandBuffer: MTLCommandBuffer) {
-        self.encode(sourceTexture: sourceTexture,
-                    destinationTexture: destinationTexture,
+        self.encode(source: source,
+                    destination: destination,
                     constant: constant,
                     in: commandBuffer)
     }
 
-    public func callAsFunction(sourceTexture: MTLTexture,
-                               destinationTexture: MTLTexture,
+    public func callAsFunction(source: MTLTexture,
+                               destination: MTLTexture,
                                constant: MTLBuffer,
                                using encoder: MTLComputeCommandEncoder) {
-        self.encode(sourceTexture: sourceTexture,
-                    destinationTexture: destinationTexture,
+        self.encode(source: source,
+                    destination: destination,
                     constant: constant,
                     using: encoder)
     }
 
-    public func encode(sourceTexture: MTLTexture,
-                       destinationTexture: MTLTexture,
+    public func encode(source: MTLTexture,
+                       destination: MTLTexture,
                        constant: MTLBuffer,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
             encoder.label = "Texture Divide by Constant"
-            self.encode(sourceTexture: sourceTexture,
-                        destinationTexture: destinationTexture,
+            self.encode(source: source,
+                        destination: destination,
                         constant: constant,
                         using: encoder)
         }
     }
 
-    public func encode(sourceTexture: MTLTexture,
-                       destinationTexture: MTLTexture,
+    public func encode(source: MTLTexture,
+                       destination: MTLTexture,
                        constant: MTLBuffer,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [sourceTexture,
-                               destinationTexture])
+        encoder.setTextures(source, destination)
         encoder.setBuffer(constant, offset: 0, index: 0)
 
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: self.pipelineState,
-                               exactly: sourceTexture.size)
+                               exactly: source.size)
         } else {
             encoder.dispatch2d(state: self.pipelineState,
-                               covering: sourceTexture.size)
+                               covering: source.size)
         }
     }
 

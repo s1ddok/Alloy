@@ -91,7 +91,7 @@ public final class MTLContext {
         if
             isSRGB == nil,
             let colorSpace = image.colorSpace,
-            colorSpace.name == CGColorSpace.sRGB
+            colorSpace.name == CGColorSpace.linearSRGB
         {
             isSRGB = true
         }

@@ -30,53 +30,51 @@ final public class TextureMultiplyAdd {
 
     // MARK: - Encode
 
-    public func callAsFunction(sourceTextureOne: MTLTexture,
-                               sourceTextureTwo: MTLTexture,
-                               destinationTexture: MTLTexture,
+    public func callAsFunction(sourceOne: MTLTexture,
+                               sourceTwo: MTLTexture,
+                               destination: MTLTexture,
                                in commandBuffer: MTLCommandBuffer) {
-        self.encode(sourceTextureOne: sourceTextureOne,
-                    sourceTextureTwo: sourceTextureTwo,
-                    destinationTexture: destinationTexture,
+        self.encode(sourceOne: sourceOne,
+                    sourceTwo: sourceTwo,
+                    destination: destination,
                     in: commandBuffer)
     }
 
-    public func callAsFunction(sourceTextureOne: MTLTexture,
-                               sourceTextureTwo: MTLTexture,
-                               destinationTexture: MTLTexture,
+    public func callAsFunction(sourceOne: MTLTexture,
+                               sourceTwo: MTLTexture,
+                               destination: MTLTexture,
                                using encoder: MTLComputeCommandEncoder) {
-        self.encode(sourceTextureOne: sourceTextureOne,
-                    sourceTextureTwo: sourceTextureTwo,
-                    destinationTexture: destinationTexture,
+        self.encode(sourceOne: sourceOne,
+                    sourceTwo: sourceTwo,
+                    destination: destination,
                     using: encoder)
     }
 
-    public func encode(sourceTextureOne: MTLTexture,
-                       sourceTextureTwo: MTLTexture,
-                       destinationTexture: MTLTexture,
+    public func encode(sourceOne: MTLTexture,
+                       sourceTwo: MTLTexture,
+                       destination: MTLTexture,
                        in commandBuffer: MTLCommandBuffer) {
         commandBuffer.compute { encoder in
             encoder.label = "Texture Multiply Add"
-            self.encode(sourceTextureOne: sourceTextureOne,
-                        sourceTextureTwo: sourceTextureTwo,
-                        destinationTexture: destinationTexture,
+            self.encode(sourceOne: sourceOne,
+                        sourceTwo: sourceTwo,
+                        destination: destination,
                         using: encoder)
         }
     }
 
-    public func encode(sourceTextureOne: MTLTexture,
-                       sourceTextureTwo: MTLTexture,
-                       destinationTexture: MTLTexture,
+    public func encode(sourceOne: MTLTexture,
+                       sourceTwo: MTLTexture,
+                       destination: MTLTexture,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [sourceTextureOne,
-                               sourceTextureTwo,
-                               destinationTexture])
+        encoder.setTextures(sourceOne, sourceTwo, destination)
 
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: pipelineState,
-                               exactly: destinationTexture.size)
+                               exactly: destination.size)
         } else {
             encoder.dispatch2d(state: pipelineState,
-                               covering: destinationTexture.size)
+                               covering: destination.size)
         }
     }
 

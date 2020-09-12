@@ -14,22 +14,21 @@ final public class MPSUnaryImageKernels {
 
     // MARK: - Encode
 
-    public func callAsFunction(sourceTexture: MTLTexture,
-                               destinationTexture: MTLTexture,
+    public func callAsFunction(source: MTLTexture,
+                               destination: MTLTexture,
                                in commandBuffer: MTLCommandBuffer) {
-        self.encode(sourceTexture: sourceTexture,
-                    destinationTexture: destinationTexture,
+        self.encode(source: source,
+                    destination: destination,
                     in: commandBuffer)
     }
 
-    public func encode(sourceTexture: MTLTexture,
-                       destinationTexture: MTLTexture,
+    public func encode(source: MTLTexture,
+                       destination: MTLTexture,
                        in commandBuffer: MTLCommandBuffer) {
-        guard self.kernelQueue
-                  .count != 0
+        guard !self.kernelQueue.isEmpty
         else { return }
 
-        let textureDescriptor = sourceTexture.descriptor
+        let textureDescriptor = source.descriptor
         textureDescriptor.usage = [.shaderRead, .shaderWrite]
         textureDescriptor.storageMode = .private
         // We need only 2 temporary images in the worst case.
@@ -43,12 +42,12 @@ final public class MPSUnaryImageKernels {
         if self.kernelQueue.count == 1 {
             self.kernelQueue[0]
                 .encode(commandBuffer: commandBuffer,
-                        sourceTexture: sourceTexture,
-                        destinationTexture: destinationTexture)
+                        sourceTexture: source,
+                        destinationTexture: destination)
         } else {
             self.kernelQueue[0]
                 .encode(commandBuffer: commandBuffer,
-                        sourceTexture: sourceTexture,
+                        sourceTexture: source,
                         destinationTexture: temporaryImages[0].texture)
 
             for i in 1 ..< self.kernelQueue.count - 1 {
@@ -63,7 +62,7 @@ final public class MPSUnaryImageKernels {
             self.kernelQueue[self.kernelQueue.count - 1]
                 .encode(commandBuffer: commandBuffer,
                         sourceTexture: temporaryImages[0].texture,
-                        destinationTexture: destinationTexture)
+                        destinationTexture: destination)
         }
     }
 }
