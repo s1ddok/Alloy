@@ -23,7 +23,7 @@ class AlloyTests: XCTestCase {
         do {
             self.context = try MTLContext()
 
-            let library = try self.context.library(for: Self.self)
+            let library = try self.context.library(for: .module)
 
             self.evenInitState = try library.computePipelineState(function: "initialize_even")
 

@@ -12,7 +12,7 @@ final public class RGBAToYCbCr {
 
     public convenience init(context: MTLContext,
                             halfSizedCbCr: Bool = true) throws {
-        try self.init(library: context.library(for: Self.self),
+        try self.init(library: context.library(for: .module),
                       halfSizedCbCr: halfSizedCbCr)
     }
 
