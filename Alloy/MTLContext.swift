@@ -9,7 +9,7 @@ public final class MTLContext {
     public let commandQueue: MTLCommandQueue
 
     private var libraryCache: [Bundle: MTLLibrary] = [:]
-    private lazy var textureLoader = MTKTextureLoader(device: self.device)
+    public private(set) lazy var textureLoader = MTKTextureLoader(device: self.device)
 
     // MARK: - Init
 

@@ -94,7 +94,7 @@ void textureMask(texture2d<T, access::read> source,
                         filter::linear);
     const auto positionF = float2(position);
     const auto textureSizeF = float2(textureSize);
-    const auto normalizedPosition = (positionF.x + 0.5f) / textureSizeF;
+    const auto normalizedPosition = (positionF + 0.5f) / textureSizeF;
 
     auto maskValue = mask.sample(s, normalizedPosition);
     if (isInversed) {
