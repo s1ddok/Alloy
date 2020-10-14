@@ -7,7 +7,7 @@ public extension MTLRenderCommandEncoder {
         self.setVertexBytes(&t, length: MemoryLayout<T>.stride, index: index)
     }
     
-    func setVertexValue<T>(_ value: T, at index: Int) where T: Collection {
+    func setVertexValue<T>(_ value: [T], at index: Int) {
         var t = value
         self.setVertexBytes(&t, length: MemoryLayout<T>.stride * value.count, index: index)
     }
@@ -17,7 +17,7 @@ public extension MTLRenderCommandEncoder {
         self.setFragmentBytes(&t, length: MemoryLayout<T>.stride, index: index)
     }
     
-    func setFragmentValue<T>(_ value: T, at index: Int) where T: Collection {
+    func setFragmentValue<T>(_ value: [T], at index: Int) {
         var t = value
         self.setFragmentBytes(&t, length: MemoryLayout<T>.stride * value.count, index: index)
     }
