@@ -1,8 +1,6 @@
 import XCTest
 import Alloy
-#if SWIFT_PM
 import TestsResources
-#endif
 
 final class TextureCachingTests: XCTestCase {
 
