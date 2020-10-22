@@ -5,45 +5,32 @@ import PackageDescription
 let package = Package(
     name: "Alloy",
     platforms: [
-        .iOS(SupportedPlatform.IOSVersion.v11),
+        .iOS(.v11),
         .macOS(.v10_13)
     ],
     products: [
-        .library(
-            name: "Alloy",
-            targets: ["Alloy", "ShadersSharedCode"]),
-    ],
-    dependencies: [
+        .library(name: "Alloy",
+                 targets: [
+                    "Alloy",
+                    "AlloyShadersSharedTypes"
+                 ]),
     ],
     targets: [
-        .target(name: "ShadersSharedCode",
-                dependencies: [],
-                path: "Alloy/Shaders/",
-                exclude: [],
-                sources: ["ShaderStructures.h", "File.c"],
-                resources: nil,
-                publicHeadersPath: nil,
-                cSettings: nil,
-                cxxSettings: nil,
-                swiftSettings: nil,
-                linkerSettings: nil),
+        .target(name: "AlloyShadersSharedTypes",
+                publicHeadersPath: "."),
         .target(name: "Alloy",
-                dependencies: [.target(name: "ShadersSharedCode")],
-                path: "Alloy",
-                exclude: ["Shaders/File.c"],
-                sources: nil,
+                dependencies: [.target(name: "AlloyShadersSharedTypes")],
                 resources: [.process("Shaders/Shaders.metal")],
-                publicHeadersPath: nil,
-                cSettings: nil,
-                cxxSettings: nil,
-                swiftSettings: [
-                    .define("SWIFT_PM")
-                ],
-                linkerSettings: [
-                    .linkedFramework("Metal"),
-                    .linkedFramework("CoreVideo"),
-                    .linkedFramework("MetalPerformanceShaders"),
-                    .linkedFramework("CoreGraphics")
-                ])
+                swiftSettings: [.define("SWIFT_PM")]),
+        .target(name: "TestsResources",
+                path: "TestsResources",
+                resources: [
+                    .copy("Shared"),
+                    .copy("TextureCopy")
+                ]),
+        .testTarget(name: "AlloyTests",
+                    dependencies: ["Alloy", "TestsResources"],
+                    resources: [.process("Shaders/Shaders.metal")],
+                    swiftSettings: [.define("SWIFT_PM")])
     ]
 )
