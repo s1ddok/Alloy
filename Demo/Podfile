@@ -6,21 +6,3 @@ target 'Demo' do
   pod 'Alloy/ML', :path => '../'
   pod 'SwiftMath'
 end
-
-target 'AlloyTests' do
-  pod 'Alloy', :path => '../'
-  pod 'Alloy/Shaders', :path => '../'
-  pod 'Alloy/ML', :path => '../'
-end
-
-target 'DemoApp' do
-  pod 'Alloy', :path => '../'
-  pod 'Alloy/Shaders', :path => '../'
-  pod 'Alloy/ML', :path => '../'
-end
-
-target 'DemoAppTests' do
-  pod 'Alloy', :path => '../'
-  pod 'Alloy/Shaders', :path => '../'
-  pod 'Alloy/ML', :path => '../'
-end

@@ -1,21 +1,12 @@
 {
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "933349fd4cd86c5b4b1982ffc6d0-1443763.jpg!d.jpeg",
-      "scale" : "1x"
-    },
-    {
-      "idiom" : "universal",
-      "scale" : "2x"
-    },
-    {
-      "idiom" : "universal",
-      "scale" : "3x"
+      "filename" : "flower.png",
+      "idiom" : "universal"
     }
   ],
   "info" : {
-    "version" : 1,
-    "author" : "xcode"
+    "author" : "xcode",
+    "version" : 1
   }
 }

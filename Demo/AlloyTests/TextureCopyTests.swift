@@ -50,7 +50,7 @@ final class TextureCopyTests: XCTestCase {
             self.textureCopy = try .init(context: self.context,
                                                 scalarType: .float)
 
-            let bundle = Bundle(for: Self.self)
+            let bundle = Bundle(for: .module)
             let jsonDecoder = JSONDecoder()
             let testCasesFolderURL = bundle.url(forResource: Self.testCasesFolderName,
                                                 withExtension: nil)!

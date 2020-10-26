@@ -77,8 +77,7 @@ final public class SwitchDataFormatEncoder {
     public func encode(normalized: MTLTexture,
                        unnormalized: MTLTexture,
                        using encoder: MTLComputeCommandEncoder) {
-        encoder.set(textures: [normalized,
-                               unnormalized])
+        encoder.setTextures(normalized, unnormalized)
 
         if self.deviceSupportsNonuniformThreadgroups {
             encoder.dispatch2d(state: self.pipelineState,
