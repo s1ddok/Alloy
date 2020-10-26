@@ -6,7 +6,7 @@ PODS:
     - Alloy/Core
   - Alloy/Shaders (0.16.3):
     - Alloy/Core
-  - SwiftMath (3.2.0)
+  - SwiftMath (3.2.1)
 
 DEPENDENCIES:
   - Alloy (from `../`)
@@ -24,8 +24,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Alloy: bb6ea8f13a3770ba2ef2b29dcc4b4363ed5f875b
-  SwiftMath: d010d63f42454f782680c28df987323b08a85caa
+  SwiftMath: 5ae74160b077a63752d6cce4fbe85657dad6b534
 
 PODFILE CHECKSUM: 47302649763fb94215def855f34cafd582f0ef06
 
-COCOAPODS: 1.10.0
+COCOAPODS: 1.9.3

@@ -36,7 +36,7 @@ class ViewController: NSViewController {
             let transform = Matrix3x3f.translate(tx: 0.5, ty: 0.5)
                           * Matrix3x3f.rotate(angle: Angle(radians: sender.floatValue))
                           * Matrix3x3f.translate(tx: -0.5, ty: -0.5)
-            
+
             try self.context.scheduleAndWait { buffer in
                 self.affineCropEncoder(source: texture,
                                        destination: cropTexture,
