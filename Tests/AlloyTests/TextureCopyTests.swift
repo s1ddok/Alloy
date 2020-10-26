@@ -30,8 +30,8 @@ final class TextureCopyTests: XCTestCase {
                                      scalarType: .float)
 
         let jsonDecoder = JSONDecoder()
-        let testCasesFolderURL = Bundle.testsResources.url(forResource: Self.testResourcesFolderName,
-                                                           withExtension: nil)!
+        let testCasesFolderURL = Bundle.alloyTestsResources.url(forResource: Self.testResourcesFolderName,
+                                                                withExtension: nil)!
         
         let testCasesURLs = try FileManager.default.contentsOfDirectory(at: testCasesFolderURL,
                                                                         includingPropertiesForKeys: nil,

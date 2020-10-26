@@ -1,6 +1,6 @@
 import XCTest
 import Alloy
-import TestsResources
+import AlloyTestsResources
 
 final class TextureCachingTests: XCTestCase {
 
@@ -67,8 +67,8 @@ final class TextureCachingTests: XCTestCase {
                                                    options: .storageModeShared)
 
         let originalTextures: [MTLTexture] = try ["255x121", "512x512", "1024x1024"].map {
-            let originalTextureURL = Bundle.testsResources.url(forResource: "Shared/\($0)",
-                                                               withExtension: "png")!
+            let originalTextureURL = Bundle.alloyTestsResources.url(forResource: "Shared/\($0)",
+                                                                    withExtension: "png")!
             return try self.context.scheduleAndWait { commadBuffer in
                 let cgImage = try CGImage.initFromURL(originalTextureURL)
                 return try self.textureFromCGImage(cgImage,

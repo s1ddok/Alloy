@@ -19,8 +19,8 @@ final class EuclideanDistanceTests: XCTestCase {
                                                 scalarType: .float)
         self.textureAddConstantFloat = try .init(context: self.context,
                                                  scalarType: .float)
-        let sourceImageFileURL = Bundle.testsResources.url(forResource: "Shared/255x121",
-                                                           withExtension: "png")!
+        let sourceImageFileURL = Bundle.alloyTestsResources.url(forResource: "Shared/255x121",
+                                                                withExtension: "png")!
         self.source = try self.context.texture(from: .initFromURL(sourceImageFileURL),
                                                usage: [.shaderRead, .shaderWrite])
         self.destination = try self.source.matchingTexture(usage: [.shaderRead, .shaderWrite])

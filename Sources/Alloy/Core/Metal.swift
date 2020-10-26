@@ -1,6 +1,7 @@
 @_exported import Foundation
 @_exported import Metal
 @_exported import MetalKit
+@_exported import MetalPerformanceShaders
 
 public final class Metal {
     
