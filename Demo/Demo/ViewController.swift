@@ -1,11 +1,3 @@
-//
-//  ViewController.swift
-//  Demo
-//
-//  Created by Andrey Volodin on 02/12/2018.
-//  Copyright © 2018 avolodin. All rights reserved.
-//
-
 import Cocoa
 import Alloy
 import AVFoundation
@@ -31,44 +23,35 @@ class ViewController: NSViewController {
     
     @IBAction func sliderDragged(_ sender: NSSlider) {
         var rect = NSRect(origin: .zero, size: self.image.size)
-        // Very very bad and slow, just for demo purposes
-        guard
+        
+        do {
             let cgImage = self.image.cgImage(forProposedRect: &rect,
                                              context: nil,
-                                             hints: nil),
-            let texture = try? context.texture(from: cgImage,
-                                               usage: [.shaderRead, .shaderWrite])
-        else { return }
-        
-
-        let cropTextureDescriptor = texture.descriptor
-        cropTextureDescriptor.usage.insert(.shaderWrite)
-        cropTextureDescriptor.width = 200
-        cropTextureDescriptor.height = 100
-
-        let transform = Matrix3x3f.translate(tx: 0.5, ty: 0.5)
-                        * Matrix3x3f.rotate(angle: Angle(radians: sender.floatValue))
-                        * Matrix3x3f.scale(sx: 1.9, sy: 0.2)
-                        * Matrix3x3f.translate(tx: -0.5, ty: -0.5)
-
-        let cropTexture = context.device.makeTexture(descriptor: cropTextureDescriptor)!
-
-        try? self.context.scheduleAndWait { buffer in
-            buffer.compute { encoder in
-                self.affineCropEncoder.encode(source: texture,
-                                              destination: cropTexture,
-                                              affineTransform: simd_float3x3(transform),
-                                              using: encoder)
-            }
+                                             hints: nil)!
+            let texture = try context.texture(from: cgImage,
+                                              srgb: false,
+                                              usage: [.shaderRead, .shaderWrite])
+            let cropTexture = try texture.matchingTexture()
             
-            // For Mac applications (doesn't actually do anything, serves as an example)
-            if case .managed = texture.storageMode {
-                buffer.blit { encoder in
-                    encoder.synchronize(resource: cropTexture)
+            let transform = Matrix3x3f.translate(tx: 0.5, ty: 0.5)
+                          * Matrix3x3f.rotate(angle: Angle(radians: sender.floatValue))
+                          * Matrix3x3f.translate(tx: -0.5, ty: -0.5)
+            
+            try self.context.scheduleAndWait { buffer in
+                self.affineCropEncoder(source: texture,
+                                       destination: cropTexture,
+                                       affineTransform: simd_float3x3(transform),
+                                       in: buffer)
+                
+                // For Mac applications (doesn't actually do anything, serves as an example)
+                if case .managed = texture.storageMode {
+                    buffer.blit { encoder in
+                        encoder.synchronize(resource: cropTexture)
+                    }
                 }
             }
-        }
-        
-        self.imageView.image = try! cropTexture.image()
+            
+            self.imageView.image = try cropTexture.image()
+        } catch { return }
     }
 }
