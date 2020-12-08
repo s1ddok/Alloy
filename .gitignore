@@ -6,3 +6,4 @@ Demo/Demo.xcodeproj/xcuserdata/
 Demo/Demo.xcworkspace/xcuserdata/
 *gen
 .swiftpm
+.build
