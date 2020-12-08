@@ -2,7 +2,7 @@ import Metal
 
 public enum Feature {
     case nonUniformThreadgroups
-    case readWriteTexture(MTLPixelFormat)
+    case readWriteTextures(MTLPixelFormat)
 }
 
 public extension MTLDevice {
@@ -17,7 +17,7 @@ public extension MTLDevice {
             return self.supportsFeatureSet(.macOS_GPUFamily1_v3)
             #endif
             
-        case let .readWriteTexture(pixelFormat):
+        case let .readWriteTextures(pixelFormat):
             let tierOneSupportedPixelFormats: Set<MTLPixelFormat> = [
                 .r32Float, .r32Uint, .r32Sint
             ]
