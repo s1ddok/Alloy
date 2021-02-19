@@ -36,6 +36,10 @@ Pod::Spec.new do |s|
     ml.dependency 'Alloy/Core'
   end
 
+  s.pod_target_xcconfig = {
+    'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'NEEDS_BUNDLE_MODULE_DEFINITION'
+  }
+
   s.license = {
     :type => 'MIT',
     :file => 'LICENSE'
