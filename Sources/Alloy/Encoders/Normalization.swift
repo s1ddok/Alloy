@@ -1,6 +1,6 @@
 import Metal
 
-final public class Normalize {
+final public class Normalization {
 
     // MARK: - Propertires
 
@@ -82,5 +82,5 @@ final public class Normalize {
         }
     }
 
-    public static let functionName = "normalize"
+    public static let functionName = "normalization"
 }
