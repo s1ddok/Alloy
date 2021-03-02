@@ -38,8 +38,10 @@ public class MTLTextureCodableBox: Codable {
 
                     textureView.getBytes(pointer.advanced(by: offset),
                                          bytesPerRow: bytesPerRow,
+                                         bytesPerImage: bytesPerImage,
                                          from: textureView.region,
-                                         mipmapLevel: 0)
+                                         mipmapLevel: 0,
+                                         slice: 0)
 
                     offset += bytesPerImage
                 }
@@ -80,8 +82,10 @@ public class MTLTextureCodableBox: Codable {
 
                     textureView.replace(region: textureView.region,
                                         mipmapLevel: 0,
+                                        slice: 0,
                                         withBytes: pointer.advanced(by: offset),
-                                        bytesPerRow: bytesPerRow)
+                                        bytesPerRow: bytesPerRow,
+                                        bytesPerImage: bytesPerImage)
 
                     offset += bytesPerImage
                 }
