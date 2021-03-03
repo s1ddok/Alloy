@@ -1,5 +1,5 @@
 import Foundation
-#if NEEDS_BUNDLE_MODULE_DEFINITION
+#if !SWIFT_PACKAGE
 public extension Bundle {
     static var module = Bundle(for: MTLContext.self)
 }
