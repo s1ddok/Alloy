@@ -1,5 +1,5 @@
 import Metal
-#if SWIFT_PM
+#if SWIFT_PACKAGE
 import AlloyShadersSharedTypes
 #endif
 

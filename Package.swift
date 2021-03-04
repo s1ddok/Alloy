@@ -17,8 +17,7 @@ let package = Package(
                 publicHeadersPath: "."),
         .target(name: "Alloy",
                 dependencies: [.target(name: "AlloyShadersSharedTypes")],
-                resources: [.process("Shaders/Shaders.metal")],
-                swiftSettings: [.define("SWIFT_PM")]),
+                resources: [.process("Shaders/Shaders.metal")]),
         .target(name: "AlloyTestsResources",
                 path: "Tests/AlloyTestsResources",
                 resources: [
@@ -27,7 +26,6 @@ let package = Package(
                 ]),
         .testTarget(name: "AlloyTests",
                     dependencies: ["Alloy", "AlloyTestsResources"],
-                    resources: [.process("Shaders/Shaders.metal")],
-                    swiftSettings: [.define("SWIFT_PM")])
+                    resources: [.process("Shaders/Shaders.metal")])
     ]
 )

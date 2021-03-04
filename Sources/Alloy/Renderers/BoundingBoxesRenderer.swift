@@ -1,6 +1,6 @@
 import Metal
 import CoreGraphics
-#if SWIFT_PM
+#if SWIFT_PACKAGE
 import AlloyShadersSharedTypes
 #endif
 
