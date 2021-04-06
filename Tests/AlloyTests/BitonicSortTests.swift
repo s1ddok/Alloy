@@ -19,7 +19,7 @@ final class BitonicSortTests: XCTestCase {
     }
 
     func testSortFloat32() throws {
-        let data = [Float32](repeating: .random(in: 0 ..< .init(self.numberOfElements)),
+        let data = [Float32](random: 0 ..< .init(self.numberOfElements),
                              count: self.numberOfElements)
         let cpuSortedData = data.sorted()
         let gpuSortedData = try self.sortData(data)
@@ -30,7 +30,7 @@ final class BitonicSortTests: XCTestCase {
     @available(macOS, unavailable)
     @available(macCatalyst, unavailable)
     func testSortFloat16() throws {
-        let data = [Swift.Float16](repeating: .random(in: 0 ..< .max),
+        let data = [Swift.Float16](random: 0 ..< .max,
                                    count: .init(Swift.Float16.max))
         let cpuSortedData = data.sorted()
         let gpuSortedData = try self.sortData(data)
@@ -38,7 +38,7 @@ final class BitonicSortTests: XCTestCase {
     }
 
     func testSortUInt32() throws {
-        let data = [UInt32](repeating: .random(in: 0 ..< .init(self.numberOfElements)),
+        let data = [UInt32](random: 0 ..< .init(self.numberOfElements),
                             count: self.numberOfElements)
         let cpuSortedData = data.sorted()
         let gpuSortedData = try self.sortData(data)
@@ -46,7 +46,7 @@ final class BitonicSortTests: XCTestCase {
     }
 
     func testSortUInt16() throws {
-        let data = [UInt16](repeating: .random(in: 0 ..< .max),
+        let data = [UInt16](random: 0 ..< .max,
                             count: .init(UInt16.max))
         let cpuSortedData = data.sorted()
         let gpuSortedData = try self.sortData(data)
@@ -54,7 +54,7 @@ final class BitonicSortTests: XCTestCase {
     }
 
     func testSortInt32() throws {
-        let data = [Int32](repeating: .random(in: 0 ..< .init(self.numberOfElements)),
+        let data = [Int32](random: 0 ..< .init(self.numberOfElements),
                            count: self.numberOfElements)
         let cpuSortedData = data.sorted()
         let gpuSortedData = try self.sortData(data)
@@ -62,7 +62,7 @@ final class BitonicSortTests: XCTestCase {
     }
 
     func testSortInt16() throws {
-        let data = [Int16](repeating: .random(in: 0 ..< .max),
+        let data = [Int16](random: 0 ..< .max,
                            count: .init(Int16.max))
         let cpuSortedData = data.sorted()
         let gpuSortedData = try self.sortData(data)
@@ -78,6 +78,18 @@ final class BitonicSortTests: XCTestCase {
         return result
     }
 
+    func testPerformance() throws {
+        let data = [Float32](random: 0 ..< .init(self.numberOfElements),
+                             count: self.numberOfElements)
+
+        let bitonicSort: BitonicSort<Float32> = try .init(context: self.context)
+        try bitonicSort.setData(data)
+
+        self.measure {
+            try? self.context.scheduleAndWait(bitonicSort.encode(in:))
+        }
+    }
+
 }
 
 @available(iOS 14.0, tvOS 14.0, *)
@@ -85,4 +97,73 @@ final class BitonicSortTests: XCTestCase {
 @available(macCatalyst, unavailable)
 extension Swift.Float16 {
     static let max: Swift.Float16 = 65504
+}
+
+extension Array where Element == Float32 {
+    init(random range: Range<Float32>, count: Int) {
+        var array = [Float32](repeating: .zero,
+                              count: count)
+        for i in 0 ..< array.count {
+            array[i] = .random(in: range)
+        }
+        self = array
+    }
+}
+
+@available(iOS 14.0, tvOS 14.0, *)
+@available(macOS, unavailable)
+@available(macCatalyst, unavailable)
+extension Array where Element == Swift.Float16 {
+    init(random range: Range<Swift.Float16>, count: Int) {
+        var array = [Swift.Float16](repeating: .zero,
+                                    count: count)
+        for i in 0 ..< array.count {
+            array[i] = .random(in: range)
+        }
+        self = array
+    }
+}
+
+extension Array where Element == UInt32 {
+    init(random range: Range<UInt32>, count: Int) {
+        var array = [UInt32](repeating: .zero,
+                              count: count)
+        for i in 0 ..< array.count {
+            array[i] = .random(in: range)
+        }
+        self = array
+    }
+}
+
+extension Array where Element == UInt16 {
+    init(random range: Range<UInt16>, count: Int) {
+        var array = [UInt16](repeating: .zero,
+                             count: count)
+        for i in 0 ..< array.count {
+            array[i] = .random(in: range)
+        }
+        self = array
+    }
+}
+
+extension Array where Element == Int32 {
+    init(random range: Range<Int32>, count: Int) {
+        var array = [Int32](repeating: .zero,
+                            count: count)
+        for i in 0 ..< array.count {
+            array[i] = .random(in: range)
+        }
+        self = array
+    }
+}
+
+extension Array where Element == Int16 {
+    init(random range: Range<Int16>, count: Int) {
+        var array = [Int16](repeating: .zero,
+                              count: count)
+        for i in 0 ..< array.count {
+            array[i] = .random(in: range)
+        }
+        self = array
+    }
 }

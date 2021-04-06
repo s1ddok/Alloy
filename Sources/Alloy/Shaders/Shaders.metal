@@ -1178,4 +1178,4 @@ generateKernels(bitonicSortFinalPass)
 
 #undef outerArguments
 #undef innerArguments
-#undef SORT(F,L,R)
+#undef SORT
