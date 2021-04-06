@@ -11,12 +11,16 @@ extension Float32: MetalCompatibleScalar {
     public static var maximum: MetalCompatibleScalar { Self.greatestFiniteMagnitude }
     public static var minimum: MetalCompatibleScalar { Self.leastNormalMagnitude }
 }
-@available(iOS 14.0, *)
+
+@available(iOS 14.0, tvOS 14.0, *)
+@available(macOS, unavailable)
+@available(macCatalyst, unavailable)
 extension Swift.Float16: MetalCompatibleScalar  {
     public static var scalarType: MTLPixelFormat.ScalarType { .half }
     public static var maximum: MetalCompatibleScalar { Self.greatestFiniteMagnitude }
     public static var minimum: MetalCompatibleScalar { Self.leastNormalMagnitude }
 }
+
 extension UInt32: MetalCompatibleScalar  {
     public static var scalarType: MTLPixelFormat.ScalarType { .uint }
     public static var maximum: MetalCompatibleScalar { Self.max }
