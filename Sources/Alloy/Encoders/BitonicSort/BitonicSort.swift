@@ -2,15 +2,23 @@ import Metal
 
 final public class BitonicSort<T: MetalCompatibleScalar> {
 
+    // MARK: - Type Definitions
+
+    public enum Error: Swift.Error {
+        case missingDataBuffer
+    }
+
     // MARK: - Properties
+
+    public var count = 0
+    public var paddedCount = 0
+    private var dataBuffer: MTLBuffer?
 
     private let firstPass: FirstPass
     private let generalPass: GeneralPass
     private let finalPass: FinalPass
 
-    private var dataBuffer: MTLBuffer?
-    private var count = 0
-    private var paddedCount = 0
+    // MARK: - Init
 
     public convenience init(context: MTLContext) throws {
         try self.init(library: context.library(for: .module))
@@ -26,7 +34,8 @@ final public class BitonicSort<T: MetalCompatibleScalar> {
                                    scalarType: scalarType)
     }
 
-    public func setData(_ array: [T]) throws {
+    @discardableResult
+    public func setData(_ array: [T]) throws -> MTLBuffer {
         self.count = array.count
         self.paddedCount = 1 << UInt(ceil(log2f(.init(array.count))))
 
@@ -61,13 +70,14 @@ final public class BitonicSort<T: MetalCompatibleScalar> {
                                             repeating: maxValue,
                                             count: self.paddedCount - array.count)
         }
+
+        return data
     }
 
-    public func getData() -> [T]? {
-        guard let data = self.dataBuffer
-        else { return nil }
-        return data.array(of: T.self,
-                          count: self.count)
+    // MARK: - Encode
+
+    public func callAsFunction(in commandeBuffer: MTLCommandBuffer) {
+        self.encode(in: commandeBuffer)
     }
 
     public func encode(in commandBuffer: MTLCommandBuffer) {
