@@ -1,10 +1,14 @@
 import XCTest
 import Alloy
 
+@available(iOS 14.0, tvOS 14.0, *)
+@available(macOS, unavailable)
+@available(macCatalyst, unavailable)
 final class BitonicSortTests: XCTestCase {
 
     enum Error: Swift.Error {
         case missingData
+        case unsupportedType
     }
 
     // MARK: - Properties
@@ -69,11 +73,44 @@ final class BitonicSortTests: XCTestCase {
         XCTAssertEqual(cpuSortedData, gpuSortedData)
     }
 
-    func sortData<T: MetalCompatibleScalar>(_ data: [T]) throws -> [T] {
-        let bitonicSort: BitonicSort<T> = try .init(context: self.context)
-        try bitonicSort.setData(data)
-        try self.context.scheduleAndWait(bitonicSort.encode(in:))
-        guard let result = bitonicSort.getData()
+    func sortData<T: FloatingPoint>(_ data: [T]) throws -> [T] {
+        guard let firstElement = data.first
+        else { throw Error.missingData }
+
+        let bitonicSort = try BitonicSort(context: self.context,
+                                          scalarType: firstElement.scalarType())
+        let buffer = try BitonicSort.buffer(from: data,
+                                            device: self.context.device,
+                                            options: .storageModeShared)
+
+        try? self.context.scheduleAndWait { commandBuffer in
+            bitonicSort(data: buffer.0,
+                        count: buffer.1,
+                        in: commandBuffer)
+        }
+
+        guard let result = buffer.buffer.array(of: T.self, count: data.count)
+        else { throw Error.missingData }
+        return result
+    }
+
+    func sortData<T: FixedWidthInteger>(_ data: [T]) throws -> [T] {
+        guard let firstElement = data.first
+        else { throw Error.missingData }
+
+        let bitonicSort = try BitonicSort(context: self.context,
+                                          scalarType: firstElement.scalarType())
+        let buffer = try BitonicSort.buffer(from: data,
+                                            device: self.context.device,
+                                            options: .storageModeShared)
+
+        try? self.context.scheduleAndWait { commandBuffer in
+            bitonicSort(data: buffer.0,
+                        count: buffer.1,
+                        in: commandBuffer)
+        }
+
+        guard let result = buffer.buffer.array(of: T.self, count: data.count)
         else { throw Error.missingData }
         return result
     }
@@ -82,11 +119,18 @@ final class BitonicSortTests: XCTestCase {
         let data = [Float32](random: 0 ..< .init(self.numberOfElements),
                              count: self.numberOfElements)
 
-        let bitonicSort: BitonicSort<Float32> = try .init(context: self.context)
-        try bitonicSort.setData(data)
+        let bitonicSort = try BitonicSort(context: self.context,
+                                          scalarType: .float)
+        let buffer = try BitonicSort.buffer(from: data,
+                                            device: self.context.device,
+                                            options: .storageModeShared)
 
         self.measure {
-            try? self.context.scheduleAndWait(bitonicSort.encode(in:))
+            try? self.context.scheduleAndWait { commandBuffer in
+                bitonicSort(data: buffer.0,
+                            count: buffer.1,
+                            in: commandBuffer)
+            }
         }
     }
 
@@ -95,11 +139,30 @@ final class BitonicSortTests: XCTestCase {
 @available(iOS 14.0, tvOS 14.0, *)
 @available(macOS, unavailable)
 @available(macCatalyst, unavailable)
-extension Swift.Float16 {
+private extension Numeric {
+
+    func scalarType() throws -> MTLPixelFormat.ScalarType {
+        switch self {
+        case is Float32: return .float
+        case is Swift.Float16: return .half
+        case is UInt32: return .uint
+        case is UInt16: return .ushort
+        case is Int32: return .int
+        case is Int16: return .short
+        default: throw BitonicSortTests.Error.unsupportedType
+        }
+    }
+
+}
+
+@available(iOS 14.0, tvOS 14.0, *)
+@available(macOS, unavailable)
+@available(macCatalyst, unavailable)
+private extension Swift.Float16 {
     static let max: Swift.Float16 = 65504
 }
 
-extension Array where Element == Float32 {
+private extension Array where Element == Float32 {
     init(random range: Range<Float32>, count: Int) {
         var array = [Float32](repeating: .zero,
                               count: count)
@@ -113,7 +176,7 @@ extension Array where Element == Float32 {
 @available(iOS 14.0, tvOS 14.0, *)
 @available(macOS, unavailable)
 @available(macCatalyst, unavailable)
-extension Array where Element == Swift.Float16 {
+private extension Array where Element == Swift.Float16 {
     init(random range: Range<Swift.Float16>, count: Int) {
         var array = [Swift.Float16](repeating: .zero,
                                     count: count)
@@ -124,10 +187,10 @@ extension Array where Element == Swift.Float16 {
     }
 }
 
-extension Array where Element == UInt32 {
+private extension Array where Element == UInt32 {
     init(random range: Range<UInt32>, count: Int) {
         var array = [UInt32](repeating: .zero,
-                              count: count)
+                             count: count)
         for i in 0 ..< array.count {
             array[i] = .random(in: range)
         }
@@ -135,7 +198,7 @@ extension Array where Element == UInt32 {
     }
 }
 
-extension Array where Element == UInt16 {
+private extension Array where Element == UInt16 {
     init(random range: Range<UInt16>, count: Int) {
         var array = [UInt16](repeating: .zero,
                              count: count)
@@ -146,7 +209,7 @@ extension Array where Element == UInt16 {
     }
 }
 
-extension Array where Element == Int32 {
+private extension Array where Element == Int32 {
     init(random range: Range<Int32>, count: Int) {
         var array = [Int32](repeating: .zero,
                             count: count)
@@ -157,10 +220,10 @@ extension Array where Element == Int32 {
     }
 }
 
-extension Array where Element == Int16 {
+private extension Array where Element == Int16 {
     init(random range: Range<Int16>, count: Int) {
         var array = [Int16](repeating: .zero,
-                              count: count)
+                            count: count)
         for i in 0 ..< array.count {
             array[i] = .random(in: range)
         }
