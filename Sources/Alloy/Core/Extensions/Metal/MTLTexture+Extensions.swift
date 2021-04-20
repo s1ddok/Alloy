@@ -20,8 +20,7 @@ public extension MTLTexture {
             let rowBytes = self.width
             let length = rowBytes * self.height
 
-            let rgbaBytes = UnsafeMutableRawPointer.allocate(byteCount: length,
-                                                             alignment: MemoryLayout<UInt8>.alignment)
+            let rgbaBytes = UnsafeMutablePointer<UInt8>.allocate(capacity: length)
             defer { rgbaBytes.deallocate() }
             self.getBytes(rgbaBytes,
                           bytesPerRow: rowBytes,
@@ -33,7 +32,7 @@ public extension MTLTexture {
                                                     ? CGImageAlphaInfo.alphaOnly.rawValue
                                                     : CGImageAlphaInfo.none.rawValue)
             guard let data = CFDataCreate(nil,
-                                          rgbaBytes.assumingMemoryBound(to: UInt8.self),
+                                          rgbaBytes,
                                           length),
                   let dataProvider = CGDataProvider(data: data),
                   let cgImage = CGImage(width: self.width,
@@ -54,25 +53,20 @@ public extension MTLTexture {
             // read texture as byte array
             let rowBytes = self.width * 4
             let length = rowBytes * self.height
-
-            let bgraBytes = UnsafeMutableRawPointer.allocate(byteCount: length,
-                                                             alignment: MemoryLayout<UInt8>.alignment)
-            defer { bgraBytes.deallocate() }
-
+            let bgraBytes = UnsafeMutablePointer<UInt8>.allocate(capacity: length)
+            let rgbaBytes = UnsafeMutablePointer<UInt8>.allocate(capacity: length)
+            defer { bgraBytes.deallocate(); rgbaBytes.deallocate() }
             self.getBytes(bgraBytes,
                           bytesPerRow: rowBytes,
                           from: self.region,
                           mipmapLevel: 0)
 
             // use Accelerate framework to convert from BGRA to RGBA
+
             var bgraBuffer = vImage_Buffer(data: bgraBytes,
                                            height: vImagePixelCount(self.height),
                                            width: vImagePixelCount(self.width),
                                            rowBytes: rowBytes)
-
-            let rgbaBytes = UnsafeMutableRawPointer.allocate(byteCount: length,
-                                                             alignment: MemoryLayout<UInt8>.alignment)
-            defer { rgbaBytes.deallocate() }
             var rgbaBuffer = vImage_Buffer(data: rgbaBytes,
                                            height: vImagePixelCount(self.height),
                                            width: vImagePixelCount(self.width),
@@ -86,7 +80,7 @@ public extension MTLTexture {
             let colorScape = colorSpace ?? CGColorSpaceCreateDeviceRGB()
             let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
             guard let data = CFDataCreate(nil,
-                                          rgbaBytes.assumingMemoryBound(to: UInt8.self),
+                                          rgbaBytes,
                                           length),
                   let dataProvider = CGDataProvider(data: data),
                   let cgImage = CGImage(width: self.width,
@@ -107,10 +101,8 @@ public extension MTLTexture {
             let rowBytes = self.width * 4
             let length = rowBytes * self.height
 
-            let rgbaBytes = UnsafeMutableRawPointer.allocate(byteCount: length,
-                                                             alignment: MemoryLayout<UInt8>.alignment)
+            let rgbaBytes = UnsafeMutablePointer<UInt8>.allocate(capacity: length)
             defer { rgbaBytes.deallocate() }
-
             self.getBytes(rgbaBytes,
                           bytesPerRow: rowBytes,
                           from: self.region,
@@ -119,7 +111,7 @@ public extension MTLTexture {
             let colorScape = colorSpace ?? CGColorSpaceCreateDeviceRGB()
             let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
             guard let data = CFDataCreate(nil,
-                                          rgbaBytes.assumingMemoryBound(to: UInt8.self),
+                                          rgbaBytes,
                                           length),
                   let dataProvider = CGDataProvider(data: data),
                   let cgImage = CGImage(width: self.width,

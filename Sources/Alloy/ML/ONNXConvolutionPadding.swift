@@ -30,9 +30,9 @@ public typealias Scales = (height: Int, width: Int)
     }
 
     required convenience public init?(coder aDecoder: NSCoder) {
-        guard
-            let data = aDecoder.decodeData(),
-            let other = NSKeyedUnarchiver.unarchiveObject(with: data) as? ONNXConvolutionPadding
+        guard let data = aDecoder.decodeData(),
+              let other = try? NSKeyedUnarchiver.unarchivedObject(ofClass: ONNXConvolutionPadding.self,
+                                                                  from: data)
         else { return nil }
         self.init(kernel: other.kernel,
                   strides: other.strides,
@@ -43,7 +43,8 @@ public typealias Scales = (height: Int, width: Int)
     }
 
     public func encode(with aCoder: NSCoder) {
-        aCoder.encode(NSKeyedArchiver.archivedData(withRootObject: self))
+        try? aCoder.encode(NSKeyedArchiver.archivedData(withRootObject: self,
+                                                        requiringSecureCoding: false))
     }
 
     public func paddingMethod() -> MPSNNPaddingMethod {

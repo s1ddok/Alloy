@@ -6,6 +6,7 @@ public extension MTLPixelFormat {
     }
 
     var size: Int? {
+        #if os(iOS) && !targetEnvironment(macCatalyst)
         switch self {
         case .a8Unorm, .r8Unorm, .r8Snorm,
              .r8Uint, .r8Sint, .stencil8, .r8Unorm_srgb: return 1
@@ -20,20 +21,41 @@ public extension MTLPixelFormat {
              .rgba8Sint, .bgra8Unorm, .bgra8Unorm_srgb,
              .rgb10a2Unorm, .rgb10a2Uint, .rg11b10Float,
              .rgb9e5Float, .bgr10a2Unorm, .gbgr422,
+             .bgrg422, .depth32Float, .bgr10_xr_srgb, .bgr10_xr: return 4
+        case .rg32Uint, .rg32Sint, .rg32Float,
+             .rgba16Unorm, .rgba16Snorm, .rgba16Uint,
+             .rgba16Sint, .rgba16Float, .depth32Float_stencil8, .x32_stencil8,
+             .bgra10_xr, .bgra10_xr_srgb: return 8
+        case .rgba32Uint, .rgba32Sint, .rgba32Float: return 16
+        default: return nil
+        }
+        #elseif os(macOS) || (os(iOS) && targetEnvironment(macCatalyst))
+        switch self {
+        case .a8Unorm, .r8Unorm, .r8Snorm,
+             .r8Uint, .r8Sint, .stencil8: return 1
+        case .r16Unorm, .r16Snorm, .r16Uint,
+             .r16Sint, .r16Float, .rg8Unorm,
+             .rg8Snorm, .rg8Uint, .rg8Sint,
+             .depth16Unorm: return 2
+        case .r32Uint, .r32Sint, .r32Float,
+             .rg16Unorm, .rg16Snorm, .rg16Uint,
+             .rg16Sint, .rg16Float, .rgba8Unorm,
+             .rgba8Unorm_srgb, .rgba8Snorm, .rgba8Uint,
+             .rgba8Sint, .bgra8Unorm, .bgra8Unorm_srgb,
+             .rgb10a2Unorm, .rgb10a2Uint, .rg11b10Float,
+             .rgb9e5Float, .bgr10a2Unorm, .gbgr422,
              .bgrg422, .depth32Float, .depth24Unorm_stencil8,
-             .x24_stencil8, .bgr10_xr_srgb, .bgr10_xr: return 4
+             .x24_stencil8: return 4
         case .rg32Uint, .rg32Sint, .rg32Float,
              .rgba16Unorm, .rgba16Snorm, .rgba16Uint,
              .rgba16Sint, .rgba16Float, .bc1_rgba,
-             .bc1_rgba_srgb, .depth32Float_stencil8, .x32_stencil8,
-             .bgra10_xr, .bgra10_xr_srgb: return 8
+             .bc1_rgba_srgb, .depth32Float_stencil8, .x32_stencil8: return 8
         case .rgba32Uint, .rgba32Sint, .rgba32Float,
              .bc2_rgba, .bc2_rgba_srgb, .bc3_rgba,
              .bc3_rgba_srgb: return 16
-        default:
-            // TODO: Finish bc4-bc7
-            return nil
+        default: return nil
         }
+        #endif
     }
 
     var isOrdinary8Bit: Bool {
@@ -175,11 +197,18 @@ public extension MTLPixelFormat {
 
     var isCompressed: Bool {
         #if os(iOS) && !targetEnvironment(macCatalyst)
-        return self.isPVRTC
-            || self.isEAC
-            || self.isETC
-            || self.isASTC
-            || self.isHDRASTC
+        if #available(iOS 13.0, *) {
+            return self.isPVRTC
+                || self.isEAC
+                || self.isETC
+                || self.isASTC
+                || self.isHDRASTC
+        } else {
+            return self.isPVRTC
+                || self.isEAC
+                || self.isETC
+                || self.isASTC
+        }
         #elseif os(macOS) || (os(iOS) && targetEnvironment(macCatalyst))
         return self.isS3TC
             || self.isRGTC
@@ -210,15 +239,13 @@ public extension MTLPixelFormat {
         }
     }
 
+    @available(iOS 13.0, *)
     var isHDRASTC: Bool {
         switch self {
-        case .astc_4x4_hdr,
-             .astc_5x4_hdr, .astc_5x5_hdr,
-             .astc_6x5_hdr, .astc_6x6_hdr,
-             .astc_8x5_hdr, .astc_8x6_hdr, .astc_8x8_hdr,
-             .astc_10x5_hdr, .astc_10x6_hdr, .astc_10x8_hdr, .astc_10x10_hdr,
+        case .astc_4x4_hdr, .astc_5x4_hdr, .astc_5x5_hdr, .astc_6x5_hdr, .astc_6x6_hdr, .astc_8x5_hdr,
+             .astc_8x6_hdr, .astc_8x8_hdr, .astc_10x5_hdr, .astc_10x6_hdr, .astc_10x8_hdr, .astc_10x10_hdr,
              .astc_12x10_hdr, .astc_12x12_hdr:
-                return true
+            return true
         default: return false
         }
     }
@@ -282,10 +309,16 @@ public extension MTLPixelFormat {
     }
 
     var isDepth: Bool {
-        switch self {
-        case .depth16Unorm, .depth32Float:
-            return true
-        default: return false
+        if #available(iOS 13.0, *) {
+            switch self {
+            case .depth16Unorm, .depth32Float: return true
+            default: return false
+            }
+        } else {
+            switch self {
+            case .depth32Float: return true
+            default: return false
+            }
         }
     }
 
