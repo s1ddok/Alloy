@@ -102,21 +102,13 @@ final public class BitonicSort {
                                            device: MTLDevice,
                                            options: MTLResourceOptions = []) throws -> (buffer: MTLBuffer, paddedCount: Int) {
         let paddedCount = 1 << UInt(ceil(log2f(.init(array.count))))
-        let data = try device.buffer(for: T.self,
-                                     count: paddedCount,
-                                     options: options)
-        let bufferContents = data.contents()
-        bufferContents.initializeMemory(as: T.self,
-                                        from: array,
-                                        count: array.count)
-        if array.count < paddedCount {
-            bufferContents.advanced(by: MemoryLayout<T>.stride * array.count)
-                          .initializeMemory(as: T.self,
-                                            repeating: paddingValue,
-                                            count: paddedCount - array.count)
+        var array = array
+        if paddedCount > array.count {
+            array += .init(repeating: paddingValue,
+                           count: paddedCount - array.count)
         }
-
-        return (buffer: data, paddedCount: paddedCount)
+        return try (buffer: device.buffer(with: array, options: options),
+                    paddedCount: paddedCount)
     }
 
 }
