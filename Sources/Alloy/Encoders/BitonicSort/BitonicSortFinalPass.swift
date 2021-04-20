@@ -34,11 +34,13 @@ extension BitonicSort {
         // MARK: - Encode
 
         func callAsFunction(data: MTLBuffer,
+                            elementStride: Int,
                             params: SIMD2<UInt32>,
                             gridSize: Int,
                             unitSize: Int,
                             in commandBuffer: MTLCommandBuffer) {
             self.encode(data: data,
+                        elementStride: elementStride,
                         params: params,
                         gridSize: gridSize,
                         unitSize: unitSize,
@@ -46,11 +48,13 @@ extension BitonicSort {
         }
 
         func callAsFunction(data: MTLBuffer,
+                            elementStride: Int,
                             params: SIMD2<UInt32>,
                             gridSize: Int,
                             unitSize: Int,
                             using encoder: MTLComputeCommandEncoder) {
             self.encode(data: data,
+                        elementStride: elementStride,
                         params: params,
                         gridSize: gridSize,
                         unitSize: unitSize,
@@ -58,6 +62,7 @@ extension BitonicSort {
         }
 
         func encode(data: MTLBuffer,
+                    elementStride: Int,
                     params: SIMD2<UInt32>,
                     gridSize: Int,
                     unitSize: Int,
@@ -65,6 +70,7 @@ extension BitonicSort {
             commandBuffer.compute { encoder in
                 encoder.label = "Bitonic Sort Final Pass"
                 self.encode(data: data,
+                            elementStride: elementStride,
                             params: params,
                             gridSize: gridSize,
                             unitSize: unitSize,
@@ -73,6 +79,7 @@ extension BitonicSort {
         }
 
         func encode(data: MTLBuffer,
+                    elementStride: Int,
                     params: SIMD2<UInt32>,
                     gridSize: Int,
                     unitSize: Int,
@@ -81,7 +88,7 @@ extension BitonicSort {
             encoder.setValue(UInt32(gridSize), at: 1)
             encoder.setValue(params, at: 2)
 
-            encoder.setThreadgroupMemoryLength((MemoryLayout<T>.stride * unitSize) << 1,
+            encoder.setThreadgroupMemoryLength((elementStride * unitSize) << 1,
                                                index: 0)
 
             if self.deviceSupportsNonuniformThreadgroups {

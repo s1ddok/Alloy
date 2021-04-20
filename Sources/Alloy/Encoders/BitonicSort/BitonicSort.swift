@@ -1,18 +1,8 @@
 import Metal
 
-final public class BitonicSort<T: MetalCompatibleScalar> {
-
-    // MARK: - Type Definitions
-
-    public enum Error: Swift.Error {
-        case missingDataBuffer
-    }
+final public class BitonicSort {
 
     // MARK: - Properties
-
-    public var count = 0
-    public var paddedCount = 0
-    private var dataBuffer: MTLBuffer?
 
     private let firstPass: FirstPass
     private let generalPass: GeneralPass
@@ -20,12 +10,14 @@ final public class BitonicSort<T: MetalCompatibleScalar> {
 
     // MARK: - Init
 
-    public convenience init(context: MTLContext) throws {
-        try self.init(library: context.library(for: .module))
+    public convenience init(context: MTLContext,
+                            scalarType: MTLPixelFormat.ScalarType) throws {
+        try self.init(library: context.library(for: .module),
+                      scalarType: scalarType)
     }
 
-    public init(library: MTLLibrary) throws {
-        let scalarType = T.scalarType
+    public init(library: MTLLibrary,
+                scalarType: MTLPixelFormat.ScalarType) throws {
         self.firstPass = try .init(library: library,
                                    scalarType: scalarType)
         self.generalPass = try .init(library: library,
@@ -34,57 +26,21 @@ final public class BitonicSort<T: MetalCompatibleScalar> {
                                    scalarType: scalarType)
     }
 
-    @discardableResult
-    public func setData(_ array: [T]) throws -> MTLBuffer {
-        self.count = array.count
-        self.paddedCount = 1 << UInt(ceil(log2f(.init(array.count))))
-
-        let storageMode: MTLResourceOptions
-        #if targetEnvironment(macCatalyst) || os(macOS)
-        storageMode = .storageModeManaged
-        defer {
-            if #available(macOS 10.11, macCatalyst 14.0, *) {
-                self.dataBuffer?.didModifyRange(0 ..< MemoryLayout<T>.stride * self.paddedCount)
-            }
-        }
-        #else
-        storageMode = .storageModeShared
-        #endif
-
-        let data = try self.generalPass
-                           .pipelineState
-                           .device
-                           .buffer(for: T.self,
-                                   count: self.paddedCount,
-                                   options: storageMode)
-        self.dataBuffer = data
-
-        let bufferContents = data.contents()
-        bufferContents.initializeMemory(as: T.self,
-                                        from: array,
-                                        count: array.count)
-        if array.count < self.paddedCount,
-           let maxValue = T.maximum as? T {
-            bufferContents.advanced(by: MemoryLayout<T>.stride * array.count)
-                          .initializeMemory(as: T.self,
-                                            repeating: maxValue,
-                                            count: self.paddedCount - array.count)
-        }
-
-        return data
-    }
-
     // MARK: - Encode
 
-    public func callAsFunction(in commandeBuffer: MTLCommandBuffer) {
-        self.encode(in: commandeBuffer)
+    public func callAsFunction(data: MTLBuffer,
+                               count: Int,
+                               in commandeBuffer: MTLCommandBuffer) {
+        self.encode(data: data,
+                    count: count,
+                    in: commandeBuffer)
     }
 
-    public func encode(in commandBuffer: MTLCommandBuffer) {
-        guard let data = self.dataBuffer
-        else { return }
-
-        let gridSize = self.paddedCount >> 1
+    public func encode(data: MTLBuffer,
+                       count: Int,
+                       in commandBuffer: MTLCommandBuffer) {
+        let elementStride = data.length / count
+        let gridSize = count >> 1
         let unitSize = min(gridSize,
                            self.generalPass
                                .pipelineState
@@ -93,12 +49,13 @@ final public class BitonicSort<T: MetalCompatibleScalar> {
         var params = SIMD2<UInt32>(repeating: 1)
 
         self.firstPass(data: data,
+                       elementStride: elementStride,
                        gridSize: gridSize,
                        unitSize: unitSize,
                        in: commandBuffer)
         params.x = .init(unitSize << 1)
 
-        while params.x < self.paddedCount {
+        while params.x < count {
             params.y = params.x
             params.x <<= 1
             repeat {
@@ -111,6 +68,7 @@ final public class BitonicSort<T: MetalCompatibleScalar> {
                     params.y >>= 1
                 } else {
                     self.finalPass(data: data,
+                                   elementStride: elementStride,
                                    params: params,
                                    gridSize: gridSize,
                                    unitSize: unitSize,
@@ -119,12 +77,46 @@ final public class BitonicSort<T: MetalCompatibleScalar> {
                 }
             } while params.y > .zero
         }
+    }
 
-        #if targetEnvironment(macCatalyst) || os(macOS)
-        commandBuffer.blit { encoder in
-            encoder.synchronize(resource: data)
+    public static func buffer<T: FixedWidthInteger>(from array: [T],
+                                                    device: MTLDevice,
+                                                    options: MTLResourceOptions = []) throws -> (buffer: MTLBuffer, paddedCount: Int) {
+        return try Self.buffer(from: array,
+                               paddingValue: T.max,
+                               device: device,
+                               options: options)
+    }
+
+    public static func buffer<T: FloatingPoint>(from array: [T],
+                                                device: MTLDevice,
+                                                options: MTLResourceOptions = []) throws -> (buffer: MTLBuffer, paddedCount: Int) {
+        return try Self.buffer(from: array,
+                               paddingValue: T.greatestFiniteMagnitude,
+                               device: device,
+                               options: options)
+    }
+
+    private static func buffer<T: Numeric>(from array: [T],
+                                           paddingValue: T,
+                                           device: MTLDevice,
+                                           options: MTLResourceOptions = []) throws -> (buffer: MTLBuffer, paddedCount: Int) {
+        let paddedCount = 1 << UInt(ceil(log2f(.init(array.count))))
+        let data = try device.buffer(for: T.self,
+                                     count: paddedCount,
+                                     options: options)
+        let bufferContents = data.contents()
+        bufferContents.initializeMemory(as: T.self,
+                                        from: array,
+                                        count: array.count)
+        if array.count < paddedCount {
+            bufferContents.advanced(by: MemoryLayout<T>.stride * array.count)
+                          .initializeMemory(as: T.self,
+                                            repeating: paddingValue,
+                                            count: paddedCount - array.count)
         }
-        #endif
+
+        return (buffer: data, paddedCount: paddedCount)
     }
 
 }

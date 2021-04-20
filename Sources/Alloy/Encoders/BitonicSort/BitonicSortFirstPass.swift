@@ -34,32 +34,38 @@ extension BitonicSort {
         // MARK: - Encode
 
         func callAsFunction(data: MTLBuffer,
+                            elementStride: Int,
                             gridSize: Int,
                             unitSize: Int,
                             in commandBuffer: MTLCommandBuffer) {
             self.encode(data: data,
+                        elementStride: elementStride,
                         gridSize: gridSize,
                         unitSize: unitSize,
                         in: commandBuffer)
         }
 
         func callAsFunction(data: MTLBuffer,
+                            elementStride: Int,
                             gridSize: Int,
                             unitSize: Int,
                             using encoder: MTLComputeCommandEncoder) {
             self.encode(data: data,
+                        elementStride: elementStride,
                         gridSize: gridSize,
                         unitSize: unitSize,
                         using: encoder)
         }
 
         func encode(data: MTLBuffer,
+                    elementStride: Int,
                     gridSize: Int,
                     unitSize: Int,
                     in commandBuffer: MTLCommandBuffer) {
             commandBuffer.compute { encoder in
                 encoder.label = "Bitonic Sort First Pass"
                 self.encode(data: data,
+                            elementStride: elementStride,
                             gridSize: gridSize,
                             unitSize: unitSize,
                             using: encoder)
@@ -67,12 +73,13 @@ extension BitonicSort {
         }
 
         func encode(data: MTLBuffer,
+                    elementStride: Int,
                     gridSize: Int,
                     unitSize: Int,
                     using encoder: MTLComputeCommandEncoder) {
             encoder.setBuffers(data)
             encoder.setValue(UInt32(gridSize), at: 1)
-            encoder.setThreadgroupMemoryLength((MemoryLayout<T>.stride * unitSize) << 1,
+            encoder.setThreadgroupMemoryLength((elementStride * unitSize) << 1,
                                                index: 0)
 
             if self.deviceSupportsNonuniformThreadgroups {
