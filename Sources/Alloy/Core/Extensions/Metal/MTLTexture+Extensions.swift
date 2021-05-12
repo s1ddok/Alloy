@@ -50,60 +50,7 @@ public extension MTLTexture {
             else { throw MetalError.MTLTextureError.imageCreationFailed }
 
             return cgImage
-        case .bgra8Unorm, .bgra8Unorm_srgb:
-            // read texture as byte array
-            let rowBytes = self.width * 4
-            let length = rowBytes * self.height
-
-            let bgraBytes = UnsafeMutableRawPointer.allocate(byteCount: length,
-                                                             alignment: MemoryLayout<UInt8>.alignment)
-            defer { bgraBytes.deallocate() }
-
-            self.getBytes(bgraBytes,
-                          bytesPerRow: rowBytes,
-                          from: self.region,
-                          mipmapLevel: 0)
-
-            // use Accelerate framework to convert from BGRA to RGBA
-            var bgraBuffer = vImage_Buffer(data: bgraBytes,
-                                           height: vImagePixelCount(self.height),
-                                           width: vImagePixelCount(self.width),
-                                           rowBytes: rowBytes)
-
-            let rgbaBytes = UnsafeMutableRawPointer.allocate(byteCount: length,
-                                                             alignment: MemoryLayout<UInt8>.alignment)
-            defer { rgbaBytes.deallocate() }
-            var rgbaBuffer = vImage_Buffer(data: rgbaBytes,
-                                           height: vImagePixelCount(self.height),
-                                           width: vImagePixelCount(self.width),
-                                           rowBytes: rowBytes)
-            let map: [UInt8] = [2, 1, 0, 3]
-            vImagePermuteChannels_ARGB8888(&bgraBuffer,
-                                           &rgbaBuffer,
-                                           map, 0)
-
-            // create CGImage with RGBA Flipped Bytes
-            let colorScape = colorSpace ?? CGColorSpaceCreateDeviceRGB()
-            let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
-            guard let data = CFDataCreate(nil,
-                                          rgbaBytes.assumingMemoryBound(to: UInt8.self),
-                                          length),
-                  let dataProvider = CGDataProvider(data: data),
-                  let cgImage = CGImage(width: self.width,
-                                        height: self.height,
-                                        bitsPerComponent: 8,
-                                        bitsPerPixel: 32,
-                                        bytesPerRow: rowBytes,
-                                        space: colorScape,
-                                        bitmapInfo: bitmapInfo,
-                                        provider: dataProvider,
-                                        decode: nil,
-                                        shouldInterpolate: true,
-                                        intent: .defaultIntent)
-            else { throw MetalError.MTLTextureError.imageCreationFailed }
-
-            return cgImage
-        case .rgba8Unorm, .rgba8Unorm_srgb:
+        case .rgba8Unorm, .rgba8Unorm_srgb, .bgra8Unorm, .bgra8Unorm_srgb:
             let rowBytes = self.width * 4
             let length = rowBytes * self.height
 
@@ -117,7 +64,14 @@ public extension MTLTexture {
                           mipmapLevel: 0)
 
             let colorScape = colorSpace ?? CGColorSpaceCreateDeviceRGB()
-            let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
+
+            let bitmapInfo: CGBitmapInfo
+            if self.pixelFormat == .bgra8Unorm || self.pixelFormat == .bgra8Unorm_srgb {
+                bitmapInfo = .init(rawValue: CGImageByteOrderInfo.order32Little.rawValue | CGImageAlphaInfo.premultipliedFirst.rawValue)
+            } else {
+                bitmapInfo = .init(rawValue: CGImageByteOrderInfo.order32Big.rawValue | CGImageAlphaInfo.premultipliedLast.rawValue)
+            }
+
             guard let data = CFDataCreate(nil,
                                           rgbaBytes.assumingMemoryBound(to: UInt8.self),
                                           length),
@@ -134,7 +88,7 @@ public extension MTLTexture {
                                         shouldInterpolate: true,
                                         intent: .defaultIntent)
             else { throw MetalError.MTLTextureError.imageCreationFailed }
-
+            
             return cgImage
         default: throw MetalError.MTLTextureError.imageIncompatiblePixelFormat
         }
