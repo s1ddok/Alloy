@@ -11,76 +11,114 @@ public extension MTLTexture {
     typealias XImage = NSImage
     #endif
     
-    func cgImage(colorSpace: CGColorSpace? = nil) throws -> CGImage {
+    func cgImage(colorSpace: CGColorSpace? = nil,
+                 useAlpha: Bool? = false) throws -> CGImage {
         guard self.isAccessibleOnCPU
         else { throw MetalError.MTLTextureError.imageCreationFailed }
 
         switch self.pixelFormat {
         case .a8Unorm, .r8Unorm, .r8Uint:
-            let rowBytes = self.width
-            let length = rowBytes * self.height
+            let componentsPerPixel = 1
+            let bytesPerComponent = MemoryLayout<UInt8>.stride
+            let bytesPerPixel = bytesPerComponent * componentsPerPixel
+            let bytesPerRow = self.width * bytesPerPixel
 
-            let rgbaBytes = UnsafeMutableRawPointer.allocate(byteCount: length,
-                                                             alignment: MemoryLayout<UInt8>.alignment)
-            defer { rgbaBytes.deallocate() }
-            self.getBytes(rgbaBytes,
-                          bytesPerRow: rowBytes,
+            let bitsPerComponent = bytesPerComponent * 8
+            let bitsPerPixel = bytesPerPixel * 8
+
+            let length = bytesPerRow * self.height
+
+            let bytes = UnsafeMutableRawPointer.allocate(byteCount: length,
+                                                         alignment: MemoryLayout<UInt8>.alignment)
+            defer { bytes.deallocate() }
+            self.getBytes(bytes,
+                          bytesPerRow: bytesPerRow,
                           from: self.region,
                           mipmapLevel: 0)
 
-            let colorScape = colorSpace ?? CGColorSpaceCreateDeviceGray()
-            let bitmapInfo = CGBitmapInfo(rawValue: self.pixelFormat == .a8Unorm
-                                                    ? CGImageAlphaInfo.alphaOnly.rawValue
-                                                    : CGImageAlphaInfo.none.rawValue)
+            let colorSpace = colorSpace ?? CGColorSpaceCreateDeviceGray()
+            let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.none.rawValue)
             guard let data = CFDataCreate(nil,
-                                          rgbaBytes.assumingMemoryBound(to: UInt8.self),
+                                          bytes.assumingMemoryBound(to: UInt8.self),
                                           length),
-                  let dataProvider = CGDataProvider(data: data),
-                  let cgImage = CGImage(width: self.width,
-                                        height: self.height,
-                                        bitsPerComponent: 8,
-                                        bitsPerPixel: 8,
-                                        bytesPerRow: rowBytes,
-                                        space: colorScape,
-                                        bitmapInfo: bitmapInfo,
-                                        provider: dataProvider,
-                                        decode: nil,
-                                        shouldInterpolate: true,
-                                        intent: .defaultIntent)
+                  let dataProvider = CGDataProvider(data: data)
+            else { throw MetalError.MTLTextureError.imageCreationFailed }
+
+            let createdCGImage: CGImage?
+            if useAlpha == true {
+                createdCGImage = CGImage(maskWidth: self.width,
+                                         height: self.height,
+                                         bitsPerComponent: bitsPerComponent,
+                                         bitsPerPixel: bitsPerPixel,
+                                         bytesPerRow: bytesPerRow,
+                                         provider: dataProvider,
+                                         decode: nil,
+                                         shouldInterpolate: true)
+            } else {
+                createdCGImage = CGImage(width: self.width,
+                                         height: self.height,
+                                         bitsPerComponent: bitsPerComponent,
+                                         bitsPerPixel: bitsPerPixel,
+                                         bytesPerRow: bytesPerRow,
+                                         space: colorSpace,
+                                         bitmapInfo: bitmapInfo,
+                                         provider: dataProvider,
+                                         decode: nil,
+                                         shouldInterpolate: true,
+                                         intent: .defaultIntent)
+            }
+
+            guard let cgImage = createdCGImage
             else { throw MetalError.MTLTextureError.imageCreationFailed }
 
             return cgImage
         case .rgba8Unorm, .rgba8Unorm_srgb, .bgra8Unorm, .bgra8Unorm_srgb:
-            let rowBytes = self.width * 4
-            let length = rowBytes * self.height
+            let componentsPerPixel = 4
+            let bytesPerComponent = MemoryLayout<UInt8>.stride
+            let bytesPerPixel = bytesPerComponent * componentsPerPixel
+            let bytesPerRow = self.width * bytesPerPixel
 
-            let rgbaBytes = UnsafeMutableRawPointer.allocate(byteCount: length,
-                                                             alignment: MemoryLayout<UInt8>.alignment)
-            defer { rgbaBytes.deallocate() }
+            let bitsPerComponent = bytesPerComponent * 8
+            let bitsPerPixel = bytesPerPixel * 8
 
-            self.getBytes(rgbaBytes,
-                          bytesPerRow: rowBytes,
+            let length = bytesPerRow * self.height
+
+            let bytes = UnsafeMutableRawPointer.allocate(byteCount: length,
+                                                         alignment: MemoryLayout<UInt8>.alignment)
+            defer { bytes.deallocate() }
+
+            self.getBytes(bytes,
+                          bytesPerRow: bytesPerRow,
                           from: self.region,
                           mipmapLevel: 0)
 
             let colorScape = colorSpace ?? CGColorSpaceCreateDeviceRGB()
 
-            let bitmapInfo: CGBitmapInfo
+            let byteOrderInfo: CGImageByteOrderInfo
             if self.pixelFormat == .bgra8Unorm || self.pixelFormat == .bgra8Unorm_srgb {
-                bitmapInfo = .init(rawValue: CGImageByteOrderInfo.order32Little.rawValue | CGImageAlphaInfo.premultipliedFirst.rawValue)
+                byteOrderInfo = .order32Little
             } else {
-                bitmapInfo = .init(rawValue: CGImageByteOrderInfo.order32Big.rawValue | CGImageAlphaInfo.premultipliedLast.rawValue)
+                byteOrderInfo = .order32Big
             }
 
+            let alphaInfo: CGImageAlphaInfo
+            if let useAlpha = useAlpha {
+                alphaInfo = useAlpha ? .last : .noneSkipLast
+            } else {
+                alphaInfo = .premultipliedLast
+            }
+
+            let bitmapInfo = CGBitmapInfo(rawValue: byteOrderInfo.rawValue | alphaInfo.rawValue)
+
             guard let data = CFDataCreate(nil,
-                                          rgbaBytes.assumingMemoryBound(to: UInt8.self),
+                                          bytes.assumingMemoryBound(to: UInt8.self),
                                           length),
                   let dataProvider = CGDataProvider(data: data),
                   let cgImage = CGImage(width: self.width,
                                         height: self.height,
-                                        bitsPerComponent: 8,
-                                        bitsPerPixel: 32,
-                                        bytesPerRow: rowBytes,
+                                        bitsPerComponent: bitsPerComponent,
+                                        bitsPerPixel: bitsPerPixel,
+                                        bytesPerRow: bytesPerRow,
                                         space: colorScape,
                                         bitmapInfo: bitmapInfo,
                                         provider: dataProvider,
@@ -94,8 +132,10 @@ public extension MTLTexture {
         }
     }
     
-    func image(colorSpace: CGColorSpace? = nil) throws -> XImage {
-        let cgImage = try self.cgImage(colorSpace: colorSpace)
+    func image(colorSpace: CGColorSpace? = nil,
+               useAlpha: Bool? = false) throws -> XImage {
+        let cgImage = try self.cgImage(colorSpace: colorSpace,
+                                       useAlpha: useAlpha)
         #if os(iOS)
         return UIImage(cgImage: cgImage)
         #elseif os(macOS)
