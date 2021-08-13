@@ -63,8 +63,8 @@ public extension MTLBuffer {
         guard self.length - offset >= dataLength
         else { throw MetalError.MTLBufferError.incompatibleData }
 
-        memcpy(&values,
-               self.contents() + offset,
+        memcpy(self.contents() + offset,
+               &values,
                dataLength)
     }
 }
