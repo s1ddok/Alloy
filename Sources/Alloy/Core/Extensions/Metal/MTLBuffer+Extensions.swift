@@ -62,6 +62,6 @@ public extension MTLBuffer {
         guard self.length - offset >= dataLength
         else { throw MetalError.MTLBufferError.incompatibleData }
         (self.contents() + offset).copyMemory(from: values,
-                                              byteCount: MemoryLayout<T>.stride * values.count)
+                                              byteCount: dataLength)
     }
 }
