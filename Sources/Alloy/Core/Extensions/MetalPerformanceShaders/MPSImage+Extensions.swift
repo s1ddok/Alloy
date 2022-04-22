@@ -3,6 +3,15 @@ import MetalPerformanceShaders
 /* Utility functions for converting of MPSImages to floating point arrays. */
 public extension MPSImage {
 
+    var descriptor: MPSImageDescriptor {
+        MPSImageDescriptor(channelFormat: self.featureChannelFormat,
+                           width: self.width,
+                           height: self.height,
+                           featureChannels: self.featureChannels,
+                           numberOfImages: self.numberOfImages,
+                           usage: self.usage)
+    }
+    
     /// Utility function for converting of MPSImages to floating point arrays.
     ///
     /// - Returns: Array of floats containing each pixel of MPSImage's texture.
