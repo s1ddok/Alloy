@@ -27,7 +27,7 @@ public class MTLTextureCodableBox: Codable {
                                                                     slices: slice..<slice+1)
                     else { throw MetalError.MTLTextureSerializationError.dataAccessFailure }
 
-                    var bytesPerRow = pixelFormatSize * textureView.width
+                    var bytesPerRow = pixelFormatSize * textureView.width * textureView.sampleCount
                     let bytesPerImage = bytesPerRow * textureView.height
 
                     // This comes from docs
@@ -71,7 +71,7 @@ public class MTLTextureCodableBox: Codable {
                                                                     slices: slice..<slice+1)
                     else { throw MetalError.MTLTextureSerializationError.dataAccessFailure }
 
-                    var bytesPerRow = pixelFormatSize * textureView.width
+                    var bytesPerRow = pixelFormatSize * textureView.width * textureView.sampleCount
                     let bytesPerImage = bytesPerRow * textureView.height
 
                     // This comes from docs
