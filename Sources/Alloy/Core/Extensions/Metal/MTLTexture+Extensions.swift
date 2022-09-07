@@ -333,3 +333,19 @@ public extension MTLTexture {
         return bytes
     }
 }
+
+public extension MTLTexture {
+    /// Pretty limited but often helpful extension that fill a certain region of a 0 slice and 0 mipmap level of a texture
+    /// T must be compatible with texture's pixel format
+    func fill<T>(region: MTLRegion? = nil, with value: T) throws {
+        guard self.storageMode == .shared else {
+            throw MetalError.MTLTextureError.incompatibleStorageMode
+        }
+        
+        let targetRegion = region ?? self.region
+        let bytesPerRow = MemoryLayout<T>.stride * targetRegion.size.width * self.sampleCount
+        var bytes = [T](repeating: value, count: self.sampleCount * targetRegion.size.width * targetRegion.size.height)
+
+        self.replace(region: targetRegion, mipmapLevel: 0, withBytes: &bytes, bytesPerRow: bytesPerRow)
+    }
+}
