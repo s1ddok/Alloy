@@ -54,37 +54,37 @@ public extension MTLContext {
 
 public extension MTLTexture {
 
-    var pixelBuffer: CVPixelBuffer? {
+    func pixelBuffer(region: MTLRegion? = nil) throws -> CVPixelBuffer {
         guard let cvPixelFormat = self.pixelFormat
                                       .compatibleCVPixelFormat
-        else { return nil }
+        else { throw MetalError.MTLTextureError.imageIncompatiblePixelFormat }
 
         var pb: CVPixelBuffer? = nil
         var status = CVPixelBufferCreate(nil,
-                                         self.width,
-                                         self.height,
+                                         region?.size.width ?? self.width,
+                                         region?.size.height ?? self.height,
                                          cvPixelFormat,
                                          nil,
                                          &pb)
         guard status == kCVReturnSuccess,
               let pixelBuffer = pb
-        else { return nil }
+        else { throw MetalError.MTLTextureError.pixelBufferConversionFailed }
 
         status = CVPixelBufferLockBaseAddress(pixelBuffer, [])
         guard status == kCVReturnSuccess,
               let pixelBufferBaseAdress = CVPixelBufferGetBaseAddress(pixelBuffer)
-        else { return nil }
+        else { throw MetalError.MTLTextureError.pixelBufferConversionFailed }
 
         let bytesPerRow = CVPixelBufferGetBytesPerRow(pixelBuffer)
 
         self.getBytes(pixelBufferBaseAdress,
                       bytesPerRow: bytesPerRow,
-                      from: self.region,
+                      from: region ?? self.region,
                       mipmapLevel: 0)
 
         status = CVPixelBufferUnlockBaseAddress(pixelBuffer, [])
         guard status == kCVReturnSuccess
-        else { return nil }
+        else { throw MetalError.MTLTextureError.pixelBufferConversionFailed }
 
         return pixelBuffer
     }
