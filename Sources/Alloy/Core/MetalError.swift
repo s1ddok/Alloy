@@ -34,6 +34,8 @@ public enum MetalError {
     public enum MTLTextureError: Error {
         case imageCreationFailed
         case imageIncompatiblePixelFormat
+        case incompatibleStorageMode
+        case pixelBufferConversionFailed
     }
     public enum MTLBufferError: Error {
         case incompatibleData
