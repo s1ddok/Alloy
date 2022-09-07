@@ -14,27 +14,24 @@ public extension MTLDevice {
                                      sampleCount: Int = 4) throws -> (main: MTLTexture,
                                                                       resolve: MTLTexture) {
         let mainDescriptor = MTLTextureDescriptor()
+        mainDescriptor.textureType = .type2DMultisample
+        mainDescriptor.sampleCount = sampleCount
         mainDescriptor.width = width
         mainDescriptor.height = height
         mainDescriptor.pixelFormat = pixelFormat
         mainDescriptor.usage = [.renderTarget, .shaderRead]
 
         let sampleDescriptor = MTLTextureDescriptor()
-        sampleDescriptor.textureType = MTLTextureType.type2DMultisample
         sampleDescriptor.width = width
         sampleDescriptor.height = height
-        sampleDescriptor.sampleCount = sampleCount
         sampleDescriptor.pixelFormat = pixelFormat
-        #if !os(macOS) && !targetEnvironment(macCatalyst)
-        sampleDescriptor.storageMode = .memoryless
-        #endif
-        sampleDescriptor.usage = .renderTarget
+        sampleDescriptor.usage = [.shaderRead, .shaderWrite]
 
         guard let mainTex = self.makeTexture(descriptor: mainDescriptor),
               let sampleTex = self.makeTexture(descriptor: sampleDescriptor)
         else { throw MetalError.MTLDeviceError.textureCreationFailed }
 
-        return (main: sampleTex, resolve: mainTex)
+        return (main: mainTex, resolve: sampleTex)
     }
 
     func heap(size: Int,
