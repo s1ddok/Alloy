@@ -52,8 +52,9 @@ public class MTLTextureCodableBox: Codable {
     }
 
     public func texture(device: MTLDevice, usage: MTLTextureUsage? = nil) throws -> MTLTexture {
-        let descriptor = self.descriptor.descriptor
+        var descriptor = self.descriptor.descriptor
         if let usage = usage {
+            descriptor = descriptor.makeCopy()
             descriptor.usage = usage
         }
         guard let texture = device.makeTexture(descriptor: descriptor)
