@@ -106,13 +106,33 @@ public extension MTLDevice {
     func texture(width: Int,
                  height: Int,
                  pixelFormat: MTLPixelFormat,
-                 usage: MTLTextureUsage = [.shaderRead]) throws -> MTLTexture {
+                 usage: MTLTextureUsage = [.shaderRead],
+                 storageMode: MTLStorageMode = .shared) throws -> MTLTexture {
         let textureDescriptor = MTLTextureDescriptor()
         textureDescriptor.width = width
         textureDescriptor.height = height
         textureDescriptor.pixelFormat = pixelFormat
+        textureDescriptor.storageMode = storageMode
         textureDescriptor.usage = usage
         guard let texture = self.makeTexture(descriptor: textureDescriptor)
+        else { throw MetalError.MTLDeviceError.textureCreationFailed }
+        return texture
+    }
+    
+    func texture(width: Int,
+                 height: Int,
+                 pixelFormat: MTLPixelFormat,
+                 usage: MTLTextureUsage = [.shaderRead],
+                 storageMode: MTLStorageMode = .shared,
+                 ioSurface: IOSurfaceRef,
+                 plane: Int = 0) throws -> MTLTexture {
+        let textureDescriptor = MTLTextureDescriptor()
+        textureDescriptor.width = width
+        textureDescriptor.height = height
+        textureDescriptor.pixelFormat = pixelFormat
+        textureDescriptor.storageMode = storageMode
+        textureDescriptor.usage = usage
+        guard let texture = self.makeTexture(descriptor: textureDescriptor, iosurface: ioSurface, plane: plane)
         else { throw MetalError.MTLDeviceError.textureCreationFailed }
         return texture
     }
