@@ -51,8 +51,12 @@ public class MTLTextureCodableBox: Codable {
         self.data = data
     }
 
-    public func texture(device: MTLDevice) throws -> MTLTexture {
-        guard let texture = device.makeTexture(descriptor: self.descriptor.descriptor)
+    public func texture(device: MTLDevice, usage: MTLTextureUsage? = nil) throws -> MTLTexture {
+        let descriptor = self.descriptor.descriptor
+        if let usage = usage {
+            descriptor.usage = usage
+        }
+        guard let texture = device.makeTexture(descriptor: descriptor)
         else { throw MetalError.MTLTextureSerializationError.allocationFailed }
 
         try self.data.withUnsafeMutableBytes { p in
