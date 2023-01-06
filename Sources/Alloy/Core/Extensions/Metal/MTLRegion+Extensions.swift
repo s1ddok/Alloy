@@ -14,15 +14,15 @@ public extension MTLRegion {
     }
     
     var maxX: Int {
-        return self.origin.x + self.size.width
+        return self.origin.x + self.size.width - 1
     }
     
     var maxY: Int {
-        return self.origin.y + self.size.height
+        return self.origin.y + self.size.height - 1
     }
     
     var maxZ: Int {
-        return self.origin.z + self.size.depth
+        return self.origin.z + self.size.depth - 1
     }
 
     var area: Int {
@@ -44,9 +44,9 @@ public extension MTLRegion {
         return MTLRegion(origin: .init(x: ox,
                                        y: oy,
                                        z: oz),
-                         size: .init(width:  maxX - ox,
-                                     height: maxY - oy,
-                                     depth:  maxZ - oz))
+                         size: .init(width:  maxX - ox + 1,
+                                     height: maxY - oy + 1,
+                                     depth:  maxZ - oz + 1))
         
     }
 
