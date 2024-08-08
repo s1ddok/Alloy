@@ -86,7 +86,7 @@ let decodedTexture = try decodableTexture.texture(device: self.context.device)
 
 ## Other Alloy-specific types
 
-Other types that are introduces my Alloy are
+Other types that are introduced by Alloy are
 
 - `MTLOffscreenRenderer`: this is a class that lets you create simple off-screen renderers to draw something into arbitary `MTLTextures`
 - `ComputeCommand`: this is an *experimental class* that does a reflection over Metal kernels and lets you assign arguments by name instead of index. This is a subject for improvements.
