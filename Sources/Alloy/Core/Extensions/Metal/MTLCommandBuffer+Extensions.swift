@@ -43,6 +43,7 @@ public extension MTLCommandBuffer {
 
     // TODO: Support multisample rendering
     func render(to texture: MTLTexture,
+                arrayLength: Int = 1,
                 loadAction: MTLRenderPassColorAttachmentDescriptor.LoadAction = .clear(.clear),
                 storeAction: MTLStoreAction = .store,
                 _ commands: (MTLRenderCommandEncoder) -> Void) {
@@ -50,12 +51,17 @@ public extension MTLCommandBuffer {
         renderPassDescriptor.colorAttachments[0].texture = texture
         renderPassDescriptor.colorAttachments[0].setLoadAction(loadAction)
         renderPassDescriptor.colorAttachments[0].storeAction = storeAction
+        
+        if arrayLength > 1 {
+            renderPassDescriptor.renderTargetArrayLength = arrayLength
+        }
         
         self.render(descriptor: renderPassDescriptor, commands)
     }
     
     @available(visionOS 1.0, iOS 13.0, macOS 10.15.4, *)
     func render(to texture: MTLTexture,
+                arrayLength: Int = 1,
                 with rasterizationMap: MTLRasterizationRateMap,
                 loadAction: MTLRenderPassColorAttachmentDescriptor.LoadAction = .clear(.clear),
                 storeAction: MTLStoreAction = .store,
@@ -67,10 +73,15 @@ public extension MTLCommandBuffer {
         
         renderPassDescriptor.rasterizationRateMap = rasterizationMap
         
+        if arrayLength > 1 {
+            renderPassDescriptor.renderTargetArrayLength = arrayLength
+        }
+        
         self.render(descriptor: renderPassDescriptor, commands)
     }
     
     func render(to texture: MTLTexture,
+                arrayLength: Int = 1,
                 loadAction: MTLRenderPassColorAttachmentDescriptor.LoadAction = .clear(.clear),
                 storeAction: MTLStoreAction = .store,
                 depthAttachment: MTLTexture,
@@ -85,12 +96,17 @@ public extension MTLCommandBuffer {
         renderPassDescriptor.depthAttachment.texture = depthAttachment
         renderPassDescriptor.depthAttachment.setLoadAction(depthLoadAction)
         renderPassDescriptor.depthAttachment.storeAction = depthStoreAction
+        
+        if arrayLength > 1 {
+            renderPassDescriptor.renderTargetArrayLength = arrayLength
+        }
         
         self.render(descriptor: renderPassDescriptor, commands)
     }
     
     @available(visionOS 1.0, iOS 13, macOS 10.15.4, *)
     func render(to texture: MTLTexture,
+                arrayLength: Int = 1,
                 with rasterizationMap: MTLRasterizationRateMap,
                 loadAction: MTLRenderPassColorAttachmentDescriptor.LoadAction = .clear(.clear),
                 storeAction: MTLStoreAction = .store,
@@ -108,6 +124,10 @@ public extension MTLCommandBuffer {
         renderPassDescriptor.depthAttachment.storeAction = depthStoreAction
         
         renderPassDescriptor.rasterizationRateMap = rasterizationMap
+        
+        if arrayLength > 1 {
+            renderPassDescriptor.renderTargetArrayLength = arrayLength
+        }
         
         self.render(descriptor: renderPassDescriptor, commands)
     }
