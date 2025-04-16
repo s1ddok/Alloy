@@ -29,6 +29,18 @@ public extension MTLRegion {
         self.size.width * self.size.height
     }
     
+    var width: Int {
+        self.size.width
+    }
+    
+    var height: Int {
+        self.size.height
+    }
+    
+    var depth: Int {
+        self.size.depth
+    }
+    
     func clamped(to region: MTLRegion) -> MTLRegion? {
         let ox = max(self.origin.x, region.origin.x)
         let oy = max(self.origin.y, region.origin.y)

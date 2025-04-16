@@ -711,6 +711,45 @@ fragment float4 primitivesFragment(VertexOut in [[ stage_in ]],
     return color;
 }
 
+
+// MARK: - Texture Rendering
+
+struct TextureFillVertexOut {
+    float4 position [[ position ]];
+    float2 uv;
+};
+
+vertex TextureFillVertexOut textureFillVertex(constant Rectangle& rectangle [[ buffer(0) ]],
+                                              uint vid [[vertex_id]]) {
+    struct Vertex {
+        float2 position;
+        float2 uv;
+    };
+
+    const Vertex vertices[] = {
+        Vertex { rectangle.topLeft, float2(0.0, 1.0) },
+        Vertex { rectangle.bottomLeft, float2(0.0, 0.0) },
+        Vertex { rectangle.topRight, float2(1.0, 1.0) },
+        Vertex { rectangle.bottomRight, float2(1.0, 0.0) }
+    };
+    const auto position = convertToScreenSpace(vertices[vid].position);
+    TextureFillVertexOut out = {
+        .position = float4(position, 0.0, 1.0),
+        .uv = vertices[vid].uv
+    };
+
+    return out;
+}
+
+fragment half4 textureFillFragment(TextureFillVertexOut in [[ stage_in ]],
+                                   texture2d<half, access::sample> texture [[ texture(0) ]]) {
+    constexpr sampler s(coord::normalized,
+                        address::clamp_to_edge,
+                        filter::linear);
+
+    return texture.sample(s, in.uv);
+}
+
 // MARK: - Mask Rendering
 
 struct MaskVertexOut {

@@ -10,6 +10,8 @@ public extension MTLRenderPipelineColorAttachmentDescriptor {
         case none
         /// Regular alpha blending.
         case alpha
+        /// Front to back rendering using alpha blending
+        case reverseAlpha
         /// Pre-multiplied alpha blending. (This is usually the default)
         case premultipliedAlpha
         /// Additive blending. (Similar to PhotoShop's linear dodge mode)
@@ -47,6 +49,11 @@ public extension MTLRenderPipelineColorAttachmentDescriptor {
             self.destinationRGBBlendFactor = .oneMinusSourceAlpha
             self.sourceAlphaBlendFactor = .sourceAlpha
             self.destinationAlphaBlendFactor = .oneMinusSourceAlpha
+        case .reverseAlpha:
+            self.sourceRGBBlendFactor = .oneMinusDestinationAlpha
+            self.sourceAlphaBlendFactor = .oneMinusDestinationAlpha
+            self.destinationRGBBlendFactor = .one
+            self.destinationAlphaBlendFactor = .one
         case .premultipliedAlpha:
             self.sourceRGBBlendFactor = .one
             self.destinationRGBBlendFactor = .oneMinusSourceAlpha

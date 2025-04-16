@@ -30,12 +30,14 @@ public extension MTLContext {
     func texture(width: Int,
                  height: Int,
                  pixelFormat: MTLPixelFormat,
-                 usage: MTLTextureUsage = [.shaderRead]) throws -> MTLTexture {
+                 usage: MTLTextureUsage = [.shaderRead],
+                 storageMode: MTLStorageMode = .shared) throws -> MTLTexture {
         return try self.device
                        .texture(width: width,
                                 height: height,
                                 pixelFormat: pixelFormat,
-                                usage: usage)
+                                usage: usage,
+                                storageMode: storageMode)
     }
 
     func depthState(depthCompareFunction: MTLCompareFunction,

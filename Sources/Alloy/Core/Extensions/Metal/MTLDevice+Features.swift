@@ -15,6 +15,8 @@ public extension MTLDevice {
             return self.supportsFeatureSet(.iOS_GPUFamily4_v1)
             #elseif os(macOS)
             return self.supportsFeatureSet(.macOS_GPUFamily1_v3)
+            #elseif os(visionOS)
+            return self.supportsFamily(.common2)
             #endif
             
         case let .readWriteTextures(pixelFormat):

@@ -91,5 +91,26 @@ public extension MTLRenderCommandEncoder {
                                    indexBufferOffset: offset,
                                    instanceCount: instanceCount)
     }
+    
+    func drawIndexedPrimitives(type: MTLPrimitiveType,
+                               indexBuffer: MTLIndexBuffer,
+                               indirectBuffer: MTLBuffer) {
+        self.drawIndexedPrimitives(type: type,
+                                   indexType: indexBuffer.type,
+                                   indexBuffer: indexBuffer.buffer,
+                                   indexBufferOffset: 0,
+                                   indirectBuffer: indirectBuffer,
+                                   indirectBufferOffset: 0)
+    }
+    
+    @available(macOS 10.15.4, visionOS 1, iOS 17, *)
+    func setDefaultAmplificationMappings(count: Int) {
+        var viewMappings = (0..<count).map {
+            MTLVertexAmplificationViewMapping(viewportArrayIndexOffset: UInt32($0),
+                                              renderTargetArrayIndexOffset: UInt32($0))
+        }
+        self.setVertexAmplificationCount(count,
+                                         viewMappings: &viewMappings)
+    }
 
 }

@@ -5,7 +5,7 @@ import MetalPerformanceShaders
 import Accelerate
 
 public extension MTLTexture {
-    #if os(iOS) || os(tvOS)
+    #if os(iOS) || os(tvOS) || os(visionOS)
     typealias XImage = UIImage
     #elseif os(macOS)
     typealias XImage = NSImage
@@ -142,7 +142,7 @@ public extension MTLTexture {
     
     func image(colorSpace: CGColorSpace? = nil) throws -> XImage {
         let cgImage = try self.cgImage(colorSpace: colorSpace)
-        #if os(iOS)
+        #if os(iOS) || os(visionOS)
         return UIImage(cgImage: cgImage)
         #elseif os(macOS)
         return NSImage(cgImage: cgImage,

@@ -37,7 +37,7 @@ public extension MTLPixelFormat {
     }
 
     var isOrdinary8Bit: Bool {
-        #if os(iOS) && !targetEnvironment(macCatalyst)
+        #if (os(iOS) || os(visionOS)) && !targetEnvironment(macCatalyst)
         switch self {
         case .a8Unorm, .r8Unorm, .r8Unorm_srgb, .r8Snorm, .r8Uint, .r8Sint:
             return true
@@ -53,7 +53,7 @@ public extension MTLPixelFormat {
     }
 
     var isOrdinary16Bit: Bool {
-        #if os(iOS) && !targetEnvironment(macCatalyst)
+        #if (os(iOS) || os(visionOS)) && !targetEnvironment(macCatalyst)
         switch self {
         case .r16Unorm, .r16Snorm, .r16Uint, .r16Sint, .r16Float,
              .rg8Unorm, .rg8Unorm_srgb, .rg8Snorm, .rg8Uint, .rg8Sint:
@@ -71,7 +71,7 @@ public extension MTLPixelFormat {
     }
 
     var isPacked16Bit: Bool {
-        #if os(iOS) && !targetEnvironment(macCatalyst)
+        #if (os(iOS) || os(visionOS))  && !targetEnvironment(macCatalyst)
         switch self {
         case .b5g6r5Unorm, .a1bgr5Unorm, .abgr4Unorm, .bgr5A1Unorm:
             return true
@@ -93,7 +93,7 @@ public extension MTLPixelFormat {
     }
 
     var isPacked32Bit: Bool {
-        #if os(iOS) && !targetEnvironment(macCatalyst)
+        #if (os(iOS) || os(visionOS))  && !targetEnvironment(macCatalyst)
         switch self {
         case .rgb10a2Unorm, .rgb10a2Uint, .rg11b10Float, .rgb9e5Float,
              .bgr10a2Unorm, .bgr10_xr, .bgr10_xr_srgb:
@@ -111,7 +111,7 @@ public extension MTLPixelFormat {
     }
 
     var isNormal64Bit: Bool {
-        #if os(iOS) && !targetEnvironment(macCatalyst)
+        #if (os(iOS) || os(visionOS)) && !targetEnvironment(macCatalyst)
         switch self {
         case .rg32Uint, .rg32Sint, .rg32Float, .rgba16Unorm,
              .rgba16Snorm, .rgba16Uint, .rgba16Sint, .rgba16Float,
@@ -138,7 +138,7 @@ public extension MTLPixelFormat {
     }
 
     var isSRGB: Bool {
-        #if os(iOS) && !targetEnvironment(macCatalyst)
+        #if (os(iOS) || os(visionOS)) && !targetEnvironment(macCatalyst)
         switch self {
         case .bgra8Unorm_srgb, .bgr10_xr_srgb, .bgra10_xr_srgb,
              .r8Unorm_srgb, .rg8Unorm_srgb,
@@ -161,7 +161,7 @@ public extension MTLPixelFormat {
     }
 
     var isExtendedRange: Bool {
-        #if os(iOS) && !targetEnvironment(macCatalyst)
+        #if (os(iOS) || os(visionOS))  && !targetEnvironment(macCatalyst)
         switch self {
         case .bgr10_xr, .bgr10_xr_srgb,
              .bgra10_xr, .bgra10_xr_srgb:
@@ -174,7 +174,7 @@ public extension MTLPixelFormat {
     }
 
     var isCompressed: Bool {
-        #if os(iOS) && !targetEnvironment(macCatalyst)
+        #if (os(iOS) || os(visionOS))  && !targetEnvironment(macCatalyst)
         return self.isPVRTC
             || self.isEAC
             || self.isETC
@@ -187,7 +187,7 @@ public extension MTLPixelFormat {
         #endif
     }
 
-    #if os(iOS) && !targetEnvironment(macCatalyst)
+    #if (os(iOS) || os(visionOS)) && !targetEnvironment(macCatalyst)
 
     var isPVRTC: Bool {
         switch self {
@@ -309,7 +309,7 @@ public extension MTLPixelFormat {
         case .a8Unorm:
             return false
         case .rgb9e5Float:
-            #if os(iOS) && !targetEnvironment(macCatalyst)
+            #if (os(iOS) || os(visionOS)) && !targetEnvironment(macCatalyst)
             return true
             #elseif os(macOS) || (os(iOS) && targetEnvironment(macCatalyst))
             return false
